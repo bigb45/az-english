@@ -1,10 +1,10 @@
 name: ez_english
 description: A new Flutter project.
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.1.0 <4.0.0'
+  sdk: ">=3.1.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -17,3 +17,19 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/static/Inter-Regular.ttf
+        - asset: assets/fonts/static/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/static/Inter-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/static/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/static/Inter-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/static/Inter-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/static/Inter-Black.ttf
+          weight: 900
