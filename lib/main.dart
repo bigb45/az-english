@@ -2,6 +2,9 @@
 
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
+import 'package:ez_english/widgets/card.dart';
+import 'package:ez_english/widgets/text_field.dart';
+import 'package:ez_english/widgets/word_chip.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,6 +17,11 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Palette.primary,
+        scaffoldBackgroundColor: Palette.secondary,
+      ),
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: SafeArea(
           child: Center(
@@ -32,6 +40,33 @@ class MainApp extends StatelessWidget {
                     ),
                   ),
                 ),
+                CustomTextField(),
+                SelectableCard(
+                  onPressed: () {},
+                  child: Text(
+                    "Long Vocabulary Card",
+                    style: TextStyle(
+                      color: Palette.primaryText,
+                      fontFamily: 'Inter',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                WordChip(
+                  onPressed: () {},
+                  child: Text(
+                    "discombobulate",
+                    style: TextStyle(
+                      color: Palette.primaryText,
+                      fontFamily: 'Inter',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                )
               ],
             ),
           ),

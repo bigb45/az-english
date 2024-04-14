@@ -24,4 +24,6 @@ class Palette {
   static const error = Color(0xFFFD4D50);
   static const errorShadow = Color(0xFFD63E36);
   static const errorFill = Color(0xFFFEC1C2);
+
+  static const textFieldFill = Color(0xFFF7F7F7);
 }
