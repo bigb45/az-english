@@ -26,24 +26,10 @@ class WordChipState extends State<WordChip> {
         });
         widget.onPressed;
       },
-      child:
-          // widget.onPressed == null
-          //     ? ColorFiltered(
-          //         colorFilter: ColorFilter.mode(
-          //             Palette.secondaryStroke.withOpacity(0.5), BlendMode.srcATop),
-          //         child: Container(
-          //           decoration: BoxDecoration(
-          //             color: Palette.secondaryStroke,
-          //             border: Border.all(color: Palette.secondaryStroke, width: 2),
-          //             borderRadius: BorderRadius.circular(16),
-          //           ),
-          //           height: 44,
-          //           child: Center(child: widget.child),
-          //         ),
-          //       )
-          //     :
-          Flex(
+      child: Flex(
         direction: Axis.horizontal,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             decoration: BoxDecoration(

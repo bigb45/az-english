@@ -3,6 +3,7 @@
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/card.dart';
+import 'package:ez_english/widgets/result_card.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:ez_english/widgets/word_chip.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,7 @@ class MainApp extends StatelessWidget {
                 WordChip(
                   onPressed: () {},
                   child: Text(
-                    "discombobulate",
+                    "word",
                     style: TextStyle(
                       color: Palette.primaryText,
                       fontFamily: 'Inter',
@@ -66,7 +67,12 @@ class MainApp extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                )
+                ),
+                ResultCard(
+                  topText: "BAD",
+                  score: Score.bad,
+                  mainText: "8/10 ANSWERED CORRECTLY",
+                ),
               ],
             ),
           ),

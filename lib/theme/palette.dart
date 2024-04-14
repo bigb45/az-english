@@ -26,4 +26,5 @@ class Palette {
   static const errorFill = Color(0xFFFEC1C2);
 
   static const textFieldFill = Color(0xFFF7F7F7);
+  static const resultCardBadFill = Color(0xFFD63E36);
 }
