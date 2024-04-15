@@ -40,14 +40,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
           filled: true,
           fillColor: fillColor,
           disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
             borderSide: BorderSide(
               color: fillColor,
               width: 2,
             ),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
             borderSide: BorderSide(
               color: Palette.secondaryStroke,
               width: 2,
@@ -55,17 +55,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
 
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
             borderSide: BorderSide(
               color: Palette.error,
               width: 2,
             ),
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
             borderSide: BorderSide(
               color: Palette.secondaryVariantStroke,
               width: 2,

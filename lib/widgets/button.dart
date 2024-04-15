@@ -41,7 +41,7 @@ class ButtonState extends State<Button> {
                 decoration: BoxDecoration(
                   color: Palette.secondaryStroke,
                   border: Border.all(color: Palette.secondaryStroke, width: 2),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.r),
                 ),
                 width: 382.w,
                 height: 48.h,
@@ -64,7 +64,7 @@ class ButtonState extends State<Button> {
                     Border.all(color: Palette.secondaryVariantStroke, width: 2),
                   _ => null
                 },
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
                 boxShadow: isPressed
                     ? null
                     : [

@@ -36,7 +36,7 @@ class SelectableCardState extends State<SelectableCard> {
                 decoration: BoxDecoration(
                   color: Palette.secondaryStroke,
                   border: Border.all(color: Palette.secondaryStroke, width: 2),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.r),
                 ),
                 width: 180.w,
                 height: 180.h,
@@ -55,7 +55,7 @@ class SelectableCardState extends State<SelectableCard> {
                     width: 2),
                 color:
                     isSelected ? Palette.secondaryVariant : Palette.secondary,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
                 boxShadow: [
                   BoxShadow(
                     color: isSelected
@@ -67,7 +67,7 @@ class SelectableCardState extends State<SelectableCard> {
                 ],
               ),
               width: 180.w,
-              height: 180.h,
+              height: 200.h,
               child: Padding(
                 padding: EdgeInsets.all(Constants.padding30),
                 child: Center(child: widget.child),

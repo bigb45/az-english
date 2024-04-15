@@ -1,6 +1,7 @@
 import 'package:ez_english/core/Constants.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WordChip extends StatefulWidget {
   final VoidCallback? onPressed;
@@ -36,7 +37,7 @@ class WordChipState extends State<WordChip> {
             decoration: BoxDecoration(
               border: Border.all(color: Palette.secondaryStroke, width: 2),
               color: Palette.secondary,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
               boxShadow: const [
                 BoxShadow(
                   color: Palette.secondaryStroke,

@@ -23,7 +23,7 @@ class ResultCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(children: [
         Padding(
@@ -42,7 +42,7 @@ class ResultCard extends StatelessWidget {
             width: 180.w,
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
             ),
             child: Padding(
               padding: EdgeInsets.all(Constants.padding30),
