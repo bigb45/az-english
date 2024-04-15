@@ -1,14 +1,20 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:ez_english/firebase_options.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/card.dart';
 import 'package:ez_english/widgets/result_card.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:ez_english/widgets/word_chip.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MainApp());
 }
 
