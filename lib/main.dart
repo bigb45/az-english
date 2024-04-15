@@ -2,7 +2,6 @@
 
 import 'package:ez_english/firebase_options.dart';
 import 'package:ez_english/theme/palette.dart';
-import 'package:ez_english/widgets/app_providers.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/card.dart';
 import 'package:ez_english/widgets/result_card.dart';
