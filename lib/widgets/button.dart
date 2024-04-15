@@ -1,5 +1,6 @@
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Button extends StatefulWidget {
   final ButtonType type;
@@ -42,8 +43,8 @@ class ButtonState extends State<Button> {
                   border: Border.all(color: Palette.secondaryStroke, width: 2),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                width: 382,
-                height: 48,
+                width: 382.w,
+                height: 48.h,
                 child: Center(child: widget.child),
               ),
             )
@@ -82,8 +83,8 @@ class ButtonState extends State<Button> {
                         ),
                       ],
               ),
-              width: 382,
-              height: 48,
+              width: 382.w,
+              height: 48.h,
               child: Center(child: widget.child),
             ),
     );

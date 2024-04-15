@@ -1,5 +1,7 @@
+import 'package:ez_english/core/Constants.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ResultCard extends StatelessWidget {
   final String mainText;
@@ -25,32 +27,32 @@ class ResultCard extends StatelessWidget {
       ),
       child: Column(children: [
         Padding(
-          padding: const EdgeInsets.all(2.0),
+          padding: EdgeInsets.all(Constants.padding2),
           child: Text(topText,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Palette.secondary,
                 fontFamily: 'Inter',
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w700,
               )),
         ),
         Padding(
-          padding: const EdgeInsets.all(2.0),
+          padding: EdgeInsets.all(Constants.padding2),
           child: Container(
-            width: 180,
+            width: 180.w,
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(30.0),
+              padding: EdgeInsets.all(Constants.padding30),
               child: Center(
                 child: Text(
                   mainText,
                   style: TextStyle(
                       color: color,
                       fontFamily: 'Inter',
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w700),
                   textAlign: TextAlign.center,
                 ),

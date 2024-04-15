@@ -2,6 +2,7 @@
 
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextField extends StatefulWidget {
   // TODO: Pass in the required parameters (controller, focusNode, etc.)
@@ -32,7 +33,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         style: TextStyle(
           color: Palette.primaryText,
           fontFamily: 'Inter',
-          fontSize: 14,
+          fontSize: 14.sp,
           fontWeight: FontWeight.w700,
         ),
         decoration: InputDecoration(
@@ -73,7 +74,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           hintStyle: TextStyle(
             color: Palette.secondaryText,
             fontFamily: 'Inter',
-            fontSize: 14,
+            fontSize: 14.sp,
             fontWeight: FontWeight.w700,
           ),
           // helperText: "HELPER TEXT",

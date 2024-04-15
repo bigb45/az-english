@@ -1,3 +1,4 @@
+import 'package:ez_english/core/Constants.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
 
@@ -45,8 +46,9 @@ class WordChipState extends State<WordChip> {
               ],
             ),
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
+              padding: EdgeInsets.symmetric(
+                  horizontal: Constants.padding12,
+                  vertical: Constants.padding8),
               child: Center(child: widget.child),
             ),
           )

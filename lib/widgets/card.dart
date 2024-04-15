@@ -1,5 +1,7 @@
+import 'package:ez_english/core/Constants.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SelectableCard extends StatefulWidget {
   final VoidCallback? onPressed;
@@ -36,10 +38,10 @@ class SelectableCardState extends State<SelectableCard> {
                   border: Border.all(color: Palette.secondaryStroke, width: 2),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                width: 180,
-                height: 180,
+                width: 180.w,
+                height: 180.h,
                 child: Padding(
-                  padding: const EdgeInsets.all(30.0),
+                  padding: EdgeInsets.all(Constants.padding30),
                   child: Center(child: widget.child),
                 ),
               ),
@@ -64,10 +66,10 @@ class SelectableCardState extends State<SelectableCard> {
                   ),
                 ],
               ),
-              width: 180,
-              height: 180,
+              width: 180.w,
+              height: 180.h,
               child: Padding(
-                padding: const EdgeInsets.all(30.0),
+                padding: EdgeInsets.all(Constants.padding30),
                 child: Center(child: widget.child),
               ),
             ),
