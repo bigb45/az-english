@@ -4,6 +4,8 @@ import 'package:ez_english/firebase_options.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/card.dart';
+import 'package:ez_english/widgets/menu.dart';
+import 'package:ez_english/widgets/microphone_button.dart';
 import 'package:ez_english/widgets/result_card.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:ez_english/widgets/word_chip.dart';
@@ -44,65 +46,77 @@ class MainApp extends StatelessWidget {
 
 class Components extends StatelessWidget {
   const Components({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Button(
-                onPressed: () {},
-                type: ButtonType.primary,
-                child: Text(
-                  "CONTINUE",
-                  style: TextStyle(
-                    color: Palette.secondary,
-                    fontFamily: 'Inter',
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w700,
+        child: Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Button(
+                    onPressed: () {},
+                    type: ButtonType.primary,
+                    child: Text(
+                      "CONTINUE",
+                      style: TextStyle(
+                        color: Palette.secondary,
+                        fontFamily: 'Inter',
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(height: 20.h),
-              CustomTextField(),
-              SizedBox(height: 20.h),
-              SelectableCard(
-                onPressed: () {},
-                child: Text(
-                  "Long Vocabulary Card",
-                  style: TextStyle(
-                    color: Palette.primaryText,
-                    fontFamily: 'Inter',
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w700,
+                  SizedBox(height: 20.h),
+                  CustomTextField(),
+                  SizedBox(height: 20.h),
+                  SelectableCard(
+                    onPressed: () {},
+                    child: Text(
+                      "Long Vocabulary Card",
+                      style: TextStyle(
+                        color: Palette.primaryText,
+                        fontFamily: 'Inter',
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              WordChip(
-                onPressed: () {},
-                child: Text(
-                  "word",
-                  style: TextStyle(
-                    color: Palette.primaryText,
-                    fontFamily: 'Inter',
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w500,
+                  SizedBox(height: 20.h),
+                  WordChip(
+                    onPressed: () {},
+                    child: Text(
+                      "word",
+                      style: TextStyle(
+                        color: Palette.primaryText,
+                        fontFamily: 'Inter',
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                ),
+                  SizedBox(height: 20.h),
+                  ResultCard(
+                    topText: "BAD",
+                    score: Score.bad,
+                    mainText: "2/10 ANSWERED CORRECTLY",
+                  ),
+                  SizedBox(height: 20.h),
+                  AudioControlButton(
+                    onPressed: () {},
+                    type: AudioControlType.speaker,
+                  ),
+                  SizedBox(height: 20.h),
+                  Menu(),
+                  SizedBox(height: 20.h),
+                ],
               ),
-              SizedBox(height: 20.h),
-              ResultCard(
-                topText: "BAD",
-                score: Score.bad,
-                mainText: "8/10 ANSWERED CORRECTLY",
-              ),
-            ],
+            ),
           ),
         ),
       ),
