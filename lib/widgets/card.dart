@@ -17,15 +17,22 @@ class SelectableCard extends StatefulWidget {
 }
 
 class SelectableCardState extends State<SelectableCard> {
-  var isSelected = false;
+  var isPressed = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTapDown: (details) {
         setState(() {
-          isSelected = !isSelected;
+          isPressed = true;
         });
+      },
+      onTapUp: (details) {
+        setState(() {
+          isPressed = false;
+        });
+      },
+      onTap: () {
         widget.onPressed;
       },
       child: widget.onPressed == null
@@ -39,38 +46,43 @@ class SelectableCardState extends State<SelectableCard> {
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 width: 180.w,
-                height: 180.h,
+                height: 200.h,
                 child: Padding(
                   padding: EdgeInsets.all(Constants.padding30),
                   child: Center(child: widget.child),
                 ),
               ),
             )
-          : Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: isSelected
-                        ? Palette.secondaryVariantStroke
-                        : Palette.secondaryStroke,
-                    width: 2),
-                color:
-                    isSelected ? Palette.secondaryVariant : Palette.secondary,
-                borderRadius: BorderRadius.circular(16.r),
-                boxShadow: [
-                  BoxShadow(
-                    color: isSelected
-                        ? Palette.secondaryVariantStroke
-                        : Palette.secondaryStroke,
-                    offset: const Offset(0, 2),
-                    blurRadius: 0,
-                  ),
-                ],
-              ),
-              width: 180.w,
-              height: 200.h,
-              child: Padding(
-                padding: EdgeInsets.all(Constants.padding30),
-                child: Center(child: widget.child),
+          : Transform.translate(
+              offset: Offset(0, isPressed ? 3 : 0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: isPressed
+                          ? Palette.secondaryVariantStroke
+                          : Palette.secondaryStroke,
+                      width: 2),
+                  color:
+                      isPressed ? Palette.secondaryVariant : Palette.secondary,
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: isPressed
+                      ? null
+                      : [
+                          BoxShadow(
+                            color: isPressed
+                                ? Palette.secondaryVariantStroke
+                                : Palette.secondaryStroke,
+                            offset: const Offset(0, 2),
+                            blurRadius: 0,
+                          ),
+                        ],
+                ),
+                width: 180.w,
+                height: 200.h,
+                child: Padding(
+                  padding: EdgeInsets.all(Constants.padding30),
+                  child: Center(child: widget.child),
+                ),
               ),
             ),
     );
