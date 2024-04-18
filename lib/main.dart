@@ -4,6 +4,7 @@ import 'package:ez_english/firebase_options.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/card.dart';
+import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:ez_english/widgets/menu.dart';
 import 'package:ez_english/widgets/microphone_button.dart';
 import 'package:ez_english/widgets/result_card.dart';
@@ -134,6 +135,20 @@ class Components extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 20.h),
+                    ExerciseCard(
+                      attempted: false,
+                      onPressed: () {},
+                      image: null,
+                      child: Text(
+                        "Exercise Card",
+                        style: TextStyle(
+                            color: Palette.secondary,
+                            fontFamily: 'Inter',
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w700),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ],
                 ),
               ),

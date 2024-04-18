@@ -16,6 +16,7 @@ dependencies:
   flutter_screenutil: ^5.9.0
   routemaster: ^1.0.1
   provider: ^6.0.5
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -40,3 +41,6 @@ flutter:
           weight: 800
         - asset: assets/fonts/static/Inter-Black.ttf
           weight: 900
+
+  assets:
+    - assets/images/
