@@ -18,6 +18,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(const MainApp());
 }
 
@@ -50,75 +51,95 @@ class Components extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Expanded(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Button(
-                    onPressed: () {},
-                    type: ButtonType.primary,
-                    child: Text(
-                      "CONTINUE",
-                      style: TextStyle(
-                        color: Palette.secondary,
-                        fontFamily: 'Inter',
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w700,
+        child: Flex(direction: Axis.vertical, children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Button(
+                      onPressed: () {},
+                      type: ButtonType.primary,
+                      child: Text(
+                        "CONTINUE",
+                        style: TextStyle(
+                          color: Palette.secondary,
+                          fontFamily: 'Inter',
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 20.h),
-                  CustomTextField(),
-                  SizedBox(height: 20.h),
-                  SelectableCard(
-                    onPressed: () {},
-                    child: Text(
-                      "Long Vocabulary Card",
-                      style: TextStyle(
-                        color: Palette.primaryText,
-                        fontFamily: 'Inter',
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w700,
+                    SizedBox(height: 20.h),
+                    CustomTextField(),
+                    SizedBox(height: 20.h),
+                    SelectableCard(
+                      onPressed: () {},
+                      child: Text(
+                        "Long Vocabulary Card",
+                        style: TextStyle(
+                          color: Palette.primaryText,
+                          fontFamily: 'Inter',
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                  ),
-                  SizedBox(height: 20.h),
-                  WordChip(
-                    onPressed: () {},
-                    child: Text(
-                      "word",
-                      style: TextStyle(
-                        color: Palette.primaryText,
-                        fontFamily: 'Inter',
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w500,
+                    SizedBox(height: 20.h),
+                    WordChip(
+                      onPressed: () {},
+                      child: Text(
+                        "word",
+                        style: TextStyle(
+                          color: Palette.primaryText,
+                          fontFamily: 'Inter',
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                  ),
-                  SizedBox(height: 20.h),
-                  ResultCard(
-                    topText: "BAD",
-                    score: Score.bad,
-                    mainText: "2/10 ANSWERED CORRECTLY",
-                  ),
-                  SizedBox(height: 20.h),
-                  AudioControlButton(
-                    onPressed: () {},
-                    type: AudioControlType.speaker,
-                  ),
-                  SizedBox(height: 20.h),
-                  Menu(),
-                  SizedBox(height: 20.h),
-                ],
+                    SizedBox(height: 20.h),
+                    ResultCard(
+                      topText: "BAD",
+                      score: Score.bad,
+                      mainText: "2/10 ANSWERED CORRECTLY",
+                    ),
+                    SizedBox(height: 20.h),
+                    AudioControlButton(
+                      onPressed: () {},
+                      type: AudioControlType.speaker,
+                    ),
+                    SizedBox(height: 20.h),
+                    Menu(
+                      onItemSelected: (index) {
+                        print(index);
+                      },
+                      items: const [
+                        MenuItemData(
+                          mainText: "Item 1",
+                          description: "Item 1 description",
+                        ),
+                        MenuItemData(
+                          mainText: "Item 2",
+                          description: "Item 2 description",
+                        ),
+                        MenuItemData(
+                          mainText: "Item 3",
+                          description: "Item 3 description",
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+        ]),
       ),
     );
   }
