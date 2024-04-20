@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:ez_english/features/levels/screens/level_selection.dart';
 import 'package:ez_english/firebase_options.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
@@ -39,7 +40,7 @@ class MainApp extends StatelessWidget {
           primaryColor: Palette.primary,
           scaffoldBackgroundColor: Palette.secondary,
         ),
-        home: const Components(),
+        home: const LevelSelection(),
       ),
       // ),
     );

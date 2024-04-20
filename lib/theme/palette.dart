@@ -27,4 +27,6 @@ class Palette {
 
   static const textFieldFill = Color(0xFFF7F7F7);
   static const resultCardBadFill = Color(0xFFD63E36);
+
+  static const blackColor = Color(0xFF000000);
 }
