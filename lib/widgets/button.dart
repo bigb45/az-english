@@ -2,6 +2,8 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// TODO: fix ontapdown and drag away bug
+
 class Button extends StatefulWidget {
   final ButtonType type;
   final VoidCallback? onPressed;
@@ -25,6 +27,11 @@ class ButtonState extends State<Button> {
       onTapDown: (details) {
         setState(() {
           isPressed = true;
+        });
+      },
+      onTapCancel: () {
+        setState(() {
+          isPressed = false;
         });
       },
       onTapUp: (details) {

@@ -27,6 +27,11 @@ class SelectableCardState extends State<SelectableCard> {
           isPressed = true;
         });
       },
+      onTapCancel: () {
+        setState(() {
+          isPressed = false;
+        });
+      },
       onTapUp: (details) {
         setState(() {
           isPressed = false;

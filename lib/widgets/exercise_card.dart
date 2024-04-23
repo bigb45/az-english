@@ -45,6 +45,11 @@ class ExerciseCardState extends State<ExerciseCard> {
           isPressed = false;
         });
       },
+      onTapCancel: () {
+        setState(() {
+          isPressed = false;
+        });
+      },
       onTap: () {
         widget.onPressed;
       },
