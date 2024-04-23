@@ -41,17 +41,20 @@ class SelectableCardState extends State<SelectableCard> {
         widget.onPressed;
       },
       child: widget.onPressed == null
-          ? ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                  Palette.secondaryStroke.withOpacity(0.5), BlendMode.srcATop),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Palette.secondaryStroke,
-                  border: Border.all(color: Palette.secondaryStroke, width: 2),
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(Constants.padding8),
+          ? Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Palette.secondaryStroke, width: 2),
+                color: Palette.secondary,
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              width: 170.w,
+              height: 170.h,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(10.sp, 10.sp, 10.sp, 10.sp),
+                child: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                      Palette.secondaryStroke.withOpacity(0.5),
+                      BlendMode.srcATop),
                   child: Center(child: widget.child),
                 ),
               ),

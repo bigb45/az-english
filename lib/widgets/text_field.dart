@@ -6,8 +6,14 @@ class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final FocusNode? focusNode;
   final String? hintText;
-  const CustomTextField(
-      {super.key, required this.controller, this.focusNode, this.hintText});
+  final bool enabled;
+  const CustomTextField({
+    super.key,
+    required this.controller,
+    this.focusNode,
+    this.hintText,
+    this.enabled = true,
+  });
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();

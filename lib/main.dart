@@ -42,7 +42,7 @@ class MainApp extends StatelessWidget {
           primaryColor: Palette.primary,
           scaffoldBackgroundColor: Palette.secondary,
         ),
-        home: const LevelSelection(),
+        home: const Components(),
       ),
       // ),
     );
@@ -82,7 +82,7 @@ class Components extends StatelessWidget {
                     ),
                     SizedBox(height: 20.h),
                     SelectableCard(
-                      onPressed: () {},
+                      onPressed: null,
                       child: Text(
                         "Long Vocabulary Card",
                         style: TextStyle(
