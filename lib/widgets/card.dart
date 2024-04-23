@@ -78,7 +78,7 @@ class SelectableCardState extends State<SelectableCard> {
                 width: 170.w,
                 height: 170.h,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(10.sp, 30.sp, 10.sp, 10.sp),
+                  padding: EdgeInsets.fromLTRB(10.sp, 10.sp, 10.sp, 10.sp),
                   child: Center(child: widget.child),
                 ),
               ),
