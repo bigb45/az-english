@@ -5,6 +5,7 @@ import 'package:ez_english/firebase_options.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/card.dart';
+import 'package:ez_english/widgets/checkbox.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:ez_english/widgets/menu.dart';
 import 'package:ez_english/widgets/microphone_button.dart';
@@ -159,24 +160,49 @@ class Components extends StatelessWidget {
                         print(value.title);
                       },
                       defaultOption: RadioItemData(
-                        value: "2",
-                        title: "Option 1",
+                        value: "",
+                        title: "",
                       ),
                       options: [
                         RadioItemData(
                           value: "1",
-                          title: "Option 1",
+                          title: "A Bag",
                         ),
                         RadioItemData(
                           value: "2",
-                          title: "Option 2",
+                          title: "A Backpack",
                         ),
                         RadioItemData(
                           value: "3",
-                          title: "Option 3",
+                          title: "A Suitcase",
                         ),
+                        RadioItemData(
+                          value: "4",
+                          title: "A Duffle Bag",
+                        )
                       ],
                     ),
+                    SizedBox(height: 20.h),
+                    CheckboxGroup(
+                        onChanged: (selections) {
+                          List<bool?> options =
+                              selections.map((e) => e.value).toList();
+                          print("new selections: $options");
+                        },
+                        options: [
+                          CheckboxData(
+                            title: "Option 1",
+                          ),
+                          CheckboxData(
+                            title: "Option 2",
+                          ),
+                          CheckboxData(
+                            title: "Option 3",
+                          ),
+                          CheckboxData(
+                            title: "Option 4",
+                          ),
+                        ]),
                     SizedBox(height: 20.h),
                   ],
                 ),
