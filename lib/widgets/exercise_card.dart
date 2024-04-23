@@ -108,8 +108,8 @@ class ExerciseCardState extends State<ExerciseCard> {
                         children: [
                           widget.attempted
                               ? Container(
-                                  width: 30.w,
-                                  height: 30.w,
+                                  width: 20.w,
+                                  height: 20.w,
                                   decoration: BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
@@ -123,7 +123,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                                   child: Icon(
                                     Icons.check,
                                     color: Palette.secondary,
-                                    size: 25.sp,
+                                    size: 18.sp,
                                     shadows: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.2),

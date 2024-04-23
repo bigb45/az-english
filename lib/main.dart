@@ -8,6 +8,7 @@ import 'package:ez_english/widgets/card.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:ez_english/widgets/menu.dart';
 import 'package:ez_english/widgets/microphone_button.dart';
+import 'package:ez_english/widgets/radio_button.dart';
 import 'package:ez_english/widgets/result_card.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:ez_english/widgets/word_chip.dart';
@@ -40,7 +41,7 @@ class MainApp extends StatelessWidget {
           primaryColor: Palette.primary,
           scaffoldBackgroundColor: Palette.secondary,
         ),
-        home: const LevelSelection(),
+        home: const Components(),
       ),
       // ),
     );
@@ -75,7 +76,9 @@ class Components extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    CustomTextField(),
+                    CustomTextField(
+                      controller: TextEditingController(),
+                    ),
                     SizedBox(height: 20.h),
                     SelectableCard(
                       onPressed: () {},
@@ -137,7 +140,7 @@ class Components extends StatelessWidget {
                     ),
                     SizedBox(height: 20.h),
                     ExerciseCard(
-                      attempted: false,
+                      attempted: true,
                       onPressed: () {},
                       image: null,
                       child: Text(
@@ -150,6 +153,31 @@ class Components extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     ),
+                    SizedBox(height: 20.h),
+                    RadioGroup(
+                      onChanged: (value) {
+                        print(value.title);
+                      },
+                      defaultOption: RadioItemData(
+                        value: "2",
+                        title: "Option 1",
+                      ),
+                      options: [
+                        RadioItemData(
+                          value: "1",
+                          title: "Option 1",
+                        ),
+                        RadioItemData(
+                          value: "2",
+                          title: "Option 2",
+                        ),
+                        RadioItemData(
+                          value: "3",
+                          title: "Option 3",
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
                   ],
                 ),
               ),

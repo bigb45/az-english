@@ -34,6 +34,7 @@ class _LevelSelectionState extends State<LevelSelection> {
           style: TextStyle(color: Palette.blackColor),
         ),
       ),
+      // TODO: place this inside a SingleChildScrollView
       body: SizedBox(
         child: Column(
           children: [
