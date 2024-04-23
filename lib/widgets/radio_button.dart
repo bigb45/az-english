@@ -50,18 +50,6 @@ class _RadioGroupState extends State<RadioGroup> {
   }
 }
 
-Widget RadioOption(String value, String title, Function(String) onChanged,
-    String selectedOption) {
-  return ListTile(
-    title: Text(title),
-    leading: Radio<String>(
-      value: value,
-      groupValue: selectedOption,
-      onChanged: onChanged(value),
-    ),
-  );
-}
-
 class RadioItemData {
   final String title;
   final String value;
