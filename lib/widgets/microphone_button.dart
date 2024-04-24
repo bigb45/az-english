@@ -38,11 +38,10 @@ class AudioControlButtonState extends State<AudioControlButton> {
         });
       },
       onTap: () {
+        widget.onPressed!();
         setState(() {
           isSelected = !isSelected;
         });
-
-        widget.onPressed;
       },
       child: Transform.translate(
         offset: Offset(0, isPressed ? 5 : 0),
