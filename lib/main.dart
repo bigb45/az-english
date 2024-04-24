@@ -9,6 +9,7 @@ import 'package:ez_english/widgets/checkbox.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:ez_english/widgets/menu.dart';
 import 'package:ez_english/widgets/microphone_button.dart';
+import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:ez_english/widgets/result_card.dart';
 import 'package:ez_english/widgets/text_field.dart';
@@ -203,6 +204,10 @@ class Components extends StatelessWidget {
                             title: "Option 4",
                           ),
                         ]),
+                    SizedBox(height: 20.h),
+                    ProgressBar(
+                      value: 50,
+                    ),
                     SizedBox(height: 20.h),
                   ],
                 ),
