@@ -41,7 +41,6 @@ Future<void> main() async {
       child: const MainApp(),
     ),
   );
-
 }
 
 class MainApp extends StatelessWidget {
@@ -66,7 +65,7 @@ class MainApp extends StatelessWidget {
           primaryColor: Palette.primary,
           scaffoldBackgroundColor: Palette.secondary,
         ),
-        home: const Components(),
+        home: const WritingPractice(),
       ),
       // ),
     );
@@ -91,8 +90,8 @@ class Components extends StatelessWidget {
                       onPressed: () {},
                       type: ButtonType.primary,
                       child: Text(
-                          AppStrings.continueButton,
-                          style: TextStyle(
+                        AppStrings.continueButton,
+                        style: TextStyle(
                           color: Palette.secondary,
                           fontFamily: 'Inter',
                           fontSize: 14.sp,

@@ -31,6 +31,8 @@ flutter:
   
   assets:
       - assets/translations/
+      - assets/images/
+
   fonts:
     - family: Inter
       fonts:
@@ -48,5 +50,3 @@ flutter:
         - asset: assets/fonts/static/Inter-Black.ttf
           weight: 900
 
-  assets:
-    - assets/images/
