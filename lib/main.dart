@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:ez_english/features/levels/screens/level_selection.dart';
 import 'package:ez_english/features/sections/writing/landing_page.dart';
 import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:ez_english/firebase_options.dart';
+import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/card.dart';
@@ -22,25 +24,42 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [
+        Locale('ar'),
+        Locale('en'),
+        Locale('tr'),
+      ],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      child: const MainApp(),
+    ),
+  );
 
-  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
-
   @override
   Widget build(BuildContext context) {
+    context.setLocale(Locale('en'));
     return
         // AppProviders(
         //   child:
         ScreenUtilInit(
       designSize: const Size(390, 844),
       builder: (_, child) => MaterialApp(
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
         debugShowCheckedModeBanner: false,
+
         title: 'EZ English',
         // TODO: move theme to palette file
         theme: ThemeData(
@@ -72,8 +91,8 @@ class Components extends StatelessWidget {
                       onPressed: () {},
                       type: ButtonType.primary,
                       child: Text(
-                        "CONTINUE",
-                        style: TextStyle(
+                          AppStrings.continueButton,
+                          style: TextStyle(
                           color: Palette.secondary,
                           fontFamily: 'Inter',
                           fontSize: 14.sp,

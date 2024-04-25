@@ -16,8 +16,10 @@ dependencies:
   flutter_screenutil: ^5.9.0
   routemaster: ^1.0.1
   provider: ^6.0.5
+  easy_localization: ^3.0.6
   flutter_svg: ^2.0.10+1
   flutter_tts: ^4.0.2
+
 
 dev_dependencies:
   flutter_test:
@@ -26,6 +28,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  
+  assets:
+      - assets/translations/
   fonts:
     - family: Inter
       fonts:
