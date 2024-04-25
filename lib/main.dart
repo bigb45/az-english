@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:ez_english/features/levels/screens/level_selection.dart';
+import 'package:ez_english/features/sections/writing/landing_page.dart';
+import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:ez_english/firebase_options.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
@@ -38,7 +40,9 @@ class MainApp extends StatelessWidget {
         ScreenUtilInit(
       designSize: const Size(390, 844),
       builder: (_, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'EZ English',
+        // TODO: move theme to palette file
         theme: ThemeData(
           primaryColor: Palette.primary,
           scaffoldBackgroundColor: Palette.secondary,
@@ -83,7 +87,7 @@ class Components extends StatelessWidget {
                     ),
                     SizedBox(height: 20.h),
                     SelectableCard(
-                      onPressed: null,
+                      onPressed: () {},
                       child: Text(
                         "Long Vocabulary Card",
                         style: TextStyle(
@@ -143,7 +147,7 @@ class Components extends StatelessWidget {
                     SizedBox(height: 20.h),
                     ExerciseCard(
                       attempted: true,
-                      onPressed: () {},
+                      onPressed: null,
                       image: null,
                       child: Text(
                         "Exercise Card",
@@ -206,7 +210,7 @@ class Components extends StatelessWidget {
                         ]),
                     SizedBox(height: 20.h),
                     ProgressBar(
-                      value: 50,
+                      value: 20,
                     ),
                     SizedBox(height: 20.h),
                   ],
