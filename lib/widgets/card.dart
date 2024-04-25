@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SelectableCard extends StatefulWidget {
   final VoidCallback? onPressed;
   final Widget child;
+  // TODO:  add clickable state
   const SelectableCard({
     super.key,
     required this.onPressed,
@@ -17,60 +18,78 @@ class SelectableCard extends StatefulWidget {
 }
 
 class SelectableCardState extends State<SelectableCard> {
-  var isSelected = false;
+  var isPressed = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTapDown: (details) {
         setState(() {
-          isSelected = !isSelected;
+          isPressed = true;
         });
+      },
+      onTapCancel: () {
+        setState(() {
+          isPressed = false;
+        });
+      },
+      onTapUp: (details) {
+        setState(() {
+          isPressed = false;
+        });
+      },
+      onTap: () {
         widget.onPressed;
       },
       child: widget.onPressed == null
-          ? ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                  Palette.secondaryStroke.withOpacity(0.5), BlendMode.srcATop),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Palette.secondaryStroke,
-                  border: Border.all(color: Palette.secondaryStroke, width: 2),
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                width: 180.w,
-                height: 180.h,
-                child: Padding(
-                  padding: EdgeInsets.all(Constants.padding30),
+          ? Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Palette.secondaryStroke, width: 2),
+                color: Palette.secondary,
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              width: 170.w,
+              height: 170.h,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(10.sp, 10.sp, 10.sp, 10.sp),
+                child: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                      Palette.secondaryStroke.withOpacity(0.5),
+                      BlendMode.srcATop),
                   child: Center(child: widget.child),
                 ),
               ),
             )
-          : Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: isSelected
-                        ? Palette.secondaryVariantStroke
-                        : Palette.secondaryStroke,
-                    width: 2),
-                color:
-                    isSelected ? Palette.secondaryVariant : Palette.secondary,
-                borderRadius: BorderRadius.circular(16.r),
-                boxShadow: [
-                  BoxShadow(
-                    color: isSelected
-                        ? Palette.secondaryVariantStroke
-                        : Palette.secondaryStroke,
-                    offset: const Offset(0, 2),
-                    blurRadius: 0,
-                  ),
-                ],
-              ),
-              width: 180.w,
-              height: 200.h,
-              child: Padding(
-                padding: EdgeInsets.all(Constants.padding30),
-                child: Center(child: widget.child),
+          : Transform.translate(
+              offset: Offset(0, isPressed ? 3 : 0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: isPressed
+                          ? Palette.secondaryVariantStroke
+                          : Palette.secondaryStroke,
+                      width: 2),
+                  color:
+                      isPressed ? Palette.secondaryVariant : Palette.secondary,
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: isPressed
+                      ? null
+                      : [
+                          BoxShadow(
+                            color: isPressed
+                                ? Palette.secondaryVariantStroke
+                                : Palette.secondaryStroke,
+                            offset: const Offset(0, 2),
+                            blurRadius: 0,
+                          ),
+                        ],
+                ),
+                width: 170.w,
+                height: 170.h,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(10.sp, 10.sp, 10.sp, 10.sp),
+                  child: Center(child: widget.child),
+                ),
               ),
             ),
     );

@@ -2,6 +2,8 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// TODO: fix ontapdown and drag away bug
+
 class Button extends StatefulWidget {
   final ButtonType type;
   final VoidCallback? onPressed;
@@ -27,6 +29,11 @@ class ButtonState extends State<Button> {
           isPressed = true;
         });
       },
+      onTapCancel: () {
+        setState(() {
+          isPressed = false;
+        });
+      },
       onTapUp: (details) {
         setState(() {
           isPressed = false;
@@ -48,44 +55,47 @@ class ButtonState extends State<Button> {
                 child: Center(child: widget.child),
               ),
             )
-          : Container(
-              decoration: BoxDecoration(
-                color: switch (widget.type) {
-                  ButtonType.primary => Palette.primary,
-                  ButtonType.primaryVariant => Palette.primaryVariant,
-                  ButtonType.error => Palette.error,
-                  ButtonType.secondary => Palette.secondary,
-                  ButtonType.secondarySelected => Palette.secondaryVariant,
-                },
-                border: switch (widget.type) {
-                  ButtonType.secondary =>
-                    Border.all(color: Palette.secondaryStroke, width: 2),
-                  ButtonType.secondarySelected =>
-                    Border.all(color: Palette.secondaryVariantStroke, width: 2),
-                  _ => null
-                },
-                borderRadius: BorderRadius.circular(16.r),
-                boxShadow: isPressed
-                    ? null
-                    : [
-                        BoxShadow(
-                          color: switch (widget.type) {
-                            ButtonType.primary => Palette.primaryShadow,
-                            ButtonType.primaryVariant =>
-                              Palette.primaryVariantShadow,
-                            ButtonType.error => Palette.errorShadow,
-                            ButtonType.secondary => Palette.secondaryStroke,
-                            ButtonType.secondarySelected =>
-                              Palette.secondaryVariantStroke,
-                          },
-                          offset: const Offset(0, 2),
-                          blurRadius: 0,
-                        ),
-                      ],
+          : Transform.translate(
+              offset: Offset(0, isPressed ? 3 : 0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: switch (widget.type) {
+                    ButtonType.primary => Palette.primary,
+                    ButtonType.primaryVariant => Palette.primaryVariant,
+                    ButtonType.error => Palette.error,
+                    ButtonType.secondary => Palette.secondary,
+                    ButtonType.secondarySelected => Palette.secondaryVariant,
+                  },
+                  border: switch (widget.type) {
+                    ButtonType.secondary =>
+                      Border.all(color: Palette.secondaryStroke, width: 2),
+                    ButtonType.secondarySelected => Border.all(
+                        color: Palette.secondaryVariantStroke, width: 2),
+                    _ => null
+                  },
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: isPressed
+                      ? null
+                      : [
+                          BoxShadow(
+                            color: switch (widget.type) {
+                              ButtonType.primary => Palette.primaryShadow,
+                              ButtonType.primaryVariant =>
+                                Palette.primaryVariantShadow,
+                              ButtonType.error => Palette.errorShadow,
+                              ButtonType.secondary => Palette.secondaryStroke,
+                              ButtonType.secondarySelected =>
+                                Palette.secondaryVariantStroke,
+                            },
+                            offset: const Offset(0, 3),
+                            blurRadius: 0,
+                          ),
+                        ],
+                ),
+                width: 382.w,
+                height: 48.h,
+                child: Center(child: widget.child),
               ),
-              width: 382.w,
-              height: 48.h,
-              child: Center(child: widget.child),
             ),
     );
   }
