@@ -6,13 +6,14 @@ class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final FocusNode? focusNode;
   final String? hintText;
-  final bool enabled;
+  final int maxLines;
+
   const CustomTextField({
     super.key,
     required this.controller,
     this.focusNode,
     this.hintText,
-    this.enabled = true,
+    this.maxLines = 1,
   });
 
   @override
@@ -23,6 +24,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLines: widget.maxLines,
       focusNode: widget.focusNode,
       controller: widget.controller,
       enabled: true,
