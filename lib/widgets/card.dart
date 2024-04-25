@@ -49,7 +49,7 @@ class SelectableCardState extends State<SelectableCard> {
                 borderRadius: BorderRadius.circular(16.r),
               ),
               width: 170.w,
-              height: 170.h,
+              height: 170.w,
               child: Padding(
                 padding: EdgeInsets.fromLTRB(10.sp, 10.sp, 10.sp, 10.sp),
                 child: ColorFiltered(
@@ -85,7 +85,7 @@ class SelectableCardState extends State<SelectableCard> {
                         ],
                 ),
                 width: 170.w,
-                height: 170.h,
+                height: 170.w,
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(10.sp, 10.sp, 10.sp, 10.sp),
                   child: Center(child: widget.child),

@@ -15,7 +15,6 @@ class ExerciseCard extends StatefulWidget {
   final bool attempted;
 
   const ExerciseCard(
-      // TODO: fix disabled state
       {super.key,
       required this.onPressed,
       required this.child,
@@ -65,14 +64,58 @@ class ExerciseCardState extends State<ExerciseCard> {
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 width: 180.w,
-                height: 200.h,
-                child: Column(
-                  children: [
-                    SvgPicture.asset(
-                        widget.image ?? 'assets/images/notepad.svg',
-                        height: 100),
-                    Center(child: widget.child),
-                  ],
+                height: 180.w,
+                child: Padding(
+                  padding: EdgeInsets.all(Constants.padding8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: widget.attempted
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.start,
+                        children: [
+                          widget.attempted
+                              ? Container(
+                                  width: 20.w,
+                                  height: 20.w,
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        offset: const Offset(0, 2),
+                                      )
+                                    ],
+                                    color: Palette.primary,
+                                    borderRadius: BorderRadius.circular(100.r),
+                                  ),
+                                  child: Icon(
+                                    Icons.check,
+                                    color: Palette.secondary,
+                                    size: 18.sp,
+                                    shadows: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        offset: const Offset(0, 2),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              : Text(
+                                  "Not Attempted",
+                                  style: TextStyle(
+                                      color: Palette.secondary,
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                        ],
+                      ),
+                      SvgPicture.asset(
+                          widget.image ?? 'assets/images/notepad.svg',
+                          height: 100),
+                      Center(child: widget.child),
+                    ],
+                  ),
                 ),
               ),
             )
@@ -96,7 +139,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                         ],
                 ),
                 width: 180.w,
-                height: 210.h,
+                height: 180.w,
                 child: Padding(
                   padding: EdgeInsets.all(Constants.padding8),
                   child: Column(

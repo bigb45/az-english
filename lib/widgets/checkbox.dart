@@ -72,8 +72,8 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
         }
       },
       child: Container(
-        width: 30,
-        height: 30,
+        width: 30.w,
+        height: 30.w,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.r),
           color: switch (state) {

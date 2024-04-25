@@ -1,8 +1,5 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:easy_localization/easy_localization.dart';
-import 'package:ez_english/features/levels/screens/level_selection.dart';
-import 'package:ez_english/features/sections/writing/landing_page.dart';
+
 import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:ez_english/firebase_options.dart';
 import 'package:ez_english/resources/app_strings.dart';
@@ -47,7 +44,7 @@ class MainApp extends StatelessWidget {
   const MainApp({super.key});
   @override
   Widget build(BuildContext context) {
-    context.setLocale(Locale('en'));
+    context.setLocale(const Locale('en'));
     return
         // AppProviders(
         //   child:
@@ -65,7 +62,8 @@ class MainApp extends StatelessWidget {
           primaryColor: Palette.primary,
           scaffoldBackgroundColor: Palette.secondary,
         ),
-        home: const WritingPractice(),
+        home: const Components(),
+        // home: const WritingPractice(),
       ),
       // ),
     );
@@ -132,7 +130,7 @@ class Components extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    ResultCard(
+                    const ResultCard(
                       topText: "BAD",
                       score: Score.bad,
                       mainText: "2/10 ANSWERED CORRECTLY",
@@ -164,8 +162,8 @@ class Components extends StatelessWidget {
                     ),
                     SizedBox(height: 20.h),
                     ExerciseCard(
-                      attempted: true,
-                      onPressed: null,
+                      attempted: false,
+                      onPressed: () {},
                       image: null,
                       child: Text(
                         "Exercise Card",
@@ -227,7 +225,7 @@ class Components extends StatelessWidget {
                           ),
                         ]),
                     SizedBox(height: 20.h),
-                    ProgressBar(
+                    const ProgressBar(
                       value: 20,
                     ),
                     SizedBox(height: 20.h),

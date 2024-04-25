@@ -51,7 +51,7 @@ class ButtonState extends State<Button> {
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 width: 382.w,
-                height: 48.h,
+                height: 48.w,
                 child: Center(child: widget.child),
               ),
             )
@@ -93,7 +93,7 @@ class ButtonState extends State<Button> {
                         ],
                 ),
                 width: 382.w,
-                height: 48.h,
+                height: 48.w,
                 child: Center(child: widget.child),
               ),
             ),
