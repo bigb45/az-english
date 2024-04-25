@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:ez_english/firebase_options.dart';
+import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/card.dart';
@@ -13,23 +15,39 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MainApp());
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [
+        Locale('ar'),
+        Locale('en'),
+        Locale('tr'),
+      ],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
-
   @override
   Widget build(BuildContext context) {
+    context.setLocale(Locale('en'));
     return
         // AppProviders(
         //   child:
         ScreenUtilInit(
       designSize: const Size(390, 844),
       builder: (_, child) => MaterialApp(
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
         title: 'EZ English',
         theme: ThemeData(
           primaryColor: Palette.primary,
@@ -57,7 +75,7 @@ class Components extends StatelessWidget {
                 onPressed: () {},
                 type: ButtonType.primary,
                 child: Text(
-                  "CONTINUE",
+                  AppStrings.continueButton,
                   style: TextStyle(
                     color: Palette.secondary,
                     fontFamily: 'Inter',
