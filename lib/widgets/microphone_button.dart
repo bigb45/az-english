@@ -59,8 +59,8 @@ class AudioControlButtonState extends State<AudioControlButton> {
                     ),
                   ],
           ),
-          width: 100.w,
-          height: 120.h,
+          width: 150.w,
+          height: 170.w,
           child: Center(
               child: switch (widget.type) {
             AudioControlType.microphone => Icon(

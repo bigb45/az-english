@@ -113,8 +113,8 @@ class _WritingPracticeState extends State<WritingPractice> {
           Container(
             width: double.infinity,
             color: switch (evaulationState) {
-              EvaluationState.correct => Palette.primary,
-              EvaluationState.incorrect => Palette.error,
+              EvaluationState.correct => Palette.primaryFill,
+              EvaluationState.incorrect => Palette.errorFill,
               _ => Palette.secondary,
             },
             child: Padding(
@@ -128,7 +128,11 @@ class _WritingPracticeState extends State<WritingPractice> {
                         : EvaluationState.incorrect;
                   });
                 },
-                type: ButtonType.primary,
+                type: switch (evaulationState) {
+                  EvaluationState.correct => ButtonType.primary,
+                  EvaluationState.incorrect => ButtonType.error,
+                  _ => ButtonType.primaryVariant,
+                },
                 child: Text(
                   "CHECK",
                   style: TextStyle(

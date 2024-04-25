@@ -15,6 +15,7 @@ class ExerciseCard extends StatefulWidget {
   final bool attempted;
 
   const ExerciseCard(
+      // TODO: fix disabled state
       {super.key,
       required this.onPressed,
       required this.child,

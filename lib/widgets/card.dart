@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SelectableCard extends StatefulWidget {
   final VoidCallback? onPressed;
   final Widget child;
+  // TODO:  add clickable state
   const SelectableCard({
     super.key,
     required this.onPressed,
