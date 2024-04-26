@@ -18,6 +18,7 @@ class _WritingSectionState extends State<WritingSection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // TODO: use the default theme from the palette file
       appBar: AppBar(
         toolbarHeight: 90.h,
         backgroundColor: Palette.primaryShadow,
