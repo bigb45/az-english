@@ -5,13 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SelectableCard extends StatefulWidget {
   final VoidCallback? onPressed;
+  final bool selected;
   final Widget child;
-  // TODO:  add clickable state
-  const SelectableCard({
-    super.key,
-    required this.onPressed,
-    required this.child,
-  });
+  const SelectableCard(
+      {super.key,
+      required this.onPressed,
+      required this.child,
+      this.selected = false});
 
   @override
   State<SelectableCard> createState() => SelectableCardState();
@@ -65,18 +65,19 @@ class SelectableCardState extends State<SelectableCard> {
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: isPressed
+                      color: isPressed || widget.selected
                           ? Palette.secondaryVariantStroke
                           : Palette.secondaryStroke,
                       width: 2),
-                  color:
-                      isPressed ? Palette.secondaryVariant : Palette.secondary,
+                  color: isPressed || widget.selected
+                      ? Palette.secondaryVariant
+                      : Palette.secondary,
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: isPressed
                       ? null
                       : [
                           BoxShadow(
-                            color: isPressed
+                            color: isPressed || widget.selected
                                 ? Palette.secondaryVariantStroke
                                 : Palette.secondaryStroke,
                             offset: const Offset(0, 2),
