@@ -2,10 +2,12 @@ import 'dart:math';
 
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/sections/writing/components/dictation_question.dart';
+import 'package:ez_english/features/sections/writing/components/multiple_choice_question.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/microphone_button.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
+import 'package:ez_english/widgets/radio_button.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,7 +60,8 @@ class _WritingPracticeState extends State<WritingPractice> {
 
   final TextEditingController _controller = TextEditingController();
   String text = "The quick brown fox jumps over the lazy dog.";
-  EvaluationState evaulationState = EvaluationState.empty;
+
+  RadioItemData? selectedOption;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,52 +103,91 @@ class _WritingPracticeState extends State<WritingPractice> {
                       padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: ProgressBar(value: 20),
                     ),
-                    DictationQuestion(
-                      controller: _controller,
-                      text: text,
-                      flutterTts: flutterTts,
+                    // DictationQuestion(
+                    //   controller: _controller,
+                    //   text: text,
+                    //   flutterTts: flutterTts,
+                    // ),
+                    RadioGroup(
+                      onChanged: (newValue) {
+                        print("new value: ${newValue.title}");
+                      },
+                      options: [
+                        RadioItemData(title: "Option 1", value: "1"),
+                        RadioItemData(title: "Option 2", value: "2"),
+                        RadioItemData(title: "Option 3", value: "3"),
+                        RadioItemData(title: "Option 4", value: "4"),
+                      ],
                     ),
+                    // MultipleChoiceQuestion(
+                    //   question: "Select the correct option from below",
+                    //   selectedOption: selectedOption,
+                    //   options: [
+                    //     RadioItemData(title: "Option 1", value: "1"),
+                    //     RadioItemData(title: "Option 2", value: "2"),
+                    //     RadioItemData(title: "Option 3", value: "3"),
+                    //     RadioItemData(title: "Option 4", value: "4"),
+                    //   ],
+                    //   onChanged: (value) {
+                    //     selectedOption = value;
+                    //   },
+                    // ),
                   ],
                 ),
               ),
             ),
           ),
-          Container(
-            width: double.infinity,
-            color: switch (evaulationState) {
-              EvaluationState.correct => Palette.primaryFill,
-              EvaluationState.incorrect => Palette.errorFill,
-              _ => Palette.secondary,
-            },
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: Constants.padding8, horizontal: Constants.padding8),
-              child: Button(
-                onPressed: () {
-                  setState(() {
-                    evaulationState = Random().nextBool()
-                        ? EvaluationState.correct
-                        : EvaluationState.incorrect;
-                  });
-                },
-                type: switch (evaulationState) {
-                  EvaluationState.correct => ButtonType.primary,
-                  EvaluationState.incorrect => ButtonType.error,
-                  _ => ButtonType.primaryVariant,
-                },
-                child: Text(
-                  "CHECK",
-                  style: TextStyle(
-                    color: Palette.secondary,
-                    fontFamily: 'Inter',
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
+          EvaluateAnswer()
+        ],
+      ),
+    );
+  }
+}
+
+class EvaluateAnswer extends StatefulWidget {
+  const EvaluateAnswer({super.key});
+
+  @override
+  State<EvaluateAnswer> createState() => _EvaluateAnswerState();
+}
+
+class _EvaluateAnswerState extends State<EvaluateAnswer> {
+  EvaluationState evaulationState = EvaluationState.empty;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      color: switch (evaulationState) {
+        EvaluationState.correct => Palette.primaryFill,
+        EvaluationState.incorrect => Palette.errorFill,
+        _ => Palette.secondary,
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: Constants.padding8, horizontal: Constants.padding8),
+        child: Button(
+          onPressed: () {
+            setState(() {
+              evaulationState = Random().nextBool()
+                  ? EvaluationState.correct
+                  : EvaluationState.incorrect;
+            });
+          },
+          type: switch (evaulationState) {
+            EvaluationState.correct => ButtonType.primary,
+            EvaluationState.incorrect => ButtonType.error,
+            _ => ButtonType.primaryVariant,
+          },
+          child: Text(
+            "CHECK",
+            style: TextStyle(
+              color: Palette.secondary,
+              fontFamily: 'Inter',
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w700,
             ),
           ),
-        ],
+        ),
       ),
     );
   }
