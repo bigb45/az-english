@@ -5,7 +5,7 @@ import 'package:ez_english/firebase_options.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
-import 'package:ez_english/widgets/card.dart';
+import 'package:ez_english/widgets/selectable_card.dart';
 import 'package:ez_english/widgets/checkbox.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:ez_english/widgets/menu.dart';
@@ -62,8 +62,8 @@ class MainApp extends StatelessWidget {
           primaryColor: Palette.primary,
           scaffoldBackgroundColor: Palette.secondary,
         ),
-        home: const Components(),
-        // home: const WritingPractice(),
+        // home: const Components(),
+        home: const WritingPractice(),
       ),
       // ),
     );
@@ -103,6 +103,7 @@ class Components extends StatelessWidget {
                     ),
                     SizedBox(height: 20.h),
                     SelectableCard(
+                      selected: false,
                       onPressed: () {},
                       child: Text(
                         "Long Vocabulary Card",
@@ -180,10 +181,6 @@ class Components extends StatelessWidget {
                       onChanged: (value) {
                         print(value.title);
                       },
-                      defaultOption: RadioItemData(
-                        value: "",
-                        title: "",
-                      ),
                       options: [
                         RadioItemData(
                           value: "1",
