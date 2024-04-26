@@ -1,4 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:ez_english/features/levels/screens/level_selection.dart';
+import 'package:ez_english/features/sections/section_selection.dart';
+import 'package:ez_english/features/sections/writing/landing_page.dart';
 
 import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:ez_english/firebase_options.dart';
@@ -57,13 +60,9 @@ class MainApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
 
         title: 'EZ English',
-        // TODO: move theme to palette file
-        theme: ThemeData(
-          primaryColor: Palette.primary,
-          scaffoldBackgroundColor: Palette.secondary,
-        ),
+        theme: Palette.lightModeAppTheme,
         // home: const Components(),
-        home: const WritingPractice(),
+        home: const SectionSelection(),
       ),
       // ),
     );
