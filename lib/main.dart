@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:ez_english/features/levels/screens/level_selection.dart';
-import 'package:ez_english/features/sections/section_selection.dart';
+import 'package:ez_english/features/sections/practice_screen.dart';
 import 'package:ez_english/features/sections/writing/landing_page.dart';
 
 import 'package:ez_english/features/sections/writing/practice.dart';
@@ -62,7 +62,7 @@ class MainApp extends StatelessWidget {
         title: 'EZ English',
         theme: Palette.lightModeAppTheme,
         // home: const Components(),
-        home: const SectionSelection(),
+        home: const PracticeScreen(),
       ),
       // ),
     );

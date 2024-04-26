@@ -17,4 +17,26 @@ class TextStyles {
     fontWeight: FontWeight.w800,
     fontFamily: "Inter",
   );
+  static TextStyle practiceCardMainText = TextStyle(
+      color: Palette.secondary,
+      fontFamily: 'Inter',
+      fontSize: 20.sp,
+      fontWeight: FontWeight.w700);
+  static TextStyle practiceCardSecondaryText = TextStyle(
+      color: Palette.primaryText,
+      fontFamily: 'Inter',
+      fontSize: 20.sp,
+      fontWeight: FontWeight.w700);
+
+  static TextStyle titleTextStyle = TextStyle(
+      color: Palette.secondary,
+      fontFamily: 'Inter',
+      fontSize: 24.sp,
+      fontWeight: FontWeight.w700);
+
+  static TextStyle subtitleTextStyle = TextStyle(
+      color: Palette.secondary,
+      fontFamily: 'Inter',
+      fontSize: 17.sp,
+      fontWeight: FontWeight.w400);
 }

@@ -1,3 +1,11 @@
 {
-  "continueButton": "Continue"
+  "continueButton": "Continue",
+  "comment1": "Section Screen",
+  "practiceScreenTitle": "Practice",
+  "practiceScreenText": "B2 level, Basic Conversation",
+  "readingSectionCardTitle": "Reading",
+  "listeningAndWritingSectionCardTitle": "Listening & Writing",
+  "vocabSectionCardTitle": "Vocabulary",
+  "grammarSectionCardTitle": "Grammar",
+  "skillTestSectionCardTitle": "Skill Test"
 }

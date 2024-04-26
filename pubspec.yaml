@@ -19,6 +19,7 @@ dependencies:
   easy_localization: ^3.0.6
   flutter_svg: ^2.0.10+1
   flutter_tts: ^4.0.2
+  flutter_statusbarcolor_ns: ^0.5.0
 
 
 dev_dependencies:

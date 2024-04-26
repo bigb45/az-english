@@ -104,7 +104,8 @@ class ExerciseCardState extends State<ExerciseCard> {
                               : Text(
                                   "Not Attempted",
                                   style: TextStyle(
-                                      color: Palette.secondary,
+                                      color:
+                                          widget.textColor ?? Palette.secondary,
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -179,7 +180,8 @@ class ExerciseCardState extends State<ExerciseCard> {
                               : Text(
                                   "Not Attempted",
                                   style: TextStyle(
-                                      color: Palette.secondary,
+                                      color:
+                                          widget.textColor ?? Palette.secondary,
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.bold),
                                 ),
