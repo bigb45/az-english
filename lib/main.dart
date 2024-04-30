@@ -1,4 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:ez_english/features/sections/grammar/landing_page.dart';
+import 'package:ez_english/features/sections/grammar/practice.dart';
 import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:ez_english/firebase_options.dart';
 import 'package:ez_english/resources/app_strings.dart';
@@ -58,7 +60,7 @@ class MainApp extends StatelessWidget {
         title: 'EZ English',
         theme: Palette.lightModeAppTheme,
         // home: const Components(),
-        home: const WritingPractice(),
+        home: const GrammarPractice(),
       ),
       // ),
     );
