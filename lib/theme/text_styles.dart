@@ -11,6 +11,7 @@ class TextStyles {
     fontWeight: FontWeight.w800,
     fontFamily: "Inter",
   );
+
   static TextStyle cardText = TextStyle(
     fontSize: 13.sp,
     color: Palette.secondaryText,
@@ -45,4 +46,24 @@ class TextStyles {
       fontFamily: 'Inter',
       fontSize: 14.sp,
       fontWeight: FontWeight.w700);
+
+  static TextStyle bodyMedium = TextStyle(
+    height: 2,
+    fontSize: 16.sp,
+    color: Palette.primaryText,
+  );
+
+  static TextStyle bodyLarge = TextStyle(
+    height: 2,
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w700,
+    color: Palette.primaryText,
+  );
+
+  static TextStyle buttonTextStyle = TextStyle(
+    color: Palette.secondary,
+    fontFamily: 'Inter',
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w700,
+  );
 }
