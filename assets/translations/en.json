@@ -7,5 +7,10 @@
   "listeningAndWritingSectionCardTitle": "Listening & Writing",
   "vocabSectionCardTitle": "Vocabulary",
   "grammarSectionCardTitle": "Grammar",
-  "skillTestSectionCardTitle": "Skill Test"
+  "skillTestSectionCardTitle": "Skill Test",
+  "comment2": "Reading Practice",
+  "readingSectionOnboardingAppbarTitle": "Reading",
+  "readingSectionOnboardingTitle": "Reading Practice",
+  "readingSectionOnboardingText": "In this section you will read a paragraph out loud and afterwards,  you will be asked some questions regarding the passage",
+  "startPracticingButton": "START PRACTICING"
 }

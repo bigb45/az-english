@@ -11,4 +11,11 @@ abstract class AppStrings {
   static final vocabSectionCardTitle = 'vocabSectionCardTitle'.tr();
   static final grammarSectionCardTitle = 'grammarSectionCardTitle'.tr();
   static final skillTestSectionCardTitle = 'skillTestSectionCardTitle'.tr();
+  static final readingSectionOnboardingAppbarTitle =
+      "readingSectionOnboardingAppbarTitle".tr();
+  static final readingSectionOnboardingTitle =
+      "readingSectionOnboardingTitle".tr();
+  static final readingSectionOnboardingText =
+      "readingSectionOnboardingText".tr();
+  static final startPracticingButton = "startPracticingButton".tr();
 }
