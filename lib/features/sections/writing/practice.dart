@@ -108,30 +108,20 @@ class _WritingPracticeState extends State<WritingPractice> {
                     //   text: text,
                     //   flutterTts: flutterTts,
                     // ),
-                    RadioGroup(
-                      onChanged: (newValue) {
-                        print("new value: ${newValue.title}");
-                      },
+                    MultipleChoiceQuestion(
+                      question:
+                          "Select the sentence that best describes the image above",
+                      image: "assets/images/writing_question_image.png",
                       options: [
-                        RadioItemData(title: "Option 1", value: "1"),
-                        RadioItemData(title: "Option 2", value: "2"),
-                        RadioItemData(title: "Option 3", value: "3"),
-                        RadioItemData(title: "Option 4", value: "4"),
+                        RadioItemData(title: "A Backpack", value: "1"),
+                        RadioItemData(title: "A Leather Purse", value: "2"),
+                        RadioItemData(title: "A Suitcase", value: "3"),
+                        RadioItemData(title: "A Shopping Bag", value: "4"),
                       ],
+                      onChanged: (value) {
+                        selectedOption = value;
+                      },
                     ),
-                    // MultipleChoiceQuestion(
-                    //   question: "Select the correct option from below",
-                    //   selectedOption: selectedOption,
-                    //   options: [
-                    //     RadioItemData(title: "Option 1", value: "1"),
-                    //     RadioItemData(title: "Option 2", value: "2"),
-                    //     RadioItemData(title: "Option 3", value: "3"),
-                    //     RadioItemData(title: "Option 4", value: "4"),
-                    //   ],
-                    //   onChanged: (value) {
-                    //     selectedOption = value;
-                    //   },
-                    // ),
                   ],
                 ),
               ),
