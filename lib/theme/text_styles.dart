@@ -45,4 +45,14 @@ class TextStyles {
       fontFamily: 'Inter',
       fontSize: 14.sp,
       fontWeight: FontWeight.w700);
+  static TextStyle readingPracticeTextStyle = TextStyle(
+      color: Palette.primaryText,
+      fontFamily: 'Inter',
+      fontSize: 20.sp,
+      fontWeight: FontWeight.w400);
+  static TextStyle readingPracticeSecondaryTextStyle = TextStyle(
+      color: Palette.secondaryText,
+      fontFamily: 'Inter',
+      fontSize: 13.sp,
+      fontWeight: FontWeight.w400);
 }

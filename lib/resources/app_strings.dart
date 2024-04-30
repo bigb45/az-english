@@ -18,4 +18,7 @@ abstract class AppStrings {
   static final readingSectionOnboardingText =
       "readingSectionOnboardingText".tr();
   static final startPracticingButton = "startPracticingButton".tr();
+  static final readingSectionPracticeAppbarTitle =
+      "readingSectionPracticeAppbarTitle".tr();
+  static final speakingQuesiton = "speakingQuesiton".tr();
 }
