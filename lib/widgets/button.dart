@@ -1,17 +1,22 @@
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Button extends StatefulWidget {
   final ButtonType type;
   final VoidCallback? onPressed;
-  final Widget child;
+  final String? text;
+  final Widget? child;
   const Button({
     super.key,
     this.type = ButtonType.primary,
     required this.onPressed,
-    required this.child,
-  });
+    @Deprecated("use text instead for automatic text color and style")
+    this.child,
+    this.text,
+  }) : assert(child != null || text != null,
+            "Either a child or a text must be provided (provide a text for default button style)");
 
   @override
   State<Button> createState() => ButtonState();
@@ -19,6 +24,22 @@ class Button extends StatefulWidget {
 
 class ButtonState extends State<Button> {
   var isPressed = false;
+  Color textColor = Palette.secondary;
+  @override
+  void initState() {
+    textColor = switch (widget.type) {
+      ButtonType.primary => Palette.secondary,
+      ButtonType.primaryVariant => Palette.secondary,
+      ButtonType.error => Palette.secondary,
+      ButtonType.secondary => Palette.primaryVariant,
+      ButtonType.secondarySelected => Palette.primaryVariantText,
+    };
+    if (widget.onPressed == null) {
+      textColor = Palette.secondaryStroke;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -50,7 +71,15 @@ class ButtonState extends State<Button> {
                 ),
                 width: 382.w,
                 height: 48.w,
-                child: Center(child: widget.child),
+                child: Center(
+                  child: widget.child ??
+                      Text(
+                        widget.text!.toUpperCase(),
+                        style: TextStyles.buttonTextStyle.copyWith(
+                          color: textColor,
+                        ),
+                      ),
+                ),
               ),
             )
           : Transform.translate(
@@ -92,7 +121,15 @@ class ButtonState extends State<Button> {
                 ),
                 width: 382.w,
                 height: 48.w,
-                child: Center(child: widget.child),
+                child: Center(
+                  child: widget.child ??
+                      Text(
+                        widget.text!.toUpperCase(),
+                        style: TextStyles.buttonTextStyle.copyWith(
+                          color: textColor,
+                        ),
+                      ),
+                ),
               ),
             ),
     );
