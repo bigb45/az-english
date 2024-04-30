@@ -1,14 +1,11 @@
 import 'dart:math';
 
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/sections/writing/components/dictation_question.dart';
 import 'package:ez_english/features/sections/writing/components/multiple_choice_question.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
-import 'package:ez_english/widgets/microphone_button.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/radio_button.dart';
-import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -108,30 +105,20 @@ class _WritingPracticeState extends State<WritingPractice> {
                     //   text: text,
                     //   flutterTts: flutterTts,
                     // ),
-                    RadioGroup(
-                      onChanged: (newValue) {
-                        print("new value: ${newValue.title}");
-                      },
+                    MultipleChoiceQuestion(
+                      question:
+                          "Select the sentence that best describes the image above",
+                      image: "assets/images/writing_question_image.png",
                       options: [
-                        RadioItemData(title: "Option 1", value: "1"),
-                        RadioItemData(title: "Option 2", value: "2"),
-                        RadioItemData(title: "Option 3", value: "3"),
-                        RadioItemData(title: "Option 4", value: "4"),
+                        RadioItemData(title: "A Backpack", value: "1"),
+                        RadioItemData(title: "A Leather Purse", value: "2"),
+                        RadioItemData(title: "A Suitcase", value: "3"),
+                        RadioItemData(title: "A Shopping Bag", value: "4"),
                       ],
+                      onChanged: (value) {
+                        selectedOption = value;
+                      },
                     ),
-                    // MultipleChoiceQuestion(
-                    //   question: "Select the correct option from below",
-                    //   selectedOption: selectedOption,
-                    //   options: [
-                    //     RadioItemData(title: "Option 1", value: "1"),
-                    //     RadioItemData(title: "Option 2", value: "2"),
-                    //     RadioItemData(title: "Option 3", value: "3"),
-                    //     RadioItemData(title: "Option 4", value: "4"),
-                    //   ],
-                    //   onChanged: (value) {
-                    //     selectedOption = value;
-                    //   },
-                    // ),
                   ],
                 ),
               ),

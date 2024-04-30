@@ -3,10 +3,8 @@ import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
-import 'package:ez_english/widgets/selectable_card.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_english/theme/palette.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 
