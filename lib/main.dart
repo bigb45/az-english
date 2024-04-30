@@ -165,6 +165,7 @@ class Components extends StatelessWidget {
                       attempted: false,
                       onPressed: () {},
                       image: null,
+                      cardBackgroundColor: const Color(0xFF34495E),
                       child: Text(
                         "Exercise Card",
                         style: TextStyle(

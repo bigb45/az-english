@@ -118,6 +118,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _buildCard(
+                      backgroundColor: const Color(0xFF34495E),
                       headerText: AppStrings.skillTestSectionCardTitle,
                       cardText:
                           "learn common everyday expressions and simple phrases",
@@ -132,12 +133,11 @@ class _PracticeScreenState extends State<PracticeScreen> {
     );
   }
 
-// TODO ask about shadow colors for the cards
   Widget _buildCard({
     required String headerText,
     required String cardText,
+    required Color backgroundColor,
     String? imagePath,
-    Color? backgroundColor,
     bool secondaryText = false,
     Color? cardShadowColor,
   }) {

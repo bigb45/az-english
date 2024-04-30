@@ -9,7 +9,7 @@ class ExerciseCard extends StatefulWidget {
   final Widget child;
   final String? description;
   final String? image;
-  final Color? cardBackgroundColor;
+  final Color cardBackgroundColor;
   final Color? cardShadowColor;
   final Color? textColor;
   final bool attempted;
@@ -19,7 +19,7 @@ class ExerciseCard extends StatefulWidget {
       required this.onPressed,
       required this.child,
       required this.image,
-      this.cardBackgroundColor,
+      required this.cardBackgroundColor,
       this.cardShadowColor,
       this.textColor,
       required this.attempted,
@@ -124,7 +124,7 @@ class ExerciseCardState extends State<ExerciseCard> {
               offset: Offset(0, isPressed ? 4 : 0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: widget.cardBackgroundColor ?? const Color(0xFF34495E),
+                  color: widget.cardBackgroundColor,
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: isPressed
                       ? null
@@ -132,8 +132,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                           BoxShadow(
                             color: isPressed
                                 ? Palette.secondary
-                                : widget.cardShadowColor ??
-                                    const Color(0xFF00144A),
+                                : darkenColor(widget.cardBackgroundColor, 0.2),
                             offset: const Offset(0, 4),
                             blurRadius: 0,
                           ),
@@ -198,4 +197,15 @@ class ExerciseCardState extends State<ExerciseCard> {
             ),
     );
   }
+}
+
+Color darkenColor(Color? color, double factor) {
+  assert(factor >= 0 && factor <= 1);
+  if (color == null) return const Color(0xFF000000);
+  // Calculate the new color components
+  int red = (color.red * (1 - factor)).round();
+  int green = (color.green * (1 - factor)).round();
+  int blue = (color.blue * (1 - factor)).round();
+  // Create and return the new color
+  return Color.fromARGB(color.alpha, red, green, blue);
 }
