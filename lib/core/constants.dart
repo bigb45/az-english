@@ -5,9 +5,11 @@ class Constants {
   static final gapW10 = SizedBox(width: 10.w);
   static final gapW4 = SizedBox(width: 4.w);
 
+  static final gapH8 = SizedBox(height: 8.h);
   static final gapH12 = SizedBox(height: 12.h);
   static final gapH14 = SizedBox(height: 14.h);
   static final gapH16 = SizedBox(height: 16.h);
+  static final gapH18 = SizedBox(height: 18.h);
   static final gapH24 = SizedBox(height: 24.h);
   static final gapH20 = SizedBox(height: 20.h);
   static final gapH28 = SizedBox(height: 28.h);
