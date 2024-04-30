@@ -39,4 +39,10 @@ class TextStyles {
       fontFamily: 'Inter',
       fontSize: 17.sp,
       fontWeight: FontWeight.w400);
+
+  static TextStyle optionTextStyle = TextStyle(
+      color: Palette.primaryText,
+      fontFamily: 'Inter',
+      fontSize: 14.sp,
+      fontWeight: FontWeight.w700);
 }

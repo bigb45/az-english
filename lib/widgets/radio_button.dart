@@ -1,3 +1,4 @@
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class RadioGroup extends StatefulWidget {
@@ -24,14 +25,19 @@ class _RadioGroupState extends State<RadioGroup> {
 
   @override
   Widget build(BuildContext context) {
-    print("rebuiling, selected option: ${selectedOption.title}");
     return Column(
       children: List.generate(
         widget.options.length,
         (index) {
           RadioItemData option = widget.options[index];
           return ListTile(
-            title: Text(option.title),
+            onTap: () {
+              widget.onChanged(option);
+              setState(() {
+                selectedOption = option;
+              });
+            },
+            title: Text(option.title, style: TextStyles.optionTextStyle),
             leading: Radio<RadioItemData>(
               value: option,
               groupValue: selectedOption,
