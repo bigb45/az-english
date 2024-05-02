@@ -5,45 +5,49 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/word_chip.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DragAndDropQuestion extends StatefulWidget {
-  const DragAndDropQuestion({super.key});
+  // TODO: fix divider and wrap alignment
+  // TODO: make the words draggable
+  final String fullSentence;
+  final String words;
+  const DragAndDropQuestion(
+      {super.key, required this.fullSentence, required this.words});
 
   @override
   State<DragAndDropQuestion> createState() => _DragAndDropQuestionState();
 }
 
 class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
-  List<WordChipString> words = [
-    WordChipString("Jumps"),
-    WordChipString("over"),
-    WordChipString("dog"),
-    WordChipString("it"),
-    WordChipString("The"),
-    WordChipString("does"),
-    WordChipString("is"),
-    WordChipString("are"),
-    WordChipString("do"),
-  ];
+  late List<WordChipString> words;
+  @override
+  void initState() {
+    super.initState();
+    words =
+        widget.words.split(" ").map((word) => WordChipString(word)).toList();
+  }
+
   List<WordChipString> orderedWords = [];
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text("Place the words in their correct order",
-              style: TextStyles.bodyLarge),
-          Column(
+    return Column(
+      children: [
+        Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Text("Place the words in their correct order",
+                  style: TextStyles.bodyLarge),
               Column(
                 children: [
                   Container(
-                    height: 40.w,
-                    child: Row(
+                    width: double.infinity,
+                    // height: 40.w,
+                    child: Wrap(
+                      alignment: WrapAlignment.start,
+                      runSpacing: Constants.padding20,
                       children: orderedWords.map((word) {
                         return Padding(
                             padding: EdgeInsets.symmetric(
@@ -64,22 +68,42 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
                     thickness: 2,
                     color: Palette.secondaryStroke,
                   ),
+                  // Container(
+                  //   height: 40.w,
+                  //   child: Row(
+                  //     children: orderedWords.map((word) {
+                  //       return Padding(
+                  //         padding: EdgeInsets.symmetric(
+                  //             horizontal: Constants.padding4),
+                  //       );
+                  //     }).toList(),
+                  //   ),
+                  // ),
+                  // Divider(
+                  //   thickness: 2,
+                  //   color: Palette.secondaryStroke,
+                  // ),
                 ],
-              ),
-              WordOptions(
-                onWordSelected: (value) {
-                  setState(() {
-                    orderedWords.add(value);
-                    value.isSelected = true;
-                  });
-                },
-                selectedWords: orderedWords,
-                words: words,
               )
             ],
-          )
-        ],
-      ),
+          ),
+        ),
+        WordOptions(
+          onWordSelected: (value) {
+            setState(() {
+              orderedWords.add(value);
+              value.isSelected = true;
+            });
+            print(
+              orderedWords.map((e) => e.text).join(
+                    " ",
+                  ),
+            );
+          },
+          selectedWords: orderedWords,
+          words: words,
+        ),
+      ],
     );
   }
 }

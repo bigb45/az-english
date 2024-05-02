@@ -58,7 +58,12 @@ class _GrammarPracticeState extends State<GrammarPractice> {
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: SingleChildScrollView(
                 child: Column(
-                  children: [DragAndDropQuestion()],
+                  children: [
+                    DragAndDropQuestion(
+                      fullSentence: "The dog jumps over the fence",
+                      words: "The jumps dog fence dogs jumped over under the",
+                    )
+                  ],
                 ),
               ),
             ),
