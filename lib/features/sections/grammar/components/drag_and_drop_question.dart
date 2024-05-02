@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, sized_box_for_whitespace
 
 import 'package:ez_english/core/Constants.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -16,17 +16,18 @@ class DragAndDropQuestion extends StatefulWidget {
 }
 
 class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
-  String selectedWord = "";
-  List<String> words = [
-    "Jumps",
-    "over",
-    "The",
-    "does",
-    "is",
-    "are",
-    "do",
+  List<WordChipString> words = [
+    WordChipString("Jumps"),
+    WordChipString("over"),
+    WordChipString("dog"),
+    WordChipString("it"),
+    WordChipString("The"),
+    WordChipString("does"),
+    WordChipString("is"),
+    WordChipString("are"),
+    WordChipString("do"),
   ];
-  List<String> orderedWords = [];
+  List<WordChipString> orderedWords = [];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,36 +52,12 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
                               onPressed: () {
                                 setState(() {
                                   orderedWords.remove(word);
+                                  word.isSelected = false;
                                 });
                               },
-                              text: word,
-                            )
-                            // Container(
-                            //   width: 100.w,
-                            //   height: 40.w,
-                            //   decoration: BoxDecoration(
-                            //     color: Palette.secondaryStroke,
-                            //     borderRadius: BorderRadius.circular(16.r),
-                            //   ),
-                            // ),
-                            );
+                              text: word.text,
+                            ));
                       }).toList(),
-                      // [
-                      //   // Text("The dog", style: TextStyles.wordChipTextStyle),
-                      //   // Padding(
-                      //   //   padding: EdgeInsets.symmetric(
-                      //   //       horizontal: Constants.padding4),
-                      //   //   child: Container(
-                      //   //     width: 100.w,
-                      //   //     height: 40.w,
-                      //   //     decoration: BoxDecoration(
-                      //   //       color: Palette.secondaryStroke,
-                      //   //       borderRadius: BorderRadius.circular(16.r),
-                      //   //     ),
-                      //   //   ),
-                      //   // ),
-                      //   // Text("over the fox", style: TextStyles.wordChipTextStyle),
-                      // ],
                     ),
                   ),
                   Divider(
@@ -90,13 +67,15 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
                 ],
               ),
               WordOptions(
-                  onWordSelected: (value) {
-                    print(value);
-                    setState(() {
-                      orderedWords.add(value);
-                    });
-                  },
-                  words: words)
+                onWordSelected: (value) {
+                  setState(() {
+                    orderedWords.add(value);
+                    value.isSelected = true;
+                  });
+                },
+                selectedWords: orderedWords,
+                words: words,
+              )
             ],
           )
         ],
@@ -106,10 +85,15 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
 }
 
 class WordOptions extends StatefulWidget {
-  final List<String> words;
-  final Function(String) onWordSelected;
-  const WordOptions(
-      {super.key, required this.words, required this.onWordSelected});
+  final List<WordChipString> words;
+  final List<WordChipString> selectedWords;
+  final Function(WordChipString) onWordSelected;
+  const WordOptions({
+    super.key,
+    required this.words,
+    required this.onWordSelected,
+    required this.selectedWords,
+  });
 
   @override
   State<WordOptions> createState() => _WordOptionsState();
@@ -118,7 +102,6 @@ class WordOptions extends StatefulWidget {
 class _WordOptionsState extends State<WordOptions> {
   @override
   Widget build(BuildContext context) {
-    // widget.words.shuffle();
     return Wrap(
       alignment: WrapAlignment.center,
       spacing: Constants.padding8,
@@ -127,14 +110,23 @@ class _WordOptionsState extends State<WordOptions> {
             (word) => Padding(
               padding: EdgeInsets.symmetric(vertical: Constants.padding4),
               child: WordChip(
-                onPressed: () {
-                  widget.onWordSelected(word);
-                },
-                text: word,
+                isSelected: word.isSelected,
+                onPressed: word.isSelected
+                    ? null
+                    : () {
+                        widget.onWordSelected(word);
+                      },
+                text: word.text,
               ),
             ),
           )
           .toList(),
     );
   }
+}
+
+class WordChipString {
+  final String text;
+  bool isSelected;
+  WordChipString(this.text, {this.isSelected = false});
 }

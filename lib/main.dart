@@ -114,10 +114,10 @@ class Components extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    WordChip(
-                      onPressed: () {},
-                      text: "word",
-                    ),
+                    // WordChip(
+                    //   onPressed: () {},
+                    //   text: "word",
+                    // ),
                     SizedBox(height: 20.h),
                     const ResultCard(
                       topText: "BAD",
