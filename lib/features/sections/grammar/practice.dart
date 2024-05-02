@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
-import 'package:ez_english/features/sections/writing/components/multiple_choice_question.dart';
+import 'package:ez_english/features/sections/grammar/components/drag_and_drop_question.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
@@ -30,7 +30,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
     });
   }
 
-  EvaluationState answerState = EvaluationState.incorrect;
+  EvaluationState answerState = EvaluationState.empty;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +58,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: SingleChildScrollView(
                 child: Column(
-                  children: [],
+                  children: [DragAndDropQuestion()],
                 ),
               ),
             ),
