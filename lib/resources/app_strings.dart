@@ -21,4 +21,7 @@ abstract class AppStrings {
   static final readingSectionPracticeAppbarTitle =
       "readingSectionPracticeAppbarTitle".tr();
   static final speakingQuesiton = "speakingQuesiton".tr();
+  static final mcQuestionReadMoreText = "mcQuestionReadMoreText".tr();
+  static final mcQuestionShowLessText = "mcQuestionShowLessText".tr();
+  static final mcQuestionText = "mcQuestionText".tr();
 }
