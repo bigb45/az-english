@@ -76,4 +76,11 @@ class TextStyles {
     fontSize: 14.sp,
     fontWeight: FontWeight.w700,
   );
+
+  static TextStyle wordChipTextStyle = TextStyle(
+    color: Palette.primaryText,
+    fontFamily: 'Inter',
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w500,
+  );
 }

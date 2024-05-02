@@ -116,16 +116,7 @@ class Components extends StatelessWidget {
                     SizedBox(height: 20.h),
                     WordChip(
                       onPressed: () {},
-                      child: Text(
-                        "word",
-                        style: TextStyle(
-                          color: Palette.primaryText,
-                          fontFamily: 'Inter',
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+                      text: "word",
                     ),
                     SizedBox(height: 20.h),
                     const ResultCard(
