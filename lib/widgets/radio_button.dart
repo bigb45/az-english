@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 class RadioGroup extends StatefulWidget {
   final Function(RadioItemData) onChanged;
   final List<RadioItemData> options;
+  final RadioItemData? selectedOption;
   const RadioGroup({
     super.key,
     required this.onChanged,
     required this.options,
+    required this.selectedOption,
   });
 
   @override
@@ -15,12 +17,12 @@ class RadioGroup extends StatefulWidget {
 }
 
 class _RadioGroupState extends State<RadioGroup> {
-  late RadioItemData selectedOption;
+  late RadioItemData? selectedOption;
 
   @override
   void initState() {
-    selectedOption = widget.options[0];
     super.initState();
+    selectedOption = widget.selectedOption;
   }
 
   @override
@@ -32,7 +34,8 @@ class _RadioGroupState extends State<RadioGroup> {
           RadioItemData option = widget.options[index];
           return ListTile(
             onTap: () {
-              widget.onChanged(option);
+              // TODO Do we need onchanged function here ?
+              // widget.onChanged(option);
               setState(() {
                 selectedOption = option;
               });
@@ -45,6 +48,8 @@ class _RadioGroupState extends State<RadioGroup> {
                 widget.onChanged(value!);
                 setState(() {
                   selectedOption = value;
+                  // TODO Do we need onchanged function here ?
+                  // widget.onChanged(selectedOption!);
                 });
               },
             ),

@@ -50,7 +50,8 @@ class TextStyles {
       color: Palette.primaryText,
       fontFamily: 'Inter',
       fontSize: 20.sp,
-      fontWeight: FontWeight.w400);
+      fontWeight: FontWeight.w400,
+      height: 1.5);
   static TextStyle readingPracticeSecondaryTextStyle = TextStyle(
       color: Palette.secondaryText,
       fontFamily: 'Inter',
@@ -76,7 +77,18 @@ class TextStyles {
     fontSize: 14.sp,
     fontWeight: FontWeight.w700,
   );
-
+  static TextStyle showMoreTextStyle = TextStyle(
+    color: Palette.primaryVariantShadow,
+    fontFamily: 'Inter',
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w400,
+  );
+  static TextStyle questionTextStyle = TextStyle(
+    color: Palette.primaryText,
+    fontFamily: 'Inter',
+    fontSize: 19.sp,
+    fontWeight: FontWeight.w600,
+  );
   static TextStyle wordChipTextStyle = TextStyle(
     color: Palette.primaryText,
     fontFamily: 'Inter',

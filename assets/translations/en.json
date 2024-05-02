@@ -14,5 +14,8 @@
   "readingSectionOnboardingText": "In this section you will read a paragraph out loud and afterwards,  you will be asked some questions regarding the passage",
   "startPracticingButton": "START PRACTICING",
   "readingSectionPracticeAppbarTitle": "Reading Practice",
-  "speakingQuesiton": "Tap the Microphone icon and read the highlighted section\nwhen you are ready"
+  "speakingQuesiton": "Tap the Microphone icon and read the highlighted section\nwhen you are ready",
+  "mcQuestionReadMoreText": "Show paragraph",
+  "mcQuestionShowLessText": "Hide paragraph",
+  "mcQuestionText": "Select the sentence that best matches the subject of the paragraph"
 }
