@@ -47,11 +47,14 @@ class _MultipleChoiceQuestionState extends State<MultipleChoiceQuestion> {
               ],
             ),
             RadioGroup(
-                onChanged: (newValue) {
-                  widget.onChanged(newValue);
-                  print("new value: ${newValue.title}");
-                },
-                options: widget.options),
+              onChanged: (newValue) {
+                widget.onChanged(newValue);
+                print("new value: ${newValue.title}");
+              },
+              options: widget.options,
+              //TODO
+              selectedOption: null,
+            ),
             SizedBox(height: Constants.padding20),
           ],
         ),
