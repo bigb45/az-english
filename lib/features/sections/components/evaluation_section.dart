@@ -9,27 +9,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EvaluateAnswer extends StatefulWidget {
   final VoidCallback onPressed;
-  final EvaluationState? state;
-  const EvaluateAnswer({super.key, required this.onPressed, this.state});
+  final EvaluationState state;
+  const EvaluateAnswer(
+      {super.key, required this.onPressed, this.state = EvaluationState.empty});
 
   @override
   State<EvaluateAnswer> createState() => _EvaluateAnswerState();
 }
 
 class _EvaluateAnswerState extends State<EvaluateAnswer> {
-  EvaluationState evaulationState = EvaluationState.empty;
-  @override
-  void initState() {
-    super.initState();
-    evaulationState = widget.state ?? EvaluationState.empty;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       height: 130.h,
-      color: switch (evaulationState) {
+      color: switch (widget.state) {
         EvaluationState.correct => Palette.primaryFill,
         EvaluationState.incorrect => Palette.errorFill,
         _ => Palette.secondary,
@@ -42,13 +36,13 @@ class _EvaluateAnswerState extends State<EvaluateAnswer> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-                switch (evaulationState) {
+                switch (widget.state) {
                   EvaluationState.correct => "Good Job!",
                   EvaluationState.incorrect => "Try Again!",
                   _ => "",
                 },
                 style: TextStyles.bodyLarge.copyWith(
-                    color: switch (evaulationState) {
+                    color: switch (widget.state) {
                   EvaluationState.correct => Palette.primary,
                   EvaluationState.incorrect => Palette.error,
                   _ => Palette.secondary,
@@ -56,18 +50,19 @@ class _EvaluateAnswerState extends State<EvaluateAnswer> {
             Button(
               onPressed: () {
                 widget.onPressed();
-                setState(() {
-                  evaulationState = Random().nextBool()
-                      ? EvaluationState.correct
-                      : EvaluationState.incorrect;
-                });
+
+                // setState(() {
+                //   evaulationState = Random().nextBool()
+                //       ? EvaluationState.correct
+                //       : EvaluationState.incorrect;
+                // });
               },
-              type: switch (evaulationState) {
+              type: switch (widget.state) {
                 EvaluationState.correct => ButtonType.primary,
                 EvaluationState.incorrect => ButtonType.error,
                 _ => ButtonType.primaryVariant,
               },
-              text: switch (evaulationState) {
+              text: switch (widget.state) {
                 EvaluationState.empty => "check",
                 _ => "continue",
               },

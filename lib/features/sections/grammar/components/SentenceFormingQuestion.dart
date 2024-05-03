@@ -12,8 +12,12 @@ class SentenceFormingQuestion extends StatefulWidget {
   // TODO: make the words draggable, maybe not
   final String fullSentence;
   final String words;
+  final Function(String) onChanged;
   const SentenceFormingQuestion(
-      {super.key, required this.fullSentence, required this.words});
+      {super.key,
+      required this.fullSentence,
+      required this.words,
+      required this.onChanged});
 
   @override
   State<SentenceFormingQuestion> createState() =>
@@ -89,6 +93,11 @@ class _SentenceFormingQuestionState extends State<SentenceFormingQuestion> {
                                     setState(() {
                                       orderedWords.remove(word);
                                       word.isSelected = false;
+                                      widget.onChanged(
+                                        orderedWords
+                                            .map((e) => e.text)
+                                            .join(" "),
+                                      );
                                     });
                                   },
                                   text: word.text,
@@ -112,6 +121,9 @@ class _SentenceFormingQuestionState extends State<SentenceFormingQuestion> {
             setState(() {
               orderedWords.add(value);
               value.isSelected = true;
+              widget.onChanged(
+                orderedWords.map((e) => e.text).join(" "),
+              );
             });
             print(
               orderedWords.map((e) => e.text).join(

@@ -61,7 +61,11 @@ class MainApp extends StatelessWidget {
         title: 'EZ English',
         theme: Palette.lightModeAppTheme,
         // home: const Components(),
-        home: const GrammarPractice(),
+        home: const GrammarPractice(
+          fullSentence: "The dog jumps over the fence",
+          options:
+              "the dog jumps over fence the under jumped jumping above below",
+        ),
       ),
       // ),
     );
