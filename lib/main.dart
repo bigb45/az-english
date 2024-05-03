@@ -61,7 +61,7 @@ class MainApp extends StatelessWidget {
         title: 'EZ English',
         theme: Palette.lightModeAppTheme,
         // home: const Components(),
-        home: const ReadingPractice(),
+        home: const GrammarPractice(),
       ),
       // ),
     );

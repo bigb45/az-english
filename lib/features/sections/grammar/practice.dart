@@ -59,9 +59,10 @@ class _GrammarPracticeState extends State<GrammarPractice> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    DragAndDropQuestion(
+                    SentenceFormingQuestion(
                       fullSentence: "The dog jumps over the fence",
-                      words: "The jumps dog fence dogs jumped over under the",
+                      words:
+                          "The jumps dog fence dogs jumped over under the jumped over under the",
                     )
                   ],
                 ),

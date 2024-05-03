@@ -7,25 +7,27 @@ import 'package:ez_english/widgets/word_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class DragAndDropQuestion extends StatefulWidget {
+class SentenceFormingQuestion extends StatefulWidget {
   // TODO: fix divider and wrap alignment
-  // TODO: make the words draggable
+  // TODO: make the words draggable, maybe not
   final String fullSentence;
   final String words;
-  const DragAndDropQuestion(
+  const SentenceFormingQuestion(
       {super.key, required this.fullSentence, required this.words});
 
   @override
-  State<DragAndDropQuestion> createState() => _DragAndDropQuestionState();
+  State<SentenceFormingQuestion> createState() =>
+      _SentenceFormingQuestionState();
 }
 
-class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
+class _SentenceFormingQuestionState extends State<SentenceFormingQuestion> {
   late List<WordChipString> words;
   @override
   void initState() {
     super.initState();
     words =
         widget.words.split(" ").map((word) => WordChipString(word)).toList();
+    words.shuffle();
   }
 
   List<WordChipString> orderedWords = [];
@@ -34,55 +36,72 @@ class _DragAndDropQuestionState extends State<DragAndDropQuestion> {
     return Column(
       children: [
         Container(
+          constraints: BoxConstraints(minHeight: 40.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Place the words in their correct order",
                   style: TextStyles.bodyLarge),
-              Column(
+              Stack(
                 children: [
-                  Container(
-                    width: double.infinity,
-                    // height: 40.w,
-                    child: Wrap(
-                      alignment: WrapAlignment.start,
-                      runSpacing: Constants.padding20,
-                      children: orderedWords.map((word) {
-                        return Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: Constants.padding4),
-                            child: WordChip(
-                              onPressed: () {
-                                setState(() {
-                                  orderedWords.remove(word);
-                                  word.isSelected = false;
-                                });
-                              },
-                              text: word.text,
-                            ));
-                      }).toList(),
+                  Positioned(
+                    top: 40.w,
+                    left: 0,
+                    right: 0,
+                    child: Divider(
+                      thickness: 2,
+                      color: Palette.secondaryStroke,
                     ),
                   ),
-                  Divider(
-                    thickness: 2,
-                    color: Palette.secondaryStroke,
+                  Positioned(
+                    top: 100.w,
+                    left: 0,
+                    right: 0,
+                    child: Divider(
+                      thickness: 2,
+                      color: Palette.secondaryStroke,
+                    ),
                   ),
-                  // Container(
-                  //   height: 40.w,
-                  //   child: Row(
-                  //     children: orderedWords.map((word) {
-                  //       return Padding(
-                  //         padding: EdgeInsets.symmetric(
-                  //             horizontal: Constants.padding4),
-                  //       );
-                  //     }).toList(),
-                  //   ),
-                  // ),
-                  // Divider(
-                  //   thickness: 2,
-                  //   color: Palette.secondaryStroke,
-                  // ),
+                  Positioned(
+                    top: 160.w,
+                    left: 0,
+                    right: 0,
+                    child: Divider(
+                      thickness: 2,
+                      color: Palette.secondaryStroke,
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        height: 200.w,
+                        width: double.infinity,
+                        child: Wrap(
+                          alignment: WrapAlignment.start,
+                          runSpacing: Constants.padding20,
+                          children: orderedWords.map((word) {
+                            return Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: Constants.padding4),
+                                child: WordChip(
+                                  onPressed: () {
+                                    setState(() {
+                                      orderedWords.remove(word);
+                                      word.isSelected = false;
+                                    });
+                                  },
+                                  text: word.text,
+                                ));
+                          }).toList(),
+                        ),
+                      ),
+                      // Divider(
+                      //   thickness: 2,
+                      //   color: Palette.secondaryStroke,
+                      // ),
+                    ],
+                  ),
                 ],
               )
             ],
