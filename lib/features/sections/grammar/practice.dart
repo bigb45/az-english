@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
-import 'package:ez_english/features/sections/grammar/components/drag_and_drop_question.dart';
+import 'package:ez_english/features/sections/grammar/components/sentence_forming_question.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
@@ -15,13 +15,21 @@ import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class GrammarPractice extends StatefulWidget {
-  const GrammarPractice({super.key});
+  // TODO: make sure divider is aligned properly
+
+  // TODO:
+  final String fullSentence;
+  final String options;
+  const GrammarPractice(
+      {super.key, required this.fullSentence, required this.options});
 
   @override
   State<GrammarPractice> createState() => _GrammarPracticeState();
 }
 
 class _GrammarPracticeState extends State<GrammarPractice> {
+  String userAnswer = "";
+
   @override
   void initState() {
     super.initState();
@@ -53,16 +61,21 @@ class _GrammarPracticeState extends State<GrammarPractice> {
       ),
       body: Column(
         children: [
-          const Expanded(
+          Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    const ProgressBar(value: 20),
                     SentenceFormingQuestion(
-                      fullSentence: "The dog jumps over the fence",
-                      words:
-                          "The jumps dog fence dogs jumped over under the jumped over under the",
+                      onChanged: (value) {
+                        setState(() {
+                          userAnswer = value;
+                        });
+                      },
+                      fullSentence: widget.fullSentence,
+                      words: widget.options,
                     )
                   ],
                 ),
@@ -72,7 +85,12 @@ class _GrammarPracticeState extends State<GrammarPractice> {
           EvaluateAnswer(
             state: answerState,
             onPressed: () {
-              print("Continuing");
+              setState(() {
+                answerState = widget.fullSentence.toLowerCase() ==
+                        userAnswer.toLowerCase()
+                    ? EvaluationState.correct
+                    : EvaluationState.incorrect;
+              });
             },
           )
         ],
