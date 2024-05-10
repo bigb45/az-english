@@ -8,14 +8,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ExpandableTextBox extends StatefulWidget {
   final bool isReadMore;
   final String readMoreText;
-  final bool isFocused;
+  bool? isFocused;
   final String questionText;
 
-  const ExpandableTextBox({
+  ExpandableTextBox({
     super.key,
     required this.isReadMore,
     required this.readMoreText,
-    required this.isFocused,
+    this.isFocused,
     required this.questionText,
   });
 
@@ -40,14 +40,14 @@ class _ExpandableTextBoxState extends State<ExpandableTextBox> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          isFocused = widget.isFocused;
+          widget.isFocused = true;
         });
       },
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.0),
           border: Border.all(
-            color: isFocused ? Colors.blue : Colors.grey,
+            color: widget.isFocused! ? Colors.blue : Colors.grey,
             width: 2.0,
           ),
         ),

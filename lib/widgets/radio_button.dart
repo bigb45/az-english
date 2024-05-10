@@ -34,9 +34,8 @@ class _RadioGroupState extends State<RadioGroup> {
           RadioItemData option = widget.options[index];
           return ListTile(
             onTap: () {
-              // TODO Do we need onchanged function here ?
-              // widget.onChanged(option);
               setState(() {
+                widget.onChanged(option);
                 selectedOption = option;
               });
             },
@@ -45,11 +44,9 @@ class _RadioGroupState extends State<RadioGroup> {
               value: option,
               groupValue: selectedOption,
               onChanged: (value) {
-                widget.onChanged(value!);
                 setState(() {
+                  widget.onChanged(value!);
                   selectedOption = value;
-                  // TODO Do we need onchanged function here ?
-                  // widget.onChanged(selectedOption!);
                 });
               },
             ),
