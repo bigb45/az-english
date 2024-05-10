@@ -13,16 +13,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
-class MCQuestion extends StatefulWidget {
-  const MCQuestion({
+class MultipleChoiceQuestion extends StatefulWidget {
+  const MultipleChoiceQuestion({
     super.key,
   });
 
   @override
-  State<MCQuestion> createState() => _MCQuestionState();
+  State<MultipleChoiceQuestion> createState() => _MultipleChoiceQuestionState();
 }
 
-class _MCQuestionState extends State<MCQuestion> {
+class _MultipleChoiceQuestionState extends State<MultipleChoiceQuestion> {
   bool _isFocused = false;
   bool _isReadMore = false;
   RadioItemData? selectedOption;
