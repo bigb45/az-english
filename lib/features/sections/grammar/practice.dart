@@ -1,23 +1,13 @@
-import 'dart:math';
-
-import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/grammar/components/sentence_forming_question.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
-import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
-import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
 class GrammarPractice extends StatefulWidget {
-  // TODO: make sure divider is aligned properly
-
-  // TODO:
   final String fullSentence;
   final String options;
   const GrammarPractice(
@@ -76,25 +66,38 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                       },
                       fullSentence: widget.fullSentence,
                       words: widget.options,
-                    )
+                      answerState: answerState,
+                    ),
                   ],
                 ),
               ),
             ),
           ),
           EvaluateAnswer(
-            state: answerState,
-            onPressed: () {
-              setState(() {
-                answerState = widget.fullSentence.toLowerCase() ==
-                        userAnswer.toLowerCase()
-                    ? EvaluationState.correct
-                    : EvaluationState.incorrect;
-              });
-            },
-          )
+              state: answerState,
+              onPressed: switch (answerState) {
+                EvaluationState.correct => () {
+                    print("continuing to next screen");
+                  },
+                EvaluationState.incorrect => () {
+                    evaluateAnswer();
+                    print("try again");
+                  },
+                EvaluationState.empty => () {
+                    evaluateAnswer();
+                  },
+              }),
         ],
       ),
     );
+  }
+
+  void evaluateAnswer() {
+    setState(() {
+      answerState =
+          widget.fullSentence.toLowerCase() == userAnswer.toLowerCase()
+              ? EvaluationState.correct
+              : EvaluationState.incorrect;
+    });
   }
 }
