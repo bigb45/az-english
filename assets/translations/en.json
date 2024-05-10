@@ -17,5 +17,8 @@
   "speakingQuesiton": "Tap the Microphone icon and read the highlighted section\nwhen you are ready",
   "mcQuestionReadMoreText": "Show paragraph",
   "mcQuestionShowLessText": "Hide paragraph",
-  "mcQuestionText": "Select the sentence that best matches the subject of the paragraph"
+  "mcQuestionText": "Select the sentence that best matches the subject of the paragraph",
+  "loginScreenTitile": "AZEnglish",
+  "createAccountButton": "create account",
+  "loginButton": "login"
 }

@@ -24,4 +24,7 @@ abstract class AppStrings {
   static final mcQuestionReadMoreText = "mcQuestionReadMoreText".tr();
   static final mcQuestionShowLessText = "mcQuestionShowLessText".tr();
   static final mcQuestionText = "mcQuestionText".tr();
+  static final loginScreenTitile = "loginScreenTitile".tr();
+  static final createAccountButton = "createAccountButton".tr();
+  static final loginButton = "loginButton".tr();
 }
