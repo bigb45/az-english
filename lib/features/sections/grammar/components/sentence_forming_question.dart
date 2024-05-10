@@ -1,4 +1,5 @@
 import 'package:ez_english/core/Constants.dart';
+import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/word_chip.dart';
@@ -8,12 +9,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SentenceFormingQuestion extends StatefulWidget {
   final String fullSentence;
   final String words;
+  final EvaluationState answerState;
   final Function(String) onChanged;
-  const SentenceFormingQuestion(
-      {super.key,
-      required this.fullSentence,
-      required this.words,
-      required this.onChanged});
+
+  const SentenceFormingQuestion({
+    super.key,
+    required this.fullSentence,
+    required this.words,
+    required this.answerState,
+    required this.onChanged,
+  });
 
   @override
   State<SentenceFormingQuestion> createState() =>
@@ -85,26 +90,25 @@ class _SentenceFormingQuestionState extends State<SentenceFormingQuestion> {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: Constants.padding4),
                                 child: WordChip(
-                                  onPressed: () {
-                                    setState(() {
-                                      orderedWords.remove(word);
-                                      word.isSelected = false;
-                                      widget.onChanged(
-                                        orderedWords
-                                            .map((e) => e.text)
-                                            .join(" "),
-                                      );
-                                    });
-                                  },
+                                  onPressed: widget.answerState ==
+                                          EvaluationState.correct
+                                      ? null
+                                      : () {
+                                          setState(() {
+                                            orderedWords.remove(word);
+                                            word.isSelected = false;
+                                            widget.onChanged(
+                                              orderedWords
+                                                  .map((e) => e.text)
+                                                  .join(" "),
+                                            );
+                                          });
+                                        },
                                   text: word.text,
                                 ));
                           }).toList(),
                         ),
                       ),
-                      // Divider(
-                      //   thickness: 2,
-                      //   color: Palette.secondaryStroke,
-                      // ),
                     ],
                   ),
                 ],
@@ -113,6 +117,7 @@ class _SentenceFormingQuestionState extends State<SentenceFormingQuestion> {
           ),
         ),
         WordOptions(
+          answerState: widget.answerState,
           onWordSelected: (value) {
             setState(() {
               orderedWords.add(value);
@@ -121,11 +126,11 @@ class _SentenceFormingQuestionState extends State<SentenceFormingQuestion> {
                 orderedWords.map((e) => e.text).join(" "),
               );
             });
-            print(
-              orderedWords.map((e) => e.text).join(
-                    " ",
-                  ),
-            );
+            // print(
+            //   orderedWords.map((e) => e.text).join(
+            //         " ",
+            //       ),
+            // );
           },
           selectedWords: orderedWords,
           words: words,
@@ -139,12 +144,13 @@ class WordOptions extends StatefulWidget {
   final List<WordChipString> words;
   final List<WordChipString> selectedWords;
   final Function(WordChipString) onWordSelected;
-  const WordOptions({
-    super.key,
-    required this.words,
-    required this.onWordSelected,
-    required this.selectedWords,
-  });
+  final EvaluationState answerState;
+  const WordOptions(
+      {super.key,
+      required this.words,
+      required this.onWordSelected,
+      required this.selectedWords,
+      required this.answerState});
 
   @override
   State<WordOptions> createState() => _WordOptionsState();
@@ -162,7 +168,8 @@ class _WordOptionsState extends State<WordOptions> {
               padding: EdgeInsets.symmetric(vertical: Constants.padding4),
               child: WordChip(
                 isSelected: word.isSelected,
-                onPressed: word.isSelected
+                onPressed: word.isSelected ||
+                        widget.answerState == EvaluationState.correct
                     ? null
                     : () {
                         widget.onWordSelected(word);
