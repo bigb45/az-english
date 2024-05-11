@@ -39,13 +39,12 @@ class _WritingPracticeState extends State<WritingPractice> {
       //   print("$currentWord");
       // });
       // TODO: set voice to female voice
-      await flutterTts.setSharedInstance(true);
 
-      await flutterTts.setLanguage('en-US');
-      await flutterTts.setSpeechRate(0.5);
-      await flutterTts.setVolume(1.0);
-      await flutterTts.setPitch(0.5);
-      await flutterTts.setVoice({"name": "Karen", "locale": "en-AU"});
+      // await flutterTts.setLanguage('en-US');
+      // await flutterTts.setSpeechRate(0.5);
+      // await flutterTts.setVolume(1.0);
+      // await flutterTts.setPitch(0.5);
+      // await flutterTts.setVoice({"name": "Karen", "locale": "en-AU"});
       flutterTts.setStartHandler(() {
         setState(() {
           isSpeaking = true;
@@ -56,6 +55,17 @@ class _WritingPracticeState extends State<WritingPractice> {
           isSpeaking = false;
         });
       };
+
+      await flutterTts.setSharedInstance(true);
+      await flutterTts.setIosAudioCategory(
+          IosTextToSpeechAudioCategory.playback,
+          [
+            IosTextToSpeechAudioCategoryOptions.allowBluetooth,
+            IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
+            IosTextToSpeechAudioCategoryOptions.mixWithOthers,
+            IosTextToSpeechAudioCategoryOptions.defaultToSpeaker
+          ],
+          IosTextToSpeechAudioMode.defaultMode);
     }
 
     configureTts();
