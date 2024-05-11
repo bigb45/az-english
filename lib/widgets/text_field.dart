@@ -7,6 +7,7 @@ class CustomTextField extends StatefulWidget {
   final FocusNode? focusNode;
   final String? hintText;
   final int maxLines;
+  final bool isFocused;
 
   const CustomTextField({
     super.key,
@@ -14,6 +15,7 @@ class CustomTextField extends StatefulWidget {
     this.focusNode,
     this.hintText,
     this.maxLines = 1,
+    this.isFocused = false,
   });
 
   @override
@@ -21,57 +23,72 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
+  bool? _isFocused;
+  @override
+  void initState() {
+    _isFocused = widget.isFocused;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: widget.maxLines,
-      focusNode: widget.focusNode,
-      controller: widget.controller,
-      enabled: true,
-      style: TextStyle(
-        color: Palette.primaryText,
-        fontFamily: 'Inter',
-        fontSize: 14.sp,
-        fontWeight: FontWeight.w700,
-      ),
-      decoration: InputDecoration(
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16.r),
-          borderSide: const BorderSide(
-            width: 2,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16.r),
-          borderSide: const BorderSide(
-            color: Palette.secondaryStroke,
-            width: 2,
-          ),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16.r),
-          borderSide: const BorderSide(
-            color: Palette.error,
-            width: 2,
-          ),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16.r),
-          borderSide: const BorderSide(
-            color: Palette.secondaryVariantStroke,
-            width: 2,
-          ),
-        ),
-        hintStyle: TextStyle(
-          color: Palette.secondaryText,
+    return Focus(
+      onFocusChange: (value) {
+        setState(() {
+          _isFocused = value;
+        });
+      },
+      child: TextFormField(
+        maxLines: widget.maxLines,
+        focusNode: widget.focusNode,
+        controller: widget.controller,
+        enabled: true,
+        style: TextStyle(
+          color: Palette.primaryText,
           fontFamily: 'Inter',
           fontSize: 14.sp,
           fontWeight: FontWeight.w700,
         ),
-        hintText: widget.hintText ?? "Enter text",
+        decoration: InputDecoration(
+          filled: _isFocused! ? false : true,
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: const BorderSide(
+              width: 2,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: const BorderSide(
+              color: Palette.secondaryStroke,
+              width: 2,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: const BorderSide(
+              color: Palette.error,
+              width: 2,
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: const BorderSide(
+              color: Palette.secondaryVariantStroke,
+              width: 2,
+            ),
+          ),
+          hintStyle: TextStyle(
+            color: Palette.secondaryText,
+            fontFamily: 'Inter',
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w700,
+          ),
+          hintText: widget.hintText ?? "Enter text",
+        ),
       ),
     );
   }
