@@ -27,49 +27,80 @@ class WritingPractice extends StatefulWidget {
 }
 
 class _WritingPracticeState extends State<WritingPractice> {
-  FlutterTts flutterTts = FlutterTts();
+  late FlutterTts flutterTts;
   bool isSpeaking = false;
+
+  configureTts() async {
+    flutterTts = FlutterTts();
+
+    // flutterTts.setProgressHandler((_, __, ___, currentWord) {
+    //   print("$currentWord");
+    // });
+    // TODO: set voice to female voice
+
+    // await flutterTts.setLanguage('en-US');
+    // await flutterTts.setSpeechRate(0.5);
+    // await flutterTts.setVolume(1.0);
+    // await flutterTts.setPitch(0.5);
+    // await flutterTts.setVoice({"name": "Karen", "locale": "en-AU"});
+
+    flutterTts = FlutterTts();
+    await flutterTts.awaitSpeakCompletion(true);
+
+    flutterTts.setStartHandler(() {
+      setState(() {
+        print("Playing");
+      });
+    });
+
+    flutterTts.setCompletionHandler(() {
+      setState(() {
+        print("Complete");
+      });
+    });
+
+    flutterTts.setCancelHandler(() {
+      setState(() {
+        print("Cancel");
+      });
+    });
+
+    flutterTts.setErrorHandler((message) {
+      setState(() {
+        print("Error: $message");
+      });
+    });
+
+    // flutterTts.setStartHandler(() {
+    //   setState(() {
+    //     isSpeaking = true;
+    //   });
+    // });
+    // flutterTts.completionHandler = () {
+    //   setState(() {
+    //     isSpeaking = false;
+    //   });
+    // };
+
+    // await flutterTts.setSharedInstance(true);
+    // await flutterTts.setIosAudioCategory(
+    //     IosTextToSpeechAudioCategory.playback,
+    //     [
+    //       IosTextToSpeechAudioCategoryOptions.allowBluetooth,
+    //       IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
+    //       IosTextToSpeechAudioCategoryOptions.mixWithOthers,
+    //       IosTextToSpeechAudioCategoryOptions.defaultToSpeaker
+    //     ],
+    //     IosTextToSpeechAudioMode.defaultMode);
+  }
+
   @override
   void initState() {
-    Future<void> configureTts() async {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        FlutterStatusbarcolor.setStatusBarColor(Colors.white);
-      });
-      // flutterTts.setProgressHandler((_, __, ___, currentWord) {
-      //   print("$currentWord");
-      // });
-      // TODO: set voice to female voice
-
-      // await flutterTts.setLanguage('en-US');
-      // await flutterTts.setSpeechRate(0.5);
-      // await flutterTts.setVolume(1.0);
-      // await flutterTts.setPitch(0.5);
-      // await flutterTts.setVoice({"name": "Karen", "locale": "en-AU"});
-      flutterTts.setStartHandler(() {
-        setState(() {
-          isSpeaking = true;
-        });
-      });
-      flutterTts.completionHandler = () {
-        setState(() {
-          isSpeaking = false;
-        });
-      };
-
-      await flutterTts.setSharedInstance(true);
-      await flutterTts.setIosAudioCategory(
-          IosTextToSpeechAudioCategory.playback,
-          [
-            IosTextToSpeechAudioCategoryOptions.allowBluetooth,
-            IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
-            IosTextToSpeechAudioCategoryOptions.mixWithOthers,
-            IosTextToSpeechAudioCategoryOptions.defaultToSpeaker
-          ],
-          IosTextToSpeechAudioMode.defaultMode);
-    }
-
-    configureTts();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FlutterStatusbarcolor.setStatusBarColor(Colors.white);
+    });
+    configureTts();
   }
 
   void speakText(String text) async {
@@ -118,6 +149,7 @@ class _WritingPracticeState extends State<WritingPractice> {
                       padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: ProgressBar(value: 20),
                     ),
+                    // todo: pass tts state to dictation question to control the audio playback (play pause)
                     DictationQuestion(
                       controller: _controller,
                       text: text,
