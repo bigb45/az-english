@@ -20,5 +20,9 @@
   "mcQuestionText": "Select the sentence that best matches the subject of the paragraph",
   "loginScreenTitile": "AZEnglish",
   "createAccountButton": "create account",
-  "loginButton": "login"
+  "loginButton": "login",
+  "studentName": "Student Name",
+  "parentPhoneNumber": "Parent Phone Number",
+  "emailAddress": "Email Address",
+  "password": "Password"
 }

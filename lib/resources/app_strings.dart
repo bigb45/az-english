@@ -27,4 +27,8 @@ abstract class AppStrings {
   static final loginScreenTitile = "loginScreenTitile".tr();
   static final createAccountButton = "createAccountButton".tr();
   static final loginButton = "loginButton".tr();
+  static final studentName = "studentName".tr();
+  static final parentPhoneNumber = "parentPhoneNumber".tr();
+  static final emailAddress = "emailAddress".tr();
+  static final password = "password".tr();
 }
