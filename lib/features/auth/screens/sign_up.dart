@@ -25,14 +25,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-      ),
       body: Padding(
         padding: EdgeInsets.all(Constants.padding12),
         child: SingleChildScrollView(
           child: Column(
             children: [
+              Constants.gapAppBarH,
               Text(
                 AppStrings.loginScreenTitile,
                 style:

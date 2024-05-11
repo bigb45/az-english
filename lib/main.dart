@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:ez_english/features/auth/screens/sign_up.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
 import 'package:ez_english/features/sections/grammar/practice.dart';
 import 'package:ez_english/features/sections/reading/practice.dart';
@@ -60,7 +61,7 @@ class MainApp extends StatelessWidget {
 
         title: 'EZ English',
         theme: Palette.lightModeAppTheme,
-        home: const ReadingPractice(),
+        home: const SignUpScreen(),
         // home: const GrammarPractice(
         //   fullSentence: "The dog jumps over the fence",
         //   options:
