@@ -103,6 +103,12 @@ class _WritingPracticeState extends State<WritingPractice> {
     configureTts();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    flutterTts.stop();
+  }
+
   void speakText(String text) async {
     await flutterTts.speak(text);
   }

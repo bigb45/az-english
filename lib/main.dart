@@ -60,7 +60,7 @@ class MainApp extends StatelessWidget {
 
         title: 'EZ English',
         theme: Palette.lightModeAppTheme,
-        home: const ReadingPractice(),
+        home: const WritingPractice(),
         // home: const GrammarPractice(
         //   fullSentence: "The dog jumps over the fence",
         //   options:
