@@ -1,8 +1,11 @@
+// ignore_for_file: avoid_print
+
 import 'dart:math';
 
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/grammar/practice.dart';
+import 'package:ez_english/features/sections/writing/components/dictation_question.dart';
 import 'package:ez_english/features/sections/writing/components/multiple_choice_question.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -36,10 +39,12 @@ class _WritingPracticeState extends State<WritingPractice> {
       //   print("$currentWord");
       // });
       // TODO: set voice to female voice
-      await flutterTts.setLanguage('en-US');
-      await flutterTts.setSpeechRate(0.5);
-      await flutterTts.setVolume(1.0);
-      await flutterTts.setPitch(0.5);
+
+      // await flutterTts.setLanguage('en-US');
+      // await flutterTts.setSpeechRate(0.5);
+      // await flutterTts.setVolume(1.0);
+      // await flutterTts.setPitch(0.5);
+      // await flutterTts.setVoice({"name": "Karen", "locale": "en-AU"});
       flutterTts.setStartHandler(() {
         setState(() {
           isSpeaking = true;
@@ -50,6 +55,17 @@ class _WritingPracticeState extends State<WritingPractice> {
           isSpeaking = false;
         });
       };
+
+      await flutterTts.setSharedInstance(true);
+      await flutterTts.setIosAudioCategory(
+          IosTextToSpeechAudioCategory.playback,
+          [
+            IosTextToSpeechAudioCategoryOptions.allowBluetooth,
+            IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
+            IosTextToSpeechAudioCategoryOptions.mixWithOthers,
+            IosTextToSpeechAudioCategoryOptions.defaultToSpeaker
+          ],
+          IosTextToSpeechAudioMode.defaultMode);
     }
 
     configureTts();
@@ -102,25 +118,25 @@ class _WritingPracticeState extends State<WritingPractice> {
                       padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: ProgressBar(value: 20),
                     ),
-                    // DictationQuestion(
-                    //   controller: _controller,
-                    //   text: text,
-                    //   flutterTts: flutterTts,
-                    // ),
-                    MultipleChoiceQuestion(
-                      question:
-                          "Select the sentence that best describes the image above",
-                      image: "assets/images/writing_question_image.png",
-                      options: [
-                        RadioItemData(title: "A Backpack", value: "1"),
-                        RadioItemData(title: "A Leather Purse", value: "2"),
-                        RadioItemData(title: "A Suitcase", value: "3"),
-                        RadioItemData(title: "A Shopping Bag", value: "4"),
-                      ],
-                      onChanged: (value) {
-                        selectedOption = value;
-                      },
+                    DictationQuestion(
+                      controller: _controller,
+                      text: text,
+                      flutterTts: flutterTts,
                     ),
+                    // MultipleChoiceQuestion(
+                    //   question:
+                    //       "Select the sentence that best describes the image above",
+                    //   image: "assets/images/writing_question_image.png",
+                    //   options: [
+                    //     RadioItemData(title: "A Backpack", value: "1"),
+                    //     RadioItemData(title: "A Leather Purse", value: "2"),
+                    //     RadioItemData(title: "A Suitcase", value: "3"),
+                    //     RadioItemData(title: "A Shopping Bag", value: "4"),
+                    //   ],
+                    //   onChanged: (value) {
+                    //     selectedOption = value;
+                    //   },
+                    // ),
                   ],
                 ),
               ),
