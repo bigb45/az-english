@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/sections/reading/components/mcq.dart';
+import 'package:ez_english/features/sections/reading/components/multiple-choice%20question.dart';
 import 'package:ez_english/features/sections/reading/components/speaking_question.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -74,7 +74,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                       padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: ProgressBar(value: 20),
                     ),
-                    MCQuestion(),
+                    MultipleChoiceQuestion(),
                   ],
                 ),
               ),
