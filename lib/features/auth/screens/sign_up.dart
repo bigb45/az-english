@@ -16,10 +16,10 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final Map<String, TextEditingController> textFieldMap = {
-    "Student Name": TextEditingController(),
-    "Parent Phone Number": TextEditingController(),
-    "Email Address": TextEditingController(),
-    "Password": TextEditingController(),
+    AppStrings.studentName: TextEditingController(),
+    AppStrings.parentPhoneNumber: TextEditingController(),
+    AppStrings.emailAddress: TextEditingController(),
+    AppStrings.password: TextEditingController(),
   };
 
   @override
