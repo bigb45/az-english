@@ -52,7 +52,8 @@ class _SignInScreenState extends State<SignInScreen> {
                   return Column(
                     children: [
                       SizedBox(
-                        height: 50.h,
+                        // giving custom height textfield causes text to be off-center
+                        // height: 50.h,
                         child: CustomTextField(
                           focusNode: FocusNode(),
                           hintText: hint,

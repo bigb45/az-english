@@ -54,7 +54,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   return Column(
                     children: [
                       SizedBox(
-                        height: 50.h,
+                        // height: 50.h,
                         child: CustomTextField(
                           hintText: hint,
                           controller: controller,
