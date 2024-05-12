@@ -95,4 +95,17 @@ class TextStyles {
     fontSize: 18.sp,
     fontWeight: FontWeight.w500,
   );
+  static TextStyle indicator = TextStyle(
+    color: Palette.primaryVariant,
+    fontFamily: 'Inter',
+    fontSize: 12.sp,
+    fontStyle: FontStyle.italic,
+    fontWeight: FontWeight.w700,
+  );
+  static TextStyle wordType = TextStyle(
+    color: Palette.secondaryText,
+    fontFamily: 'Inter',
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w700,
+  );
 }

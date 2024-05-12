@@ -20,6 +20,7 @@ import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:ez_english/widgets/result_card.dart';
 import 'package:ez_english/widgets/text_field.dart';
+import 'package:ez_english/widgets/word_list_tile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -63,8 +64,10 @@ class MainApp extends StatelessWidget {
 
         title: 'EZ English',
         theme: Palette.lightModeAppTheme,
-        home: const SignUpScreen(),
-        // home: const Components(),
+        // home: const SignUpScreen(),
+
+        home: const Components(),
+
         // home: const GrammarPractice(
         //   fullSentence: "The dog jumps over the fence",
         //   options:
@@ -224,6 +227,14 @@ class Components extends StatelessWidget {
                     const ProgressBar(
                       value: 20,
                     ),
+                    SizedBox(height: 20.h),
+                    WordListTile(
+                        word: "View",
+                        type: WordType.noun,
+                        isNew: false,
+                        onTap: () {
+                          print("navigate to word details");
+                        }),
                     SizedBox(height: 20.h),
                   ],
                 ),
