@@ -6,6 +6,8 @@ import 'package:ez_english/features/auth/screens/sign_up.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
 import 'package:ez_english/features/sections/grammar/practice.dart';
 import 'package:ez_english/features/sections/reading/practice.dart';
+import 'package:ez_english/features/sections/vocabulary/word_list.dart';
+import 'package:ez_english/features/sections/vocabulary/word_view.dart';
 import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:ez_english/firebase_options.dart';
 import 'package:ez_english/resources/app_strings.dart';
@@ -64,9 +66,21 @@ class MainApp extends StatelessWidget {
 
         title: 'EZ English',
         theme: Palette.lightModeAppTheme,
-        // home: const SignUpScreen(),
-
-        home: const Components(),
+        home: const WordListView(
+            pageTitle: "Vocabulary",
+            pageSubtitle: "Daily Conversations",
+            words: [
+              WordModel(
+                word: "View",
+                type: WordType.noun,
+                isNew: false,
+              ),
+              WordModel(
+                word: "Combine",
+                type: WordType.verb,
+                isNew: true,
+              ),
+            ]),
 
         // home: const GrammarPractice(
         //   fullSentence: "The dog jumps over the fence",
