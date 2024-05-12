@@ -4,11 +4,11 @@ import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class WordChip extends StatefulWidget {
+class WordChip extends StatelessWidget {
   final VoidCallback? onPressed;
   final String text;
-  bool isSelected;
-  WordChip({
+  final bool isSelected;
+  const WordChip({
     super.key,
     this.isSelected = false,
     required this.onPressed,
@@ -16,17 +16,10 @@ class WordChip extends StatefulWidget {
   });
 
   @override
-  State<WordChip> createState() => WordChipState();
-}
-
-class WordChipState extends State<WordChip> {
-  // var isSelected = false;
-
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        widget.onPressed == null ? null : widget.onPressed!();
+        onPressed == null ? null : onPressed!();
       },
       child: Flex(
         direction: Axis.horizontal,
@@ -36,9 +29,7 @@ class WordChipState extends State<WordChip> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(color: Palette.secondaryStroke, width: 2),
-              color: widget.isSelected
-                  ? Palette.secondaryStroke
-                  : Palette.secondary,
+              color: isSelected ? Palette.secondaryStroke : Palette.secondary,
               borderRadius: BorderRadius.circular(16.r),
               boxShadow: const [
                 BoxShadow(
@@ -53,8 +44,8 @@ class WordChipState extends State<WordChip> {
                   horizontal: Constants.padding8, vertical: Constants.padding8),
               child: Center(
                   child: Text(
-                widget.text,
-                style: widget.isSelected
+                text,
+                style: isSelected
                     ? TextStyles.wordChipTextStyle
                         .copyWith(color: Palette.secondaryStroke)
                     : TextStyles.wordChipTextStyle,

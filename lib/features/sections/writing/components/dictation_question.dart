@@ -1,6 +1,5 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/widgets/microphone_button.dart';
-import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';

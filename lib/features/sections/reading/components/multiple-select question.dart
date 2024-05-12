@@ -1,18 +1,9 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/resources/app_strings.dart';
-import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
-import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/checkbox.dart';
 import 'package:ez_english/widgets/expandable_text.dart';
-import 'package:ez_english/widgets/microphone_button.dart';
-import 'package:ez_english/widgets/progress_bar.dart';
-import 'package:ez_english/widgets/radio_button.dart';
-import 'package:ez_english/widgets/text_box.dart';
-import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
 class MultipleSelectQuestion extends StatefulWidget {
   const MultipleSelectQuestion({

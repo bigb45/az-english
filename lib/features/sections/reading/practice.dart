@@ -2,17 +2,14 @@ import 'dart:math';
 
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/sections/reading/components/multiple-choice%20question.dart';
-import 'package:ez_english/features/sections/reading/components/speaking_question.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
-import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
 class ReadingPractice extends StatefulWidget {
   const ReadingPractice({super.key});

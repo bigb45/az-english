@@ -3,11 +3,11 @@ import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ExpandableTextBox extends StatefulWidget {
   final bool isReadMore;
   final String readMoreText;
+  // TODO: remove this
   bool? isFocused;
   final String questionText;
 

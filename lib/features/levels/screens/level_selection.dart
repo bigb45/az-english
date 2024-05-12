@@ -3,7 +3,6 @@ import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_english/theme/palette.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LevelSelection extends StatefulWidget {
   const LevelSelection({Key? key}) : super(key: key);
@@ -22,9 +21,6 @@ class _LevelSelectionState extends State<LevelSelection> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,

@@ -1,21 +1,13 @@
 // ignore_for_file: avoid_print
 
-import 'dart:math';
-
-import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
-import 'package:ez_english/features/sections/grammar/practice.dart';
 import 'package:ez_english/features/sections/writing/components/dictation_question.dart';
-import 'package:ez_english/features/sections/writing/components/multiple_choice_question.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
-import 'package:ez_english/widgets/button.dart';
-import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
