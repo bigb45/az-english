@@ -1,7 +1,7 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
-import 'package:ez_english/widgets/word_list_tile.dart';
+import 'package:ez_english/features/sections/vocabulary/components/word_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

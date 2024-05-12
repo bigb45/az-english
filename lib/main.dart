@@ -1,8 +1,9 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, unused_import
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:ez_english/features/auth/screens/sign_in.dart';
 import 'package:ez_english/features/auth/screens/sign_up.dart';
+import 'package:ez_english/features/azure_tts_test.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
 import 'package:ez_english/features/sections/grammar/practice.dart';
 import 'package:ez_english/features/sections/reading/practice.dart';
@@ -22,7 +23,7 @@ import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:ez_english/widgets/result_card.dart';
 import 'package:ez_english/widgets/text_field.dart';
-import 'package:ez_english/widgets/word_list_tile.dart';
+import 'package:ez_english/features/sections/vocabulary/components/word_list_tile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -66,21 +67,23 @@ class MainApp extends StatelessWidget {
 
         title: 'EZ English',
         theme: Palette.lightModeAppTheme,
-        home: const WordListView(
-            pageTitle: "Vocabulary",
-            pageSubtitle: "Daily Conversations",
-            words: [
-              WordModel(
-                word: "View",
-                type: WordType.noun,
-                isNew: false,
-              ),
-              WordModel(
-                word: "Combine",
-                type: WordType.verb,
-                isNew: true,
-              ),
-            ]),
+        // home: const WordListView(
+        //     pageTitle: "Vocabulary",
+        //     pageSubtitle: "Daily Conversations",
+        //     words: [
+        //       WordModel(
+        //         word: "View",
+        //         type: WordType.noun,
+        //         isNew: false,
+        //       ),
+        //       WordModel(
+        //         word: "Combine",
+        //         type: WordType.verb,
+        //         isNew: true,
+        //       ),
+        //     ]),
+
+        home: const AzureTtsTest(),
 
         // home: const GrammarPractice(
         //   fullSentence: "The dog jumps over the fence",
