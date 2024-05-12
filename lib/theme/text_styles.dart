@@ -18,11 +18,13 @@ class TextStyles {
     fontWeight: FontWeight.w800,
     fontFamily: "Inter",
   );
+
   static TextStyle practiceCardMainText = TextStyle(
       color: Palette.secondary,
       fontFamily: 'Inter',
       fontSize: 20.sp,
       fontWeight: FontWeight.w700);
+
   static TextStyle practiceCardSecondaryText = TextStyle(
       color: Palette.primaryText,
       fontFamily: 'Inter',
@@ -107,5 +109,22 @@ class TextStyles {
     fontFamily: 'Inter',
     fontSize: 16.sp,
     fontWeight: FontWeight.w700,
+    height: 2,
+  );
+
+  static TextStyle vocabularyTerm = TextStyle(
+    color: Palette.primaryText,
+    fontFamily: 'Inter',
+    fontSize: 36.sp,
+    fontWeight: FontWeight.w700,
+    height: 2,
+  );
+
+  static TextStyle vocabularyExample = TextStyle(
+    color: Palette.blackColor,
+    fontFamily: 'Inter',
+    fontSize: 20.sp,
+    fontWeight: FontWeight.w700,
+    height: 2,
   );
 }
