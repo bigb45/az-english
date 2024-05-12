@@ -23,20 +23,18 @@ class _WritingPracticeState extends State<WritingPractice> {
   bool isSpeaking = false;
 
   configureTts() async {
-    flutterTts = FlutterTts();
-
     // flutterTts.setProgressHandler((_, __, ___, currentWord) {
     //   print("$currentWord");
     // });
     // TODO: set voice to female voice
 
-    // await flutterTts.setLanguage('en-US');
-    // await flutterTts.setSpeechRate(0.5);
-    // await flutterTts.setVolume(1.0);
-    // await flutterTts.setPitch(0.5);
+    flutterTts = FlutterTts();
+    await flutterTts.setLanguage('en-US');
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.setVolume(1.0);
+    await flutterTts.setPitch(0.5);
     // await flutterTts.setVoice({"name": "Karen", "locale": "en-AU"});
 
-    flutterTts = FlutterTts();
     await flutterTts.awaitSpeakCompletion(true);
 
     flutterTts.setStartHandler(() {

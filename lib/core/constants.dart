@@ -15,6 +15,8 @@ class Constants {
   static final gapH28 = SizedBox(height: 28.h);
   static final gapH36 = SizedBox(height: 36.h);
 
+  static final gapAppBarH = SizedBox(height: 56.h);
+
   static final padding30 = 30.w;
   static final padding20 = 20.w;
   static final padding12 = 12.w;

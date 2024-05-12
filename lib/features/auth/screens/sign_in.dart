@@ -7,17 +7,16 @@ import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignInScreenState extends State<SignInScreen> {
+  final usedGap = Constants.gapH16;
   final Map<String, TextEditingController> textFieldMap = {
-    AppStrings.studentName: TextEditingController(),
-    AppStrings.parentPhoneNumber: TextEditingController(),
     AppStrings.emailAddress: TextEditingController(),
     AppStrings.password: TextEditingController(),
   };
@@ -36,18 +35,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 style:
                     TextStyles.cardHeader.copyWith(color: Palette.primaryText),
               ),
-              Constants.gapH8,
+              Constants.gapH36,
               // TODO change logo
               Image.asset(
                 "assets/images/test_icon.png",
               ),
-
-              Constants.gapH8,
+              usedGap,
               ListView.builder(
                 padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: 4, // Number of text fields you want
+                itemCount: 2, // Number of text fields you want
                 itemBuilder: (context, index) {
                   final hint = textFieldMap.keys.elementAt(index);
                   final controller = textFieldMap[hint]!;
@@ -56,28 +54,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 50.h,
                         child: CustomTextField(
+                          focusNode: FocusNode(),
                           hintText: hint,
                           controller: controller,
                         ),
                       ),
-                      Constants
-                          .gapH8, // Assuming Constants.gapH8 is a SizedBox with height 8
+                      usedGap, // Assuming Constants.gapH8 is a SizedBox with height 8
                     ],
                   );
                 },
               ),
               Button(
-                text: AppStrings.createAccountButton,
+                text: AppStrings.loginButton,
                 onPressed: () {},
                 type: ButtonType.primary,
               ),
-              Constants.gapH12,
+              usedGap,
               Button(
-                text: AppStrings.loginButton,
+                text: AppStrings.createAccountButton,
                 onPressed: () {},
                 type: ButtonType.secondary,
               ),
-              Constants.gapH12,
+              usedGap,
+              Text(
+                "RESET PASSWORD",
+                style: TextStyles.cardText
+                    .copyWith(decoration: TextDecoration.underline),
+              )
             ],
           ),
         ),
