@@ -29,7 +29,8 @@ class WordListTile extends StatelessWidget {
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: Constants.padding20, vertical: Constants.padding20),
+              horizontal: Constants.padding20,
+              vertical: isNew ? Constants.padding12 : Constants.padding20),
           child: Row(
             children: [
               Column(
@@ -59,7 +60,11 @@ class WordListTile extends StatelessWidget {
                         width: 10.w,
                       ),
                       // TODO: change this to a switch case
-                      Text(WordType.values[type.index].toString().split(".")[1],
+                      Text(
+                          switch (type) {
+                            WordType.noun => "Noun",
+                            WordType.verb => "Verb",
+                          },
                           style: TextStyles.wordType),
                     ],
                   ),
