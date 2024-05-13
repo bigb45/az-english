@@ -1,67 +1,58 @@
-// ignore_for_file: avoid_print, unused_local_variable
+// ignore_for_file: avoid_print
 
-import 'package:cloud_text_to_speech/cloud_text_to_speech.dart';
+import 'dart:convert';
+
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:http/http.dart' as http;
 
 class AzureTtsTest extends StatefulWidget {
   const AzureTtsTest({super.key});
-
   @override
   State<AzureTtsTest> createState() => _AzureTtsTestState();
 }
 
 class _AzureTtsTestState extends State<AzureTtsTest> {
   final _controller = TextEditingController();
+  final player = AudioPlayer();
+  final String apiKey = (dotenv.env['ELEVEN_LABS_API_KEY'] ?? "").toString();
 
-  // TODO: use post requests to get the audio file and play it back
-  // https://dev.to/noahvelasco/amplify-your-flutter-apps-with-elevenlabs-tts-api-a-simple-guide-5147
-  @override
-  void initState() {
-    TtsMicrosoft.init(
-        params: InitParamsMicrosoft(
-            subscriptionKey: "REDACTED", region: "westeurope"),
-        withLogs: true);
-    TtsUniversal.setProvider(TtsProviders.microsoft);
+  Future<void> playTextToSpeech(String text) async {
+    String voiceRachel =
+        '21m00Tcm4TlvDq8ikWAM'; //Rachel voice - change if you know another Voice ID
 
-    super.initState();
-  }
-
-  void speak(String text) async {
+    String url = 'https://api.elevenlabs.io/v1/text-to-speech/$voiceRachel';
     try {
-      final voicesResponse = await TtsUniversal.getVoices();
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'accept': 'audio/mpeg',
+          'xi-api-key': apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          "text": text,
+          "model_id": "eleven_monolingual_v1",
+          "voice_settings": {"stability": .15, "similarity_boost": .75}
+        }),
+      );
 
-      final voices = voicesResponse.voices;
-
-      print(voices.first.name);
-
-      final voice = voices
-          .where((element) => element.locale.code.startsWith("en-"))
-          .toList(growable: false)
-          .first;
-
-      //Generate Audio for a text
-      const text =
-          "Amazon, Microsoft and Google Text-to-Speech API are awesome";
-
-      final ttsParams = TtsParamsUniversal(
-          voice: voice,
-          audioFormat: AudioOutputFormatUniversal.mp3_64k,
-          text: text,
-          rate: 'slow', //optional
-          pitch: 'default' //optional
-          );
-
-      final ttsResponse = await TtsUniversal.convertTts(ttsParams);
-      print(ttsResponse.reason);
-//Get the audio bytes.
-      final audioBytes = ttsResponse.audio.buffer.asByteData();
-    } catch (e) {
-      print("Error: $e");
+      if (response.statusCode == 200) {
+        final bytes = response.bodyBytes;
+        await player.setAudioSource(MyCustomSource(bytes));
+        player.play();
+      } else {
+        print("Failed to load audio: ${response.statusCode}");
+      }
+    } catch (e, stackTrace) {
+      print("Error while playing audio: $e");
+      print(stackTrace);
     }
   }
 
@@ -96,7 +87,8 @@ class _AzureTtsTestState extends State<AzureTtsTest> {
             Button(
               type: ButtonType.primaryVariant,
               onPressed: () async {
-                speak(_controller.text);
+                await playTextToSpeech(_controller.text);
+
                 print("speaking: ${_controller.text}");
               },
               text: "Speak",
@@ -114,6 +106,24 @@ class _AzureTtsTestState extends State<AzureTtsTest> {
           ]),
         ),
       ),
+    );
+  }
+}
+
+class MyCustomSource extends StreamAudioSource {
+  final List<int> bytes;
+  MyCustomSource(this.bytes);
+
+  @override
+  Future<StreamAudioResponse> request([int? start, int? end]) async {
+    start ??= 0;
+    end ??= bytes.length;
+    return StreamAudioResponse(
+      sourceLength: bytes.length,
+      contentLength: end - start,
+      offset: start,
+      stream: Stream.value(bytes.sublist(start, end)),
+      contentType: 'audio/mpeg',
     );
   }
 }
