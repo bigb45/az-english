@@ -3,6 +3,7 @@ import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_english/theme/palette.dart';
+import 'package:routemaster/routemaster.dart';
 
 class LevelSelection extends StatefulWidget {
   const LevelSelection({Key? key}) : super(key: key);
@@ -13,6 +14,11 @@ class LevelSelection extends StatefulWidget {
 
 class _LevelSelectionState extends State<LevelSelection> {
   int _selectedIndex = 0;
+  void navigateToLevel({required int levelId}) {
+    print("navigating to $levelId");
+    Routemaster.of(context).push('/level/$levelId');
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -31,60 +37,80 @@ class _LevelSelectionState extends State<LevelSelection> {
         ),
       ),
       // TODO: place this inside a SingleChildScrollView
-      body: SizedBox(
-        child: Column(
-          children: [
-            // First row
-            Constants.gapH36,
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: [
-                  _buildCard(
+      body: SingleChildScrollView(
+        child: SizedBox(
+          child: Column(
+            children: [
+              // First row
+              Constants.gapH36,
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: [
+                    _buildCard(
+                        headerText: 'A1',
+                        cardText:
+                            "learn common everyday expressions and simple phrases",
+                        onTap: (levelId) {
+                          navigateToLevel(levelId: 1);
+                        }),
+                    Constants.gapW10,
+                    _buildCard(
                       headerText: 'A1',
                       cardText:
-                          "learn common everyday expressions and simple phrases"),
-                  Constants.gapW10,
-                  _buildCard(
-                      headerText: 'A1',
-                      cardText:
-                          "learn common everyday expressions and simple phrases"),
-                ],
+                          "learn common everyday expressions and simple phrases",
+                      onTap: (levelId) {
+                        navigateToLevel(levelId: 1);
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-            // Second row
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: [
-                  _buildCard(
+              // Second row
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: [
+                    _buildCard(
                       headerText: 'A1',
                       cardText:
-                          "learn common everyday expressions and simple phrases"),
-                  Constants.gapW10,
-                  _buildCard(
+                          "learn common everyday expressions and simple phrases",
+                      onTap: (levelId) {
+                        navigateToLevel(levelId: 1);
+                      },
+                    ),
+                    Constants.gapW10,
+                    _buildCard(
                       headerText: 'A1',
                       cardText:
-                          "learn common everyday expressions and simple phrases"),
-                ],
+                          "learn common everyday expressions and simple phrases",
+                      onTap: (levelId) {
+                        navigateToLevel(levelId: 1);
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-            // Third row
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildCard(
-                    headerText: 'A1',
-                    cardText:
-                        "learn common everyday expressions and simple phrases",
-                  ),
-                ],
+              // Third row
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildCard(
+                      headerText: 'A1',
+                      cardText:
+                          "learn common everyday expressions and simple phrases",
+                      onTap: (levelId) {
+                        navigateToLevel(levelId: 1);
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Constants.gapH36,
-          ],
+              Constants.gapH36,
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -111,9 +137,14 @@ class _LevelSelectionState extends State<LevelSelection> {
     );
   }
 
-  Widget _buildCard({required String headerText, required String cardText}) {
+  Widget _buildCard(
+      {required String headerText,
+      required String cardText,
+      required Function(int) onTap}) {
     return SelectableCard(
-      onPressed: () {},
+      onPressed: () {
+        onTap(1);
+      },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

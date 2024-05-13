@@ -38,7 +38,7 @@ class SelectableCardState extends State<SelectableCard> {
         });
       },
       onTap: () {
-        widget.onPressed;
+        widget.onPressed != null ? widget.onPressed!() : null;
       },
       child: widget.onPressed == null
           ? Container(

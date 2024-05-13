@@ -59,14 +59,15 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                   children: [
                     const ProgressBar(value: 20),
                     SentenceFormingQuestion(
+                      partialSentence: ["A"],
+                      fullSentence: widget.fullSentence,
+                      words: widget.options,
+                      answerState: answerState,
                       onChanged: (value) {
                         setState(() {
                           userAnswer = value;
                         });
                       },
-                      fullSentence: widget.fullSentence,
-                      words: widget.options,
-                      answerState: answerState,
                     ),
                   ],
                 ),

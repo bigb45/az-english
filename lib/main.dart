@@ -12,6 +12,7 @@ import 'package:ez_english/features/sections/vocabulary/word_view.dart';
 import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:ez_english/firebase_options.dart';
 import 'package:ez_english/resources/app_strings.dart';
+import 'package:ez_english/router.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
@@ -28,6 +29,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:routemaster/routemaster.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,15 +56,19 @@ Future<void> main() async {
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
+
   @override
   Widget build(BuildContext context) {
+    // this value will be initially false, after the user creates an account
+    // or logs in, it will be set to true and retreived from sharedPreferences
+    bool isLoggedIn = true;
     context.setLocale(const Locale('en'));
     return
         // AppProviders(
         //   child:
         ScreenUtilInit(
       designSize: const Size(390, 844),
-      builder: (_, child) => MaterialApp(
+      builder: (_, child) => MaterialApp.router(
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,
@@ -70,6 +76,12 @@ class MainApp extends StatelessWidget {
 
         title: 'EZ English',
         theme: Palette.lightModeAppTheme,
+
+        routerDelegate: RoutemasterDelegate(routesBuilder: (_) {
+          // ignore: dead_code
+          return isLoggedIn ? loggedInRoute : loggedOutRoute;
+        }),
+        routeInformationParser: const RoutemasterParser(),
         // home: const WordListView(
         //     pageTitle: "Vocabulary",
         //     pageSubtitle: "Daily Conversations",
@@ -86,7 +98,7 @@ class MainApp extends StatelessWidget {
         //       ),
         //     ]),
 
-        home: const AzureTtsTest(),
+        // home: Router(routerDelegate: R),
 
         // home: const GrammarPractice(
         //   fullSentence: "The dog jumps over the fence",
@@ -114,7 +126,9 @@ class Components extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Button(
-                      onPressed: () {},
+                      onPressed: () {
+                        Routemaster.of(context).push('/settings');
+                      },
                       type: ButtonType.primary,
                       child: Text(
                         AppStrings.continueButton,

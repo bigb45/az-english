@@ -8,12 +8,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SentenceFormingQuestion extends StatefulWidget {
   final String fullSentence;
+  // TODO: figure out how to make the same question incorporate partial sentences
+  final List<String>? partialSentence;
   final String words;
   final EvaluationState answerState;
   final Function(String) onChanged;
 
   const SentenceFormingQuestion({
     super.key,
+    this.partialSentence,
     required this.fullSentence,
     required this.words,
     required this.answerState,
@@ -27,6 +30,7 @@ class SentenceFormingQuestion extends StatefulWidget {
 
 class _SentenceFormingQuestionState extends State<SentenceFormingQuestion> {
   late List<WordChipString> words;
+
   @override
   void initState() {
     super.initState();
@@ -83,31 +87,37 @@ class _SentenceFormingQuestionState extends State<SentenceFormingQuestion> {
                         height: 200.w,
                         width: double.infinity,
                         child: Wrap(
-                          alignment: WrapAlignment.start,
-                          runSpacing: Constants.padding20,
-                          children: orderedWords.map((word) {
-                            return Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: Constants.padding4),
-                                child: WordChip(
-                                  onPressed: widget.answerState ==
-                                          EvaluationState.correct
-                                      ? null
-                                      : () {
-                                          setState(() {
-                                            orderedWords.remove(word);
-                                            word.isSelected = false;
-                                            widget.onChanged(
-                                              orderedWords
-                                                  .map((e) => e.text)
-                                                  .join(" "),
-                                            );
-                                          });
-                                        },
-                                  text: word.text,
-                                ));
-                          }).toList(),
-                        ),
+                            alignment: WrapAlignment.start,
+                            runSpacing: Constants.padding20,
+                            children: [
+                              Text(widget.partialSentence?[0] ?? "",
+                                  style: TextStyles.bodyLarge),
+                              ...orderedWords.map(
+                                (word) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: Constants.padding4),
+                                    child: WordChip(
+                                      onPressed: widget.answerState ==
+                                              EvaluationState.correct
+                                          ? null
+                                          : () {
+                                              setState(() {
+                                                orderedWords.remove(word);
+                                                word.isSelected = false;
+                                                widget.onChanged(
+                                                  orderedWords
+                                                      .map((e) => e.text)
+                                                      .join(" "),
+                                                );
+                                              });
+                                            },
+                                      text: word.text,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ]),
                       ),
                     ],
                   ),
