@@ -7,9 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
+import 'package:routemaster/routemaster.dart';
 
 class PracticeScreen extends StatefulWidget {
-  const PracticeScreen({Key? key}) : super(key: key);
+  // TODO: use levelId to fetch title and exercises for the level via viewmodel
+  final String levelId;
+  const PracticeScreen({
+    Key? key,
+    required this.levelId,
+  }) : super(key: key);
 
   @override
   State<PracticeScreen> createState() => _PracticeScreenState();
@@ -24,6 +30,10 @@ class _PracticeScreenState extends State<PracticeScreen> {
     });
 
     super.initState();
+  }
+
+  void navigateToSection({required String sectionId}) {
+    Routemaster.of(context).push('/section/$sectionId');
   }
 
   @override
@@ -67,21 +77,25 @@ class _PracticeScreenState extends State<PracticeScreen> {
                 child: Row(
                   children: [
                     _buildCard(
-                        headerText: AppStrings.readingSectionCardTitle,
-                        cardText:
-                            "learn common everyday expressions and simple phrases",
-                        imagePath: "assets/images/reading_section_card.svg",
-                        backgroundColor: const Color(0xFFFFA500),
-                        cardShadowColor: const Color(0xFFFFA500)),
+                      headerText: AppStrings.readingSectionCardTitle,
+                      cardText:
+                          "learn common everyday expressions and simple phrases",
+                      imagePath: "assets/images/reading_section_card.svg",
+                      backgroundColor: const Color(0xFFFFA500),
+                      cardShadowColor: const Color(0xFFFFA500),
+                      sectionId: "reading",
+                    ),
                     Constants.gapW10,
                     _buildCard(
-                        headerText:
-                            AppStrings.listeningAndWritingSectionCardTitle,
-                        cardText:
-                            "learn common everyday expressions and simple phrases",
-                        imagePath: "assets/images/listening_section_card.svg",
-                        backgroundColor: const Color(0xFF3498DB),
-                        cardShadowColor: const Color(0xFF3498DB)),
+                      headerText:
+                          AppStrings.listeningAndWritingSectionCardTitle,
+                      cardText:
+                          "learn common everyday expressions and simple phrases",
+                      imagePath: "assets/images/listening_section_card.svg",
+                      backgroundColor: const Color(0xFF3498DB),
+                      cardShadowColor: const Color(0xFF3498DB),
+                      sectionId: "listening",
+                    ),
                   ],
                 ),
               ),
@@ -91,21 +105,25 @@ class _PracticeScreenState extends State<PracticeScreen> {
                 child: Row(
                   children: [
                     _buildCard(
-                        headerText: AppStrings.vocabSectionCardTitle,
-                        cardText:
-                            "learn common everyday expressions and simple phrases",
-                        imagePath: "assets/images/vocabulary_section_card.svg",
-                        backgroundColor: const Color(0xFFECECEC),
-                        cardShadowColor: const Color(0xFFECECEC),
-                        secondaryText: true),
+                      headerText: AppStrings.vocabSectionCardTitle,
+                      cardText:
+                          "learn common everyday expressions and simple phrases",
+                      imagePath: "assets/images/vocabulary_section_card.svg",
+                      backgroundColor: const Color(0xFFECECEC),
+                      cardShadowColor: const Color(0xFFECECEC),
+                      secondaryText: true,
+                      sectionId: "vocabulary",
+                    ),
                     Constants.gapW10,
                     _buildCard(
-                        headerText: AppStrings.grammarSectionCardTitle,
-                        cardText:
-                            "learn common everyday expressions and simple phrases",
-                        imagePath: "assets/images/grammar_section_card.svg",
-                        backgroundColor: const Color(0xFF663399),
-                        cardShadowColor: const Color(0xFF663399)),
+                      headerText: AppStrings.grammarSectionCardTitle,
+                      cardText:
+                          "learn common everyday expressions and simple phrases",
+                      imagePath: "assets/images/grammar_section_card.svg",
+                      backgroundColor: const Color(0xFF663399),
+                      cardShadowColor: const Color(0xFF663399),
+                      sectionId: "grammar",
+                    ),
                   ],
                 ),
               ),
@@ -120,6 +138,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                       headerText: AppStrings.skillTestSectionCardTitle,
                       cardText:
                           "learn common everyday expressions and simple phrases",
+                      sectionId: "skill_test",
                     ),
                   ],
                 ),
@@ -135,13 +154,16 @@ class _PracticeScreenState extends State<PracticeScreen> {
     required String headerText,
     required String cardText,
     required Color backgroundColor,
+    required String sectionId,
     String? imagePath,
     bool secondaryText = false,
     Color? cardShadowColor,
   }) {
     return ExerciseCard(
       attempted: false,
-      onPressed: () {},
+      onPressed: () {
+        navigateToSection(sectionId: sectionId);
+      },
       cardBackgroundColor: backgroundColor,
       image: imagePath,
       cardShadowColor: cardShadowColor,

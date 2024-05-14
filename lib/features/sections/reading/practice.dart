@@ -19,7 +19,8 @@ class ReadingPractice extends StatefulWidget {
 }
 
 class _ReadingPracticeState extends State<ReadingPractice> {
-  void initState() {
+  @override
+  void initState() async {
     // setStatusBar to make the top side of the navbar with a different color since this is not supported for IOS in the default implementation of AppBar
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FlutterStatusbarcolor.setStatusBarColor(Palette.secondary);
@@ -32,10 +33,8 @@ class _ReadingPracticeState extends State<ReadingPractice> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 90.h,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: Palette.secondary,
-        elevation: 0,
         title: ListTile(
           contentPadding: const EdgeInsets.only(left: 0, right: 0),
           title: Text(
