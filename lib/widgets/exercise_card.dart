@@ -51,7 +51,7 @@ class ExerciseCardState extends State<ExerciseCard> {
         });
       },
       onTap: () {
-        widget.onPressed;
+        widget.onPressed != null ? widget.onPressed!() : null;
       },
       child: widget.onPressed == null
           ? ColorFiltered(
