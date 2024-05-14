@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:routemaster/routemaster.dart';
 
 class ReadingSection extends StatefulWidget {
   const ReadingSection({super.key});
@@ -31,17 +32,19 @@ class _ReadingSectionState extends State<ReadingSection> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Palette.secondary,
+          ),
+          onPressed: () {
+            // use this to avoid returning to the root screen because of android behavior
+            Routemaster.of(context).history.back();
+          },
+        ),
         title: ListTile(
           contentPadding: EdgeInsets.only(left: 0, right: 0),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Palette.secondary,
-            ),
-            onPressed: () {
-              print("Navigate back");
-            },
-          ),
           title: Text(
             AppStrings.readingSectionOnboardingAppbarTitle,
             style: TextStyle(
@@ -105,17 +108,11 @@ class _ReadingSectionState extends State<ReadingSection> {
                 ),
               ),
               Button(
-                onPressed: () {},
+                onPressed: () {
+                  Routemaster.of(context).push('/components');
+                },
                 type: ButtonType.primary,
-                child: Text(
-                  AppStrings.startPracticingButton,
-                  style: TextStyle(
-                    color: Palette.secondary,
-                    fontFamily: 'Inter',
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+                text: AppStrings.startPracticingButton,
               )
             ],
           ),

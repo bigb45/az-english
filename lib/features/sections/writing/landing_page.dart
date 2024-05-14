@@ -5,8 +5,11 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:routemaster/routemaster.dart';
 
+// TODO: fix status bar color issue here
 class WritingSection extends StatefulWidget {
   const WritingSection({super.key});
 
@@ -16,24 +19,35 @@ class WritingSection extends StatefulWidget {
 
 class _WritingSectionState extends State<WritingSection> {
   @override
+  void initState() {
+    super.initState();
+    // changeStatusBarColor();
+  }
+
+  void changeStatusBarColor() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      FlutterStatusbarcolor.setStatusBarColor(Palette.primary);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    changeStatusBarColor();
     return Scaffold(
-      // TODO: use the default theme from the palette file
       appBar: AppBar(
-        toolbarHeight: 90.h,
-        backgroundColor: Palette.primaryShadow,
-        elevation: 0,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Palette.secondary,
+          ),
+          onPressed: () {
+            Routemaster.of(context).history.back();
+            print("Navigate back");
+          },
+        ),
         title: ListTile(
           contentPadding: EdgeInsets.only(left: 0, right: 0),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Palette.secondary,
-            ),
-            onPressed: () {
-              print("Navigate back");
-            },
-          ),
           title: Text(
             'Writing & Listening',
             style: TextStyle(
@@ -94,17 +108,13 @@ class _WritingSectionState extends State<WritingSection> {
                 ),
               ),
               Button(
-                onPressed: () {},
+                onPressed: () {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    FlutterStatusbarcolor.setStatusBarColor(Palette.primary);
+                  });
+                },
                 type: ButtonType.primary,
-                child: Text(
-                  "CONTINUE",
-                  style: TextStyle(
-                    color: Palette.secondary,
-                    fontFamily: 'Inter',
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+                text: "continue",
               )
             ],
           ),

@@ -6,7 +6,9 @@ import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:routemaster/routemaster.dart';
 
 class GrammarSection extends StatefulWidget {
   const GrammarSection({super.key});
@@ -17,20 +19,29 @@ class GrammarSection extends StatefulWidget {
 
 class _GrammarSectionState extends State<GrammarSection> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FlutterStatusbarcolor.setStatusBarColor(Palette.primary);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Palette.secondary,
+          ),
+          onPressed: () {
+            Routemaster.of(context).history.back();
+          },
+        ),
         title: ListTile(
           contentPadding: EdgeInsets.only(left: 0, right: 0),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Palette.secondary,
-            ),
-            onPressed: () {
-              print("Navigate back");
-            },
-          ),
           title: Text('Grammar', style: TextStyles.titleTextStyle),
           subtitle:
               Text("Daily Conversations", style: TextStyles.subtitleTextStyle),
