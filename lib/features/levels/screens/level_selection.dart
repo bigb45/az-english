@@ -3,6 +3,8 @@ import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_english/theme/palette.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:routemaster/routemaster.dart';
 
 class LevelSelection extends StatefulWidget {
@@ -14,8 +16,18 @@ class LevelSelection extends StatefulWidget {
 
 class _LevelSelectionState extends State<LevelSelection> {
   int _selectedIndex = 0;
-  void navigateToLevel({required int levelId}) {
-    print("navigating to $levelId");
+
+  @override
+  void initState() {
+    super.initState();
+    changeColor();
+  }
+
+  void changeColor() async {
+    await FlutterStatusbarcolor.setStatusBarColor(Palette.secondary);
+  }
+
+  void navigateToLevel({required String levelId}) {
     Routemaster.of(context).push('/level/$levelId');
   }
 
@@ -27,16 +39,16 @@ class _LevelSelectionState extends State<LevelSelection> {
 
   @override
   Widget build(BuildContext context) {
+    changeColor();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        elevation: 0,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         title: const Text(
           'Assigned Levels',
-          style: TextStyle(color: Palette.blackColor),
+          style: TextStyle(color: Palette.primaryText),
         ),
       ),
-      // TODO: place this inside a SingleChildScrollView
       body: SingleChildScrollView(
         child: SizedBox(
           child: Column(
@@ -52,7 +64,7 @@ class _LevelSelectionState extends State<LevelSelection> {
                         cardText:
                             "learn common everyday expressions and simple phrases",
                         onTap: (levelId) {
-                          navigateToLevel(levelId: 1);
+                          navigateToLevel(levelId: "1");
                         }),
                     Constants.gapW10,
                     _buildCard(
@@ -60,7 +72,7 @@ class _LevelSelectionState extends State<LevelSelection> {
                       cardText:
                           "learn common everyday expressions and simple phrases",
                       onTap: (levelId) {
-                        navigateToLevel(levelId: 1);
+                        navigateToLevel(levelId: "1");
                       },
                     ),
                   ],
@@ -76,7 +88,7 @@ class _LevelSelectionState extends State<LevelSelection> {
                       cardText:
                           "learn common everyday expressions and simple phrases",
                       onTap: (levelId) {
-                        navigateToLevel(levelId: 1);
+                        navigateToLevel(levelId: "1");
                       },
                     ),
                     Constants.gapW10,
@@ -85,7 +97,7 @@ class _LevelSelectionState extends State<LevelSelection> {
                       cardText:
                           "learn common everyday expressions and simple phrases",
                       onTap: (levelId) {
-                        navigateToLevel(levelId: 1);
+                        navigateToLevel(levelId: "1");
                       },
                     ),
                   ],
@@ -102,7 +114,7 @@ class _LevelSelectionState extends State<LevelSelection> {
                       cardText:
                           "learn common everyday expressions and simple phrases",
                       onTap: (levelId) {
-                        navigateToLevel(levelId: 1);
+                        navigateToLevel(levelId: "1");
                       },
                     ),
                   ],
@@ -113,26 +125,28 @@ class _LevelSelectionState extends State<LevelSelection> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: NavigationBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+        destinations: const <NavigationDestination>[
+          NavigationDestination(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.change_circle),
             label: 'Result',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.account_circle),
             label: 'Account',
           ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Palette.primary,
-        onTap: _onItemTapped,
+
+        selectedIndex: _selectedIndex,
+        indicatorColor: Palette.secondaryVariantStroke,
+        // selectedItemColor: Palette.primary,
+        onDestinationSelected: _onItemTapped,
       ),
     );
   }
