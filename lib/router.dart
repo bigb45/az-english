@@ -8,7 +8,7 @@ import 'package:ez_english/features/sections/vocabulary/landing_page.dart';
 import 'package:ez_english/features/sections/writing/landing_page.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
-
+import 'package:ez_english/features/azure_tts_test.dart';
 import 'package:ez_english/main.dart';
 
 final loggedOutRoute = RouteMap(
@@ -19,7 +19,7 @@ final loggedOutRoute = RouteMap(
 
 final loggedInRoute = RouteMap(
   routes: {
-    '/': (_) => const MaterialPage(child: LevelSelection()),
+    '/': (_) => MaterialPage(child: AzureTtsTest()),
     '/settings': (_) => const MaterialPage(
           child: Scaffold(
             body: Center(

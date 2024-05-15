@@ -21,26 +21,25 @@ class AzureTtsTest extends StatefulWidget {
 class _AzureTtsTestState extends State<AzureTtsTest> {
   final _controller = TextEditingController();
   final player = AudioPlayer();
-  final String apiKey = (dotenv.env['ELEVEN_LABS_API_KEY'] ?? "").toString();
+  final String apiKey = dotenv.env['AZURE_API_KEY_1'] ?? '';
 
   Future<void> playTextToSpeech(String text) async {
     String voiceRachel =
         '21m00Tcm4TlvDq8ikWAM'; //Rachel voice - change if you know another Voice ID
 
-    String url = 'https://api.elevenlabs.io/v1/text-to-speech/$voiceRachel';
+    String url =
+        'https://westeurope.tts.speech.microsoft.com/cognitiveservices/v1';
     try {
+      var requestBody =
+          '<speak version="1.0" xml:lang="en-US">    <voice xml:lang="en-US" xml:gender="ale" name="en-US-JennyNeural">$text</voice></speak>';
       final response = await http.post(
         Uri.parse(url),
         headers: {
-          'accept': 'audio/mpeg',
-          'xi-api-key': apiKey,
-          'Content-Type': 'application/json',
+          'Ocp-Apim-Subscription-Key': apiKey,
+          'Content-Type': 'application/ssml+xml',
+          'X-Microsoft-OutputFormat': 'audio-24khz-160kbitrate-mono-mp3',
         },
-        body: json.encode({
-          "text": text,
-          "model_id": "eleven_monolingual_v1",
-          "voice_settings": {"stability": .15, "similarity_boost": .75}
-        }),
+        body: requestBody,
       );
 
       if (response.statusCode == 200) {
@@ -48,7 +47,8 @@ class _AzureTtsTestState extends State<AzureTtsTest> {
         await player.setAudioSource(MyCustomSource(bytes));
         player.play();
       } else {
-        print("Failed to load audio: ${response.statusCode}");
+        print("Status code: ${response.statusCode}");
+        print("Status code: ${response.reasonPhrase}");
       }
     } catch (e, stackTrace) {
       print("Error while playing audio: $e");
