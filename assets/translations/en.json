@@ -24,5 +24,10 @@
   "studentName": "Student Name",
   "parentPhoneNumber": "Parent Phone Number",
   "emailAddress": "Email Address",
-  "password": "Password"
+  "password": "Password",
+  "practiceFrequencyScreenTitle": "Choose a daily learning goal",
+  "practiceFrequencyPlanOne": "Casual",
+  "practiceFrequencyPlanOneDescription": "30 minutes / day",
+  "practiceFrequencyPlanTwo": "Serious",
+  "practiceFrequencyPlanTwoDescription": "1 hour every 3 days"
 }

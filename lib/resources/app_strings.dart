@@ -31,4 +31,12 @@ abstract class AppStrings {
   static final parentPhoneNumber = "parentPhoneNumber".tr();
   static final emailAddress = "emailAddress".tr();
   static final password = "password".tr();
+  static final practiceFrequencyScreenTitle =
+      "practiceFrequencyScreenTitle".tr();
+  static final practiceFrequencyPlanOne = "practiceFrequencyPlanOne".tr();
+  static final practiceFrequencyPlanOneDescription =
+      "practiceFrequencyPlanOneDescription".tr();
+  static final practiceFrequencyPlanTwo = "practiceFrequencyPlanTwo".tr();
+  static final practiceFrequencyPlanTwoDescription =
+      "practiceFrequencyPlanTwoDescription".tr();
 }
