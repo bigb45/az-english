@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/sections/reading/components/multiple-choice%20question.dart';
+import 'package:ez_english/features/sections/reading/components/speaking_question.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
@@ -20,7 +21,7 @@ class ReadingPractice extends StatefulWidget {
 
 class _ReadingPracticeState extends State<ReadingPractice> {
   @override
-  void initState() async {
+  void initState() {
     // setStatusBar to make the top side of the navbar with a different color since this is not supported for IOS in the default implementation of AppBar
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FlutterStatusbarcolor.setStatusBarColor(Palette.secondary);
@@ -70,7 +71,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                       padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: ProgressBar(value: 20),
                     ),
-                    MultipleChoiceQuestion(),
+                    SpeakingQuestion(),
                   ],
                 ),
               ),
