@@ -41,12 +41,12 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
   }
 
   Future record() async {
-    if (!isRecorderReady) return await recorder.startRecorder(toFile: "audio");
+    if (!isRecorderReady) return;
+    await recorder.startRecorder(toFile: "audio");
   }
 
   Future stop() async {
     if (!isRecorderReady) return;
-
     final path = await recorder.stopRecorder();
     final audioFile = File(path!);
     print(audioFile);

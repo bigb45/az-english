@@ -1,4 +1,5 @@
 plugins {
+// 
     id "com.android.application"
     // START: FlutterFire Configuration
     id 'com.google.gms.google-services'
@@ -27,7 +28,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.ez_english"
-    compileSdkVersion 34
+    compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
     compileOptions {

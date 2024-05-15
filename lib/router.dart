@@ -8,6 +8,7 @@ import 'package:ez_english/features/levels/screens/level_selection.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
 import 'package:ez_english/features/sections/practice_screen.dart';
 import 'package:ez_english/features/sections/reading/landing_page.dart';
+import 'package:ez_english/features/sections/reading/practice.dart';
 import 'package:ez_english/features/sections/vocabulary/landing_page.dart';
 import 'package:ez_english/features/sections/writing/landing_page.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ final loggedOutRoute = RouteMap(
 
 final loggedInRoute = RouteMap(
   routes: {
-    '/': (_) => MaterialPage(child: PracticeFrequencyScreen()),
+    '/': (_) => MaterialPage(child: ReadingPractice()),
     '/settings': (_) => const MaterialPage(
           child: Scaffold(
             body: Center(
@@ -49,6 +50,7 @@ final loggedInRoute = RouteMap(
         },
       );
     },
+    '/reading_practice': (_) => const MaterialPage(child: ReadingPractice()),
     '/components': (_) => const MaterialPage(child: Components()),
   },
 );
