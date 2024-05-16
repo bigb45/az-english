@@ -1,10 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:ez_english/components.dart';
-import 'package:ez_english/features/auth/screens/practice_frequency.dart';
 import 'package:ez_english/features/auth/screens/sign_in.dart';
-import 'package:ez_english/features/auth/screens/sign_up.dart';
-import 'package:ez_english/features/azure_tts_test.dart';
 import 'package:ez_english/features/levels/screens/level_selection.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
 import 'package:ez_english/features/sections/grammar/practice.dart';
@@ -18,8 +15,6 @@ import 'package:ez_english/features/sections/writing/landing_page.dart';
 import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ez_english/features/azure_tts_test.dart';
-import 'package:ez_english/main.dart';
 
 final loggedOutRotuer = GoRouter(
   routes: [

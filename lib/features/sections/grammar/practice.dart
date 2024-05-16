@@ -7,7 +7,6 @@ import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
-import 'package:go_router/go_router.dart';
 
 class GrammarPractice extends StatefulWidget {
   // final String fullSentence;
@@ -33,86 +32,82 @@ class _GrammarPracticeState extends State<GrammarPractice> {
   EvaluationState answerState = EvaluationState.empty;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.close,
-              color: Palette.primaryText,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (canPop) {
+        showLeaveAlertDialog(context);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.close,
+                color: Palette.primaryText,
+              ),
+              onPressed: () {
+                showLeaveAlertDialog(context);
+              },
             ),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext dialogContext) {
-                  return leavePracticeAlertDialog(onConfirm: () {
-                    Navigator.pop(dialogContext);
-                    context.go('/');
-                  }, onCancel: () {
-                    Navigator.pop(dialogContext);
-                  });
-                },
-              );
-            },
-          ),
-        ],
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
-        backgroundColor: Colors.white,
-        title: ListTile(
-          contentPadding: const EdgeInsets.only(left: 0, right: 0),
-          title: Text(
-            "Grammar Practice",
-            style:
-                TextStyles.titleTextStyle.copyWith(color: Palette.primaryText),
-          ),
-          subtitle: Text(
-            "Daily Conversations",
-            style: TextStyles.subtitleTextStyle
-                .copyWith(color: Palette.primaryText),
+          ],
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          backgroundColor: Colors.white,
+          title: ListTile(
+            contentPadding: const EdgeInsets.only(left: 0, right: 0),
+            title: Text(
+              "Grammar Practice",
+              style: TextStyles.titleTextStyle
+                  .copyWith(color: Palette.primaryText),
+            ),
+            subtitle: Text(
+              "Daily Conversations",
+              style: TextStyles.subtitleTextStyle
+                  .copyWith(color: Palette.primaryText),
+            ),
           ),
         ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const ProgressBar(value: 20),
-                    SentenceFormingQuestion(
-                      partialSentence: ["A"],
-                      fullSentence: fullSentence,
-                      words: options,
-                      answerState: answerState,
-                      onChanged: (value) {
-                        setState(() {
-                          userAnswer = value;
-                        });
-                      },
-                    ),
-                  ],
+        body: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const ProgressBar(value: 20),
+                      SentenceFormingQuestion(
+                        partialSentence: ["A"],
+                        fullSentence: fullSentence,
+                        words: options,
+                        answerState: answerState,
+                        onChanged: (value) {
+                          setState(() {
+                            userAnswer = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          EvaluateAnswer(
-              state: answerState,
-              onPressed: switch (answerState) {
-                EvaluationState.correct => () {
-                    print("continuing to next screen");
-                  },
-                EvaluationState.incorrect => () {
-                    evaluateAnswer();
-                    print("try again");
-                  },
-                EvaluationState.empty => () {
-                    evaluateAnswer();
-                  },
-              }),
-        ],
+            EvaluateAnswer(
+                state: answerState,
+                onPressed: switch (answerState) {
+                  EvaluationState.correct => () {
+                      print("continuing to next screen");
+                    },
+                  EvaluationState.incorrect => () {
+                      evaluateAnswer();
+                      print("try again");
+                    },
+                  EvaluationState.empty => () {
+                      evaluateAnswer();
+                    },
+                }),
+          ],
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 Widget leavePracticeAlertDialog(
     {required Function onConfirm, required Function onCancel}) {
@@ -26,5 +27,26 @@ Widget leavePracticeAlertDialog(
         ),
       ),
     ],
+  );
+}
+
+void showLeaveAlertDialog(BuildContext context,
+    {Function? onConfirm, Function? onCancel}) {
+  showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return leavePracticeAlertDialog(
+          onConfirm: onConfirm ??
+              () {
+                Navigator.pop(dialogContext);
+                // this pops the whole stack and navigates back to the home screen
+                context.go('/');
+              },
+          onCancel: onCancel ??
+              () {
+                // only pop the dialog
+                Navigator.pop(dialogContext);
+              });
+    },
   );
 }
