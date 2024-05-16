@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
 import 'package:ez_english/features/sections/reading/components/multiple-choice%20question.dart';
 import 'package:ez_english/features/sections/reading/components/speaking_question.dart';
 import 'package:ez_english/resources/app_strings.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
+import 'package:routemaster/routemaster.dart';
 
 class ReadingPractice extends StatefulWidget {
   const ReadingPractice({super.key});
@@ -33,6 +35,38 @@ class _ReadingPracticeState extends State<ReadingPractice> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        // leading: IconButton(
+        //   icon: const Icon(
+        //     Icons.arrow_back,
+        //     color: Palette.primaryText,
+        //   ),
+        //   onPressed: () {
+        //     // use this to avoid returning to the root screen because of android behavior
+        //     Routemaster.of(context).history.back();
+        //   },
+        // ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.close,
+              color: Palette.primaryText,
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext dialogContext) {
+                  return leavePracticeAlertDialog(onConfirm: () {
+                    Navigator.pop(dialogContext);
+                    Routemaster.of(context).pop();
+                  }, onCancel: () {
+                    Navigator.pop(dialogContext);
+                  });
+                },
+              );
+            },
+          ),
+        ],
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: Palette.secondary,
         title: ListTile(
@@ -105,33 +139,25 @@ class _EvaluateAnswerState extends State<EvaluateAnswer> {
         padding: EdgeInsets.symmetric(
             vertical: Constants.padding8, horizontal: Constants.padding8),
         child: Button(
-          onPressed: () {
-            setState(() {
-              evaulationState = Random().nextBool()
-                  ? EvaluationState.correct
-                  : EvaluationState.incorrect;
-            });
-          },
-          type: switch (evaulationState) {
-            EvaluationState.correct => ButtonType.primary,
-            EvaluationState.incorrect => ButtonType.error,
-            _ => ButtonType.primaryVariant,
-          },
-          child: Text(
-            "CHECK",
-            style: TextStyle(
-              color: Palette.secondary,
-              fontFamily: 'Inter',
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
+            onPressed: () {
+              setState(() {
+                evaulationState = Random().nextBool()
+                    ? EvaluationState.correct
+                    : EvaluationState.incorrect;
+              });
+            },
+            type: switch (evaulationState) {
+              EvaluationState.correct => ButtonType.primary,
+              EvaluationState.incorrect => ButtonType.error,
+              _ => ButtonType.primaryVariant,
+            },
+            text: "check"),
       ),
     );
   }
 }
 
+// TODO: move this to separate file
 enum EvaluationState {
   correct,
   incorrect,

@@ -109,7 +109,7 @@ class _ReadingSectionState extends State<ReadingSection> {
               ),
               Button(
                 onPressed: () {
-                  Routemaster.of(context).push('/reading_practice');
+                  Routemaster.of(context).push('/practice/reading');
                 },
                 type: ButtonType.primary,
                 text: AppStrings.startPracticingButton,

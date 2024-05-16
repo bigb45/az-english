@@ -30,10 +30,10 @@ class VocabularySection extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            Text('Vocabulary Section'),
+            Expanded(child: Center(child: Text('Vocabulary Section'))),
             Button(
               onPressed: () {
-                Routemaster.of(context).push('/section/vocabulary/word_list');
+                Routemaster.of(context).push('/practice/vocabulary');
               },
               text: "Continue",
             ),

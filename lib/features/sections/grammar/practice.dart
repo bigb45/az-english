@@ -1,4 +1,5 @@
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
+import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
 import 'package:ez_english/features/sections/grammar/components/sentence_forming_question.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -6,12 +7,12 @@ import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
+import 'package:routemaster/routemaster.dart';
 
 class GrammarPractice extends StatefulWidget {
-  final String fullSentence;
-  final String options;
-  const GrammarPractice(
-      {super.key, required this.fullSentence, required this.options});
+  // final String fullSentence;
+  // final String options;
+  const GrammarPractice({super.key});
 
   @override
   State<GrammarPractice> createState() => _GrammarPracticeState();
@@ -19,7 +20,8 @@ class GrammarPractice extends StatefulWidget {
 
 class _GrammarPracticeState extends State<GrammarPractice> {
   String userAnswer = "";
-
+  final String fullSentence = "A cat is sleeping";
+  final String options = "cat is sleeping are am the a";
   @override
   void initState() {
     super.initState();
@@ -33,6 +35,28 @@ class _GrammarPracticeState extends State<GrammarPractice> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.close,
+              color: Palette.primaryText,
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext dialogContext) {
+                  return leavePracticeAlertDialog(onConfirm: () {
+                    Navigator.pop(dialogContext);
+                    Routemaster.of(context).pop();
+                  }, onCancel: () {
+                    Navigator.pop(dialogContext);
+                  });
+                },
+              );
+            },
+          ),
+        ],
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: Colors.white,
         title: ListTile(
@@ -60,8 +84,8 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                     const ProgressBar(value: 20),
                     SentenceFormingQuestion(
                       partialSentence: ["A"],
-                      fullSentence: widget.fullSentence,
-                      words: widget.options,
+                      fullSentence: fullSentence,
+                      words: options,
                       answerState: answerState,
                       onChanged: (value) {
                         setState(() {
@@ -95,10 +119,9 @@ class _GrammarPracticeState extends State<GrammarPractice> {
 
   void evaluateAnswer() {
     setState(() {
-      answerState =
-          widget.fullSentence.toLowerCase() == userAnswer.toLowerCase()
-              ? EvaluationState.correct
-              : EvaluationState.incorrect;
+      answerState = fullSentence.toLowerCase() == userAnswer.toLowerCase()
+          ? EvaluationState.correct
+          : EvaluationState.incorrect;
     });
   }
 }

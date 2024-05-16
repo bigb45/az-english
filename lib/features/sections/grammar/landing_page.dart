@@ -84,7 +84,7 @@ class _GrammarSectionState extends State<GrammarSection> {
               ),
               Button(
                   onPressed: () {
-                    print("Navigate to practice page");
+                    Routemaster.of(context).push('/practice/grammar');
                   },
                   type: ButtonType.primary,
                   text: "continue")

@@ -109,9 +109,7 @@ class _WritingSectionState extends State<WritingSection> {
               ),
               Button(
                 onPressed: () {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    FlutterStatusbarcolor.setStatusBarColor(Palette.primary);
-                  });
+                  Routemaster.of(context).push('/practice/listening');
                 },
                 type: ButtonType.primary,
                 text: "continue",

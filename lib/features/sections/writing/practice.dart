@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
+import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
 import 'package:ez_english/features/sections/writing/components/dictation_question.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:routemaster/routemaster.dart';
 
 class WritingPractice extends StatefulWidget {
   const WritingPractice({super.key});
@@ -115,6 +117,28 @@ class _WritingPracticeState extends State<WritingPractice> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.close,
+              color: Palette.primaryText,
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext dialogContext) {
+                  return leavePracticeAlertDialog(onConfirm: () {
+                    Navigator.pop(dialogContext);
+                    Routemaster.of(context).pop();
+                  }, onCancel: () {
+                    Navigator.pop(dialogContext);
+                  });
+                },
+              );
+            },
+          ),
+        ],
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: Colors.white,
         title: ListTile(
