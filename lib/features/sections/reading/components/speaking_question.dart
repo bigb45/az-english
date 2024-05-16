@@ -1,13 +1,17 @@
 import 'dart:io';
 
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/azure_tts_test.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/microphone_button.dart';
 import 'package:ez_english/widgets/text_box.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
 
 class SpeakingQuestion extends StatefulWidget {
   const SpeakingQuestion({
@@ -20,8 +24,11 @@ class SpeakingQuestion extends StatefulWidget {
 
 class _SpeakingQuestionState extends State<SpeakingQuestion> {
   TextEditingController controller = TextEditingController();
-  final recorder = FlutterSoundRecorder();
+  FlutterSoundRecorder? recorder;
+
   bool isRecorderReady = false;
+  String? _audioFilePath;
+  bool _isRecording = false;
 
   @override
   void initState() {
@@ -35,21 +42,70 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
     if (status != PermissionStatus.granted) {
       throw "Microphone permission not granted ";
     }
-
-    await recorder.openRecorder();
+    recorder = FlutterSoundRecorder();
+    await recorder!.openRecorder();
     isRecorderReady = true;
   }
 
   Future record() async {
     if (!isRecorderReady) return;
-    await recorder.startRecorder(toFile: "audio");
+    try {
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String appDocPath = appDocDir.path;
+
+      String path = '$appDocPath/your_audio_file.wav';
+      await recorder!.startRecorder(
+        toFile: path,
+        codec: Codec.pcm16WAV,
+      );
+      setState(() {
+        _isRecording = true;
+        _audioFilePath = path; // Save the file path
+      });
+    } catch (err) {
+      print('Error starting recording: $err');
+    }
   }
 
-  Future stop() async {
-    if (!isRecorderReady) return;
-    final path = await recorder.stopRecorder();
-    final audioFile = File(path!);
-    print(audioFile);
+  Future<void> _stopRecording() async {
+    try {
+      await recorder!.stopRecorder();
+      setState(() {
+        _isRecording = false;
+      });
+    } catch (err) {
+      print('Error stopping recording: $err');
+    }
+  }
+
+  final String apiKey = dotenv.env['AZURE_API_KEY_1'] ?? '';
+
+  Future<void> _sendAudioFile() async {
+    List<int> audioBytes = await File(_audioFilePath!).readAsBytes();
+
+    String url =
+        'https://westeurope.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Ocp-Apim-Subscription-Key': apiKey,
+          'Content-Type': 'audio/wav; codecs=audio/pcm; samplerate=16000',
+          'Accept': 'application/json',
+        },
+        body: audioBytes,
+      );
+
+      if (response.statusCode == 200) {
+        print("Status code: ${response.statusCode}");
+      } else {
+        print("Status code: ${response.statusCode}");
+        print("Status code: ${response.reasonPhrase}");
+      }
+    } catch (e, stackTrace) {
+      print("Error while playing audio: $e");
+      print(stackTrace);
+    }
   }
 
   @override
@@ -82,8 +138,13 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
             Constants.gapH8,
             AudioControlButton(
               onPressed: () async {
-                if (recorder.isRecording) {
-                  await stop();
+                if (recorder!.isRecording) {
+                  await _stopRecording();
+                  if (_audioFilePath != null) {
+                    // Call your API sending function here
+                    print('Sending audio file: $_audioFilePath');
+                    _sendAudioFile();
+                  }
                 } else {
                   await record();
                 }

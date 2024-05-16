@@ -1,12 +1,12 @@
 PODS:
   - audio_session (0.0.1):
     - Flutter
-  - Firebase/CoreOnly (10.25.0):
-    - FirebaseCore (= 10.25.0)
-  - firebase_core (2.31.0):
-    - Firebase/CoreOnly (= 10.25.0)
+  - Firebase/CoreOnly (10.18.0):
+    - FirebaseCore (= 10.18.0)
+  - firebase_core (2.24.2):
+    - Firebase/CoreOnly (= 10.18.0)
     - Flutter
-  - FirebaseCore (10.25.0):
+  - FirebaseCore (10.18.0):
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.12)
     - GoogleUtilities/Logger (~> 7.12)
@@ -87,9 +87,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   audio_session: 088d2483ebd1dc43f51d253d4a1c517d9a2e7207
-  Firebase: 0312a2352584f782ea56f66d91606891d4607f06
-  firebase_core: 0b39f4f424e02eecabb2356ddf331fa07b772af8
-  FirebaseCore: 7ec4d0484817f12c3373955bc87762d96842d483
+  Firebase: 414ad272f8d02dfbf12662a9d43f4bba9bec2a06
+  firebase_core: 0af4a2b24f62071f9bf283691c0ee41556dcb3f5
+  FirebaseCore: 2322423314d92f946219c8791674d2f3345b598f
   FirebaseCoreInternal: 910a81992c33715fec9263ca7381d59ab3a750b7
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_sound: c60effa2a350fb977885f0db2fbc4c1ad5160900
