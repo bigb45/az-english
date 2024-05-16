@@ -5,11 +5,11 @@ import 'package:ez_english/features/sections/vocabulary/components/word_list_til
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class WordListView extends StatelessWidget {
+class WordsListView extends StatelessWidget {
   final List<WordModel> words;
   final String pageTitle;
   final String pageSubtitle;
-  const WordListView(
+  const WordsListView(
       {super.key,
       required this.words,
       this.pageTitle = "Vocabulary",
@@ -19,6 +19,7 @@ class WordListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Palette.primaryText),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: Colors.white,
         title: ListTile(

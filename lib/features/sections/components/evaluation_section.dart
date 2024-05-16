@@ -48,12 +48,6 @@ class _EvaluateAnswerState extends State<EvaluateAnswer> {
             Button(
               onPressed: () {
                 widget.onPressed();
-
-                // setState(() {
-                //   evaulationState = Random().nextBool()
-                //       ? EvaluationState.correct
-                //       : EvaluationState.incorrect;
-                // });
               },
               type: switch (widget.state) {
                 EvaluationState.correct => ButtonType.primary,

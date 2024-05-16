@@ -36,6 +36,7 @@ class Palette {
     primaryColor: Palette.primary,
     scaffoldBackgroundColor: Palette.secondary,
     appBarTheme: AppBarTheme(
+      iconTheme: const IconThemeData(color: Palette.secondary),
       toolbarHeight: 90.h,
       systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarBrightness: Brightness.dark,

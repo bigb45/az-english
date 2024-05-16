@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'dart:convert';
-
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
@@ -9,8 +7,8 @@ import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:http/http.dart' as http;
+import 'package:just_audio/just_audio.dart';
 
 class AzureTtsTest extends StatefulWidget {
   const AzureTtsTest({super.key});
@@ -24,9 +22,6 @@ class _AzureTtsTestState extends State<AzureTtsTest> {
   final String apiKey = dotenv.env['AZURE_API_KEY_1'] ?? '';
 
   Future<void> playTextToSpeech(String text) async {
-    String voiceRachel =
-        '21m00Tcm4TlvDq8ikWAM'; //Rachel voice - change if you know another Voice ID
-
     String url =
         'https://westeurope.tts.speech.microsoft.com/cognitiveservices/v1';
     try {
