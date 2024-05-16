@@ -1,7 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:dio/dio.dart';
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/core/network/apis_constants.dart';
+import 'package:ez_english/core/network/custom_response.dart';
+import 'package:ez_english/core/network/networkhelper.dart';
 import 'package:ez_english/features/azure_tts_test.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -13,6 +18,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class SpeakingQuestion extends StatefulWidget {
   const SpeakingQuestion({
@@ -40,6 +46,7 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
     initRecorder();
   }
 
+// TODO add all these methods to the view model
   Future<void> playRecording() async {
     try {
       Source urlSource = UrlSource(_audioFilePath!);
@@ -92,33 +99,47 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
     }
   }
 
-  final String apiKey = dotenv.env['AZURE_API_KEY_1'] ?? '';
-
   Future<void> _sendAudioFile() async {
-    List<int> audioBytes = await File(_audioFilePath!).readAsBytes();
+    List<int> audioBytes = File(_audioFilePath!).readAsBytesSync();
 
-    String url =
-        'https://westeurope.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US';
+    String url = APIsConstants.sttEndPoint; // Replace with your API endpoint
     try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {
-          'Ocp-Apim-Subscription-Key': apiKey,
-          'Content-Type': 'audio/wav; codecs=audio/pcm; samplerate=16000',
-          'Accept': 'application/json',
-        },
-        body: audioBytes,
+      // Define your JSON payload
+      Map<String, dynamic> pronAssessmentParams = {
+        "ReferenceText": "Test",
+        "GradingSystem": "HundredMark",
+        "Granularity": "Phoneme",
+        "Dimension": "Comprehensive"
+      };
+
+      // Convert JSON payload to String
+      String pronAssessmentParamsJson = jsonEncode(pronAssessmentParams);
+
+      // Encode the JSON payload to Base64
+      String pronAssessmentHeader =
+          base64Encode(utf8.encode(pronAssessmentParamsJson));
+
+      // Construct headers for the request
+      Map<String, dynamic> headers = {
+        'Content-Type': 'audio/wav',
+        'Pronunciation-Assessment': pronAssessmentHeader,
+      };
+      // Call the custom post method
+      CustomResponse response = await NetworkHelper.instance.post(
+        url: url,
+        headersForRequest: headers,
+        body: Stream.fromIterable(audioBytes.map((e) => [e])),
       );
 
+      // Handle response
       if (response.statusCode == 200) {
-        print("Status code: ${response.body}");
+        print("Status code: ${response.data}");
       } else {
-        print("Status code: ${response.statusCode}");
-        print("Status code: ${response.reasonPhrase}");
+        print(
+            'Failed to send audio file: ${response.errorMessage} ${response.statusCode}');
       }
-    } catch (e, stackTrace) {
-      print("Error while playing audio: $e");
-      print(stackTrace);
+    } catch (error) {
+      print('Error sending audio file: $error');
     }
   }
 
@@ -166,12 +187,13 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
               type: AudioControlType.microphone,
             ),
             Constants.gapH12,
-            AudioControlButton(
-              onPressed: () async {
-                await playRecording();
-              },
-              type: AudioControlType.speaker,
-            ),
+            // TODO remove this button after finish testing
+            // AudioControlButton(
+            //   onPressed: () async {
+            //     await playRecording();
+            //   },
+            //   type: AudioControlType.speaker,
+            // ),
             Text(
               AppStrings.speakingQuesiton,
               textAlign: TextAlign.center,
