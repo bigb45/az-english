@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:routemaster/routemaster.dart';
+import 'package:go_router/go_router.dart';
 
 // TODO: fix status bar color issue here
 class WritingSection extends StatefulWidget {
@@ -35,17 +35,6 @@ class _WritingSectionState extends State<WritingSection> {
     changeStatusBarColor();
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Palette.secondary,
-          ),
-          onPressed: () {
-            Routemaster.of(context).history.back();
-            print("Navigate back");
-          },
-        ),
         title: ListTile(
           contentPadding: EdgeInsets.only(left: 0, right: 0),
           title: Text(
@@ -109,7 +98,7 @@ class _WritingSectionState extends State<WritingSection> {
               ),
               Button(
                 onPressed: () {
-                  Routemaster.of(context).push('/practice/listening');
+                  context.push('/practice/listening');
                 },
                 type: ButtonType.primary,
                 text: "continue",

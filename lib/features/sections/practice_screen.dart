@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
-import 'package:routemaster/routemaster.dart';
+import 'package:go_router/go_router.dart';
 
 class PracticeScreen extends StatefulWidget {
   // TODO: use levelId to fetch title and exercises for the level via viewmodel
@@ -33,14 +33,13 @@ class _PracticeScreenState extends State<PracticeScreen> {
   }
 
   void navigateToSection({required String sectionId}) {
-    Routemaster.of(context).push('/section/$sectionId');
+    context.push('/section/$sectionId');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: ListTile(
           contentPadding: const EdgeInsets.only(left: 0, right: 0),
           title: Text(

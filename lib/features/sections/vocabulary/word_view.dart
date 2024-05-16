@@ -21,6 +21,7 @@ class WordView extends StatelessWidget {
     final type = wordData.type;
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Palette.primaryText),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         foregroundColor: Palette.primaryText,
         backgroundColor: Palette.secondary,

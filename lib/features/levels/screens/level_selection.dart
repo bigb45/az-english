@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
-import 'package:routemaster/routemaster.dart';
+import 'package:go_router/go_router.dart';
 
 class LevelSelection extends StatefulWidget {
   const LevelSelection({Key? key}) : super(key: key);
@@ -28,7 +28,7 @@ class _LevelSelectionState extends State<LevelSelection> {
   }
 
   void navigateToLevel({required String levelId}) {
-    Routemaster.of(context).push('/level/$levelId');
+    context.push('/level/$levelId');
   }
 
   void _onItemTapped(int index) {

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:routemaster/routemaster.dart';
+import 'package:go_router/go_router.dart';
 
 class WritingPractice extends StatefulWidget {
   const WritingPractice({super.key});
@@ -130,7 +130,7 @@ class _WritingPracticeState extends State<WritingPractice> {
                 builder: (BuildContext dialogContext) {
                   return leavePracticeAlertDialog(onConfirm: () {
                     Navigator.pop(dialogContext);
-                    Routemaster.of(context).pop();
+                    context.go('/');
                   }, onCancel: () {
                     Navigator.pop(dialogContext);
                   });

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:routemaster/routemaster.dart';
+import 'package:go_router/go_router.dart';
 
 class GrammarSection extends StatefulWidget {
   const GrammarSection({super.key});
@@ -30,16 +30,6 @@ class _GrammarSectionState extends State<GrammarSection> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Palette.secondary,
-          ),
-          onPressed: () {
-            Routemaster.of(context).history.back();
-          },
-        ),
         title: ListTile(
           contentPadding: EdgeInsets.only(left: 0, right: 0),
           title: Text('Grammar', style: TextStyles.titleTextStyle),
@@ -84,7 +74,7 @@ class _GrammarSectionState extends State<GrammarSection> {
               ),
               Button(
                   onPressed: () {
-                    Routemaster.of(context).push('/practice/grammar');
+                    context.push('/practice/grammar');
                   },
                   type: ButtonType.primary,
                   text: "continue")

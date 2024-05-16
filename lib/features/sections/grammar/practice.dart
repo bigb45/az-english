@@ -7,7 +7,7 @@ import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
-import 'package:routemaster/routemaster.dart';
+import 'package:go_router/go_router.dart';
 
 class GrammarPractice extends StatefulWidget {
   // final String fullSentence;
@@ -48,7 +48,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                 builder: (BuildContext dialogContext) {
                   return leavePracticeAlertDialog(onConfirm: () {
                     Navigator.pop(dialogContext);
-                    Routemaster.of(context).pop();
+                    context.go('/');
                   }, onCancel: () {
                     Navigator.pop(dialogContext);
                   });

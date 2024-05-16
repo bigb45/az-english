@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
-import 'package:routemaster/routemaster.dart';
+import 'package:go_router/go_router.dart';
 
 class ReadingPractice extends StatefulWidget {
   const ReadingPractice({super.key});
@@ -58,7 +58,8 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                 builder: (BuildContext dialogContext) {
                   return leavePracticeAlertDialog(onConfirm: () {
                     Navigator.pop(dialogContext);
-                    Routemaster.of(context).pop();
+                    // this pops the whole stack and navigates back to the home screen
+                    context.go('/');
                   }, onCancel: () {
                     Navigator.pop(dialogContext);
                   });

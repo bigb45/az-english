@@ -3,7 +3,7 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
-import 'package:routemaster/routemaster.dart';
+import 'package:go_router/go_router.dart';
 
 class VocabularySection extends StatelessWidget {
   const VocabularySection({super.key});
@@ -15,16 +15,6 @@ class VocabularySection extends StatelessWidget {
     });
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Palette.secondary,
-          ),
-          onPressed: () {
-            Routemaster.of(context).history.back();
-          },
-        ),
         title: const Text('Vocabulary Section'),
       ),
       body: Center(
@@ -33,7 +23,7 @@ class VocabularySection extends StatelessWidget {
             Expanded(child: Center(child: Text('Vocabulary Section'))),
             Button(
               onPressed: () {
-                Routemaster.of(context).push('/practice/vocabulary');
+                context.push('/practice/vocabulary');
               },
               text: "Continue",
             ),
