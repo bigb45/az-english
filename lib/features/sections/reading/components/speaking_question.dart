@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/azure_tts_test.dart';
 import 'package:ez_english/resources/app_strings.dart';
@@ -29,12 +30,25 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
   bool isRecorderReady = false;
   String? _audioFilePath;
   bool _isRecording = false;
+  late AudioPlayer audioPlayer;
 
   @override
   void initState() {
+    audioPlayer = AudioPlayer();
     // TODO: implement initState
     super.initState();
     initRecorder();
+  }
+
+  Future<void> playRecording() async {
+    try {
+      Source urlSource = UrlSource(_audioFilePath!);
+      await audioPlayer.play(urlSource);
+      // Add an event listener to be notified when the audio playback completes
+    } catch (e) {
+      print(
+          "AUDIO PLAYING++++++++++++++++++++++++${e}+++++++++++++++++++++++++");
+    }
   }
 
   Future<void> initRecorder() async {
@@ -97,7 +111,7 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
       );
 
       if (response.statusCode == 200) {
-        print("Status code: ${response.statusCode}");
+        print("Status code: ${response.body}");
       } else {
         print("Status code: ${response.statusCode}");
         print("Status code: ${response.reasonPhrase}");
@@ -152,6 +166,12 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
               type: AudioControlType.microphone,
             ),
             Constants.gapH12,
+            AudioControlButton(
+              onPressed: () async {
+                await playRecording();
+              },
+              type: AudioControlType.speaker,
+            ),
             Text(
               AppStrings.speakingQuesiton,
               textAlign: TextAlign.center,
