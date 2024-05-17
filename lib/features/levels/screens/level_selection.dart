@@ -1,6 +1,4 @@
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/account/account.dart';
-import 'package:ez_english/features/result/Results.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
@@ -17,14 +15,6 @@ class LevelSelection extends StatefulWidget {
 }
 
 class _LevelSelectionState extends State<LevelSelection> {
-  int _selectedIndex = 0;
-
-  final PageController _pageController = PageController();
-  final _pages = const [
-    LevelSelection(),
-    Results(),
-    Account(),
-  ];
   @override
   void initState() {
     super.initState();
@@ -37,12 +27,6 @@ class _LevelSelectionState extends State<LevelSelection> {
 
   void navigateToLevel({required String levelId}) {
     context.push('/level/$levelId');
-  }
-
-  void _onPageChanged(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
   }
 
   @override
@@ -69,6 +53,7 @@ class _LevelSelectionState extends State<LevelSelection> {
                   children: [
                     _buildCard(
                         headerText: 'A1',
+                        isAssigned: true,
                         cardText:
                             "learn common everyday expressions and simple phrases",
                         onTap: (levelId) {
@@ -76,6 +61,7 @@ class _LevelSelectionState extends State<LevelSelection> {
                         }),
                     Constants.gapW10,
                     _buildCard(
+                      isAssigned: true,
                       headerText: 'A1',
                       cardText:
                           "learn common everyday expressions and simple phrases",
@@ -139,11 +125,15 @@ class _LevelSelectionState extends State<LevelSelection> {
   Widget _buildCard(
       {required String headerText,
       required String cardText,
-      required Function(int) onTap}) {
+      required Function(int) onTap,
+      bool isAssigned = false}) {
     return SelectableCard(
-      onPressed: () {
-        onTap(1);
-      },
+      selected: isAssigned,
+      onPressed: isAssigned
+          ? () {
+              onTap(1);
+            }
+          : null,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
