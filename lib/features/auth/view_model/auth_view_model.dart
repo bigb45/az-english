@@ -50,7 +50,8 @@ class AuthViewModel extends ChangeNotifier {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email.trim(), password: password.trim());
     } on FirebaseAuthException catch (e) {
-      throw AuthException(e.message ?? 'An unknown error occurred');
+      Utils.showSnackBar(e.message);
+      navigatorKey.currentState!.pop();
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
@@ -62,13 +63,14 @@ class AuthViewModel extends ChangeNotifier {
       barrierDismissible: false,
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
-
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email.trim());
-      navigatorKey.currentState!.popUntil((route) => route.isFirst);
+      Utils.showSnackBar("Password Reset Email Sent");
     } on FirebaseAuthException catch (e) {
-      throw AuthException(e.message ?? 'An unknown error occurred');
+      Utils.showSnackBar(e.message);
+      navigatorKey.currentState!.pop();
     }
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 
   Future<void> signOut() async {
