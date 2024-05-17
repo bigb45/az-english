@@ -1,9 +1,8 @@
-// ignore_for_file: avoid_print
-
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/network/apis_constants.dart';
 import 'package:ez_english/core/network/custom_response.dart';
 import 'package:ez_english/core/network/network_helper.dart';
+import 'package:ez_english/features/sections/writing/dication_question_model.dart';
 import 'package:ez_english/widgets/microphone_button.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
@@ -12,12 +11,12 @@ import 'package:just_audio/just_audio.dart';
 
 class DictationQuestion extends StatefulWidget {
   final TextEditingController controller;
-  final String text;
+  final DictationQuestionModel question;
 
-  DictationQuestion({
+  const DictationQuestion({
     super.key,
     required this.controller,
-    required this.text,
+    required this.question,
   });
 
   @override
@@ -30,7 +29,7 @@ class _DictationQuestionState extends State<DictationQuestion> {
   final AudioPlayer player = AudioPlayer();
   void getAudioBytes(String? text) async {
     String requestBody =
-        '<speak version="1.0" xml:lang="en-US"><voice xml:lang="en-US" xml:gender="Female" name="en-US-JennyNeural">${widget.text}</voice></speak>';
+        '<speak version="1.0" xml:lang="en-US"><voice xml:lang="en-US" xml:gender="Female" name="en-US-JennyNeural">${widget.question.answer}</voice></speak>';
     Map<String, dynamic> requestBodyHeaders = {
       'Ocp-Apim-Subscription-Key': apiKey,
       'Content-Type': 'application/ssml+xml',
@@ -38,7 +37,6 @@ class _DictationQuestionState extends State<DictationQuestion> {
     };
 
     try {
-      print("Request body: $requestBody");
       CustomResponse response = await NetworkHelper.instance.post(
         url: APIConstants.ttsEndPoint,
         headersForRequest: requestBodyHeaders,
@@ -47,17 +45,14 @@ class _DictationQuestionState extends State<DictationQuestion> {
       );
       if (response.statusCode == 200) {
         final bytes = response.data;
-        // final bytes = response.data.map((str) => int.parse(str)).toList();
-
-        print(bytes);
-        await player.setAudioSource(DictationQuestionSource(bytes));
+        await player.setAudioSource(DictationQuestionAudioSource(bytes));
         player.play();
       } else {
-        print("Status code: ${response.statusCode}");
-        print("Error: ${response.errorMessage}");
+        throw Exception(
+            "Error while generating audio: ${response.statusCode}, ${response.errorMessage}");
       }
     } catch (e) {
-      print("Error: $e");
+      print("Error while playing audio: $e");
     }
   }
 
@@ -79,7 +74,6 @@ class _DictationQuestionState extends State<DictationQuestion> {
             SizedBox(height: Constants.padding20),
             AudioControlButton(
               onPressed: () {
-                // TODO: call azure tts service
                 getAudioBytes("testing ");
               },
               type: AudioControlType.speaker,
@@ -102,9 +96,9 @@ class _DictationQuestionState extends State<DictationQuestion> {
   }
 }
 
-class DictationQuestionSource extends StreamAudioSource {
+class DictationQuestionAudioSource extends StreamAudioSource {
   final List<int> bytes;
-  DictationQuestionSource(this.bytes);
+  DictationQuestionAudioSource(this.bytes);
 
   @override
   Future<StreamAudioResponse> request([int? start, int? end]) async {

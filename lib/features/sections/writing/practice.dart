@@ -3,6 +3,7 @@
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
 import 'package:ez_english/features/sections/writing/components/dictation_question.dart';
+import 'package:ez_english/features/sections/writing/dication_question_model.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
@@ -22,8 +23,10 @@ class WritingPractice extends StatefulWidget {
 class _WritingPracticeState extends State<WritingPractice> {
   late FlutterTts flutterTts;
   bool isSpeaking = false;
-
-  // TODO: use azure services for text to speech
+  final DictationQuestionModel question = DictationQuestionModel(
+    question: "Write the following sentence",
+    answer: "The quick brown fox jumps over the lazy dog.",
+  );
 
   @override
   void initState() {
@@ -90,7 +93,7 @@ class _WritingPracticeState extends State<WritingPractice> {
                       ),
                       DictationQuestion(
                         controller: _controller,
-                        text: text,
+                        question: question,
                       ),
                       // MultipleChoiceQuestion(
                       //   question:
@@ -111,9 +114,9 @@ class _WritingPracticeState extends State<WritingPractice> {
                 ),
               ),
             ),
-            EvaluateAnswer(
+            EvaluationSection(
               onPressed: () {
-                print("Continuing");
+                question.validateQuestion(userAnswer: _controller.text);
               },
             )
           ],
