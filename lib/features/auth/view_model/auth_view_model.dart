@@ -1,4 +1,5 @@
 import 'package:ez_english/router.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -29,8 +30,7 @@ class AuthViewModel extends ChangeNotifier {
           email: email.trim(), password: password.trim());
     } on FirebaseAuthException catch (e) {
       // TODO: Handle errors effectively
-      Navigator.of(context).pop();
-      _showErrorDialog(context, e.message);
+      Utils.showSnackBar(e.message);
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
@@ -78,22 +78,6 @@ class AuthViewModel extends ChangeNotifier {
   void _onAuthStateChanged(User? user) {
     _user = user;
     notifyListeners();
-  }
-
-  void _showErrorDialog(BuildContext context, String? message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Error'),
-        content: Text(message ?? 'An unknown error occurred'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
   }
 }
 

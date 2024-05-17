@@ -4,6 +4,7 @@ import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/firebase_options.dart';
 import 'package:ez_english/router.dart';
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -55,6 +56,7 @@ class MainAppContent extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(390, 844),
       builder: (_, child) => MaterialApp.router(
+        scaffoldMessengerKey: Utils.messngerKey,
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,
