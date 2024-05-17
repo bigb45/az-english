@@ -26,6 +26,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
     super.initState();
   }
 
+  EvaluationState answerState = EvaluationState.empty;
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -90,7 +91,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                 ),
               ),
             ),
-            EvaluateAnswer(
+            EvaluationSection(
               onPressed: () {
                 setState(() {
                   // evaulationState = Random().nextBool()
