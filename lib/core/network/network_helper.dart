@@ -24,7 +24,7 @@ class NetworkHelper {
         PrettyDioLogger(
           requestHeader: true,
           requestBody: true,
-          responseBody: true,
+          responseBody: false,
           responseHeader: false,
           error: true,
           compact: true,
@@ -53,7 +53,7 @@ class NetworkHelper {
 
   void _setAuthHeader() {
     headers.putIfAbsent(
-        'Ocp-Apim-Subscription-Key', () => '${APIsConstants.apiKey}');
+        'Ocp-Apim-Subscription-Key', () => '${APIConstants.apiKey}');
   }
 
   Future<CustomResponse> get({
@@ -86,6 +86,7 @@ class NetworkHelper {
       {required String url,
       Map<String, dynamic>? queryParameters,
       Map<String, dynamic>? headersForRequest,
+      bool returnBytesResponse = false,
       body,
       formData}) async {
     _setJsonHeader();
@@ -103,6 +104,7 @@ class NetworkHelper {
         queryParameters: queryParameters,
         data: formData != null ? (formData) : body,
         options: Options(
+          responseType: returnBytesResponse ? ResponseType.bytes : null,
           headers: headers,
         ),
       );
