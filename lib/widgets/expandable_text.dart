@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 class ExpandableTextBox extends StatefulWidget {
   final bool isReadMore;
   final String readMoreText;
-  // TODO: remove this
   bool? isFocused;
   final String questionText;
 
