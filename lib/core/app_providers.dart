@@ -1,3 +1,4 @@
+import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,7 +9,9 @@ class AppProviders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [],
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+      ],
       child: child,
     );
   }

@@ -1,10 +1,14 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/resources/app_strings.dart';
+import 'package:ez_english/router.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/text_field.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -15,13 +19,29 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final usedGap = Constants.gapH16;
-  final Map<String, TextEditingController> textFieldMap = {
-    AppStrings.emailAddress: TextEditingController(),
-    AppStrings.password: TextEditingController(),
-  };
+  final emailAddressTextController = TextEditingController();
+  final passwordTextController = TextEditingController();
+  late Map<String, TextEditingController> textFieldMap;
+  @override
+  void initState() {
+    textFieldMap = {
+      AppStrings.emailAddress: emailAddressTextController,
+      AppStrings.password: passwordTextController,
+    };
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    emailAddressTextController.dispose();
+    passwordTextController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context);
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(Constants.padding12),
@@ -66,7 +86,13 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               Button(
                 text: AppStrings.loginButton,
-                onPressed: () {},
+                onPressed: () async {
+                  await authViewModel.signIn(
+                    emailAddressTextController.text.trim(),
+                    passwordTextController.text.trim(),
+                    context,
+                  );
+                },
                 type: ButtonType.primary,
               ),
               usedGap,
