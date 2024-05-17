@@ -16,6 +16,8 @@ import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'features/main_app.dart';
+
 final loggedOutRotuer = GoRouter(
   routes: [
     GoRoute(
@@ -28,7 +30,7 @@ final loggedOutRotuer = GoRouter(
 final loggedInRouter = GoRouter(routes: [
   GoRoute(
     path: '/',
-    builder: ((context, state) => LevelSelection()),
+    builder: ((context, state) => MainApp()),
   ),
   GoRoute(
     path: '/level/:levelId',
