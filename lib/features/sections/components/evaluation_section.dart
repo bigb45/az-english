@@ -5,17 +5,17 @@ import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class EvaluateAnswer extends StatefulWidget {
+class EvaluationSection extends StatefulWidget {
   final VoidCallback onPressed;
   final EvaluationState state;
-  const EvaluateAnswer(
+  const EvaluationSection(
       {super.key, required this.onPressed, this.state = EvaluationState.empty});
 
   @override
-  State<EvaluateAnswer> createState() => _EvaluateAnswerState();
+  State<EvaluationSection> createState() => _EvaluationSectionState();
 }
 
-class _EvaluateAnswerState extends State<EvaluateAnswer> {
+class _EvaluationSectionState extends State<EvaluationSection> {
   @override
   Widget build(BuildContext context) {
     return Container(

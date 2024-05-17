@@ -92,15 +92,14 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                 ),
               ),
             ),
-            EvaluateAnswer(
+            EvaluationSection(
                 state: answerState,
                 onPressed: switch (answerState) {
                   EvaluationState.correct => () {
-                      print("continuing to next screen");
+                      // TODO: move on to next question or screen
                     },
                   EvaluationState.incorrect => () {
                       evaluateAnswer();
-                      print("try again");
                     },
                   EvaluationState.empty => () {
                       evaluateAnswer();

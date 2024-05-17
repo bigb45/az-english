@@ -3,6 +3,7 @@
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
 import 'package:ez_english/features/sections/writing/components/dictation_question.dart';
+import 'package:ez_english/features/sections/writing/dication_question_model.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
@@ -10,8 +11,8 @@ import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
+// TODO: add text styles
 class WritingPractice extends StatefulWidget {
   const WritingPractice({super.key});
 
@@ -20,10 +21,12 @@ class WritingPractice extends StatefulWidget {
 }
 
 class _WritingPracticeState extends State<WritingPractice> {
-  late FlutterTts flutterTts;
-  bool isSpeaking = false;
+  EvaluationState evaluationState = EvaluationState.empty;
 
-  // TODO: use azure services for text to speech
+  final DictationQuestionModel question = DictationQuestionModel(
+    question: "Write the following sentence",
+    answer: "The quick brown fox jumps over the lazy dog.",
+  );
 
   @override
   void initState() {
@@ -34,6 +37,7 @@ class _WritingPracticeState extends State<WritingPractice> {
   }
 
   final TextEditingController _controller = TextEditingController();
+  // TODO: get this from viewmodel
   String text = "The quick brown fox jumps over the lazy dog.";
 
   RadioItemData? selectedOption;
@@ -88,11 +92,9 @@ class _WritingPracticeState extends State<WritingPractice> {
                         padding: EdgeInsets.symmetric(vertical: 8.0),
                         child: ProgressBar(value: 20),
                       ),
-                      // todo: pass tts state to dictation question to control the audio playback (play pause)
                       DictationQuestion(
                         controller: _controller,
-                        text: text,
-                        flutterTts: flutterTts,
+                        question: question,
                       ),
                       // MultipleChoiceQuestion(
                       //   question:
@@ -113,9 +115,16 @@ class _WritingPracticeState extends State<WritingPractice> {
                 ),
               ),
             ),
-            EvaluateAnswer(
+            EvaluationSection(
+              state: evaluationState,
               onPressed: () {
-                print("Continuing");
+                setState(() {
+                  evaluationState = switch (
+                      question.validateQuestion(userAnswer: _controller.text)) {
+                    true => EvaluationState.correct,
+                    false => EvaluationState.incorrect,
+                  };
+                });
               },
             )
           ],
