@@ -135,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Button(
                   text: AppStrings.loginButton,
                   onPressed: () {
-                    context.push("/sign_in");
+                    context.pop();
                   },
                   type: ButtonType.secondary,
                 ),

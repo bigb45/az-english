@@ -57,8 +57,8 @@ class _LevelSelectionState extends State<LevelSelection> {
         // TODO remove this icon after implementing signout in account screen
         actions: [
           IconButton(
-              onPressed: () {
-                authViewModel.signOut();
+              onPressed: () async {
+                await authViewModel.signOut(context);
               },
               icon: Icon(
                 Icons.logout,
