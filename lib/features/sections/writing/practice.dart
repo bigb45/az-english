@@ -11,8 +11,8 @@ import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
+// TODO: add text styles
 class WritingPractice extends StatefulWidget {
   const WritingPractice({super.key});
 
@@ -21,8 +21,8 @@ class WritingPractice extends StatefulWidget {
 }
 
 class _WritingPracticeState extends State<WritingPractice> {
-  late FlutterTts flutterTts;
-  bool isSpeaking = false;
+  EvaluationState evaluationState = EvaluationState.empty;
+
   final DictationQuestionModel question = DictationQuestionModel(
     question: "Write the following sentence",
     answer: "The quick brown fox jumps over the lazy dog.",
@@ -37,6 +37,7 @@ class _WritingPracticeState extends State<WritingPractice> {
   }
 
   final TextEditingController _controller = TextEditingController();
+  // TODO: get this from viewmodel
   String text = "The quick brown fox jumps over the lazy dog.";
 
   RadioItemData? selectedOption;
@@ -115,8 +116,15 @@ class _WritingPracticeState extends State<WritingPractice> {
               ),
             ),
             EvaluationSection(
+              state: evaluationState,
               onPressed: () {
-                question.validateQuestion(userAnswer: _controller.text);
+                setState(() {
+                  evaluationState = switch (
+                      question.validateQuestion(userAnswer: _controller.text)) {
+                    true => EvaluationState.correct,
+                    false => EvaluationState.incorrect,
+                  };
+                });
               },
             )
           ],
