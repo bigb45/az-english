@@ -1,10 +1,12 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -14,15 +16,32 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final Map<String, TextEditingController> textFieldMap = {
-    AppStrings.studentName: TextEditingController(),
-    AppStrings.parentPhoneNumber: TextEditingController(),
-    AppStrings.emailAddress: TextEditingController(),
-    AppStrings.password: TextEditingController(),
-  };
+  final TextEditingController studentNameTextController =
+      TextEditingController();
+  final TextEditingController parentPhoneNumberTextController =
+      TextEditingController();
+  final TextEditingController emailAddressTextController =
+      TextEditingController();
+  final TextEditingController password = TextEditingController();
+
+  late Map<String, TextEditingController> textFieldMap;
+
+  @override
+  void initState() {
+    textFieldMap = {
+      AppStrings.studentName: studentNameTextController,
+      AppStrings.parentPhoneNumber: parentPhoneNumberTextController,
+      AppStrings.emailAddress: emailAddressTextController,
+      AppStrings.password: password,
+    };
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context);
+
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(Constants.padding12),
@@ -67,7 +86,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               Button(
                 text: AppStrings.createAccountButton,
-                onPressed: () {},
+                onPressed: () async {
+                  await authViewModel.signUp(
+                      emailAddressTextController.text, password.text, context);
+                },
                 type: ButtonType.primary,
               ),
               Constants.gapH12,

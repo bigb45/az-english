@@ -2,6 +2,7 @@
 
 import 'package:ez_english/components.dart';
 import 'package:ez_english/features/auth/screens/sign_in.dart';
+import 'package:ez_english/features/auth/screens/sign_up.dart';
 import 'package:ez_english/features/levels/screens/level_selection.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
 import 'package:ez_english/features/sections/grammar/practice.dart';
@@ -28,61 +29,68 @@ final loggedOutRotuer = GoRouter(
       path: '/sign_in',
       builder: (context, state) => SignInScreen(),
     ),
+    GoRoute(
+      path: '/sign_up',
+      builder: (context, state) => SignUpScreen(),
+    ),
   ],
 );
 
-final loggedInRouter = GoRouter(routes: [
-  GoRoute(
-    path: '/',
-    builder: ((context, state) => MainApp()),
-  ),
-  GoRoute(
-    path: '/level/:levelId',
-    builder: ((context, state) {
-      return PracticeScreen(levelId: state.pathParameters['levelId'] ?? "-1");
-    }),
-  ),
-  GoRoute(
-    path: '/section/:sectionId',
-    builder: ((context, state) {
-      return switch (state.pathParameters['sectionId']) {
-        "reading" => ReadingSection(),
-        "grammar" => GrammarSection(),
-        "listening" => WritingSection(),
-        "vocabulary" => VocabularySection(),
-        String() || null => const Placeholder(),
-      };
-    }),
-  ),
-  GoRoute(
-    path: '/components',
-    builder: ((context, state) => Components()),
-  ),
-  GoRoute(
-    path: '/practice/:sectionId',
-    builder: ((context, state) {
-      return switch (state.pathParameters['sectionId']) {
-        "reading" => ReadingPractice(),
-        "grammar" => GrammarPractice(),
-        "listening" => WritingPractice(),
-        "vocabulary" => WordsListView(
-            words: const [
-              WordModel(word: "word", type: WordType.noun, isNew: true),
-              WordModel(word: "word", type: WordType.noun, isNew: true),
-              WordModel(word: "word", type: WordType.noun, isNew: true),
-              WordModel(word: "word", type: WordType.noun, isNew: true),
-            ],
-          ),
-        String() || null => const Placeholder(),
-      };
-    }),
-  ),
-  GoRoute(
-    path: '/settings',
-    builder: (context, state) => Scaffold(
-      body: Center(
-        child: Text('Settings'),
+final loggedInRouter = GoRouter(
+  navigatorKey: navigatorKey,
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: ((context, state) => MainApp()),
+    ),
+    GoRoute(
+      path: '/level/:levelId',
+      builder: ((context, state) {
+        return PracticeScreen(levelId: state.pathParameters['levelId'] ?? "-1");
+      }),
+    ),
+    GoRoute(
+      path: '/section/:sectionId',
+      builder: ((context, state) {
+        return switch (state.pathParameters['sectionId']) {
+          "reading" => ReadingSection(),
+          "grammar" => GrammarSection(),
+          "listening" => WritingSection(),
+          "vocabulary" => VocabularySection(),
+          String() || null => const Placeholder(),
+        };
+      }),
+    ),
+    GoRoute(
+      path: '/components',
+      builder: ((context, state) => Components()),
+    ),
+    GoRoute(
+      path: '/practice/:sectionId',
+      builder: ((context, state) {
+        return switch (state.pathParameters['sectionId']) {
+          "reading" => ReadingPractice(),
+          "grammar" => GrammarPractice(),
+          "listening" => WritingPractice(),
+          "vocabulary" => WordsListView(
+              words: const [
+                WordModel(word: "word", type: WordType.noun, isNew: true),
+                WordModel(word: "word", type: WordType.noun, isNew: true),
+                WordModel(word: "word", type: WordType.noun, isNew: true),
+                WordModel(word: "word", type: WordType.noun, isNew: true),
+              ],
+            ),
+          String() || null => const Placeholder(),
+        };
+      }),
+    ),
+    GoRoute(
+      path: '/settings',
+      builder: (context, state) => Scaffold(
+        body: Center(
+          child: Text('Settings'),
+        ),
       ),
     ),
-  ),
-]);
+  ],
+);

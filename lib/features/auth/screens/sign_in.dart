@@ -8,6 +8,7 @@ import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -98,7 +99,9 @@ class _SignInScreenState extends State<SignInScreen> {
               usedGap,
               Button(
                 text: AppStrings.createAccountButton,
-                onPressed: () {},
+                onPressed: () {
+                  context.push('/sign_up');
+                },
                 type: ButtonType.secondary,
               ),
               usedGap,
