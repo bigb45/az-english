@@ -26,12 +26,37 @@ class AuthViewModel extends ChangeNotifier {
     );
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
+          email: email.trim(), password: password.trim());
       navigatorKey.currentState!.popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
       // TODO: Handle errors effectively
       Navigator.of(context).pop();
       _showErrorDialog(context, e.message);
+    }
+  }
+
+  Future<void> register(String email, String password) async {
+    try {
+      await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(e.message ?? 'An unknown error occurred');
+    }
+  }
+
+  Future<void> resetPassword(String email, BuildContext context) async {
+    showDialog(
+      barrierColor: Colors.transparent,
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email.trim());
+      navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(e.message ?? 'An unknown error occurred');
     }
   }
 

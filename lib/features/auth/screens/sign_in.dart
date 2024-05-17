@@ -88,8 +88,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 text: AppStrings.loginButton,
                 onPressed: () async {
                   await authViewModel.signIn(
-                    emailAddressTextController.text.trim(),
-                    passwordTextController.text.trim(),
+                    emailAddressTextController.text,
+                    passwordTextController.text,
                     context,
                   );
                 },
@@ -102,10 +102,18 @@ class _SignInScreenState extends State<SignInScreen> {
                 type: ButtonType.secondary,
               ),
               usedGap,
-              Text(
-                "RESET PASSWORD",
-                style: TextStyles.cardText
-                    .copyWith(decoration: TextDecoration.underline),
+              GestureDetector(
+                onTap: () async {
+                  await authViewModel.resetPassword(
+                    emailAddressTextController.text,
+                    context,
+                  );
+                },
+                child: Text(
+                  "RESET PASSWORD",
+                  style: TextStyles.cardText
+                      .copyWith(decoration: TextDecoration.underline),
+                ),
               )
             ],
           ),
