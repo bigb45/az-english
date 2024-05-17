@@ -88,11 +88,9 @@ class _WritingPracticeState extends State<WritingPractice> {
                         padding: EdgeInsets.symmetric(vertical: 8.0),
                         child: ProgressBar(value: 20),
                       ),
-                      // todo: pass tts state to dictation question to control the audio playback (play pause)
                       DictationQuestion(
                         controller: _controller,
                         text: text,
-                        flutterTts: flutterTts,
                       ),
                       // MultipleChoiceQuestion(
                       //   question:
