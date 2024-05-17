@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/network/apis_constants.dart';
 import 'package:ez_english/core/network/custom_response.dart';
-import 'package:ez_english/core/network/networkhelper.dart';
+import 'package:ez_english/core/network/network_helper.dart';
 import 'package:ez_english/features/azure_tts_test.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -102,7 +102,7 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
   Future<void> _sendAudioFile() async {
     List<int> audioBytes = File(_audioFilePath!).readAsBytesSync();
 
-    String url = APIsConstants.sttEndPoint; // Replace with your API endpoint
+    String url = APIConstants.sttEndPoint; // Replace with your API endpoint
     try {
       // Define your JSON payload
       Map<String, dynamic> pronAssessmentParams = {
