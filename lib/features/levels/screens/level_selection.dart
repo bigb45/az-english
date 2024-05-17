@@ -1,8 +1,10 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/account/account.dart';
+import 'package:ez_english/features/result/Results.dart';
+import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
 import 'package:flutter/material.dart';
-import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:go_router/go_router.dart';
@@ -17,6 +19,12 @@ class LevelSelection extends StatefulWidget {
 class _LevelSelectionState extends State<LevelSelection> {
   int _selectedIndex = 0;
 
+  final PageController _pageController = PageController();
+  final _pages = const [
+    LevelSelection(),
+    Results(),
+    Account(),
+  ];
   @override
   void initState() {
     super.initState();
@@ -31,7 +39,7 @@ class _LevelSelectionState extends State<LevelSelection> {
     context.push('/level/$levelId');
   }
 
-  void _onItemTapped(int index) {
+  void _onPageChanged(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -124,29 +132,6 @@ class _LevelSelectionState extends State<LevelSelection> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: NavigationBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        destinations: const <NavigationDestination>[
-          NavigationDestination(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.change_circle),
-            label: 'Result',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.account_circle),
-            label: 'Account',
-          ),
-        ],
-
-        selectedIndex: _selectedIndex,
-        indicatorColor: Palette.secondaryVariantStroke,
-        // selectedItemColor: Palette.primary,
-        onDestinationSelected: _onItemTapped,
       ),
     );
   }
