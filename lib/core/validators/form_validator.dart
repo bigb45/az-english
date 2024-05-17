@@ -23,4 +23,23 @@ class Validators {
     }
     return null;
   }
+
+  static String? validateStudentName(String? name) {
+    if (name == null || name.isEmpty) {
+      return "Name is required";
+    }
+    return null;
+  }
+
+  static String? validateParentPhoneNumber(String? phoneNumber) {
+    if (phoneNumber == null || phoneNumber.isEmpty) {
+      return "Phone number is required";
+    }
+
+    if (phoneNumber.length != 10) {
+      return "Enter a valid 10-digit phone number";
+    }
+
+    return null;
+  }
 }
