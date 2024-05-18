@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Utils {
-  static final messngerKey = GlobalKey<ScaffoldMessengerState>();
+  static final messengerKey = GlobalKey<ScaffoldMessengerState>();
   // TODO design
   static showSnackBar(String? text) {
     if (text == null) return;
@@ -10,7 +10,7 @@ class Utils {
       content: Text(text),
       backgroundColor: Colors.red,
     );
-    messngerKey.currentState!
+    messengerKey.currentState!
       ..removeCurrentSnackBar()
       ..showSnackBar(snackBar);
   }

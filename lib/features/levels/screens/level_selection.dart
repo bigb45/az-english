@@ -1,7 +1,5 @@
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/account/account.dart';
-import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
-import 'package:ez_english/features/result/Results.dart';
+import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
@@ -35,22 +33,10 @@ class _LevelSelectionState extends State<LevelSelection> {
 
   @override
   Widget build(BuildContext context) {
-    final authViewModel = Provider.of<AuthViewModel>(context);
-
+    final levelSelectionVm = Provider.of<LevelSelectionViewmodel>(context);
     changeColor();
     return Scaffold(
       appBar: AppBar(
-        // TODO remove this icon after implementing signout in account screen
-        actions: [
-          IconButton(
-              onPressed: () async {
-                await authViewModel.signOut(context);
-              },
-              icon: Icon(
-                Icons.logout,
-                color: Colors.black,
-              ))
-        ],
         backgroundColor: Colors.transparent,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         title: const Text(
@@ -60,79 +46,105 @@ class _LevelSelectionState extends State<LevelSelection> {
       ),
       body: SingleChildScrollView(
         child: SizedBox(
-          child: Column(
-            children: [
-              // First row
-              Constants.gapH36,
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  children: [
-                    _buildCard(
-                        headerText: 'A1',
-                        isAssigned: true,
-                        cardText:
-                            "learn common everyday expressions and simple phrases",
-                        onTap: (levelId) {
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Center(
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                runSpacing: 10,
+                spacing: 10,
+                children: [
+                  ...levelSelectionVm.assignedLevels.map(
+                    (level) {
+                      return _buildCard(
+                        headerText: level.name,
+                        isAssigned: level.isAssigned,
+                        cardText: level.description,
+                        onTap: () {
+                          // TODO: replace "1" with level.id
                           navigateToLevel(levelId: "1");
-                        }),
-                    Constants.gapW10,
-                    _buildCard(
-                      isAssigned: true,
-                      headerText: 'A1',
-                      cardText:
-                          "learn common everyday expressions and simple phrases",
-                      onTap: (levelId) {
-                        navigateToLevel(levelId: "1");
-                      },
-                    ),
-                  ],
-                ),
+                        },
+                      );
+                    },
+                  )
+                ],
               ),
-              // Second row
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  children: [
-                    _buildCard(
-                      headerText: 'A1',
-                      cardText:
-                          "learn common everyday expressions and simple phrases",
-                      onTap: (levelId) {
-                        navigateToLevel(levelId: "1");
-                      },
-                    ),
-                    Constants.gapW10,
-                    _buildCard(
-                      headerText: 'A1',
-                      cardText:
-                          "learn common everyday expressions and simple phrases",
-                      onTap: (levelId) {
-                        navigateToLevel(levelId: "1");
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              // Third row
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildCard(
-                      headerText: 'A1',
-                      cardText:
-                          "learn common everyday expressions and simple phrases",
-                      onTap: (levelId) {
-                        navigateToLevel(levelId: "1");
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Constants.gapH36,
-            ],
+            ),
+            // child: Column(
+            //   children: [
+            //     // First row
+            //     Constants.gapH36,
+            //     Padding(
+            //       padding: const EdgeInsets.all(10.0),
+            //       child: Row(
+            //         children: [
+            //           _buildCard(
+            //               headerText: 'A1',
+            //               isAssigned: true,
+            //               cardText:
+            //                   "learn common everyday expressions and simple phrases",
+            //               onTap: (levelId) {
+            //                 navigateToLevel(levelId: "1");
+            //               }),
+            //           Constants.gapW10,
+            //           _buildCard(
+            //             isAssigned: true,
+            //             headerText: 'A2',
+            //             cardText:
+            //                 "learn common everyday expressions and simple phrases",
+            //             onTap: (levelId) {
+            //               levelSelectionVm.setSelectedLevel(levelId);
+            //               navigateToLevel(levelId: levelId.toString());
+            //             },
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //     // Second row
+            //     Padding(
+            //       padding: const EdgeInsets.all(10.0),
+            //       child: Row(
+            //         children: [
+            //           _buildCard(
+            //             headerText: 'B1',
+            //             cardText:
+            //                 "learn common everyday expressions and simple phrases",
+            //             onTap: (levelId) {
+            //               navigateToLevel(levelId: "1");
+            //             },
+            //           ),
+            //           Constants.gapW10,
+            //           _buildCard(
+            //             headerText: 'B2',
+            //             cardText:
+            //                 "learn common everyday expressions and simple phrases",
+            //             onTap: (levelId) {
+            //               navigateToLevel(levelId: "1");
+            //             },
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //     // Third row
+            //     Padding(
+            //       padding: const EdgeInsets.all(10.0),
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           _buildCard(
+            //             headerText: 'C2',
+            //             cardText:
+            //                 "learn common everyday expressions and simple phrases",
+            //             onTap: (levelId) {
+            //               navigateToLevel(levelId: "1");
+            //             },
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //     Constants.gapH36,
+            //   ],
+            // ),
           ),
         ),
       ),
@@ -142,13 +154,13 @@ class _LevelSelectionState extends State<LevelSelection> {
   Widget _buildCard(
       {required String headerText,
       required String cardText,
-      required Function(int) onTap,
+      required Function() onTap,
       bool isAssigned = false}) {
     return SelectableCard(
       selected: isAssigned,
       onPressed: isAssigned
           ? () {
-              onTap(1);
+              onTap();
             }
           : null,
       child: Column(

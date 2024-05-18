@@ -56,7 +56,7 @@ class MainAppContent extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(390, 844),
       builder: (_, child) => MaterialApp.router(
-        scaffoldMessengerKey: Utils.messngerKey,
+        scaffoldMessengerKey: Utils.messengerKey,
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,

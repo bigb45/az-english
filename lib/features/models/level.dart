@@ -4,9 +4,13 @@ class Level {
   String name;
   String description;
   List<Section> sections;
+  bool isAssigned;
 
   Level(
-      {required this.name, required this.description, required this.sections});
+      {required this.name,
+      required this.description,
+      required this.sections,
+      this.isAssigned = false});
 
   factory Level.fromJson(Map<String, dynamic> json) {
     return Level(
