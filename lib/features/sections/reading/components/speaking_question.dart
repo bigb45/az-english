@@ -36,7 +36,6 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
   @override
   void initState() {
     audioPlayer = AudioPlayer();
-    // TODO: implement initState
     super.initState();
     initRecorder();
   }

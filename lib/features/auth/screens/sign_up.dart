@@ -59,7 +59,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       TextFieldType.email,
       TextFieldType.password,
     ];
-    // TODO: implement initState
     super.initState();
   }
 
@@ -69,7 +68,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     studentNameTextController.dispose();
     parentPhoneNumberTextController.dispose();
     emailAddressTextController.dispose();
-    // TODO: implement dispose
     super.dispose();
   }
 

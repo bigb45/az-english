@@ -47,7 +47,6 @@ class AuthViewModel extends ChangeNotifier {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
-      // TODO should the user sign in directly after signing up ?
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email.trim(), password: password.trim());
     } on FirebaseAuthException catch (e) {

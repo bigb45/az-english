@@ -46,7 +46,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
         });
       },
       child: TextFormField(
-        // TODO
         autovalidateMode: AutovalidateMode.disabled,
         validator: widget.validator,
         maxLines: widget.maxLines,

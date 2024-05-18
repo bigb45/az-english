@@ -36,7 +36,7 @@ class _WritingPracticeState extends State<WritingPractice> {
   }
 
   final TextEditingController _controller = TextEditingController();
-  // TODO: get this from viewmodel
+  // TODO: get the text from viewmodel
   String text = "The quick brown fox jumps over the lazy dog.";
 
   RadioItemData? selectedOption;

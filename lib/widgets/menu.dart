@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// TODO: fix selected border UI issue
 class Menu extends StatefulWidget {
   final Function onItemSelected;
   final List<MenuItemData> items;
