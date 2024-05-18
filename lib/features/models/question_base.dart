@@ -1,12 +1,12 @@
 abstract class QuestionBase {
   String questionText;
-  String image;
-  String voice;
+  String imageUrl;
+  String voiceUrl;
 
   QuestionBase({
     required this.questionText,
-    required this.image,
-    required this.voice,
+    required this.imageUrl,
+    required this.voiceUrl,
   });
 
   Map<String, dynamic> toJson();

@@ -3,7 +3,6 @@
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
 import 'package:ez_english/features/sections/writing/components/dictation_question.dart';
-import 'package:ez_english/features/sections/writing/dication_question_model.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/progress_bar.dart';

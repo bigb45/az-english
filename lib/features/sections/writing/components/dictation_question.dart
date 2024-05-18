@@ -2,7 +2,7 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/network/apis_constants.dart';
 import 'package:ez_english/core/network/custom_response.dart';
 import 'package:ez_english/core/network/network_helper.dart';
-import 'package:ez_english/features/sections/writing/dication_question_model.dart';
+import 'package:ez_english/features/models/question_base.dart';
 import 'package:ez_english/widgets/microphone_button.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,6 @@ import 'package:just_audio/just_audio.dart';
 class DictationQuestion extends StatefulWidget {
   final TextEditingController controller;
   final DictationQuestionModel question;
-
   const DictationQuestion({
     super.key,
     required this.controller,
@@ -111,5 +110,57 @@ class DictationQuestionAudioSource extends StreamAudioSource {
       stream: Stream.value(bytes.sublist(start, end)),
       contentType: 'audio/mpeg',
     );
+  }
+}
+
+class DictationQuestionModel extends QuestionBase {
+  final String answer;
+
+  DictationQuestionModel({
+    required this.answer,
+    required String question,
+  }) : super(
+          questionText: question,
+          imageUrl: "",
+          voiceUrl: "",
+        );
+
+  bool validateQuestion({String? correctAnswer, required String userAnswer}) {
+    correctAnswer = correctAnswer ?? answer;
+
+    correctAnswer = correctAnswer.normalize();
+    userAnswer = userAnswer.normalize();
+
+    if (userAnswer == correctAnswer) {
+      print("correct");
+    } else {
+      print(
+          "incorrect, user answered: $userAnswer, correct answer: $correctAnswer");
+    }
+
+    return userAnswer == correctAnswer;
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'question': questionText,
+      'answer': answer,
+    };
+  }
+
+  factory DictationQuestionModel.fromJson(Map<String, dynamic> json) {
+    return DictationQuestionModel(
+      question: json['question'],
+      answer: json['answer'],
+    );
+  }
+}
+
+extension StringExtension on String {
+  String normalize() {
+    return replaceAll(RegExp(r'[^\w\s]'), '')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .toLowerCase();
   }
 }
