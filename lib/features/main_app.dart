@@ -16,9 +16,9 @@ class _MainAppState extends State<MainApp> {
 
   final PageController _pageController = PageController();
 
-  final List<Widget> _pages = const [
-    LevelSelection(),
-    Results(),
+  final List<Widget> _pages = [
+    const LevelSelection(),
+    const Results(),
     Account(),
   ];
   void _onPageChanged(int index) {
