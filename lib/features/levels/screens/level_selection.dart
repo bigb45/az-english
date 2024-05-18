@@ -1,4 +1,7 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/account/account.dart';
+import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
+import 'package:ez_english/features/result/Results.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
@@ -6,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class LevelSelection extends StatefulWidget {
   const LevelSelection({Key? key}) : super(key: key);
@@ -31,9 +35,22 @@ class _LevelSelectionState extends State<LevelSelection> {
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context);
+
     changeColor();
     return Scaffold(
       appBar: AppBar(
+        // TODO remove this icon after implementing signout in account screen
+        actions: [
+          IconButton(
+              onPressed: () async {
+                await authViewModel.signOut(context);
+              },
+              icon: Icon(
+                Icons.logout,
+                color: Colors.black,
+              ))
+        ],
         backgroundColor: Colors.transparent,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         title: const Text(
