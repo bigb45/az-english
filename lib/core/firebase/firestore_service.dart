@@ -28,4 +28,20 @@ class FirestoreService {
       throw Exception('Failed to add user: $e');
     }
   }
+
+  Future<UserModel?> getUser(String userId) async {
+    try {
+      DocumentSnapshot doc = await _db
+          .collection(FirestoreConstants.usersCollections)
+          .doc(userId)
+          .get();
+      if (doc.exists) {
+        return UserModel.fromMap(doc.data() as Map<String, dynamic>);
+      }
+    } catch (e) {
+      // Handle any errors
+      print(e);
+    }
+    return null;
+  }
 }
