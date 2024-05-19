@@ -20,9 +20,13 @@ class LevelSelection extends StatefulWidget {
 }
 
 class _LevelSelectionState extends State<LevelSelection> {
+  // late LevelSelectionViewmodel levelSelectionVm;
+
   @override
   void initState() {
     super.initState();
+    // levelSelectionVm =
+    //     Provider.of<LevelSelectionViewmodel>(context, listen: false);
     changeColor();
   }
 
@@ -36,7 +40,9 @@ class _LevelSelectionState extends State<LevelSelection> {
 
   @override
   Widget build(BuildContext context) {
-    final levelSelectionVm = Provider.of<LevelSelectionViewmodel>(context);
+    LevelSelectionViewmodel levelSelectionVm =
+        Provider.of<LevelSelectionViewmodel>(context);
+
     changeColor();
     return Scaffold(
       appBar: AppBar(
@@ -47,11 +53,15 @@ class _LevelSelectionState extends State<LevelSelection> {
           style: TextStyle(color: Palette.primaryText),
         ),
       ),
-      body: levelSelectionVm.isLoding
-          // TODO design
+      body: levelSelectionVm.isLoading
           ? const Center(child: CircularProgressIndicator())
           : levelSelectionVm.error != null
-              ? ErrorWidget(error: levelSelectionVm.error!)
+              ? ErrorWidget(
+                  error: levelSelectionVm.error ??
+                      CustomException(
+                        message: "",
+                        type: FirebaseExceptionType.networkError,
+                      ))
               : SingleChildScrollView(
                   child: SizedBox(
                     child: Padding(
@@ -75,6 +85,14 @@ class _LevelSelectionState extends State<LevelSelection> {
                                 );
                               },
                             ),
+                            // ElevatedButton(
+                            //   onPressed: () {
+                            //     levelSelectionVm.fetchLevels();
+                            //   },
+                            //   child: Text(
+                            //     "Refresh",
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
