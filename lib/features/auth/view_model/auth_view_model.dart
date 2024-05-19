@@ -1,6 +1,5 @@
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/features/models/user.dart';
-import 'package:ez_english/router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -12,8 +11,8 @@ class AuthViewModel extends ChangeNotifier {
 
   User? get user => _user;
 
-  // bool get isSignedIn => _user != null;
-  bool get isSignedIn => true;
+  bool get isSignedIn => _user != null;
+  // bool get isSignedIn => true;
   AuthViewModel() {
     _firebaseAuth.authStateChanges().listen(_onAuthStateChanged);
   }

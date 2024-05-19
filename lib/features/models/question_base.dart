@@ -1,9 +1,9 @@
-abstract class QuestionBase {
+abstract class BaseQuestion {
   String questionText;
   String imageUrl;
   String voiceUrl;
 
-  QuestionBase({
+  BaseQuestion({
     required this.questionText,
     required this.imageUrl,
     required this.voiceUrl,
@@ -11,7 +11,7 @@ abstract class QuestionBase {
 
   Map<String, dynamic> toJson();
 
-  factory QuestionBase.fromJson(Map<String, dynamic> json) {
+  factory BaseQuestion.fromJson(Map<String, dynamic> json) {
     throw UnimplementedError('fromJson not implemented');
   }
 }

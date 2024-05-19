@@ -113,7 +113,7 @@ class DictationQuestionAudioSource extends StreamAudioSource {
   }
 }
 
-class DictationQuestionModel extends QuestionBase {
+class DictationQuestionModel extends BaseQuestion {
   final String answer;
 
   DictationQuestionModel({
