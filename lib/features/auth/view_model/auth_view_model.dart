@@ -26,6 +26,24 @@ class AuthViewModel extends ChangeNotifier {
   AuthViewModel() {
     _firebaseAuth.authStateChanges().listen(_onAuthStateChanged);
   }
+  //TODO remove this after testing
+  Future<void> signInDev() async {
+    errorOccurred = false;
+    try {
+      final tempUser = UserModel(emailAddress: "r@g.com", password: "123456");
+      await _firebaseAuthService.signIn(tempUser);
+      if (isSignedIn) {
+        _userDate = await _firestoreService.getUser(_user!.uid);
+        notifyListeners();
+      }
+    } on CustomException catch (e) {
+      errorOccurred = true;
+      _handleError(e.message);
+    }
+    // if (!errorOccurred) {
+    //   navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    // }
+  }
 
   Future<void> signIn(UserModel user, BuildContext context) async {
     // TODO change the lodaing design

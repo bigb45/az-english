@@ -19,6 +19,7 @@ class LevelSelectionViewmodel extends BaseViewModel {
   void update(AuthViewModel authViewModel) {
     _authProvider = authViewModel;
     if (_authProvider.isSignedIn) {
+      // TODO ask about getting the levels only when the auth state changes
       fetchLevels();
     }
   }

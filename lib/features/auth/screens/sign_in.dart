@@ -31,6 +31,7 @@ class _SignInScreenState extends State<SignInScreen> {
   late List<TextEditingController> textFieldControllers;
   late List<String? Function(String? email)> textFieldValidators;
   late List<TextFieldType> textFieldTypes;
+  late AuthViewModel authViewModel;
 
   @override
   void initState() {
@@ -41,6 +42,11 @@ class _SignInScreenState extends State<SignInScreen> {
     ];
     textFieldControllers = [emailAddressTextController, passwordTextController];
     textFieldTypes = [TextFieldType.text, TextFieldType.password];
+
+    authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+    //TODO delete this if you want to stop auto log in for test purposes
+    authViewModel.signInDev();
+
     super.initState();
   }
 
