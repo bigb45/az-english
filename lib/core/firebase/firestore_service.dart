@@ -39,8 +39,7 @@ class FirestoreService {
         return UserModel.fromMap(doc.data() as Map<String, dynamic>);
       }
     } catch (e) {
-      // Handle any errors
-      print(e);
+      throw Exception('Failed to fetch users: $e');
     }
     return null;
   }
