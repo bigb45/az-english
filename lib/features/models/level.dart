@@ -7,12 +7,14 @@ class Level {
   String name;
   String description;
   List<Section>? sections;
+  bool isAssigned;
 
   Level(
       {required this.name,
       required this.description,
       required this.sections,
-      required this.id});
+      required this.id,
+      this.isAssigned = false});
 
   factory Level.fromMap(Map<String, dynamic> map) {
     return Level(
