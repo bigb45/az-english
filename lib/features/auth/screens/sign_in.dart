@@ -2,6 +2,7 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/validators/form_validator.dart';
 import 'package:ez_english/core/validators/form_validator.dart';
 import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
+import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/router.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -101,11 +102,10 @@ class _SignInScreenState extends State<SignInScreen> {
                   onPressed: () async {
                     final isValid = formKey.currentState!.validate();
                     if (!isValid) return;
-                    await authViewModel.signIn(
-                      emailAddressTextController.text,
-                      passwordTextController.text,
-                      context,
-                    );
+                    final user = UserModel(
+                        emailAddress: emailAddressTextController.text,
+                        password: passwordTextController.text);
+                    await authViewModel.signIn(user, context);
                   },
                   type: ButtonType.primary,
                 ),

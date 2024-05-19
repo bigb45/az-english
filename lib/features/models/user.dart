@@ -4,8 +4,8 @@ import 'package:ez_english/features/models/level_progress.dart';
 
 class UserModel {
   String? id;
-  String studentName;
-  String parentPhoneNumber;
+  String? studentName;
+  String? parentPhoneNumber;
   String emailAddress;
   String password;
   List<String>? assignedLevels;
@@ -13,8 +13,8 @@ class UserModel {
 
   UserModel({
     this.id,
-    required this.studentName,
-    required this.parentPhoneNumber,
+    this.studentName,
+    this.parentPhoneNumber,
     required this.emailAddress,
     required this.password,
     this.assignedLevels,
