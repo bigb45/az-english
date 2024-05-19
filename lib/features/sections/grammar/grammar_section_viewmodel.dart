@@ -11,10 +11,6 @@ class GrammarSectionViewmodel extends BaseViewModel {
   List<BaseQuestion> get questions => _questions;
   bool get isLoding => _isLoading;
 
-  GrammarSectionViewmodel() {
-    init();
-  }
-
   @override
   void init() {
     fetchQuestions();
