@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/user.dart';
@@ -36,9 +37,9 @@ class AuthViewModel extends ChangeNotifier {
         _userDate = await _firestoreService.getUser(_user!.uid);
         notifyListeners();
       }
-    } on FirebaseAuthException catch (e) {
+    } on CustomException catch (e) {
       errorOccurred = true;
-      _handleError(e);
+      _handleError(e.message);
     }
     if (!errorOccurred) {
       navigatorKey.currentState!.popUntil((route) => route.isFirst);
@@ -56,9 +57,9 @@ class AuthViewModel extends ChangeNotifier {
         user.assignedLevels = [];
         await _firestoreService.addUser(user);
       }
-    } on FirebaseAuthException catch (e) {
+    } on CustomException catch (e) {
       errorOccurred = true;
-      _handleError(e);
+      _handleError(e.message);
     }
 
     if (isSignedIn) {
@@ -76,9 +77,9 @@ class AuthViewModel extends ChangeNotifier {
 
     try {
       await _firebaseAuthService.resetPassword(email);
-    } on FirebaseAuthException catch (e) {
+    } on CustomException catch (e) {
       errorOccurred = true;
-      _handleError(e);
+      _handleError(e.message);
     }
     if (!errorOccurred) {
       navigatorKey.currentState!.popUntil((route) => route.isFirst);
@@ -89,9 +90,9 @@ class AuthViewModel extends ChangeNotifier {
     errorOccurred = false;
     try {
       await _firebaseAuthService.signOut();
-    } on FirebaseAuthException catch (e) {
+    } on CustomException catch (e) {
       errorOccurred = true;
-      _handleError(e);
+      _handleError(e.message);
     }
     if (!errorOccurred) {
       navigatorKey.currentState!.popUntil((route) => route.isFirst);
@@ -112,8 +113,8 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _handleError(FirebaseAuthException e) {
-    Utils.showSnackBar(e.message);
+  void _handleError(String e) {
+    Utils.showSnackBar(e);
     errorOccurred = true;
     navigatorKey.currentState!.pop();
   }

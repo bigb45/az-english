@@ -4,6 +4,8 @@ import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/features/models/level.dart';
+import 'package:ez_english/router.dart';
+import 'package:ez_english/utils/utils.dart';
 
 class LevelSelectionViewmodel extends BaseViewModel {
   int _selectedLevelId = 0;
@@ -22,9 +24,8 @@ class LevelSelectionViewmodel extends BaseViewModel {
   }
 
   Future<void> fetchLevels() async {
-    print("stop");
-    List<String>? assignedLevels = _authProvider.userDate!.assignedLevels;
     isLoading = true;
+    List<String>? assignedLevels = _authProvider.userDate!.assignedLevels;
     notifyListeners();
     try {
       error = null;
@@ -32,9 +33,12 @@ class LevelSelectionViewmodel extends BaseViewModel {
       for (var level in _levels) {
         level.isAssigned = assignedLevels!.contains(level.name);
       }
-    } catch (e) {
-      error = e as CustomException;
+    } on CustomException catch (e) {
+      // error = e as CustomException;
+      _handleError(e.message);
       notifyListeners();
+    } catch (e) {
+      _handleError("An undefined error occurred");
     } finally {
       isLoading = false;
       notifyListeners();
@@ -50,5 +54,11 @@ class LevelSelectionViewmodel extends BaseViewModel {
   FutureOr<void> init() {
     // TODO: implement init
     throw UnimplementedError();
+  }
+
+  void _handleError(String e) {
+    Utils.showSnackBar(e);
+    // errorOccurred = true;
+    // navigatorKey.currentState!.pop();
   }
 }

@@ -1,3 +1,4 @@
+import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/router.dart';
 import 'package:ez_english/utils/utils.dart';
@@ -10,8 +11,8 @@ class FirebaseAuthService {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: user.emailAddress.trim(), password: user.password.trim());
-    } on FirebaseAuthException {
-      rethrow;
+    } on FirebaseAuthException catch (e) {
+      throw CustomException.fromFirebaseAuthException(e);
     }
   }
 
@@ -23,8 +24,8 @@ class FirebaseAuthService {
           await _firebaseAuth.signInWithEmailAndPassword(
               email: user.emailAddress.trim(), password: user.password.trim());
       return userCredential;
-    } on FirebaseAuthException {
-      rethrow;
+    } on FirebaseAuthException catch (e) {
+      throw CustomException.fromFirebaseAuthException(e);
     }
   }
 
@@ -32,16 +33,16 @@ class FirebaseAuthService {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email.trim());
       Utils.showSnackBar("Password Reset Email Sent");
-    } on FirebaseAuthException {
-      rethrow;
+    } on FirebaseAuthException catch (e) {
+      throw CustomException.fromFirebaseAuthException(e);
     }
   }
 
   Future<void> signOut() async {
     try {
       await _firebaseAuth.signOut();
-    } on FirebaseAuthException {
-      rethrow;
+    } on FirebaseAuthException catch (e) {
+      throw CustomException.fromFirebaseAuthException(e);
     }
   }
 }

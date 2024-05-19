@@ -59,8 +59,7 @@ class _LevelSelectionState extends State<LevelSelection> {
               ? ErrorWidget(
                   error: levelSelectionVm.error ??
                       CustomException(
-                        message: "",
-                        type: FirebaseExceptionType.networkError,
+                        "",
                       ))
               : SingleChildScrollView(
                   child: SizedBox(

@@ -13,17 +13,15 @@ class FirestoreService {
       QuerySnapshot snapshot =
           await _db.collection(FirestoreConstants.levelsCollection).get();
       if (snapshot.docs.isEmpty) {
-        throw CustomException(
-            message: "No levels found",
-            type: FirebaseExceptionType.networkError);
+        throw "No levels found";
       }
       return snapshot.docs
           .map((doc) => Level.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
     } catch (e) {
-      throw CustomException(
-          message: "A network error occured",
-          type: FirebaseExceptionType.networkError);
+      rethrow;
     }
   }
 
@@ -36,20 +34,14 @@ class FirestoreService {
           .where("level", isEqualTo: level)
           .get();
       if (snapshot.docs.isEmpty) {
-        throw CustomException(
-            message: "No questions found",
-            type: FirebaseExceptionType.networkError);
+        throw "No questions found";
       }
       return snapshot.docs
           .map((doc) =>
               BaseQuestion.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
-    } catch (e) {
-      print("Error: $e");
-
-      throw CustomException(
-          message: "A network error occured",
-          type: FirebaseExceptionType.networkError);
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
     }
   }
 
@@ -59,8 +51,8 @@ class FirestoreService {
           .collection(FirestoreConstants.usersCollections)
           .doc("${user.id}")
           .set(user.toMap());
-    } catch (e) {
-      throw Exception('Failed to add user: $e');
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
     }
   }
 
@@ -73,8 +65,10 @@ class FirestoreService {
       if (doc.exists) {
         return UserModel.fromMap(doc.data() as Map<String, dynamic>);
       }
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
     } catch (e) {
-      throw Exception('Failed to fetch users: $e');
+      rethrow;
     }
     return null;
   }
