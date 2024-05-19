@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ez_english/features/models/level_progress.dart';
 
 class User {
@@ -6,7 +8,7 @@ class User {
   String emailAddress;
   String password;
   List<String> assignedLevels;
-  List<LevelProgress> levelsProgress;
+  List<LevelProgress>? levelsProgress;
 
   User({
     required this.studentName,
@@ -17,27 +19,34 @@ class User {
     required this.levelsProgress,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
+  // Factory constructor to create a User instance from a map
+  factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      studentName: json['studentName'],
-      parentPhoneNumber: json['parentPhoneNumber'],
-      emailAddress: json['emailAddress'],
-      password: json['password'],
-      assignedLevels: List<String>.from(json['assignedLevels']),
-      levelsProgress: (json['levelsProgress'] as List)
-          .map((item) => LevelProgress.fromJson(item))
+      studentName: map['studentName'],
+      parentPhoneNumber: map['parentPhoneNumber'],
+      emailAddress: map['emailAddress'],
+      password: map['password'],
+      assignedLevels: List<String>.from(map['assignedLevels']),
+      levelsProgress: (map['levelsProgress'] as List?)
+          ?.map((item) => LevelProgress.fromMap(item))
           .toList(),
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'studentName': studentName,
       'parentPhoneNumber': parentPhoneNumber,
       'emailAddress': emailAddress,
       'password': password,
       'assignedLevels': assignedLevels,
-      'levelsProgress': levelsProgress.map((lp) => lp.toJson()).toList(),
+      'levelsProgress': levelsProgress?.map((lp) => lp.toMap()).toList(),
     };
   }
+
+  factory User.fromJson(String data) {
+    return User.fromMap(json.decode(data) as Map<String, dynamic>);
+  }
+
+  String toJson() => json.encode(toMap());
 }
