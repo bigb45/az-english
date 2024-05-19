@@ -1,10 +1,13 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -47,33 +50,37 @@ class _LevelSelectionState extends State<LevelSelection> {
       body: levelSelectionVm.isLoding
           // TODO design
           ? const Center(child: CircularProgressIndicator())
-          : SizedBox(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Center(
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    runSpacing: 10,
-                    spacing: 10,
-                    children: [
-                      ...levelSelectionVm.levels.map(
-                        (level) {
-                          return _buildCard(
-                            headerText: level.name,
-                            // TODO match this with user assigned level
-                            isAssigned: true,
-                            cardText: level.description,
-                            onTap: () {
-                              navigateToLevel(levelId: "${level.id}");
-                            },
-                          );
-                        },
-                      )
-                    ],
+          : levelSelectionVm.error != null
+              ? ErrorWidget(error: levelSelectionVm.error!)
+              : SingleChildScrollView(
+                  child: SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Center(
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          runSpacing: 10,
+                          spacing: 10,
+                          children: [
+                            ...levelSelectionVm.levels.map(
+                              (level) {
+                                return _buildCard(
+                                  headerText: level.name,
+                                  // TODO match this with user assigned level
+                                  isAssigned: true,
+                                  cardText: level.description,
+                                  onTap: () {
+                                    navigateToLevel(levelId: "${level.id}");
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
     );
   }
 
@@ -103,6 +110,35 @@ class _LevelSelectionState extends State<LevelSelection> {
             style: TextStyles.cardText,
             textAlign: TextAlign.center,
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class ErrorWidget extends StatelessWidget {
+  final CustomException error;
+  const ErrorWidget({super.key, required this.error});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error,
+            size: 100.h,
+          ),
+          Text(error.message),
+          SizedBox(
+            height: 30.h,
+          ),
+          Button(
+              onPressed: () {
+                context.read<LevelSelectionViewmodel>().fetchLevels();
+              },
+              text: 'Retry')
         ],
       ),
     );
