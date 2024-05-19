@@ -1,3 +1,5 @@
+import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/router.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,13 +7,14 @@ import 'package:flutter/material.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirestoreService _firestoreService = FirestoreService();
 
   User? _user;
 
   User? get user => _user;
 
-  // bool get isSignedIn => _user != null;
-  bool get isSignedIn => true;
+  bool get isSignedIn => _user != null;
+  // bool get isSignedIn => true;
   AuthViewModel() {
     _firebaseAuth.authStateChanges().listen(_onAuthStateChanged);
   }
@@ -35,8 +38,7 @@ class AuthViewModel extends ChangeNotifier {
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 
-  Future<void> signUp(
-      String email, String password, BuildContext context) async {
+  Future<void> signUp(UserModel user, BuildContext context) async {
     showDialog(
       barrierColor: Colors.transparent,
       context: context,
@@ -45,9 +47,20 @@ class AuthViewModel extends ChangeNotifier {
     );
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
+          email: user.emailAddress, password: user.password);
       await _firebaseAuth.signInWithEmailAndPassword(
-          email: email.trim(), password: password.trim());
+          email: user.emailAddress.trim(), password: user.password.trim());
+
+      if (_user != null) {
+        UserModel userData = UserModel(
+          id: _user!.uid,
+          studentName: user.studentName,
+          parentPhoneNumber: user.parentPhoneNumber,
+          emailAddress: user.emailAddress,
+          password: user.password,
+        );
+        await _firestoreService.addUser(userData);
+      }
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);
       navigatorKey.currentState!.pop();

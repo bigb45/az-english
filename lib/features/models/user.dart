@@ -2,26 +2,28 @@ import 'dart:convert';
 
 import 'package:ez_english/features/models/level_progress.dart';
 
-class User {
+class UserModel {
+  String? id;
   String studentName;
   String parentPhoneNumber;
   String emailAddress;
   String password;
-  List<String> assignedLevels;
+  List<String>? assignedLevels;
   List<LevelProgress>? levelsProgress;
 
-  User({
+  UserModel({
+    this.id,
     required this.studentName,
     required this.parentPhoneNumber,
     required this.emailAddress,
     required this.password,
-    required this.assignedLevels,
-    required this.levelsProgress,
+    this.assignedLevels,
+    this.levelsProgress,
   });
 
-  // Factory constructor to create a User instance from a map
-  factory User.fromMap(Map<String, dynamic> map) {
-    return User(
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      id: map['id'],
       studentName: map['studentName'],
       parentPhoneNumber: map['parentPhoneNumber'],
       emailAddress: map['emailAddress'],
@@ -35,6 +37,7 @@ class User {
 
   Map<String, dynamic> toMap() {
     return {
+      "id": id,
       'studentName': studentName,
       'parentPhoneNumber': parentPhoneNumber,
       'emailAddress': emailAddress,
@@ -44,8 +47,8 @@ class User {
     };
   }
 
-  factory User.fromJson(String data) {
-    return User.fromMap(json.decode(data) as Map<String, dynamic>);
+  factory UserModel.fromJson(String data) {
+    return UserModel.fromMap(json.decode(data) as Map<String, dynamic>);
   }
 
   String toJson() => json.encode(toMap());
