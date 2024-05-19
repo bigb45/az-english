@@ -12,7 +12,10 @@ class AppProviders extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
-        ChangeNotifierProvider(create: (_) => LevelSelectionViewmodel()),
+        ChangeNotifierProxyProvider<AuthViewModel, LevelSelectionViewmodel>(
+          update: (context, auth, levels) => levels!..update(auth),
+          create: (BuildContext context) => LevelSelectionViewmodel(),
+        ),
       ],
       child: child,
     );
