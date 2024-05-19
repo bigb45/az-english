@@ -2,7 +2,7 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/network/apis_constants.dart';
 import 'package:ez_english/core/network/custom_response.dart';
 import 'package:ez_english/core/network/network_helper.dart';
-import 'package:ez_english/features/models/question_base.dart';
+import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/widgets/microphone_button.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
