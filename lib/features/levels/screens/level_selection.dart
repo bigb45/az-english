@@ -61,7 +61,7 @@ class _LevelSelectionState extends State<LevelSelection> {
                           return _buildCard(
                             headerText: level.name,
                             // TODO match this with user assigned level
-                            isAssigned: true,
+                            isAssigned: level.isAssigned,
                             cardText: level.description,
                             onTap: () {
                               navigateToLevel(levelId: "${level.id}");
