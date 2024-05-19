@@ -85,6 +85,7 @@ class AuthViewModel extends ChangeNotifier {
       Utils.showSnackBar(e.message);
       navigatorKey.currentState!.pop();
     }
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
     // TODO try to fix navigation stack,  ensure that if the user logs in from the sign-up screen and later signs out, they are directed back to the sign-up screen
     // if (context.mounted) context.push("/sign_up");
   }

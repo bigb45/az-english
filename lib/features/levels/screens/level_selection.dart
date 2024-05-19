@@ -44,108 +44,36 @@ class _LevelSelectionState extends State<LevelSelection> {
           style: TextStyle(color: Palette.primaryText),
         ),
       ),
-      body: SizedBox(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Center(
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              runSpacing: 10,
-              spacing: 10,
-              children: [
-                ...levelSelectionVm.assignedLevels.map(
-                  (level) {
-                    return _buildCard(
-                      headerText: level.name,
-                      isAssigned: true,
-                      cardText: level.description,
-                      onTap: () {
-                        // TODO: replace "1" with level.id
-                        navigateToLevel(levelId: "1");
-                      },
-                    );
-                  },
-                )
-              ],
+      body: levelSelectionVm.isLoding
+          // TODO design
+          ? const Center(child: CircularProgressIndicator())
+          : SizedBox(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Center(
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    runSpacing: 10,
+                    spacing: 10,
+                    children: [
+                      ...levelSelectionVm.levels.map(
+                        (level) {
+                          return _buildCard(
+                            headerText: level.name,
+                            // TODO match this with user assigned level
+                            isAssigned: true,
+                            cardText: level.description,
+                            onTap: () {
+                              navigateToLevel(levelId: "${level.id}");
+                            },
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-          // child: Column(
-          //   children: [
-          //     // First row
-          //     Constants.gapH36,
-          //     Padding(
-          //       padding: const EdgeInsets.all(10.0),
-          //       child: Row(
-          //         children: [
-          //           _buildCard(
-          //               headerText: 'A1',
-          //               isAssigned: true,
-          //               cardText:
-          //                   "learn common everyday expressions and simple phrases",
-          //               onTap: (levelId) {
-          //                 navigateToLevel(levelId: "1");
-          //               }),
-          //           Constants.gapW10,
-          //           _buildCard(
-          //             isAssigned: true,
-          //             headerText: 'A2',
-          //             cardText:
-          //                 "learn common everyday expressions and simple phrases",
-          //             onTap: (levelId) {
-          //               levelSelectionVm.setSelectedLevel(levelId);
-          //               navigateToLevel(levelId: levelId.toString());
-          //             },
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //     // Second row
-          //     Padding(
-          //       padding: const EdgeInsets.all(10.0),
-          //       child: Row(
-          //         children: [
-          //           _buildCard(
-          //             headerText: 'B1',
-          //             cardText:
-          //                 "learn common everyday expressions and simple phrases",
-          //             onTap: (levelId) {
-          //               navigateToLevel(levelId: "1");
-          //             },
-          //           ),
-          //           Constants.gapW10,
-          //           _buildCard(
-          //             headerText: 'B2',
-          //             cardText:
-          //                 "learn common everyday expressions and simple phrases",
-          //             onTap: (levelId) {
-          //               navigateToLevel(levelId: "1");
-          //             },
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //     // Third row
-          //     Padding(
-          //       padding: const EdgeInsets.all(10.0),
-          //       child: Row(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           _buildCard(
-          //             headerText: 'C2',
-          //             cardText:
-          //                 "learn common everyday expressions and simple phrases",
-          //             onTap: (levelId) {
-          //               navigateToLevel(levelId: "1");
-          //             },
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //     Constants.gapH36,
-          //   ],
-          // ),
-        ),
-      ),
     );
   }
 
