@@ -1,5 +1,6 @@
 import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
+import 'package:ez_english/features/sections/reading/view_model/reading_q_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +17,7 @@ class AppProviders extends StatelessWidget {
           update: (context, auth, levels) => levels!..update(auth),
           create: (BuildContext context) => LevelSelectionViewmodel(),
         ),
+        ChangeNotifierProvider(create: (_) => ReadingQuestionViewmodel()),
       ],
       child: child,
     );

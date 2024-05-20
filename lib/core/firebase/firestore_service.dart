@@ -4,6 +4,7 @@ import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:ez_english/features/sections/reading/model/reading_question.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -26,20 +27,31 @@ class FirestoreService {
   }
 
   Future<List<BaseQuestion>> fetchQuestions(
-      String section, String level, String userId) async {
+      String section, String level) async {
+    List<BaseQuestion> questions = [];
     try {
-      QuerySnapshot snapshot = await _db
-          .collection(FirestoreConstants.questionsCollection)
-          .where("section", isEqualTo: section)
-          .where("level", isEqualTo: level)
+      DocumentSnapshot levelDoc = await _db
+          .collection(FirestoreConstants.levelsCollection)
+          .doc(level)
+          .collection(FirestoreConstants.sectionsCollection)
+          .doc(section)
+          .collection(FirestoreConstants.unitsCollection)
+          .doc("Unit1")
           .get();
-      if (snapshot.docs.isEmpty) {
-        throw "No questions found";
+      if (levelDoc.exists) {
+        Map<String, dynamic> data = levelDoc.data() as Map<String, dynamic>;
+
+        if (data.containsKey('questions')) {
+          List<dynamic> questionsData = data['questions'];
+
+          for (var mapData in questionsData) {
+            ReadingQuestionModel? question =
+                ReadingQuestionModel.fromMap(mapData as Map<String, dynamic>);
+            questions.add(question);
+          }
+        }
       }
-      return snapshot.docs
-          .map((doc) =>
-              BaseQuestion.fromJson(doc.data() as Map<String, dynamic>))
-          .toList();
+      return questions;
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
     }

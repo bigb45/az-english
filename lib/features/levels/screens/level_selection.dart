@@ -78,7 +78,7 @@ class _LevelSelectionState extends State<LevelSelection> {
                                   isAssigned: level.isAssigned,
                                   cardText: level.description,
                                   onTap: () {
-                                    navigateToLevel(levelId: "${level.id}");
+                                    navigateToLevel(levelId: level.name);
                                   },
                                 );
                               },

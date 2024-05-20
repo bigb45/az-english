@@ -9,9 +9,9 @@ abstract class BaseQuestion {
     required this.voiceUrl,
   });
 
-  Map<String, dynamic> toJson();
+  Map<String, dynamic> toMap();
 
-  factory BaseQuestion.fromJson(Map<String, dynamic> json) {
+  factory BaseQuestion.fromMap(Map<String, dynamic> json) {
     throw UnimplementedError('fromJson not implemented');
   }
 }

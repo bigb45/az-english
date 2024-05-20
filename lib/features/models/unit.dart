@@ -10,7 +10,7 @@ class Unit {
     return Unit(
       name: json['name'],
       questions: (json['questions'] as List)
-          .map((item) => BaseQuestion.fromJson(item))
+          .map((item) => BaseQuestion.fromMap(item))
           .toList(),
     );
   }
@@ -18,7 +18,7 @@ class Unit {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
-      'questions': questions.map((q) => q.toJson()).toList(),
+      'questions': questions.map((q) => q.toMap()).toList(),
     };
   }
 }

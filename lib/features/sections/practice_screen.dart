@@ -66,7 +66,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
   }
 
   void navigateToSection({required String sectionId}) {
-    context.push('/section/$sectionId');
+    context.push('/${widget.levelId}/section/$sectionId');
   }
 
   @override

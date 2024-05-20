@@ -50,10 +50,13 @@ final loggedInRouter = GoRouter(
       }),
     ),
     GoRoute(
-      path: '/section/:sectionId',
+      path: '/:levelId/section/:sectionId',
       builder: ((context, state) {
         return switch (state.pathParameters['sectionId']) {
-          "reading" => ReadingSection(),
+          "reading" => ReadingSection(
+              levelId: state.pathParameters['levelId'] ?? "-1",
+              sectionId: state.pathParameters['sectionId'] ?? "-1",
+            ),
           "grammar" => GrammarSection(),
           "listening" => WritingSection(),
           "vocabulary" => VocabularySection(),

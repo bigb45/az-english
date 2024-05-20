@@ -11,11 +11,11 @@ import 'package:just_audio/just_audio.dart';
 
 class DictationQuestion extends StatefulWidget {
   final TextEditingController controller;
-  final DictationQuestionModel question;
+  // final DictationQuestionModel question;
   const DictationQuestion({
     super.key,
     required this.controller,
-    required this.question,
+    // required this.question,
   });
 
   @override
@@ -26,70 +26,70 @@ class _DictationQuestionState extends State<DictationQuestion> {
   final String apiKey = dotenv.env['AZURE_API_KEY_1'] ?? '';
 
   final AudioPlayer player = AudioPlayer();
-  void getAudioBytes(String? text) async {
-    String requestBody =
-        '<speak version="1.0" xml:lang="en-US"><voice xml:lang="en-US" xml:gender="Female" name="en-US-JennyNeural">${widget.question.answer}</voice></speak>';
-    Map<String, dynamic> requestBodyHeaders = {
-      'Ocp-Apim-Subscription-Key': apiKey,
-      'Content-Type': 'application/ssml+xml',
-      'X-Microsoft-OutputFormat': 'audio-24khz-160kbitrate-mono-mp3',
-    };
+  // void getAudioBytes(String? text) async {
+  //   String requestBody =
+  //       '<speak version="1.0" xml:lang="en-US"><voice xml:lang="en-US" xml:gender="Female" name="en-US-JennyNeural">${widget.question.answer}</voice></speak>';
+  //   Map<String, dynamic> requestBodyHeaders = {
+  //     'Ocp-Apim-Subscription-Key': apiKey,
+  //     'Content-Type': 'application/ssml+xml',
+  //     'X-Microsoft-OutputFormat': 'audio-24khz-160kbitrate-mono-mp3',
+  //   };
 
-    try {
-      CustomResponse response = await NetworkHelper.instance.post(
-        url: APIConstants.ttsEndPoint,
-        headersForRequest: requestBodyHeaders,
-        body: requestBody,
-        returnBytesResponse: true,
-      );
-      if (response.statusCode == 200) {
-        final bytes = response.data;
-        await player.setAudioSource(DictationQuestionAudioSource(bytes));
-        player.play();
-      } else {
-        throw Exception(
-            "Error while generating audio: ${response.statusCode}, ${response.errorMessage}");
-      }
-    } catch (e) {
-      print("Error while playing audio: $e");
-    }
-  }
+  //   try {
+  //     CustomResponse response = await NetworkHelper.instance.post(
+  //       url: APIConstants.ttsEndPoint,
+  //       headersForRequest: requestBodyHeaders,
+  //       body: requestBody,
+  //       returnBytesResponse: true,
+  //     );
+  //     if (response.statusCode == 200) {
+  //       final bytes = response.data;
+  //       await player.setAudioSource(DictationQuestionAudioSource(bytes));
+  //       player.play();
+  //     } else {
+  //       throw Exception(
+  //           "Error while generating audio: ${response.statusCode}, ${response.errorMessage}");
+  //     }
+  //   } catch (e) {
+  //     print("Error while playing audio: $e");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(height: Constants.padding20),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text("Type the sentence you hear"),
-              ],
-            ),
-            SizedBox(height: Constants.padding20),
-            AudioControlButton(
-              onPressed: () {
-                getAudioBytes("testing ");
-              },
-              type: AudioControlType.speaker,
-            ),
-            SizedBox(height: Constants.padding20),
-            const Text(
-              "Tap the speaker button and listen to the sentence.\nType the sentence out in the box below.",
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: Constants.padding20),
-            CustomTextField(
-              controller: widget.controller,
-              maxLines: 10,
-              hintText: "Type your answer here",
-            ),
-          ],
-        ),
+        // Column(
+        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //   children: [
+        //     SizedBox(height: Constants.padding20),
+        //     const Row(
+        //       mainAxisAlignment: MainAxisAlignment.start,
+        //       children: [
+        //         Text("Type the sentence you hear"),
+        //       ],
+        //     ),
+        //     SizedBox(height: Constants.padding20),
+        //     AudioControlButton(
+        //       onPressed: () {
+        //         getAudioBytes("testing ");
+        //       },
+        //       type: AudioControlType.speaker,
+        //     ),
+        //     SizedBox(height: Constants.padding20),
+        //     const Text(
+        //       "Tap the speaker button and listen to the sentence.\nType the sentence out in the box below.",
+        //       textAlign: TextAlign.center,
+        //     ),
+        //     SizedBox(height: Constants.padding20),
+        //     CustomTextField(
+        //       controller: widget.controller,
+        //       maxLines: 10,
+        //       hintText: "Type your answer here",
+        //     ),
+        //   ],
+        // ),
       ],
     );
   }
@@ -113,54 +113,54 @@ class DictationQuestionAudioSource extends StreamAudioSource {
   }
 }
 
-class DictationQuestionModel extends BaseQuestion {
-  final String answer;
+// class DictationQuestionModel extends BaseQuestion {
+//   final String answer;
 
-  DictationQuestionModel({
-    required this.answer,
-    required String question,
-  }) : super(
-          questionText: question,
-          imageUrl: "",
-          voiceUrl: "",
-        );
+//   DictationQuestionModel({
+//     required this.answer,
+//     required String question,
+//   }) : super(
+//           questionText: question,
+//           imageUrl: "",
+//           voiceUrl: "",
+//         );
 
-  bool validateQuestion({String? correctAnswer, required String userAnswer}) {
-    correctAnswer = correctAnswer ?? answer;
+//   bool validateQuestion({String? correctAnswer, required String userAnswer}) {
+//     correctAnswer = correctAnswer ?? answer;
 
-    correctAnswer = correctAnswer.normalize();
-    userAnswer = userAnswer.normalize();
+//     correctAnswer = correctAnswer.normalize();
+//     userAnswer = userAnswer.normalize();
 
-    if (userAnswer == correctAnswer) {
-      print("correct");
-    } else {
-      print(
-          "incorrect, user answered: $userAnswer, correct answer: $correctAnswer");
-    }
+//     if (userAnswer == correctAnswer) {
+//       print("correct");
+//     } else {
+//       print(
+//           "incorrect, user answered: $userAnswer, correct answer: $correctAnswer");
+//     }
 
-    return userAnswer == correctAnswer;
-  }
+//     return userAnswer == correctAnswer;
+//   }
 
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      'question': questionText,
-      'answer': answer,
-    };
-  }
+//   @override
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'question': questionText,
+//       'answer': answer,
+//     };
+//   }
 
-  factory DictationQuestionModel.fromJson(Map<String, dynamic> json) {
-    return DictationQuestionModel(
-      question: json['question'],
-      answer: json['answer'],
-    );
-  }
-}
+//   factory DictationQuestionModel.fromJson(Map<String, dynamic> json) {
+//     return DictationQuestionModel(
+//       question: json['question'],
+//       answer: json['answer'],
+//     );
+//   }
+// }
 
-extension StringExtension on String {
-  String normalize() {
-    return replaceAll(RegExp(r'[^\w\s]'), '')
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .toLowerCase();
-  }
-}
+// extension StringExtension on String {
+//   String normalize() {
+//     return replaceAll(RegExp(r'[^\w\s]'), '')
+//         .replaceAll(RegExp(r'\s+'), ' ')
+//         .toLowerCase();
+//   }
+// }

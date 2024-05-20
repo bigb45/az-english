@@ -20,7 +20,7 @@ class GrammarSectionViewmodel extends BaseViewModel {
     _isLoading = true;
     try {
       // TODO: replace with actual data
-      _questions = await _firestoreService.fetchQuestions("grammar", "1", "1");
+      // _questions = await _firestoreService.fetchQuestions("grammar", "1", "1");
 
       notifyListeners();
     } catch (e) {

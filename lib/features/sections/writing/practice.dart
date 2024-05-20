@@ -22,10 +22,10 @@ class WritingPractice extends StatefulWidget {
 class _WritingPracticeState extends State<WritingPractice> {
   EvaluationState evaluationState = EvaluationState.empty;
 
-  final DictationQuestionModel question = DictationQuestionModel(
-    question: "Write the following sentence",
-    answer: "The quick brown fox jumps over the lazy dog.",
-  );
+  // final DictationQuestionModel question = DictationQuestionModel(
+  //   question: "Write the following sentence",
+  //   answer: "The quick brown fox jumps over the lazy dog.",
+  // );
 
   @override
   void initState() {
@@ -91,10 +91,10 @@ class _WritingPracticeState extends State<WritingPractice> {
                         padding: EdgeInsets.symmetric(vertical: 8.0),
                         child: ProgressBar(value: 20),
                       ),
-                      DictationQuestion(
-                        controller: _controller,
-                        question: question,
-                      ),
+                      // DictationQuestion(
+                      //   controller: _controller,
+                      //   question: question,
+                      // ),
                       // MultipleChoiceQuestion(
                       //   question:
                       //       "Select the sentence that best describes the image above",
@@ -117,13 +117,13 @@ class _WritingPracticeState extends State<WritingPractice> {
             EvaluationSection(
               state: evaluationState,
               onPressed: () {
-                setState(() {
-                  evaluationState = switch (
-                      question.validateQuestion(userAnswer: _controller.text)) {
-                    true => EvaluationState.correct,
-                    false => EvaluationState.incorrect,
-                  };
-                });
+                // setState(() {
+                //   evaluationState = switch (
+                //       question.validateQuestion(userAnswer: _controller.text)) {
+                //     true => EvaluationState.correct,
+                //     false => EvaluationState.incorrect,
+                //   };
+                // });
               },
             )
           ],
