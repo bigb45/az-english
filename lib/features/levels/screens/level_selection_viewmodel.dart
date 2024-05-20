@@ -26,9 +26,10 @@ class LevelSelectionViewmodel extends BaseViewModel {
 
   Future<void> fetchLevels() async {
     isLoading = true;
-    List<String>? assignedLevels = _authProvider.userDate!.assignedLevels;
     notifyListeners();
     try {
+      if (_authProvider.userDate == null) return;
+      List<String>? assignedLevels = _authProvider.userDate!.assignedLevels;
       error = null;
       _levels = await firestoreService.fetchLevels();
       for (var level in _levels) {
@@ -39,7 +40,7 @@ class LevelSelectionViewmodel extends BaseViewModel {
       _handleError(e.message);
       notifyListeners();
     } catch (e) {
-      _handleError("An undefined error occurred");
+      _handleError("An undefined error occurred ${e.toString()}");
     } finally {
       isLoading = false;
       notifyListeners();
@@ -52,10 +53,7 @@ class LevelSelectionViewmodel extends BaseViewModel {
   }
 
   @override
-  FutureOr<void> init() {
-    // TODO: implement init
-    throw UnimplementedError();
-  }
+  FutureOr<void> init() {}
 
   void _handleError(String e) {
     Utils.showSnackBar(e);

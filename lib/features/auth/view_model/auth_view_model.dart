@@ -32,13 +32,11 @@ class AuthViewModel extends ChangeNotifier {
     try {
       final tempUser = UserModel(emailAddress: "r@g.com", password: "123456");
       await _firebaseAuthService.signIn(tempUser);
-      if (isSignedIn) {
-        _userDate = await _firestoreService.getUser(_user!.uid);
-        notifyListeners();
-      }
     } on CustomException catch (e) {
       errorOccurred = true;
       _handleError(e.message);
+    } catch (e) {
+      print("object");
     }
     // if (!errorOccurred) {
     //   navigatorKey.currentState!.popUntil((route) => route.isFirst);
@@ -51,10 +49,6 @@ class AuthViewModel extends ChangeNotifier {
     errorOccurred = false;
     try {
       await _firebaseAuthService.signIn(user);
-      if (isSignedIn) {
-        _userDate = await _firestoreService.getUser(_user!.uid);
-        notifyListeners();
-      }
     } on CustomException catch (e) {
       errorOccurred = true;
       _handleError(e.message);
@@ -80,10 +74,6 @@ class AuthViewModel extends ChangeNotifier {
       _handleError(e.message);
     }
 
-    if (isSignedIn) {
-      _userDate = await _firestoreService.getUser(_user!.uid);
-      notifyListeners();
-    }
     if (!errorOccurred) {
       navigatorKey.currentState!.popUntil((route) => route.isFirst);
     }
@@ -126,8 +116,11 @@ class AuthViewModel extends ChangeNotifier {
     );
   }
 
-  void _onAuthStateChanged(User? user) {
+  void _onAuthStateChanged(User? user) async {
     _user = user;
+    if (_user != null) {
+      _userDate = await _firestoreService.getUser(_user!.uid);
+    }
     notifyListeners();
   }
 
