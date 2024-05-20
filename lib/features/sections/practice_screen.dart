@@ -22,9 +22,42 @@ class PracticeScreen extends StatefulWidget {
 }
 
 class _PracticeScreenState extends State<PracticeScreen> {
+  late List<String> hintTexts = [];
+  late List<String?> imageAssets = [];
+  late List<Color> backgroundColors = [];
+  late List<String> sectionIds = [];
   @override
   void initState() {
+    hintTexts = [
+      AppStrings.readingSectionCardTitle,
+      AppStrings.listeningAndWritingSectionCardTitle,
+      AppStrings.vocabSectionCardTitle,
+      AppStrings.grammarSectionCardTitle,
+      AppStrings.skillTestSectionCardTitle
+    ];
+    imageAssets = [
+      "assets/images/reading_section_card.svg",
+      "assets/images/listening_section_card.svg",
+      "assets/images/vocabulary_section_card.svg",
+      "assets/images/grammar_section_card.svg",
+      null
+    ];
+    backgroundColors = [
+      const Color(0xFFFFA500),
+      const Color(0xFF3498DB),
+      const Color(0xFFECECEC),
+      const Color(0xFF663399),
+      const Color(0xFF34495E)
+    ];
+    sectionIds = [
+      "reading",
+      "listening",
+      "vocabulary",
+      "grammar",
+      "skill_test"
+    ];
     // setStatusBar to make the top side of the navbar with a different color since this is not supported for IOS in the default implementation of AppBar
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FlutterStatusbarcolor.setStatusBarColor(Palette.primary);
     });
@@ -64,86 +97,36 @@ class _PracticeScreenState extends State<PracticeScreen> {
       ),
       body: SizedBox(
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // First row
-              const Padding(
-                padding: EdgeInsets.all(20.0),
-                child: ProgressBar(value: 20),
-              ),
-              Constants.gapH36,
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
+          child: SizedBox(
+            child: Padding(
+              padding: EdgeInsets.all(Constants.padding20),
+              child: Center(
+                child: Column(
                   children: [
-                    _buildCard(
-                      headerText: AppStrings.readingSectionCardTitle,
-                      cardText:
-                          "learn common everyday expressions and simple phrases",
-                      imagePath: "assets/images/reading_section_card.svg",
-                      backgroundColor: const Color(0xFFFFA500),
-                      cardShadowColor: const Color(0xFFFFA500),
-                      sectionId: "reading",
-                    ),
-                    Constants.gapW10,
-                    _buildCard(
-                      headerText:
-                          AppStrings.listeningAndWritingSectionCardTitle,
-                      cardText:
-                          "learn common everyday expressions and simple phrases",
-                      imagePath: "assets/images/listening_section_card.svg",
-                      backgroundColor: const Color(0xFF3498DB),
-                      cardShadowColor: const Color(0xFF3498DB),
-                      sectionId: "listening",
+                    Constants.gapH20,
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      runSpacing: 15,
+                      spacing: 10,
+                      children: [
+                        ...hintTexts.asMap().entries.map((entry) {
+                          int index = entry.key;
+                          String hintText = entry.value;
+                          return _buildCard(
+                            headerText: hintText,
+                            cardText:
+                                "Learn common everyday expressions and simple phrases",
+                            imagePath: imageAssets[index],
+                            backgroundColor: backgroundColors[index],
+                            sectionId: sectionIds[index],
+                          );
+                        }).toList(),
+                      ],
                     ),
                   ],
                 ),
               ),
-              // Second row
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  children: [
-                    _buildCard(
-                      headerText: AppStrings.vocabSectionCardTitle,
-                      cardText:
-                          "learn common everyday expressions and simple phrases",
-                      imagePath: "assets/images/vocabulary_section_card.svg",
-                      backgroundColor: const Color(0xFFECECEC),
-                      cardShadowColor: const Color(0xFFECECEC),
-                      secondaryText: true,
-                      sectionId: "vocabulary",
-                    ),
-                    Constants.gapW10,
-                    _buildCard(
-                      headerText: AppStrings.grammarSectionCardTitle,
-                      cardText:
-                          "learn common everyday expressions and simple phrases",
-                      imagePath: "assets/images/grammar_section_card.svg",
-                      backgroundColor: const Color(0xFF663399),
-                      cardShadowColor: const Color(0xFF663399),
-                      sectionId: "grammar",
-                    ),
-                  ],
-                ),
-              ),
-              // Third row
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildCard(
-                      backgroundColor: const Color(0xFF34495E),
-                      headerText: AppStrings.skillTestSectionCardTitle,
-                      cardText:
-                          "learn common everyday expressions and simple phrases",
-                      sectionId: "skill_test",
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

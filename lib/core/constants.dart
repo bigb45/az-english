@@ -21,6 +21,7 @@ class Constants {
   static final padding20 = 20.w;
   static final padding12 = 12.w;
   static final padding8 = 8.w;
+  static final padding6 = 6.w;
   static final padding4 = 4.w;
   static final padding2 = 2.w;
   static final iconSize = 16.w;

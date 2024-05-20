@@ -63,7 +63,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                   border: Border.all(color: Palette.secondaryStroke, width: 2),
                   borderRadius: BorderRadius.circular(16.r),
                 ),
-                width: 180.w,
+                width: 170.w,
                 height: 180.w,
                 child: Padding(
                   padding: EdgeInsets.all(Constants.padding8),
@@ -138,10 +138,10 @@ class ExerciseCardState extends State<ExerciseCard> {
                           ),
                         ],
                 ),
-                width: 180.w,
+                width: 170.w,
                 height: 180.w,
                 child: Padding(
-                  padding: EdgeInsets.all(Constants.padding8),
+                  padding: EdgeInsets.all(Constants.padding6),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
