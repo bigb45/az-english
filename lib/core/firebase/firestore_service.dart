@@ -27,14 +27,18 @@ class FirestoreService {
   }
 
   Future<List<BaseQuestion>> fetchQuestions(
-      String section, String level) async {
+    String sectionName,
+    String level,
+    int startIndex,
+  ) async {
     List<BaseQuestion> questions = [];
+    List<dynamic> filteredQuestionsData = [];
     try {
       DocumentSnapshot levelDoc = await _db
           .collection(FirestoreConstants.levelsCollection)
           .doc(level)
           .collection(FirestoreConstants.sectionsCollection)
-          .doc(section)
+          .doc(sectionName)
           .collection(FirestoreConstants.unitsCollection)
           .doc("Unit1")
           .get();
@@ -43,8 +47,11 @@ class FirestoreService {
 
         if (data.containsKey('questions')) {
           List<dynamic> questionsData = data['questions'];
-
-          for (var mapData in questionsData) {
+          // Ensure the startIndex is within bounds
+          if (startIndex < questionsData.length) {
+            filteredQuestionsData = questionsData.sublist(startIndex);
+          }
+          for (var mapData in filteredQuestionsData) {
             ReadingQuestionModel? question =
                 ReadingQuestionModel.fromMap(mapData as Map<String, dynamic>);
             questions.add(question);
