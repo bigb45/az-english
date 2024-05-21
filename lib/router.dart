@@ -44,16 +44,21 @@ final loggedInRouter = GoRouter(
       builder: ((context, state) => MainApp()),
     ),
     GoRoute(
-      path: '/level/:levelId',
+      path: '/level/:levelId/:levelName',
       builder: ((context, state) {
-        return PracticeScreen(levelId: state.pathParameters['levelId'] ?? "-1");
+        return PracticeScreen(
+          levelId: state.pathParameters['levelId'] ?? "-1",
+          levelName: state.pathParameters['levelName'] ?? "-1",
+        );
       }),
     ),
     GoRoute(
-      path: '/:levelId/section/:sectionId',
+      path: '/:levelName/:levelId/section/:sectionName/:sectionId',
       builder: ((context, state) {
-        return switch (state.pathParameters['sectionId']) {
+        return switch (state.pathParameters['sectionName']) {
           "reading" => ReadingSection(
+              levelName: state.pathParameters['levelName'] ?? "-1",
+              sectionName: state.pathParameters['sectionId'] ?? "-1",
               levelId: state.pathParameters['levelId'] ?? "-1",
               sectionId: state.pathParameters['sectionId'] ?? "-1",
             ),
