@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:ez_english/features/models/level_progress.dart';
 
 class UserModel {
@@ -9,7 +8,7 @@ class UserModel {
   String emailAddress;
   String password;
   List<String>? assignedLevels;
-  List<LevelProgress>? levelsProgress;
+  Map<String, LevelProgress>? levelsProgress;
 
   UserModel({
     this.id,
@@ -26,12 +25,16 @@ class UserModel {
       id: map['id'],
       studentName: map['studentName'],
       parentPhoneNumber: map['parentPhoneNumber'],
-      emailAddress: map['emailAddress'],
-      password: map['password'],
-      assignedLevels: List<String>.from(map['assignedLevels']),
-      levelsProgress: (map['levelsProgress'] as List?)
-          ?.map((item) => LevelProgress.fromMap(item))
-          .toList(),
+      emailAddress:
+          map['emailAddress'] ?? '', // Provide a default value if needed
+      password: map['password'] ?? '', // Provide a default value if needed
+      assignedLevels: List<String>.from(map['assignedLevels'] ?? []),
+      levelsProgress: (map['levelsProgress'] as Map<String, dynamic>?)?.map(
+        (key, value) => MapEntry<String, LevelProgress>(
+          key,
+          LevelProgress.fromMap(value),
+        ),
+      ),
     );
   }
 
@@ -43,7 +46,8 @@ class UserModel {
       'emailAddress': emailAddress,
       'password': password,
       'assignedLevels': assignedLevels,
-      'levelsProgress': levelsProgress?.map((lp) => lp.toMap()).toList(),
+      'levelsProgress':
+          levelsProgress?.map((key, value) => MapEntry(key, value.toMap())),
     };
   }
 

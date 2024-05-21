@@ -13,9 +13,9 @@ class SectionProgress {
 
   factory SectionProgress.fromMap(Map<String, dynamic> map) {
     return SectionProgress(
-      sectionName: map['sectionName'],
-      progress: map['progress'],
-      lastStoppedQuestionIndex: map['lastStoppedQuestionIndex'],
+      sectionName: map['sectionName'] ?? '',
+      progress: map['progress'] ?? '',
+      lastStoppedQuestionIndex: map['lastStoppedQuestionIndex'] ?? 0,
     );
   }
 
