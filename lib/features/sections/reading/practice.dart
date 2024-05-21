@@ -63,7 +63,9 @@ class _ReadingPracticeState extends State<ReadingPractice> {
     return PopScope(
       canPop: false,
       onPopInvoked: (canPop) {
-        showLeaveAlertDialog(context);
+        // TODO Is it working ???
+        // print("pressed");
+        // showLeaveAlertDialog(context);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -75,7 +77,13 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                 color: Palette.primaryText,
               ),
               onPressed: () {
-                showLeaveAlertDialog(context);
+                showLeaveAlertDialog(
+                  context,
+                  onPressed: () async {
+                    await readingQuestionViewmodel
+                        .updateSectionProgress(currentQuestionIndex);
+                  },
+                );
               },
             ),
           ],

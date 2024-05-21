@@ -45,7 +45,7 @@ class _WritingPracticeState extends State<WritingPractice> {
     return PopScope(
       canPop: false,
       onPopInvoked: (canPop) {
-        showLeaveAlertDialog(context);
+        // showLeaveAlertDialog(context);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -57,7 +57,7 @@ class _WritingPracticeState extends State<WritingPractice> {
                 color: Palette.primaryText,
               ),
               onPressed: () {
-                showLeaveAlertDialog(context);
+                showLeaveAlertDialog(context, onPressed: () {});
               },
             ),
           ],

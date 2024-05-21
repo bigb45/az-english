@@ -35,7 +35,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
     return PopScope(
       canPop: false,
       onPopInvoked: (canPop) {
-        showLeaveAlertDialog(context);
+        // showLeaveAlertDialog(context);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -47,7 +47,10 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                 color: Palette.primaryText,
               ),
               onPressed: () {
-                showLeaveAlertDialog(context);
+                showLeaveAlertDialog(
+                  context,
+                  onPressed: () {},
+                );
               },
             ),
           ],

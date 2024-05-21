@@ -36,6 +36,10 @@ class _ReadingSectionState extends State<ReadingSection> {
   void initState() {
     // setStatusBar to make the top side of the navbar with a different color since this is not supported for IOS in the default implementation of AppBar
     readQsVm = Provider.of<ReadingQuestionViewmodel>(context, listen: false);
+    readQsVm.levelId = widget.levelId;
+    readQsVm.levelName = widget.levelName;
+    readQsVm.sectionName = widget.sectionName;
+    readQsVm.sectionId = widget.sectionId;
     getQs();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FlutterStatusbarcolor.setStatusBarColor(Palette.primary);
