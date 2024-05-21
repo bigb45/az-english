@@ -43,7 +43,7 @@ class ReadingQuestionViewmodel extends BaseViewModel {
       _handleError("An undefined error occurred ${e.toString()}");
     } finally {
       isLoading = false;
-      // notifyListeners();
+      notifyListeners();
     }
   }
 
