@@ -26,6 +26,7 @@ class FirestoreService {
     }
   }
 
+// TODO generic function
   Future<List<BaseQuestion>> fetchQuestions(
     String sectionName,
     String level,
@@ -61,6 +62,40 @@ class FirestoreService {
       return questions;
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
+    }
+  }
+
+  Future<void> updateQuestionProgress(
+      {required String userId,
+      required String levelName,
+      required String sectionName,
+      required int newQuestionIndex}) async {
+    try {
+      DocumentReference userDocRef =
+          FirebaseFirestore.instance.collection('Users').doc(userId);
+
+      FieldPath lastStoppedQuestionIndex = FieldPath([
+        'levelsProgress',
+        levelName,
+        'sectionProgress',
+        sectionName,
+        "lastStoppedQuestionIndex"
+      ]);
+      FieldPath sectionProgressIndex = FieldPath([
+        'levelsProgress',
+        levelName,
+        'sectionProgress',
+        "reading",
+        "progress"
+      ]);
+
+      await userDocRef.update({
+        lastStoppedQuestionIndex: newQuestionIndex,
+        sectionProgressIndex:
+            ((newQuestionIndex + 1) / 10 * 100).toStringAsFixed(2)
+      });
+    } catch (e) {
+      print("Error updating progress: $e");
     }
   }
 
