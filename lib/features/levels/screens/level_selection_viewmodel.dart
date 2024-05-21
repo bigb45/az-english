@@ -28,8 +28,8 @@ class LevelSelectionViewmodel extends BaseViewModel {
     isLoading = true;
     notifyListeners();
     try {
-      if (_authProvider.userDate == null) return;
-      List<String>? assignedLevels = _authProvider.userDate!.assignedLevels;
+      if (_authProvider.userData == null) return;
+      List<String>? assignedLevels = _authProvider.userData!.assignedLevels;
       error = null;
       _levels = await firestoreService.fetchLevels();
       for (var level in _levels) {
