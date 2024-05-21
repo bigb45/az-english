@@ -58,7 +58,7 @@ final loggedInRouter = GoRouter(
         return switch (state.pathParameters['sectionName']) {
           "reading" => ReadingSection(
               levelName: state.pathParameters['levelName'] ?? "-1",
-              sectionName: state.pathParameters['sectionId'] ?? "-1",
+              sectionName: state.pathParameters['sectionName'] ?? "-1",
               levelId: state.pathParameters['levelId'] ?? "-1",
               sectionId: state.pathParameters['sectionId'] ?? "-1",
             ),
