@@ -1,10 +1,9 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/resources/app_strings.dart';
+import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
-import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:ez_english/theme/palette.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:go_router/go_router.dart';
@@ -45,7 +44,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
     backgroundColors = [
       const Color(0xFFFFA500),
       const Color(0xFF3498DB),
-      const Color(0xFFECECEC),
+      Color.fromARGB(255, 143, 143, 143),
       const Color(0xFF663399),
       const Color(0xFF34495E)
     ];
@@ -116,6 +115,13 @@ class _PracticeScreenState extends State<PracticeScreen> {
                             headerText: hintText,
                             cardText:
                                 "Learn common everyday expressions and simple phrases",
+                            // TODO: change this to completionState from viewmodel
+                            onTap: sectionIds[index] == sectionIds.last
+                                ? null
+                                : () {
+                                    navigateToSection(
+                                        sectionId: sectionIds[index]);
+                                  },
                             imagePath: imageAssets[index],
                             backgroundColor: backgroundColors[index],
                             sectionId: sectionIds[index],
@@ -138,15 +144,18 @@ class _PracticeScreenState extends State<PracticeScreen> {
     required String cardText,
     required Color backgroundColor,
     required String sectionId,
+    required VoidCallback? onTap,
     String? imagePath,
     bool secondaryText = false,
     Color? cardShadowColor,
   }) {
     return ExerciseCard(
       attempted: false,
-      onPressed: () {
-        navigateToSection(sectionId: sectionId);
-      },
+      onPressed: onTap != null
+          ? () {
+              onTap();
+            }
+          : null,
       cardBackgroundColor: backgroundColor,
       image: imagePath,
       cardShadowColor: cardShadowColor,

@@ -29,6 +29,9 @@ class ExerciseCard extends StatefulWidget {
   State<ExerciseCard> createState() => ExerciseCardState();
 }
 
+// TODO: change disabled card text color
+// TODO: change center image size
+// TODO: change padding values to accomadate for different screen sizes
 class ExerciseCardState extends State<ExerciseCard> {
   var isPressed = false;
 
@@ -54,7 +57,9 @@ class ExerciseCardState extends State<ExerciseCard> {
         widget.onPressed != null ? widget.onPressed!() : null;
       },
       child: widget.onPressed == null
-          ? ColorFiltered(
+          ?
+          // TODO: change padding values on disabled card
+          ColorFiltered(
               colorFilter: ColorFilter.mode(
                   Palette.secondaryStroke.withOpacity(0.5), BlendMode.srcATop),
               child: Container(
