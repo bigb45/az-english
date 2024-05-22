@@ -1,11 +1,10 @@
-import 'package:dio/dio.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
 import 'package:ez_english/features/sections/reading/components/multiple-choice%20question.dart';
 import 'package:ez_english/features/sections/reading/components/speaking_question.dart';
 import 'package:ez_english/features/sections/reading/model/reading_question.dart';
-import 'package:ez_english/features/sections/reading/view_model/reading_q_view_model.dart';
+import 'package:ez_english/features/sections/reading/view_model/reading_section_viewmodel.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
@@ -13,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class ReadingPractice extends StatefulWidget {

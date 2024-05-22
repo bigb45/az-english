@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
-import 'package:ez_english/features/sections/reading/view_model/reading_q_view_model.dart';
+import 'package:ez_english/features/sections/reading/view_model/reading_section_viewmodel.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
@@ -30,16 +29,17 @@ class ReadingSection extends StatefulWidget {
 }
 
 class _ReadingSectionState extends State<ReadingSection> {
-  late ReadingQuestionViewmodel readQsVm;
+  late ReadingQuestionViewmodel readingSectionVm;
 
   @override
   void initState() {
     // setStatusBar to make the top side of the navbar with a different color since this is not supported for IOS in the default implementation of AppBar
-    readQsVm = Provider.of<ReadingQuestionViewmodel>(context, listen: false);
-    readQsVm.levelId = widget.levelId;
-    readQsVm.levelName = widget.levelName;
-    readQsVm.sectionName = widget.sectionName;
-    readQsVm.sectionId = widget.sectionId;
+    readingSectionVm =
+        Provider.of<ReadingQuestionViewmodel>(context, listen: false);
+    readingSectionVm.levelId = widget.levelId;
+    readingSectionVm.levelName = widget.levelName;
+    readingSectionVm.sectionName = widget.sectionName;
+    readingSectionVm.sectionId = widget.sectionId;
     getQs();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FlutterStatusbarcolor.setStatusBarColor(Palette.primary);
@@ -49,7 +49,7 @@ class _ReadingSectionState extends State<ReadingSection> {
   }
 
   void getQs() async {
-    await readQsVm.fetchQuestions(
+    await readingSectionVm.fetchQuestions(
         widget.levelName, widget.levelId, widget.sectionName, widget.sectionId);
   }
 

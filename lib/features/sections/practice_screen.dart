@@ -48,7 +48,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
     backgroundColors = [
       const Color(0xFFFFA500),
       const Color(0xFF3498DB),
-      Color.fromARGB(255, 143, 143, 143),
+      const Color(0xFF8F8F8F),
       const Color(0xFF663399),
       const Color(0xFF34495E)
     ];
@@ -60,7 +60,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
       "skill_test"
     ];
     sectionIds = ["0", "1", "2", "3", "4"];
-    // setStatusBar to make the top side of the navbar with a different color since this is not supported for IOS in the default implementation of AppBar
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FlutterStatusbarcolor.setStatusBarColor(Palette.primary);
@@ -122,12 +121,14 @@ class _PracticeScreenState extends State<PracticeScreen> {
                             headerText: hintText,
                             cardText:
                                 "Learn common everyday expressions and simple phrases",
-                            // TODO: change this to completionState from viewmodel
+                            // TODO: change this to section completionState from viewmodel
                             onTap: sectionIds[index] == sectionIds.last
                                 ? null
                                 : () {
                                     navigateToSection(
-                                        sectionId: sectionIds[index]);
+                                      sectionId: sectionIds[index],
+                                      sectionName: sectionNames[index],
+                                    );
                                   },
                             imagePath: imageAssets[index],
                             backgroundColor: backgroundColors[index],
