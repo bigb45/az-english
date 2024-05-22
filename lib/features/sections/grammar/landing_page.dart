@@ -19,14 +19,6 @@ class GrammarSection extends StatefulWidget {
 
 class _GrammarSectionState extends State<GrammarSection> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FlutterStatusbarcolor.setStatusBarColor(Palette.primary);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

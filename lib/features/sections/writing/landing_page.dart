@@ -21,18 +21,10 @@ class _WritingSectionState extends State<WritingSection> {
   @override
   void initState() {
     super.initState();
-    // changeStatusBarColor();
-  }
-
-  void changeStatusBarColor() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      FlutterStatusbarcolor.setStatusBarColor(Palette.primary);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    changeStatusBarColor();
     return Scaffold(
       appBar: AppBar(
         title: ListTile(

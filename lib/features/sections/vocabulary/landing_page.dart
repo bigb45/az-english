@@ -10,9 +10,6 @@ class VocabularySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FlutterStatusbarcolor.setStatusBarColor(Palette.primary);
-    });
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vocabulary Section'),
@@ -20,7 +17,7 @@ class VocabularySection extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            Expanded(child: Center(child: Text('Vocabulary Section'))),
+            const Expanded(child: Center(child: Text('Vocabulary Section'))),
             Button(
               onPressed: () {
                 context.push('/practice/vocabulary');

@@ -61,10 +61,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
     ];
     sectionIds = ["0", "1", "2", "3", "4"];
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FlutterStatusbarcolor.setStatusBarColor(Palette.primary);
-    });
-
     super.initState();
   }
 

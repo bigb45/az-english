@@ -32,10 +32,6 @@ class _ReadingPracticeState extends State<ReadingPractice> {
         Provider.of<ReadingQuestionViewmodel>(context, listen: false);
     questions = readingQuestionViewmodel.questions;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FlutterStatusbarcolor.setStatusBarColor(Palette.secondary);
-    });
-
     super.initState();
   }
 

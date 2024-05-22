@@ -21,13 +21,6 @@ class _GrammarPracticeState extends State<GrammarPractice> {
   String userAnswer = "";
   final String fullSentence = "A cat is sleeping";
   final String options = "cat is sleeping are am the a";
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FlutterStatusbarcolor.setStatusBarColor(Colors.white);
-    });
-  }
 
   EvaluationState answerState = EvaluationState.empty;
   @override

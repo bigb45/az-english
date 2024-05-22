@@ -2,14 +2,12 @@
 
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
-import 'package:ez_english/features/sections/writing/components/dictation_question.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 
 // TODO: add text styles
 class WritingPractice extends StatefulWidget {
@@ -26,14 +24,6 @@ class _WritingPracticeState extends State<WritingPractice> {
   //   question: "Write the following sentence",
   //   answer: "The quick brown fox jumps over the lazy dog.",
   // );
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FlutterStatusbarcolor.setStatusBarColor(Colors.white);
-    });
-  }
 
   final TextEditingController _controller = TextEditingController();
   // TODO: get the text from viewmodel

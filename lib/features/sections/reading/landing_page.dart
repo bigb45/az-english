@@ -41,9 +41,6 @@ class _ReadingSectionState extends State<ReadingSection> {
     readingSectionVm.sectionName = widget.sectionName;
     readingSectionVm.sectionId = widget.sectionId;
     getQs();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FlutterStatusbarcolor.setStatusBarColor(Palette.primary);
-    });
 
     super.initState();
   }
