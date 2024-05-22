@@ -1,15 +1,12 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/validators/form_validator.dart';
-import 'package:ez_english/core/validators/form_validator.dart';
 import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/resources/app_strings.dart';
-import 'package:ez_english/router.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/text_field.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';

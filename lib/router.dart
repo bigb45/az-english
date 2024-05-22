@@ -3,7 +3,6 @@
 import 'package:ez_english/components.dart';
 import 'package:ez_english/features/auth/screens/sign_in.dart';
 import 'package:ez_english/features/auth/screens/sign_up.dart';
-import 'package:ez_english/features/levels/screens/level_selection.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
 import 'package:ez_english/features/sections/grammar/practice.dart';
 import 'package:ez_english/features/sections/practice_screen.dart';

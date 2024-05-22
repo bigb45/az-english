@@ -101,7 +101,5 @@ class ReadingQuestionViewmodel extends BaseViewModel {
 
   void _handleError(String e) {
     Utils.showSnackBar(e);
-    // errorOccurred = true;
-    // navigatorKey.currentState!.pop();
   }
 }

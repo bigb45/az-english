@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:ez_english/core/firebase/exceptions.dart';
-import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
+import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
-import 'package:ez_english/router.dart';
 import 'package:ez_english/utils/utils.dart';
 
 class LevelSelectionViewmodel extends BaseViewModel {

@@ -25,6 +25,7 @@ class GrammarSectionViewmodel extends BaseViewModel {
       notifyListeners();
     } catch (e) {
       print(e);
+
       // TODO: show error in ui
     }
   }

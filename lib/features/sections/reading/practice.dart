@@ -11,7 +11,6 @@ import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:provider/provider.dart';
 
 class ReadingPractice extends StatefulWidget {

@@ -5,7 +5,6 @@ import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:go_router/go_router.dart';
 
 class PracticeScreen extends StatefulWidget {

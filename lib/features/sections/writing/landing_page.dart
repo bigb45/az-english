@@ -5,11 +5,9 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-// TODO: fix status bar color issue here
 class WritingSection extends StatefulWidget {
   const WritingSection({super.key});
 
