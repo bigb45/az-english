@@ -18,8 +18,8 @@ class AuthViewModel extends ChangeNotifier {
 
   User? get user => _user;
 
-  UserModel? _userDate;
-  UserModel? get userDate => _userDate;
+  UserModel? _userData;
+  UserModel? get userData => _userData;
 
   bool get isSignedIn => _user != null;
   // bool get isSignedIn => true;
@@ -119,7 +119,7 @@ class AuthViewModel extends ChangeNotifier {
   void _onAuthStateChanged(User? user) async {
     _user = user;
     if (_user != null) {
-      _userDate = await _firestoreService.getUser(_user!.uid);
+      _userData = await _firestoreService.getUser(_user!.uid);
     }
     notifyListeners();
   }

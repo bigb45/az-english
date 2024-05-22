@@ -11,9 +11,11 @@ import 'package:go_router/go_router.dart';
 class PracticeScreen extends StatefulWidget {
   // TODO: use levelId to fetch title and exercises for the level via viewmodel
   final String levelId;
+  final String levelName;
   const PracticeScreen({
     Key? key,
     required this.levelId,
+    required this.levelName,
   }) : super(key: key);
 
   @override
@@ -24,7 +26,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
   late List<String> hintTexts = [];
   late List<String?> imageAssets = [];
   late List<Color> backgroundColors = [];
+  late List<String> sectionNames = [];
   late List<String> sectionIds = [];
+
   @override
   void initState() {
     hintTexts = [
@@ -48,13 +52,14 @@ class _PracticeScreenState extends State<PracticeScreen> {
       const Color(0xFF663399),
       const Color(0xFF34495E)
     ];
-    sectionIds = [
+    sectionNames = [
       "reading",
       "listening",
       "vocabulary",
       "grammar",
       "skill_test"
     ];
+    sectionIds = ["0", "1", "2", "3", "4"];
     // setStatusBar to make the top side of the navbar with a different color since this is not supported for IOS in the default implementation of AppBar
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -64,8 +69,10 @@ class _PracticeScreenState extends State<PracticeScreen> {
     super.initState();
   }
 
-  void navigateToSection({required String sectionId}) {
-    context.push('/${widget.levelId}/section/$sectionId');
+  void navigateToSection(
+      {required String sectionName, required String sectionId}) {
+    context.push(
+        '/${widget.levelName}/${widget.levelId}/section/$sectionName/$sectionId');
   }
 
   @override
@@ -124,6 +131,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                                   },
                             imagePath: imageAssets[index],
                             backgroundColor: backgroundColors[index],
+                            sectionName: sectionNames[index],
                             sectionId: sectionIds[index],
                           );
                         }).toList(),
@@ -143,6 +151,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
     required String headerText,
     required String cardText,
     required Color backgroundColor,
+    required String sectionName,
     required String sectionId,
     required VoidCallback? onTap,
     String? imagePath,

@@ -45,4 +45,12 @@ class FirebaseAuthService {
       throw CustomException.fromFirebaseAuthException(e);
     }
   }
+
+  User? getUser() {
+    try {
+      return _firebaseAuth.currentUser;
+    } on FirebaseAuthException catch (e) {
+      throw CustomException.fromFirebaseAuthException(e);
+    }
+  }
 }

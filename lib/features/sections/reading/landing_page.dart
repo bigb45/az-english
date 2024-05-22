@@ -15,10 +15,15 @@ import 'package:provider/provider.dart';
 
 class ReadingSection extends StatefulWidget {
   final String levelId;
+  final String sectionName;
+  final String levelName;
   final String sectionId;
-
   const ReadingSection(
-      {super.key, required this.levelId, required this.sectionId});
+      {super.key,
+      required this.levelId,
+      required this.sectionName,
+      required this.levelName,
+      required this.sectionId});
 
   @override
   State<ReadingSection> createState() => _ReadingSectionState();
@@ -31,6 +36,10 @@ class _ReadingSectionState extends State<ReadingSection> {
   void initState() {
     // setStatusBar to make the top side of the navbar with a different color since this is not supported for IOS in the default implementation of AppBar
     readQsVm = Provider.of<ReadingQuestionViewmodel>(context, listen: false);
+    readQsVm.levelId = widget.levelId;
+    readQsVm.levelName = widget.levelName;
+    readQsVm.sectionName = widget.sectionName;
+    readQsVm.sectionId = widget.sectionId;
     getQs();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FlutterStatusbarcolor.setStatusBarColor(Palette.primary);
@@ -40,7 +49,8 @@ class _ReadingSectionState extends State<ReadingSection> {
   }
 
   void getQs() async {
-    await readQsVm.fetchQuestions(widget.sectionId, widget.levelId);
+    await readQsVm.fetchQuestions(
+        widget.levelName, widget.levelId, widget.sectionName, widget.sectionId);
   }
 
   @override

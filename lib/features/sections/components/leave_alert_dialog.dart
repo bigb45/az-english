@@ -31,7 +31,9 @@ Widget leavePracticeAlertDialog(
 }
 
 void showLeaveAlertDialog(BuildContext context,
-    {Function? onConfirm, Function? onCancel}) {
+    {Function? onConfirm,
+    Function? onCancel,
+    required VoidCallback onPressed}) {
   showDialog(
     context: context,
     builder: (BuildContext dialogContext) {
@@ -39,6 +41,7 @@ void showLeaveAlertDialog(BuildContext context,
           onConfirm: onConfirm ??
               () {
                 Navigator.pop(dialogContext);
+                onPressed();
                 // this pops the whole stack and navigates back to the home screen
                 context.go('/');
               },
