@@ -21,15 +21,15 @@ class ReadingPractice extends StatefulWidget {
 }
 
 class _ReadingPracticeState extends State<ReadingPractice> {
-  late ReadingQuestionViewmodel readingQuestionViewmodel;
+  late ReadingQuestionViewmodel readingSectionViewmodel;
   late List<BaseQuestion> questions = [];
   int currentQuestionIndex = 0;
 
   @override
   void initState() {
-    readingQuestionViewmodel =
+    readingSectionViewmodel =
         Provider.of<ReadingQuestionViewmodel>(context, listen: false);
-    questions = readingQuestionViewmodel.questions;
+    questions = readingSectionViewmodel.questions;
 
     super.initState();
   }
@@ -73,7 +73,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                 showLeaveAlertDialog(
                   context,
                   onPressed: () async {
-                    await readingQuestionViewmodel
+                    await readingSectionViewmodel
                         .updateSectionProgress(currentQuestionIndex);
                   },
                 );

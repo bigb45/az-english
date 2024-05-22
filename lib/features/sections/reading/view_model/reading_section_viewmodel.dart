@@ -1,62 +1,48 @@
 import 'dart:async';
 
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
-import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
+import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ReadingQuestionViewmodel extends BaseViewModel {
-  String? _levelId;
+  String? sectionId;
+  String? levelId;
   String? _sectionName;
   String? _levelName;
-  String? _sectionId;
-
-  String? get sectionId => _sectionId;
+  UserModel? _userData;
   String? get sectionName => _sectionName;
   String? get levelName => _levelName;
-  String? get levelId => _levelId;
-
-  set sectionName(String? value) {
-    _sectionName = value;
-  }
-
-  set levelName(String? value) {
-    _levelName = value;
-  }
-
-  set levelId(String? value) {
-    _levelId = value;
-  }
-
-  set sectionId(String? value) {
-    _sectionId = value;
-  }
 
   final FirestoreService _firestoreService = FirestoreService();
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
-  List<BaseQuestion> _questions = [];
-  late AuthViewModel _authProvider;
-  List<BaseQuestion> get questions => _questions;
-  void update(AuthViewModel authViewModel) {
-    _authProvider = authViewModel;
-    // if (_authProvider.isSignedIn) {
 
-    // }
+  List<BaseQuestion> _questions = [];
+
+  List<BaseQuestion> get questions => _questions;
+
+  @override
+  FutureOr<void> init() {}
+
+  void myInit() async {
+    _sectionName = RouteConstants.getSectionName(sectionId!);
+    _levelName = RouteConstants.getLevelName(levelId!);
+    await getUserData(_firebaseAuthService.getUser()!.uid);
+    fetchQuestions(levelId!, sectionId!);
   }
 
-  Future<void> fetchQuestions(String levelName, String levelId,
-      String sectionName, String sectionId) async {
+  Future<void> fetchQuestions(String levelId, String sectionId) async {
     isLoading = true;
-    // notifyListeners();
-    int lastQuestionIndex = _authProvider.userData!.levelsProgress![levelName]!
+    int lastQuestionIndex = _userData!.levelsProgress![levelName]!
         .sectionProgress![sectionName]!.lastStoppedQuestionIndex;
     try {
       _questions = await _firestoreService.fetchQuestions(
-          sectionName, levelName, lastQuestionIndex);
+          _sectionName!, _levelName!, lastQuestionIndex);
       error = null;
     } on CustomException catch (e) {
       // error = e as CustomException;
@@ -68,6 +54,7 @@ class ReadingQuestionViewmodel extends BaseViewModel {
       isLoading = false;
       notifyListeners();
     }
+    print("got questions: ${_questions.length}");
   }
 
   Future<void> updateSectionProgress(int newQuestionIndex) async {
@@ -96,8 +83,12 @@ class ReadingQuestionViewmodel extends BaseViewModel {
     }
   }
 
-  @override
-  FutureOr<void> init() {}
+  Future<void> getUserData(String userId) async {
+    print("getting data for user $userId");
+
+    _userData = await _firestoreService.getUser(userId);
+    print("user data: ${_userData?.id}");
+  }
 
   void _handleError(String e) {
     Utils.showSnackBar(e);

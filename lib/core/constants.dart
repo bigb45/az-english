@@ -26,3 +26,30 @@ class Constants {
   static final padding2 = 2.w;
   static final iconSize = 16.w;
 }
+
+class RouteConstants {
+  // map of  Id, Level name
+  static final Map<String, String> levelIdName = {
+    "0": "A1",
+    "1": "A2",
+    "2": "B1",
+    "3": "B2",
+    "4": "C1",
+    "5": "C2",
+  };
+
+  static final Map<String, String> sectionIdName = {
+    "0": "reading",
+    "1": "writing",
+    "2": "vocabulary",
+    "3": "grammar",
+  };
+
+  static String getSectionName(String sectionId) {
+    return sectionIdName[sectionId]!;
+  }
+
+  static String getLevelName(String levelId) {
+    return levelIdName[levelId]!;
+  }
+}

@@ -27,15 +27,12 @@ class _LevelSelectionState extends State<LevelSelection> {
     super.initState();
     // levelSelectionVm =
     //     Provider.of<LevelSelectionViewmodel>(context, listen: false);
-    changeColor();
   }
 
-  void changeColor() async {
-    await FlutterStatusbarcolor.setStatusBarColor(Palette.secondary);
-  }
+ 
 
-  void navigateToLevel({required int levelId, required String levelName}) {
-    context.push('/level/$levelId/$levelName');
+  void navigateToLevel({required int levelId}) {
+    context.push('/level/$levelId');
   }
 
   @override
@@ -43,7 +40,6 @@ class _LevelSelectionState extends State<LevelSelection> {
     LevelSelectionViewmodel levelSelectionVm =
         Provider.of<LevelSelectionViewmodel>(context);
 
-    changeColor();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -79,20 +75,11 @@ class _LevelSelectionState extends State<LevelSelection> {
                                   cardText: level.description,
                                   onTap: () {
                                     navigateToLevel(
-                                        levelId: level.id,
-                                        levelName: level.name);
+                                        levelId: level.id);
                                   },
                                 );
                               },
                             ),
-                            // ElevatedButton(
-                            //   onPressed: () {
-                            //     levelSelectionVm.fetchLevels();
-                            //   },
-                            //   child: Text(
-                            //     "Refresh",
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),

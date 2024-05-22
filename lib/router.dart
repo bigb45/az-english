@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:ez_english/components.dart';
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/auth/screens/sign_in.dart';
 import 'package:ez_english/features/auth/screens/sign_up.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
@@ -43,28 +44,29 @@ final loggedInRouter = GoRouter(
       builder: ((context, state) => MainApp()),
     ),
     GoRoute(
-      path: '/level/:levelId/:levelName',
+      path: '/level/:levelId',
       builder: ((context, state) {
+        final levelId = state.pathParameters['levelId'] ?? "-1";
         return PracticeScreen(
-          levelId: state.pathParameters['levelId'] ?? "-1",
-          levelName: state.pathParameters['levelName'] ?? "-1",
+          levelId: levelId,
+          levelName: RouteConstants.getLevelName(levelId),
         );
       }),
     ),
     GoRoute(
-      path: '/:levelName/:levelId/section/:sectionName/:sectionId',
+      path: '/landing_page/:levelId/:sectionId',
       builder: ((context, state) {
-        return switch (state.pathParameters['sectionName']) {
-          "reading" => ReadingSection(
-              levelName: state.pathParameters['levelName'] ?? "-1",
-              sectionName: state.pathParameters['sectionName'] ?? "-1",
+        final levelId = state.pathParameters['levelId'] ?? "-1";
+        final sectionId = state.pathParameters['sectionId'] ?? "-1";
+        return switch (sectionId) {
+          "0" => ReadingSection(
               levelId: state.pathParameters['levelId'] ?? "-1",
               sectionId: state.pathParameters['sectionId'] ?? "-1",
             ),
-          "grammar" => GrammarSection(),
-          "listening" => WritingSection(),
-          "vocabulary" => VocabularySection(),
-          String() || null => const Placeholder(),
+          "1" => WritingSection(),
+          "2" => VocabularySection(),
+          "3" => GrammarSection(),
+          String() => const Placeholder(),
         };
       }),
     ),

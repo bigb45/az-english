@@ -13,15 +13,9 @@ import 'package:provider/provider.dart';
 
 class ReadingSection extends StatefulWidget {
   final String levelId;
-  final String sectionName;
-  final String levelName;
   final String sectionId;
   const ReadingSection(
-      {super.key,
-      required this.levelId,
-      required this.sectionName,
-      required this.levelName,
-      required this.sectionId});
+      {super.key, required this.levelId, required this.sectionId});
 
   @override
   State<ReadingSection> createState() => _ReadingSectionState();
@@ -35,17 +29,15 @@ class _ReadingSectionState extends State<ReadingSection> {
     readingSectionVm =
         Provider.of<ReadingQuestionViewmodel>(context, listen: false);
     readingSectionVm.levelId = widget.levelId;
-    readingSectionVm.levelName = widget.levelName;
-    readingSectionVm.sectionName = widget.sectionName;
     readingSectionVm.sectionId = widget.sectionId;
-    getQs();
+    readingSectionVm.myInit();
+    // getQs();
 
     super.initState();
   }
 
   void getQs() async {
-    await readingSectionVm.fetchQuestions(
-        widget.levelName, widget.levelId, widget.sectionName, widget.sectionId);
+    await readingSectionVm.fetchQuestions(widget.levelId, widget.sectionId);
   }
 
   @override

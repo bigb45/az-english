@@ -51,22 +51,14 @@ class _PracticeScreenState extends State<PracticeScreen> {
       const Color(0xFF663399),
       const Color(0xFF34495E)
     ];
-    sectionNames = [
-      "reading",
-      "listening",
-      "vocabulary",
-      "grammar",
-      "skill_test"
-    ];
+
     sectionIds = ["0", "1", "2", "3", "4"];
 
     super.initState();
   }
 
-  void navigateToSection(
-      {required String sectionName, required String sectionId}) {
-    context.push(
-        '/${widget.levelName}/${widget.levelId}/section/$sectionName/$sectionId');
+  void navigateToSection({required String sectionId}) {
+    context.push('/landing_page/${widget.levelId}/$sectionId');
   }
 
   @override
@@ -122,12 +114,10 @@ class _PracticeScreenState extends State<PracticeScreen> {
                                 : () {
                                     navigateToSection(
                                       sectionId: sectionIds[index],
-                                      sectionName: sectionNames[index],
                                     );
                                   },
                             imagePath: imageAssets[index],
                             backgroundColor: backgroundColors[index],
-                            sectionName: sectionNames[index],
                             sectionId: sectionIds[index],
                           );
                         }).toList(),
@@ -147,7 +137,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
     required String headerText,
     required String cardText,
     required Color backgroundColor,
-    required String sectionName,
     required String sectionId,
     required VoidCallback? onTap,
     String? imagePath,
