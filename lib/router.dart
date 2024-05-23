@@ -59,11 +59,14 @@ final loggedInRouter = GoRouter(
         final levelId = state.pathParameters['levelId'] ?? "-1";
         final sectionId = state.pathParameters['sectionId'] ?? "-1";
         return switch (sectionId) {
+          // TODO: find a better solution than this
           "0" => ReadingSection(
-              levelId: state.pathParameters['levelId'] ?? "-1",
-              sectionId: state.pathParameters['sectionId'] ?? "-1",
+              levelId: levelId,
+              sectionId: sectionId,
             ),
-          "1" => WritingSection(),
+          "1" => WritingSection(
+              levelId: levelId,
+            ),
           "2" => VocabularySection(),
           "3" => GrammarSection(),
           String() => const Placeholder(),

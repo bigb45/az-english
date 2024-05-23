@@ -11,7 +11,7 @@ import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ReadingQuestionViewmodel extends BaseViewModel {
-  String? sectionId;
+  String? sectionId = "reading";
   String? levelId;
   String? _sectionName;
   String? _levelName;
@@ -29,8 +29,9 @@ class ReadingQuestionViewmodel extends BaseViewModel {
   @override
   FutureOr<void> init() {}
 
-  void myInit() async {
-    _sectionName = RouteConstants.getSectionName(sectionId!);
+  void setValuesAndInit() async {
+    // _sectionName = RouteConstants.getSectionName(sectionId!);
+    _sectionName = "reading";
     _levelName = RouteConstants.getLevelName(levelId!);
     await getUserData(_firebaseAuthService.getUser()!.uid);
     fetchQuestions(levelId!, sectionId!);
@@ -49,6 +50,8 @@ class ReadingQuestionViewmodel extends BaseViewModel {
       _handleError(e.message);
       notifyListeners();
     } catch (e) {
+      // TODO: assign error to 'error' variable here and handle state in UI
+      // error = CustomException(e.toString());
       _handleError("An undefined error occurred ${e.toString()}");
     } finally {
       isLoading = false;
@@ -60,8 +63,8 @@ class ReadingQuestionViewmodel extends BaseViewModel {
   Future<void> updateSectionProgress(int newQuestionIndex) async {
     User? currentUser = _firebaseAuthService.getUser();
     isLoading = true;
-    // TODO change it to the total number of questions(10) after testing
-    // TODO WDYT of this formula????
+
+    // TODO: change this to be dynamic from the API
     newQuestionIndex = (3 - questions.length) + newQuestionIndex;
     notifyListeners();
     try {
@@ -84,13 +87,11 @@ class ReadingQuestionViewmodel extends BaseViewModel {
   }
 
   Future<void> getUserData(String userId) async {
-    print("getting data for user $userId");
-
     _userData = await _firestoreService.getUser(userId);
-    print("user data: ${_userData?.id}");
   }
 
   void _handleError(String e) {
+    // TODO: separate UI logic from business logic
     Utils.showSnackBar(e);
   }
 }

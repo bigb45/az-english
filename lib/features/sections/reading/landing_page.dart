@@ -29,15 +29,13 @@ class _ReadingSectionState extends State<ReadingSection> {
     readingSectionVm =
         Provider.of<ReadingQuestionViewmodel>(context, listen: false);
     readingSectionVm.levelId = widget.levelId;
-    readingSectionVm.sectionId = widget.sectionId;
-    readingSectionVm.myInit();
-    // getQs();
+    // no need to pass section Id since each viewmodel is already knows its section
+    // readingSectionVm.sectionId = widget.sectionId;
+
+    // TODO: refactor myInit to use the viewmodel's built in init function
+    readingSectionVm.setValuesAndInit();
 
     super.initState();
-  }
-
-  void getQs() async {
-    await readingSectionVm.fetchQuestions(widget.levelId, widget.sectionId);
   }
 
   @override
