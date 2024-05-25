@@ -1,22 +1,27 @@
+import 'package:ez_english/features/sections/vocabulary/components/word_list_tile.dart';
+import 'package:ez_english/features/sections/vocabulary/viewmodel/vocabulary_section_viewmodel.dart';
 import 'package:ez_english/features/sections/vocabulary/word_view.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
-import 'package:ez_english/features/sections/vocabulary/components/word_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class WordsListView extends StatelessWidget {
-  final List<WordModel> words;
+  // final List<WordModel> words;
   final String pageTitle;
   final String pageSubtitle;
   const WordsListView(
       {super.key,
-      required this.words,
+      // required this.words,
       this.pageTitle = "Vocabulary",
       this.pageSubtitle = "Daily Conversations"});
 
   @override
   Widget build(BuildContext context) {
+    final viewmodel =
+        Provider.of<VocabularySectionViewmodel>(context, listen: true);
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Palette.primaryText),
@@ -41,7 +46,7 @@ class WordsListView extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            for (var word in words)
+            for (var word in viewmodel.words)
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
