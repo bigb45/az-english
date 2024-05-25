@@ -44,9 +44,10 @@ class _ReadingPracticeState extends State<ReadingPractice> {
     return PopScope(
       canPop: false,
       onPopInvoked: (canPop) {
-        // TODO pass navigation functions to the alert dialog
-        // print("pressed");
-        // showLeaveAlertDialog(context);
+        showLeaveAlertDialog(context, onConfirm: () async {
+          await readingSectionViewmodel
+              .updateSectionProgress(currentQuestionIndex);
+        });
       },
       child: Scaffold(
         appBar: AppBar(
@@ -60,7 +61,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
               onPressed: () {
                 showLeaveAlertDialog(
                   context,
-                  onPressed: () async {
+                  onConfirm: () async {
                     await readingSectionViewmodel
                         .updateSectionProgress(currentQuestionIndex);
                   },

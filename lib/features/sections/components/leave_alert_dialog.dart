@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 Widget leavePracticeAlertDialog(
-    {required Function onConfirm, required Function onCancel}) {
+    {required Function onConfirm,
+    required Function onCancel,
+    final String? title,
+    final String? body}) {
   return AlertDialog(
-    title: const Text("Leave Practice?"),
-    content: const Text(
-        "Are you sure you want to leave the practice? Your progress will not be saved."),
+    title: Text(title ?? "Leave Practice?"),
+    content: Text(
+      body ??
+          "Are you sure you want to leave the practice? Your progress will not be saved.",
+    ),
     actions: [
       TextButton(
         onPressed: () {
-          print("Leave practice");
           onConfirm();
         },
         child: const Text(
@@ -19,7 +23,6 @@ Widget leavePracticeAlertDialog(
       ),
       TextButton(
         onPressed: () {
-          print("Stay");
           onCancel();
         },
         child: const Text(
@@ -31,25 +34,35 @@ Widget leavePracticeAlertDialog(
 }
 
 void showLeaveAlertDialog(BuildContext context,
-    {Function? onConfirm,
+    {Future<void> Function()? onConfirm,
     Function? onCancel,
-    required VoidCallback onPressed}) {
+    VoidCallback? onPressed,
+    String? title,
+    String? body}) {
   showDialog(
     context: context,
     builder: (BuildContext dialogContext) {
       return leavePracticeAlertDialog(
-          onConfirm: onConfirm ??
-              () {
+        onConfirm: onConfirm != null
+            ? () {
+                onConfirm();
+
                 Navigator.pop(dialogContext);
-                onPressed();
+                context.go('/');
+              }
+            : () {
+                Navigator.pop(dialogContext);
                 // this pops the whole stack and navigates back to the home screen
                 context.go('/');
               },
-          onCancel: onCancel ??
-              () {
-                // only pop the dialog
-                Navigator.pop(dialogContext);
-              });
+        onCancel: onCancel ??
+            () {
+              // only pop the dialog
+              Navigator.pop(dialogContext);
+            },
+        body: body,
+        title: title,
+      );
     },
   );
 }
