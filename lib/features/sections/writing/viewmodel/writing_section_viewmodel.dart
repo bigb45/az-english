@@ -7,8 +7,6 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
-import 'package:ez_english/features/sections/writing/practice.dart';
-import 'package:ez_english/widgets/radio_button.dart';
 
 class WritingSectionViewmodel extends BaseViewModel {
   final sectionId = "2";
@@ -16,26 +14,27 @@ class WritingSectionViewmodel extends BaseViewModel {
   int _currentQuestionIndex = 0;
   String? _levelName;
   String? levelId;
-  List<BaseQuestion> _questions = [
-    MultipleChoiceQuestionModel(
-      options: [
-        RadioItemData(title: "Geese", value: "geese"),
-        RadioItemData(title: "Gooses", value: "gooses"),
-        RadioItemData(title: "Geeses", value: "geeses"),
-        RadioItemData(title: "Gees", value: "gees"),
-      ],
-      questionText: "What is the plural of 'goose'?",
-      imageUrl: "",
-      voiceUrl: "",
-      answer: RadioItemData(title: "Geese", value: "geese"),
-    ),
-    DictationQuestionModel(
-      questionText: "Dictate the following text",
-      imageUrl: "",
-      voiceUrl: "",
-      answer: "Dictate the following text",
-    ),
-  ];
+  List<BaseQuestion> _questions = [];
+  // List<BaseQuestion> _questions = [
+  //   MultipleChoiceQuestionModel(
+  //     options: [
+  //       RadioItemData(title: "Geese", value: "geese"),
+  //       RadioItemData(title: "Gooses", value: "gooses"),
+  //       RadioItemData(title: "Geeses", value: "geeses"),
+  //       RadioItemData(title: "Gees", value: "gees"),
+  //     ],
+  //     questionText: "What is the plural of 'goose'?",
+  //     imageUrl: "",
+  //     voiceUrl: "",
+  //     answer: RadioItemData(title: "Geese", value: "geese"),
+  //   ),
+  //   DictationQuestionModel(
+  //     questionText: "Dictate the following text",
+  //     imageUrl: "",
+  //     voiceUrl: "",
+  //     answer: "Dictate the following text",
+  //   ),
+  // ];
 
   get questions => _questions;
   get currentQuestionIndex => _currentQuestionIndex;
@@ -50,7 +49,6 @@ class WritingSectionViewmodel extends BaseViewModel {
     final user =
         await _firestoreService.getUser(_firebaseAuthService.getUser()!.uid);
     fetchQuestions(user!);
-    print("got questions! ${_questions.length}");
   }
 
   Future<void> fetchQuestions(UserModel userData) async {
@@ -77,7 +75,6 @@ class WritingSectionViewmodel extends BaseViewModel {
 
   void nextQuestion() {
     if (_currentQuestionIndex < _questions.length - 1) {
-      print("Moving on");
       _currentQuestionIndex++;
       notifyListeners();
     }

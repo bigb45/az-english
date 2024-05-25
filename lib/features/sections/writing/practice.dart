@@ -14,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-// TODO: add text styles
 class WritingPractice extends StatefulWidget {
   const WritingPractice({super.key});
 
@@ -24,11 +23,6 @@ class WritingPractice extends StatefulWidget {
 
 class _WritingPracticeState extends State<WritingPractice> {
   EvaluationState evaluationState = EvaluationState.empty;
-
-  // final DictationQuestionModel question = DictationQuestionModel(
-  //   question: "Write the following sentence",
-  //   answer: "The quick brown fox jumps over the lazy dog.",
-  // );
 
   late WritingSectionViewmodel viewmodel;
   late BaseQuestion currentQuestion;
@@ -44,12 +38,14 @@ class _WritingPracticeState extends State<WritingPractice> {
   @override
   Widget build(BuildContext context) {
     viewmodel = Provider.of<WritingSectionViewmodel>(context, listen: false);
-    currentQuestion = viewmodel.questions[viewmodel.currentQuestionIndex];
+    // currentQuestion = viewmodel.questions[viewmodel.currentQuestionIndex];
+    currentQuestion = DictationQuestionModel(
+        answer: "test", questionText: "test", imageUrl: "", voiceUrl: "");
 
     return PopScope(
       canPop: false,
       onPopInvoked: (canPop) {
-        // showLeaveAlertDialog(context);
+        showLeaveAlertDialog(context);
       },
       child: Scaffold(
         appBar: AppBar(
