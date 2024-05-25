@@ -41,22 +41,10 @@ class _ReadingPracticeState extends State<ReadingPractice> {
     ReadingQuestionModel currentQuestion =
         baseCurrentQuestion as ReadingQuestionModel;
 
-    Widget buildQuestionWidget(ReadingQuestionModel question) {
-      switch (question.questionType) {
-        case 'speaking':
-          return SpeakingQuestion();
-        case 'mcq':
-          return MultipleChoiceQuestion();
-        // Add more cases for other question types if needed
-        default:
-          return SizedBox(); // Default case
-      }
-    }
-
     return PopScope(
       canPop: false,
       onPopInvoked: (canPop) {
-        // TODO Is it working ???
+        // TODO pass navigation functions to the alert dialog
         // print("pressed");
         // showLeaveAlertDialog(context);
       },
@@ -109,11 +97,11 @@ class _ReadingPracticeState extends State<ReadingPractice> {
           children: [
             Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0),
                         child: ProgressBar(value: 20),
                       ),
@@ -126,8 +114,8 @@ class _ReadingPracticeState extends State<ReadingPractice> {
             EvaluationSection(
               onPressed: () {
                 setState(() {
+                  // TODO: check the answer and update the state accordingly
                   currentQuestionIndex++;
-
                   // evaulationState = Random().nextBool()
                   //     ? EvaluationState.correct
                   //     : EvaluationState.incorrect;
@@ -138,6 +126,18 @@ class _ReadingPracticeState extends State<ReadingPractice> {
         ),
       ),
     );
+  }
+
+  Widget buildQuestionWidget(ReadingQuestionModel question) {
+    switch (question.questionType) {
+      case 'speaking':
+        return const SpeakingQuestion();
+      case 'mcq':
+        return const MultipleChoiceQuestion();
+      // Add more cases for other question types if needed
+      default:
+        return const SizedBox(); // Default case
+    }
   }
 }
 
