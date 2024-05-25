@@ -9,7 +9,6 @@ import 'package:ez_english/features/sections/grammar/practice.dart';
 import 'package:ez_english/features/sections/practice_screen.dart';
 import 'package:ez_english/features/sections/reading/landing_page.dart';
 import 'package:ez_english/features/sections/reading/practice.dart';
-import 'package:ez_english/features/sections/vocabulary/components/word_list_tile.dart';
 import 'package:ez_english/features/sections/vocabulary/landing_page.dart';
 import 'package:ez_english/features/sections/vocabulary/words_list.dart';
 import 'package:ez_english/features/sections/writing/landing_page.dart';
@@ -62,7 +61,6 @@ final loggedInRouter = GoRouter(
           // TODO: find a better solution than this
           "0" => ReadingSection(
               levelId: levelId,
-              sectionId: sectionId,
             ),
           "1" => WritingSection(
               levelId: levelId,
@@ -84,14 +82,7 @@ final loggedInRouter = GoRouter(
           "reading" => ReadingPractice(),
           "grammar" => GrammarPractice(),
           "listening" => WritingPractice(),
-          "vocabulary" => WordsListView(
-              words: const [
-                WordModel(word: "word", type: WordType.noun, isNew: true),
-                WordModel(word: "word", type: WordType.noun, isNew: true),
-                WordModel(word: "word", type: WordType.noun, isNew: true),
-                WordModel(word: "word", type: WordType.noun, isNew: true),
-              ],
-            ),
+          "vocabulary" => WordsListView(),
           String() || null => const Placeholder(),
         };
       }),

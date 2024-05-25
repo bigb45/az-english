@@ -13,9 +13,7 @@ import 'package:provider/provider.dart';
 
 class ReadingSection extends StatefulWidget {
   final String levelId;
-  final String sectionId;
-  const ReadingSection(
-      {super.key, required this.levelId, required this.sectionId});
+  const ReadingSection({super.key, required this.levelId});
 
   @override
   State<ReadingSection> createState() => _ReadingSectionState();
