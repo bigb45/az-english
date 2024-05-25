@@ -8,8 +8,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class EvaluationSection extends StatefulWidget {
   final VoidCallback onPressed;
   final EvaluationState state;
+  final VoidCallback? onContinue;
   const EvaluationSection(
-      {super.key, required this.onPressed, this.state = EvaluationState.empty});
+      {super.key,
+      required this.onPressed,
+      this.state = EvaluationState.empty,
+      this.onContinue});
 
   @override
   State<EvaluationSection> createState() => _EvaluationSectionState();
@@ -46,8 +50,10 @@ class _EvaluationSectionState extends State<EvaluationSection> {
                   _ => Palette.secondary,
                 })),
             Button(
-              onPressed: () {
-                widget.onPressed();
+              onPressed: switch (widget.state) {
+                EvaluationState.correct => widget.onContinue,
+                EvaluationState.incorrect => widget.onPressed,
+                _ => widget.onPressed,
               },
               type: switch (widget.state) {
                 EvaluationState.correct => ButtonType.primary,
