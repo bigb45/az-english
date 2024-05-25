@@ -3,11 +3,10 @@ import 'dart:convert';
 import 'package:ez_english/features/models/base_question.dart';
 
 class ReadingQuestionModel extends BaseQuestion {
-  final String? questionType;
   final String? answer;
 
   ReadingQuestionModel({
-    required this.questionType,
+    required super.questionType,
     required String question,
     required this.answer,
   }) : super(
@@ -44,7 +43,13 @@ class ReadingQuestionModel extends BaseQuestion {
   @override
   factory ReadingQuestionModel.fromMap(Map<String, dynamic> map) {
     return ReadingQuestionModel(
-      questionType: map['questionType'],
+      // TODO: chagne questionTyp to use enum
+      questionType: switch (map['questionType']) {
+        'multipleChoice' => QuestionType.multipleChoice,
+        'mcq' => QuestionType.multipleChoice,
+        Object()? => QuestionType.multipleChoice,
+        null => QuestionType.multipleChoice,
+      },
       question: map['questionText'],
       answer: map['answer'],
     );

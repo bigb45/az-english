@@ -130,9 +130,9 @@ class _ReadingPracticeState extends State<ReadingPractice> {
 
   Widget buildQuestionWidget(ReadingQuestionModel question) {
     switch (question.questionType) {
-      case 'speaking':
+      case QuestionType.speaking:
         return const SpeakingQuestion();
-      case 'mcq':
+      case QuestionType.multipleChoice:
         return const MultipleChoiceQuestion();
       // Add more cases for other question types if needed
       default:

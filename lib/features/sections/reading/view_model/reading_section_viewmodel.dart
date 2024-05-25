@@ -11,9 +11,9 @@ import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ReadingQuestionViewmodel extends BaseViewModel {
-  String? sectionId = "reading";
+  String? sectionId = "1";
   String? levelId;
-  String? _sectionName;
+  String? _sectionName = "reading";
   String? _levelName;
   UserModel? _userData;
   String? get sectionName => _sectionName;
@@ -34,10 +34,10 @@ class ReadingQuestionViewmodel extends BaseViewModel {
     _sectionName = "reading";
     _levelName = RouteConstants.getLevelName(levelId!);
     await getUserData(_firebaseAuthService.getUser()!.uid);
-    fetchQuestions(levelId!, sectionId!);
+    fetchQuestions();
   }
 
-  Future<void> fetchQuestions(String levelId, String sectionId) async {
+  Future<void> fetchQuestions() async {
     isLoading = true;
     int lastQuestionIndex = _userData!.levelsProgress![levelName]!
         .sectionProgress![sectionName]!.lastStoppedQuestionIndex;
@@ -57,7 +57,6 @@ class ReadingQuestionViewmodel extends BaseViewModel {
       isLoading = false;
       notifyListeners();
     }
-    print("got questions: ${_questions.length}");
   }
 
   Future<void> updateSectionProgress(int newQuestionIndex) async {

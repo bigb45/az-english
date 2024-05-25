@@ -151,7 +151,7 @@ class _WritingPracticeState extends State<WritingPractice> {
           .validateQuestion(
               correctAnswer: (currentQuestion as DictationQuestionModel).answer,
               userAnswer: _controller.text),
-      null => false,
+      _ => false,
     };
 
     setState(() {

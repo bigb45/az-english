@@ -20,4 +20,5 @@ abstract class BaseQuestion<T> {
 enum QuestionType {
   multipleChoice,
   dictation,
+  speaking,
 }
