@@ -1,10 +1,11 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 
 class MultipleChoiceQuestion extends StatefulWidget {
-  final String question;
+  final MultipleChoiceQuestionModel question;
   final List<RadioItemData> options;
   final String? image;
   final Function(RadioItemData) onChanged;
@@ -38,7 +39,7 @@ class _MultipleChoiceQuestionState extends State<MultipleChoiceQuestion> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.question,
+                    widget.question.questionText,
                     style: TextStyles.practiceCardSecondaryText
                         .copyWith(height: 2),
                     maxLines: 5,
@@ -52,7 +53,7 @@ class _MultipleChoiceQuestionState extends State<MultipleChoiceQuestion> {
                 print("new value: ${newValue.title}");
               },
               options: widget.options,
-              //TODO
+              // TODO: fix selection removal on setState issue
               selectedOption: null,
             ),
             SizedBox(height: Constants.padding20),
