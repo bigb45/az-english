@@ -3,6 +3,8 @@ import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/level.dart';
+import 'package:ez_english/features/models/section.dart';
+import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/features/sections/reading/model/reading_question.dart';
 
@@ -125,5 +127,39 @@ class FirestoreService {
       rethrow;
     }
     return null;
+  }
+
+  Future<void> uploadLevelToFirestore(Level level) async {
+    try {
+      CollectionReference levelsCollection =
+          FirebaseFirestore.instance.collection('LevelsTest');
+
+      Map<String, dynamic> levelMetadata = {
+        'name': level.name,
+        'description': level.description,
+      };
+      await levelsCollection.doc(level.name).set(levelMetadata);
+
+      for (Section section in level.sections!) {
+        Map<String, dynamic> sectionMetadata = {
+          'name': section.name,
+          'description': section.description,
+        };
+        CollectionReference sectionsCollection =
+            levelsCollection.doc(level.name).collection('sections');
+        await sectionsCollection.doc(section.name).set(sectionMetadata);
+
+        for (Unit unit in section.units) {
+          CollectionReference unitsCollection =
+              sectionsCollection.doc(section.name).collection('units');
+          Map<String, dynamic> unitData = unit.toMap();
+          await unitsCollection.doc(unit.name).set(unitData);
+        }
+      }
+
+      print('Level data uploaded successfully to Firestore.');
+    } catch (e) {
+      print('Error uploading level data to Firestore: $e');
+    }
   }
 }
