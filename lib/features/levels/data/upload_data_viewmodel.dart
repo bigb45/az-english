@@ -31,7 +31,7 @@ class UploadDataViewmodel extends ChangeNotifier {
         String descriptionEnglish = csvParts[3]!.value.toString();
         String questionEnglish = csvParts[5]!.value.toString();
         List<String> englishWords = csvParts[7]!.value.toString().split(',');
-
+        String questionType = csvParts[8]!.value.toString();
         // Check if the level already exists in the levels map
         var existingLevel = levels.firstWhere(
           (level) => level.name == levelName,
@@ -66,14 +66,19 @@ class UploadDataViewmodel extends ChangeNotifier {
 
         // Add questions dynamically based on the row data
         List<BaseQuestion> questions = englishWords.map((word) {
-          return DictationQuestionModel(
-            questionText: questionEnglish,
-            imageUrl: '',
-            voiceUrl: '',
-            answer: word,
-          );
-        }).toList();
+          var questionData = {
+            'questionType': questionType,
+            'questionText': questionEnglish,
+            'imageUrl': '',
+            'voiceUrl': '',
+            'answer': word,
+            'options': [], // Add appropriate options if needed
+            'correctAnswer':
+                '', // Set correct answer for multiple choice questions if needed
+          };
 
+          return BaseQuestion.fromMap(questionData);
+        }).toList();
         // Add the questions to the existing unit
         existingUnit?.questions.addAll(questions);
 

@@ -180,6 +180,15 @@ class DictationQuestionModel extends BaseQuestion {
     return baseMap;
   }
 
+  factory DictationQuestionModel.fromMap(Map<String, dynamic> json) {
+    return DictationQuestionModel(
+      answer: json['answer'],
+      questionText: json['questionText'],
+      imageUrl: json['imageUrl'],
+      voiceUrl: json['voiceUrl'],
+    );
+  }
+
   bool validateQuestion({String? correctAnswer, required String userAnswer}) {
     correctAnswer = correctAnswer ?? answer;
 
