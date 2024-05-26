@@ -1,12 +1,14 @@
 import 'package:ez_english/features/sections/writing/practice.dart';
 
 abstract class BaseQuestion<T> {
-  String questionText;
+  String questionTextInEnglish;
+  String questionTextInArabic;
   String imageUrl;
   String voiceUrl;
   QuestionType? questionType;
   BaseQuestion({
-    required this.questionText,
+    required this.questionTextInEnglish,
+    required this.questionTextInArabic,
     required this.imageUrl,
     required this.voiceUrl,
     this.questionType,
@@ -14,7 +16,8 @@ abstract class BaseQuestion<T> {
 
   Map<String, dynamic> toMap() {
     return {
-      'questionText': questionText,
+      'questionTextInEnglish': questionTextInEnglish,
+      'questionTextInArabic': questionTextInArabic,
       'imageUrl': imageUrl,
       'description': voiceUrl,
       "questionType": questionType!.toShortString(),
@@ -41,6 +44,8 @@ enum QuestionType {
   multipleChoice,
   dictation,
   speaking,
+  findWordsFromPassage,
+  answerQuestionsFromPassage,
 }
 
 extension QuestionTypeExtension on QuestionType {

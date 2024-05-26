@@ -40,7 +40,11 @@ class _WritingPracticeState extends State<WritingPractice> {
     viewmodel = Provider.of<WritingSectionViewmodel>(context, listen: false);
     // currentQuestion = viewmodel.questions[viewmodel.currentQuestionIndex];
     currentQuestion = DictationQuestionModel(
-        answer: "test", questionText: "test", imageUrl: "", voiceUrl: "");
+        answer: "test",
+        questionTextInEnglish: "test",
+        imageUrl: "",
+        voiceUrl: "",
+        questionTextInArabic: '');
 
     return PopScope(
       canPop: false,
@@ -167,7 +171,8 @@ class DictationQuestionModel extends BaseQuestion {
 
   DictationQuestionModel({
     required this.answer,
-    required super.questionText,
+    required super.questionTextInEnglish,
+    required super.questionTextInArabic,
     super.questionType = QuestionType.dictation,
     required super.imageUrl,
     required super.voiceUrl,
@@ -183,7 +188,8 @@ class DictationQuestionModel extends BaseQuestion {
   factory DictationQuestionModel.fromMap(Map<String, dynamic> json) {
     return DictationQuestionModel(
       answer: json['answer'],
-      questionText: json['questionText'],
+      questionTextInEnglish: json['questionTextInEnglish'],
+      questionTextInArabic: json['questionTextInArabic'],
       imageUrl: json['imageUrl'],
       voiceUrl: json['voiceUrl'],
     );
@@ -212,7 +218,8 @@ class MultipleChoiceQuestionModel<T> extends BaseQuestion {
   MultipleChoiceQuestionModel(
       {required this.options,
       required this.answer,
-      required super.questionText,
+      required super.questionTextInArabic,
+      required super.questionTextInEnglish,
       required super.imageUrl,
       super.voiceUrl = "",
       super.questionType = QuestionType.multipleChoice});
@@ -234,7 +241,8 @@ class MultipleChoiceQuestionModel<T> extends BaseQuestion {
           .map((option) => RadioItemData.fromMap(option))
           .toList(),
       answer: RadioItemData.fromMap(map['answer']),
-      questionText: map['questionText'],
+      questionTextInEnglish: map['questionTextInEnglish'],
+      questionTextInArabic: map['questionTextInArabic'],
       imageUrl: map['imageUrl'],
       voiceUrl: map['voiceUrl'],
     );

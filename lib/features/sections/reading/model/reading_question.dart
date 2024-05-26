@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:ez_english/features/models/base_question.dart';
 
+// TODO will change this class after finishing the input class
 class ReadingQuestionModel extends BaseQuestion {
   final String? answer;
 
@@ -10,7 +11,8 @@ class ReadingQuestionModel extends BaseQuestion {
     required String question,
     required this.answer,
   }) : super(
-          questionText: question,
+          questionTextInEnglish: question,
+          questionTextInArabic: "",
           imageUrl: "",
           voiceUrl: "",
         );
@@ -35,7 +37,7 @@ class ReadingQuestionModel extends BaseQuestion {
   Map<String, dynamic> toMap() {
     return {
       'questionType': questionType,
-      'question': questionText,
+      'question': questionTextInEnglish,
       'answer': answer,
     };
   }

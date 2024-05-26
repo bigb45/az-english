@@ -39,7 +39,7 @@ class _MultipleChoiceQuestionState extends State<MultipleChoiceQuestion> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.question.questionText,
+                    widget.question.questionTextInEnglish,
                     style: TextStyles.practiceCardSecondaryText
                         .copyWith(height: 2),
                     maxLines: 5,
