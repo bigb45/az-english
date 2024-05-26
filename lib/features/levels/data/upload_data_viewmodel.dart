@@ -1,5 +1,6 @@
 import 'package:excel/excel.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/features/levels/data/models/reading_question.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/section.dart';
@@ -26,16 +27,20 @@ class UploadDataViewmodel extends ChangeNotifier {
       var sheet = excel.tables.keys.first;
 
       for (var csvParts in excel.tables[sheet]!.rows) {
-        String levelName = csvParts[0]!.value.toString();
-        String sectionName = csvParts[1]!.value.toString();
-        String unitName = csvParts[2]!.value.toString();
-        String descriptionEnglish = csvParts[3]!.value.toString();
-        String descriptionArabic = csvParts[4]!.value.toString();
-        String questionEnglish = csvParts[5]!.value.toString();
-        String questionArabic = csvParts[6]!.value.toString();
+        String levelName = csvParts[0]!.value.toString().trim();
+        String sectionName = csvParts[1]!.value.toString().trim();
+        String unitName = csvParts[2]!.value.toString().trim();
+        String descriptionEnglish = csvParts[3]!.value.toString().trim();
+        String descriptionArabic = csvParts[4]!.value.toString().trim();
+        String questionEnglish = csvParts[5]!.value.toString().trim();
+        String questionArabic = csvParts[6]!.value.toString().trim();
         List<String> questionText = csvParts[7]!.value.toString().split(',');
         List<String> questionAnswer = csvParts[8]!.value.toString().split(',');
-        String questionType = csvParts[9]!.value.toString();
+        String questionType = csvParts[9]!.value.toString().trim();
+        String titleInEnglish = csvParts[10]!.value.toString().trim();
+        String titleInArabic = csvParts[11]!.value.toString().trim();
+        String passageInEnglish = csvParts[12]!.value.toString().trim();
+        String passageInArabic = csvParts[13]!.value.toString().trim();
 
         // Check if the level already exists in the levels map
         var existingLevel = levels.firstWhere(
@@ -70,21 +75,23 @@ class UploadDataViewmodel extends ChangeNotifier {
 
         // Add questions dynamically based on the row data
         List<BaseQuestion> questions = [];
-        switch (questionType) {
-          case 'dictation':
+        switch (QuestionTypeExtension.fromString(questionType)) {
+          case QuestionType.dictation:
             questions = questionText.map((word) {
               return DictationQuestionModel(
-                questionText: questionEnglish,
+                questionTextInEnglish: questionEnglish,
+                questionTextInArabic: questionArabic,
                 imageUrl: '',
                 voiceUrl: '',
                 answer: word,
               );
             }).toList();
             break;
-          case 'multipleChoice':
+          case QuestionType.multipleChoice:
             questions = [
               MultipleChoiceQuestionModel(
-                questionText: questionEnglish,
+                questionTextInEnglish: questionEnglish,
+                questionTextInArabic: questionArabic,
                 imageUrl: '',
                 voiceUrl: '',
                 options: questionText.asMap().entries.map((entry) {
@@ -96,7 +103,27 @@ class UploadDataViewmodel extends ChangeNotifier {
               )
             ];
             break;
+          case QuestionType.findWordsFromPassage:
+          case QuestionType.answerQuestionsFromPassage:
+            questions = [
+              ReadingQuestion(
+                questionTextInEnglish: questionEnglish,
+                questionTextInArabic: questionArabic,
+                imageUrl: '',
+                voiceUrl: '',
+                questionType: QuestionTypeExtension.fromString(questionType),
+                titleInEnglish: titleInEnglish,
+                titleInArabic: titleInArabic,
+                passageInEnglish: passageInEnglish,
+                passageInArabic: passageInArabic,
+                words: questionText,
+                answers: questionAnswer,
+              )
+            ];
+            break;
           // Add cases for other question types as needed
+          case QuestionType.speaking:
+          // TODO: Handle this case.
         }
 
         // Add the questions to the existing unit
