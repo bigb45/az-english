@@ -6,6 +6,7 @@ import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/writing/components/dictation_question.dart';
 import 'package:ez_english/features/sections/writing/practice.dart';
+import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -29,15 +30,18 @@ class UploadDataViewmodel extends ChangeNotifier {
         String sectionName = csvParts[1]!.value.toString();
         String unitName = csvParts[2]!.value.toString();
         String descriptionEnglish = csvParts[3]!.value.toString();
+        String descriptionArabic = csvParts[4]!.value.toString();
         String questionEnglish = csvParts[5]!.value.toString();
-        List<String> englishWords = csvParts[7]!.value.toString().split(',');
-        String questionType = csvParts[8]!.value.toString();
+        String questionArabic = csvParts[6]!.value.toString();
+        List<String> questionText = csvParts[7]!.value.toString().split(',');
+        List<String> questionAnswer = csvParts[8]!.value.toString().split(',');
+        String questionType = csvParts[9]!.value.toString();
+
         // Check if the level already exists in the levels map
         var existingLevel = levels.firstWhere(
           (level) => level.name == levelName,
           orElse: () => Level(
             // TODO: map the level id to the given level name
-            //TODO add this field to the toMap function
             id: levels.length + 1,
             name: levelName,
             description: '',
@@ -65,20 +69,36 @@ class UploadDataViewmodel extends ChangeNotifier {
         );
 
         // Add questions dynamically based on the row data
-        List<BaseQuestion> questions = englishWords.map((word) {
-          var questionData = {
-            'questionType': questionType,
-            'questionText': questionEnglish,
-            'imageUrl': '',
-            'voiceUrl': '',
-            'answer': word,
-            'options': [], // Add appropriate options if needed
-            'correctAnswer':
-                '', // Set correct answer for multiple choice questions if needed
-          };
+        List<BaseQuestion> questions = [];
+        switch (questionType) {
+          case 'dictation':
+            questions = questionText.map((word) {
+              return DictationQuestionModel(
+                questionText: questionEnglish,
+                imageUrl: '',
+                voiceUrl: '',
+                answer: word,
+              );
+            }).toList();
+            break;
+          case 'multipleChoice':
+            questions = [
+              MultipleChoiceQuestionModel(
+                questionText: questionEnglish,
+                imageUrl: '',
+                voiceUrl: '',
+                options: questionText.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  String option = entry.value;
+                  return RadioItemData(value: index.toString(), title: option);
+                }).toList(), // Assign index as the value
+                answer: RadioItemData(title: questionAnswer[0], value: '0'),
+              )
+            ];
+            break;
+          // Add cases for other question types as needed
+        }
 
-          return BaseQuestion.fromMap(questionData);
-        }).toList();
         // Add the questions to the existing unit
         existingUnit?.questions.addAll(questions);
 

@@ -61,4 +61,17 @@ class RadioItemData {
   final String title;
   final String value;
   RadioItemData({required this.title, required this.value});
+  Map<String, dynamic> toMap() {
+    return {
+      'value': value,
+      'title': title,
+    };
+  }
+
+  factory RadioItemData.fromMap(Map<String, dynamic> map) {
+    return RadioItemData(
+      title: map['title'],
+      value: map['value'],
+    );
+  }
 }

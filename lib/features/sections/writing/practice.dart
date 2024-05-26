@@ -220,10 +220,25 @@ class MultipleChoiceQuestionModel<T> extends BaseQuestion {
 
   @override
   Map<String, dynamic> toMap() {
-    // TODO: implement toMap
-    throw UnimplementedError();
+    Map<String, dynamic> baseMap = super.toMap();
+    return {
+      ...baseMap,
+      'options': options.map((option) => option.toMap()).toList(),
+      'answer': answer.toMap(),
+    };
   }
 
+  factory MultipleChoiceQuestionModel.fromMap(Map<String, dynamic> map) {
+    return MultipleChoiceQuestionModel(
+      options: (map['options'] as List<Map<String, dynamic>>)
+          .map((option) => RadioItemData.fromMap(option))
+          .toList(),
+      answer: RadioItemData.fromMap(map['answer']),
+      questionText: map['questionText'],
+      imageUrl: map['imageUrl'],
+      voiceUrl: map['voiceUrl'],
+    );
+  }
   bool validateQuestion(
       {required RadioItemData correctAnswer,
       required RadioItemData? userAnswer}) {
