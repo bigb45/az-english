@@ -1,4 +1,5 @@
 import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
+import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
 import 'package:ez_english/features/sections/reading/view_model/reading_section_viewmodel.dart';
 import 'package:ez_english/features/sections/vocabulary/viewmodel/vocabulary_section_viewmodel.dart';
@@ -22,6 +23,7 @@ class AppProviders extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ReadingQuestionViewmodel()),
         ChangeNotifierProvider(create: (_) => WritingSectionViewmodel()),
         ChangeNotifierProvider(create: (_) => VocabularySectionViewmodel()),
+        ChangeNotifierProvider(create: (_) => UploadDataViewmodel()),
       ],
       child: child,
     );
