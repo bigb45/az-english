@@ -10,7 +10,14 @@ abstract class BaseQuestion<T> {
     this.questionType,
   });
 
-  Map<String, dynamic> toMap();
+  Map<String, dynamic> toMap() {
+    return {
+      'questionText': questionText,
+      'imageUrl': imageUrl,
+      'description': voiceUrl,
+      "questionType": questionType.toString(),
+    };
+  }
 
   factory BaseQuestion.fromMap(Map<String, dynamic> json) {
     throw UnimplementedError('fromJson not implemented');

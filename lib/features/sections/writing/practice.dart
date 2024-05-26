@@ -175,8 +175,9 @@ class DictationQuestionModel extends BaseQuestion {
 
   @override
   Map<String, dynamic> toMap() {
-    // TODO: implement toMap
-    throw UnimplementedError();
+    Map<String, dynamic> baseMap = super.toMap();
+    baseMap['answer'] = answer;
+    return baseMap;
   }
 
   bool validateQuestion({String? correctAnswer, required String userAnswer}) {
