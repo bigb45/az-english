@@ -26,8 +26,10 @@ class _ResultsState extends State<Results> {
         children: [
           ElevatedButton(
             onPressed: () async {
-              Level? level = await _dataViewmodel.parseData();
-              await _dataViewmodel.saveLevelToFirestore(level!);
+              List<Level> levels = await _dataViewmodel.parseData();
+              for (Level level in levels) {
+                await _dataViewmodel.saveLevelToFirestore(level);
+              }
             },
             child: Text("Add data"),
           ),

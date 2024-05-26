@@ -12,58 +12,92 @@ import 'package:flutter/services.dart';
 class UploadDataViewmodel extends ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
 
-  Future<Level?> parseData() async {
+  Future<List<Level>> parseData() async {
+    List<Level> levels = [];
+
     ByteData data = await rootBundle.load('assets/questions.xlsx');
     List<int> bytes =
         data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
-    // Decode Excel data
-    var excel = Excel.decodeBytes(bytes);
-    for (var table in excel.tables.keys) {
-      for (var row in excel.tables[table]!.rows) {
-        print('$row');
+    try {
+      // Decode Excel data
+      var excel = Excel.decodeBytes(bytes);
+      var sheet = excel.tables.keys.first;
+
+      for (var csvParts in excel.tables[sheet]!.rows) {
+        String levelName = csvParts[0]!.value.toString();
+        String sectionName = csvParts[1]!.value.toString();
+        String unitName = csvParts[2]!.value.toString();
+        String descriptionEnglish = csvParts[3]!.value.toString();
+        String questionEnglish = csvParts[5]!.value.toString();
+        List<String> englishWords = csvParts[7]!.value.toString().split(',');
+
+        // Check if the level already exists in the levels map
+        var existingLevel = levels.firstWhere(
+          (level) => level.name == levelName,
+          orElse: () => Level(
+            // TODO: map the level id to the given level name
+            //TODO add this field to the toMap function
+            id: levels.length + 1,
+            name: levelName,
+            description: '',
+            sections: [], // Initialize an empty list of sections
+          ),
+        );
+
+        // Check if the section already exists in the existing level
+        var existingSection = existingLevel.sections?.firstWhere(
+          (section) => section.name == sectionName,
+          orElse: () => Section(
+            name: sectionName,
+            description: descriptionEnglish,
+            units: [], // Initialize an empty list of units
+          ),
+        );
+
+        // Check if the unit already exists in the existing section
+        var existingUnit = existingSection?.units.firstWhere(
+          (unit) => unit.name == unitName,
+          orElse: () => Unit(
+            name: unitName,
+            questions: [], // Initialize an empty list of questions
+          ),
+        );
+
+        // Add questions dynamically based on the row data
+        List<BaseQuestion> questions = englishWords.map((word) {
+          return DictationQuestionModel(
+            questionText: questionEnglish,
+            imageUrl: '',
+            voiceUrl: '',
+            answer: word,
+          );
+        }).toList();
+
+        // Add the questions to the existing unit
+        existingUnit?.questions.addAll(questions);
+
+        // Add the unit to the section if it's not already added
+        if (!existingSection!.units.contains(existingUnit)) {
+          existingSection.units.add(existingUnit!);
+        }
+
+        // Add the section to the level if it's not already added
+        if (!existingLevel.sections!.contains(existingSection)) {
+          existingLevel.sections!.add(existingSection);
+        }
+
+        // Add the level to the list if it's not already added
+        if (!levels.contains(existingLevel)) {
+          levels.add(existingLevel);
+        }
       }
+    } catch (e) {
+      print('Error parsing data: $e');
+      return [];
     }
 
-    var sheet = excel.tables.keys.first;
-    List<List<dynamic>> excelData = excel.tables[sheet]!.rows;
-
-    for (List<dynamic> csvParts in excelData) {
-      String levelName = csvParts[0]!.value.toString();
-      String sectionName = csvParts[1]!.value.toString();
-      String unitName = csvParts[2]!.value.toString();
-      String descriptionEnglish = csvParts[3]!.value.toString();
-      String descriptionArabic = csvParts[4]!.value.toString();
-      String questionEnglish = csvParts[5]!.value.toString();
-      String questionArabic = csvParts[6]!.value.toString();
-      List<String> englishWords = csvParts[7]!.value.toString().split(',');
-
-      List<BaseQuestion> questions = englishWords
-          .map((word) => DictationQuestionModel(
-                questionText: questionEnglish,
-                imageUrl: '',
-                voiceUrl: '',
-                answer: word,
-              ))
-          .toList();
-
-      Unit unit = Unit(name: unitName, questions: questions);
-
-      Section section = Section(
-        name: sectionName,
-        description: descriptionEnglish,
-        units: [unit],
-      );
-
-      Level level = Level(
-        id: 1,
-        name: levelName,
-        description: '',
-        sections: [section],
-      );
-      return level;
-    }
-    return null;
+    return levels;
   }
 
   Future<void> saveLevelToFirestore(Level levelData) async {
