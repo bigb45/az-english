@@ -1,12 +1,13 @@
 import 'package:ez_english/core/Constants.dart';
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ExerciseCard extends StatefulWidget {
   final VoidCallback? onPressed;
-  final Widget child;
+  final String text;
   final String? description;
   final String? image;
   final Color cardBackgroundColor;
@@ -17,7 +18,7 @@ class ExerciseCard extends StatefulWidget {
   const ExerciseCard(
       {super.key,
       required this.onPressed,
-      required this.child,
+      required this.text,
       required this.image,
       required this.cardBackgroundColor,
       this.cardShadowColor,
@@ -29,8 +30,7 @@ class ExerciseCard extends StatefulWidget {
   State<ExerciseCard> createState() => ExerciseCardState();
 }
 
-// TODO: change disabled card text color
-// TODO: change center image size
+// TODO: pass progress within section
 // TODO: change padding values to accomadate for different screen sizes
 class ExerciseCardState extends State<ExerciseCard> {
   var isPressed = false;
@@ -57,9 +57,7 @@ class ExerciseCardState extends State<ExerciseCard> {
         widget.onPressed != null ? widget.onPressed!() : null;
       },
       child: widget.onPressed == null
-          ?
-          // TODO: change padding values on disabled card
-          ColorFiltered(
+          ? ColorFiltered(
               colorFilter: ColorFilter.mode(
                   Palette.secondaryStroke.withOpacity(0.5), BlendMode.srcATop),
               child: Container(
@@ -71,7 +69,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                 width: 170.w,
                 height: 180.w,
                 child: Padding(
-                  padding: EdgeInsets.all(Constants.padding8),
+                  padding: EdgeInsets.all(Constants.padding6),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -109,8 +107,8 @@ class ExerciseCardState extends State<ExerciseCard> {
                               : Text(
                                   "Not Attempted",
                                   style: TextStyle(
-                                      color:
-                                          widget.textColor ?? Palette.secondary,
+                                      color: widget.textColor ??
+                                          Palette.secondaryText,
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -118,8 +116,16 @@ class ExerciseCardState extends State<ExerciseCard> {
                       ),
                       SvgPicture.asset(
                           widget.image ?? 'assets/images/notepad.svg',
-                          height: 100),
-                      Center(child: widget.child),
+                          height: 80),
+                      Center(
+                        child: Text(
+                          widget.text,
+                          style: TextStyles.practiceCardMainText.copyWith(
+                            color: Palette.secondaryText,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -192,9 +198,14 @@ class ExerciseCardState extends State<ExerciseCard> {
                         ],
                       ),
                       SvgPicture.asset(
-                          widget.image ?? 'assets/images/notepad.svg',
-                          height: 100),
-                      Center(child: widget.child),
+                        widget.image ?? 'assets/images/notepad.svg',
+                      ),
+                      Center(
+                          child: Text(
+                        widget.text,
+                        style: TextStyles.practiceCardMainText,
+                        textAlign: TextAlign.center,
+                      )),
                     ],
                   ),
                 ),

@@ -156,7 +156,6 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
                   TextStyles.readingPracticeTextStyle.copyWith(height: 1.5),
             ),
             Constants.gapH18,
-            // TODO: New design
             CustomTextBox(
               paragraphText:
                   '''Lorem  ipsum  dolor  sit  amet, consectetur  adipiscing  elit ''',
@@ -181,13 +180,6 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
               type: AudioControlType.microphone,
             ),
             Constants.gapH12,
-            // TODO remove this button after finish testing
-            // AudioControlButton(
-            //   onPressed: () async {
-            //     await playRecording();
-            //   },
-            //   type: AudioControlType.speaker,
-            // ),
             Text(
               AppStrings.speakingQuesiton,
               textAlign: TextAlign.center,

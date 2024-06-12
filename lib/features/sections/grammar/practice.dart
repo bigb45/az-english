@@ -27,7 +27,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
     return PopScope(
       canPop: false,
       onPopInvoked: (canPop) {
-        // showLeaveAlertDialog(context);
+        showLeaveAlertDialog(context);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -88,6 +88,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
               ),
             ),
             EvaluationSection(
+                onContinue: () {},
                 state: answerState,
                 onPressed: switch (answerState) {
                   EvaluationState.correct => () {

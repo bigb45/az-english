@@ -1,7 +1,6 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
-import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -140,7 +139,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
     required String sectionId,
     required VoidCallback? onTap,
     String? imagePath,
-    bool secondaryText = false,
     Color? cardShadowColor,
   }) {
     return ExerciseCard(
@@ -153,13 +151,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
       cardBackgroundColor: backgroundColor,
       image: imagePath,
       cardShadowColor: cardShadowColor,
-      child: Text(
-        headerText,
-        style: secondaryText
-            ? TextStyles.practiceCardSecondaryText
-            : TextStyles.practiceCardMainText,
-        textAlign: TextAlign.center,
-      ),
+      text: headerText,
     );
   }
 }

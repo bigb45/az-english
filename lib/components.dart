@@ -105,15 +105,7 @@ class Components extends StatelessWidget {
                       onPressed: () {},
                       image: null,
                       cardBackgroundColor: const Color(0xFF34495E),
-                      child: Text(
-                        "Exercise Card",
-                        style: TextStyle(
-                            color: Palette.secondary,
-                            fontFamily: 'Inter',
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w700),
-                        textAlign: TextAlign.center,
-                      ),
+                      text: "Exercise Card",
                     ),
                     SizedBox(height: 20.h),
                     RadioGroup(
