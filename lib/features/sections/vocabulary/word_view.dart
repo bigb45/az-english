@@ -1,7 +1,7 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/sections/vocabulary/components/word_list_tile.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
-import 'package:ez_english/features/sections/vocabulary/components/word_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -50,50 +50,106 @@ class WordView extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: Constants.padding30),
                 child: Text("Word of the Day",
-                    style: TextStyles.practiceCardSecondaryText),
+                    style: TextStyles.practiceCardSecondaryText.copyWith(
+                      color: Palette.primaryText,
+                      fontSize: 24.sp,
+                    )),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    wordData.word,
-                    style: TextStyles.vocabularyTerm,
-                  ),
-                  SizedBox(height: 30.h),
-                  Text(
-                    switch (type) {
-                      WordType.noun => "Noun",
-                      WordType.verb => "Verb",
-                    },
-                    style: TextStyles.wordType.copyWith(fontSize: 20),
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Text(wordData.definition,
-                      style: TextStyles.practiceCardSecondaryText),
-                ],
-              ),
-              SizedBox(height: 30.h),
-              ...List.generate(
-                wordData.exampleUsage?.length ?? 0,
-                (index) {
-                  return Wrap(
+              Card(
+                color: Palette.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: BorderSide(color: Palette.secondaryStroke, width: 1),
+                ),
+                elevation: 0,
+                child: Padding(
+                  padding: EdgeInsets.all(Constants.padding12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // const Expanded(child: SizedBox()),
                       Text(
-                        "\"${wordData.exampleUsage![index]}\"",
-                        textAlign: TextAlign.center,
-                        style: TextStyles.vocabularyExample,
+                        wordData.word,
+                        style: TextStyles.vocabularyTerm.copyWith(
+                          color: Colors.white,
+                        ),
                       ),
-                      // const Expanded(child: SizedBox()),
+                      SizedBox(height: 20.h),
+                      Text(
+                        type == WordType.noun ? "Noun" : "Verb",
+                        style: TextStyles.wordType.copyWith(
+                          fontSize: 20.sp,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        wordData.definition,
+                        style: TextStyles.practiceCardSecondaryText.copyWith(
+                          color: Colors.white70,
+                        ),
+                      ),
                     ],
-                  );
-                },
+                  ),
+                ),
               ),
               SizedBox(height: 30.h),
-              Text("${wordData.tenses}",
-                  style: TextStyles.practiceCardSecondaryText)
+              Card(
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: BorderSide(color: Palette.secondaryStroke, width: 1),
+                ),
+                elevation: 0,
+                child: Padding(
+                  padding: EdgeInsets.all(Constants.padding12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Examples",
+                        style: TextStyles.practiceCardSecondaryText.copyWith(
+                          color: Palette.primaryText,
+                          fontSize: 18.sp,
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+                      ...List.generate(
+                        wordData.exampleUsage?.length ?? 0,
+                        (index) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5.h),
+                            child: Text(
+                              "\"${wordData.exampleUsage![index]}\"",
+                              textAlign: TextAlign.left,
+                              style: TextStyles.vocabularyExample.copyWith(
+                                color: Palette.primaryText,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 30.h),
+              Card(
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: BorderSide(color: Palette.secondaryStroke, width: 1),
+                ),
+                elevation: 0,
+                child: Padding(
+                  padding: EdgeInsets.all(Constants.padding12),
+                  child: Text(
+                    wordData.tenses ?? "",
+                    style: TextStyles.practiceCardSecondaryText.copyWith(
+                      color: Palette.primaryText,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

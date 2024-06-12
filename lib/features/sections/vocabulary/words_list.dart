@@ -8,12 +8,10 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class WordsListView extends StatelessWidget {
-  // final List<WordModel> words;
   final String pageTitle;
   final String pageSubtitle;
   const WordsListView(
       {super.key,
-      // required this.words,
       this.pageTitle = "Vocabulary",
       this.pageSubtitle = "Daily Conversations"});
 

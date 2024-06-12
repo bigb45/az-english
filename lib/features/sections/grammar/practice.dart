@@ -91,24 +91,15 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                     children: [
                       // TODO: change this to actual value (current question index / total questions)
                       const ProgressBar(value: 20),
-                      // SentenceFormingQuestion(
-                      //   // partialSentence: ["A"],
-                      //   fullSentence: (questions[0] as SentenceFormingQuestion)
-                      //       .fullSentence,
-                      //   words: (questions[0] as SentenceFormingQuestion).words,
-                      //   answerState: answerState,
-                      //   onChanged: (value) {
-                      //     setState(() {
-                      //       grammarSectionViewmodel.updateAnswer(value);
-                      //     });
-                      //   },
-                      // ),
-                      _buildQuestion(
-                          question: currentQuestion,
-                          onChanged: (value) {
-                            grammarSectionViewmodel.updateAnswer(value);
-                          },
-                          answerState: grammarSectionViewmodel.answerState),
+
+                      Center(
+                        child: _buildQuestion(
+                            question: currentQuestion,
+                            onChanged: (value) {
+                              grammarSectionViewmodel.updateAnswer(value);
+                            },
+                            answerState: grammarSectionViewmodel.answerState),
+                      ),
                     ],
                   ),
                 ),

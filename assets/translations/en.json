@@ -29,5 +29,8 @@
   "practiceFrequencyPlanOne": "Casual",
   "practiceFrequencyPlanOneDescription": "30 minutes / day",
   "practiceFrequencyPlanTwo": "Serious",
-  "practiceFrequencyPlanTwoDescription": "1 hour every 3 days"
+  "practiceFrequencyPlanTwoDescription": "1 hour every 3 days",
+  "vocabularySectionOnboardingAppbarTitle": "Vocabulary section",
+  "vocabularySectionOnboardingTitle": "Vocabulary Practice",
+  "vocabularySectionOnboardingDescription": "In this section you will learn new words and their definitions"
 }

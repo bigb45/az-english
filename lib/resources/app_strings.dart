@@ -15,6 +15,8 @@ abstract class AppStrings {
       "readingSectionOnboardingAppbarTitle".tr();
   static final readingSectionOnboardingTitle =
       "readingSectionOnboardingTitle".tr();
+  static final vocabularySectionOnboardingTitle =
+      "vocabularySectionOnboardingTitle".tr();
   static final readingSectionOnboardingText =
       "readingSectionOnboardingText".tr();
   static final startPracticingButton = "startPracticingButton".tr();
@@ -39,4 +41,10 @@ abstract class AppStrings {
   static final practiceFrequencyPlanTwo = "practiceFrequencyPlanTwo".tr();
   static final practiceFrequencyPlanTwoDescription =
       "practiceFrequencyPlanTwoDescription".tr();
+  static final String vocabularySectionOnboardingAppbarTitle =
+      "vocabularySectionOnboardingAppbarTitle".tr();
+  static final String vocabularySectionOnboardingText =
+      "vocabularySectionOnboardingTitle".tr();
+  static final String vocabularySectionOnboardingDescription =
+      "vocabularySectionOnboardingDescription".tr();
 }
