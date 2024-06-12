@@ -5,7 +5,6 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/unit.dart';
-import 'package:ez_english/features/sections/writing/components/dictation_question.dart';
 import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
@@ -121,8 +120,13 @@ class UploadDataViewmodel extends ChangeNotifier {
               )
             ];
             break;
-          // Add cases for other question types as needed
+
           case QuestionType.speaking:
+          // TODO: Handle this case.
+          case QuestionType.sentenceForming:
+            // TODO: Handle this case.
+            throw Exception(UnimplementedError());
+          case QuestionType.youtubeLesson:
           // TODO: Handle this case.
         }
 

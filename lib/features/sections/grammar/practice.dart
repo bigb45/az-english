@@ -1,11 +1,16 @@
+import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
 import 'package:ez_english/features/sections/grammar/components/sentence_forming_question.dart';
+import 'package:ez_english/features/sections/grammar/grammar_section_viewmodel.dart';
+import 'package:ez_english/features/sections/grammar/model/grammar_question_model.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
+import 'package:ez_english/youtube.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class GrammarPractice extends StatefulWidget {
   // final String fullSentence;
@@ -17,13 +22,26 @@ class GrammarPractice extends StatefulWidget {
 }
 
 class _GrammarPracticeState extends State<GrammarPractice> {
-  String userAnswer = "";
-  final String fullSentence = "A cat is sleeping";
-  final String options = "cat is sleeping are am the a";
+  // String userAnswer = "";
+  // final String fullSentence = "A cat is sleeping";
+  // final String options = "cat is sleeping are am the a";
+  List<BaseQuestion> questions = [];
+  late GrammarSectionViewmodel grammarSectionViewmodel;
 
-  EvaluationState answerState = EvaluationState.empty;
+  @override
+  void initState() {
+    super.initState();
+    grammarSectionViewmodel =
+        Provider.of<GrammarSectionViewmodel>(context, listen: false);
+    questions = grammarSectionViewmodel.questions;
+  }
+
+// TODO: move answer state to viewmodel
   @override
   Widget build(BuildContext context) {
+    grammarSectionViewmodel = Provider.of<GrammarSectionViewmodel>(context);
+
+    GrammarQuestionModel currentQuestion = questions[0] as GrammarQuestionModel;
     return PopScope(
       canPop: false,
       onPopInvoked: (canPop) {
@@ -50,6 +68,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
           backgroundColor: Colors.white,
           title: ListTile(
             contentPadding: const EdgeInsets.only(left: 0, right: 0),
+            // TODO: get title and subtitle from viewmodel
             title: Text(
               "Grammar Practice",
               style: TextStyles.titleTextStyle
@@ -70,18 +89,26 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
+                      // TODO: change this to actual value (current question index / total questions)
                       const ProgressBar(value: 20),
-                      SentenceFormingQuestion(
-                        partialSentence: ["A"],
-                        fullSentence: fullSentence,
-                        words: options,
-                        answerState: answerState,
-                        onChanged: (value) {
-                          setState(() {
-                            userAnswer = value;
-                          });
-                        },
-                      ),
+                      // SentenceFormingQuestion(
+                      //   // partialSentence: ["A"],
+                      //   fullSentence: (questions[0] as SentenceFormingQuestion)
+                      //       .fullSentence,
+                      //   words: (questions[0] as SentenceFormingQuestion).words,
+                      //   answerState: answerState,
+                      //   onChanged: (value) {
+                      //     setState(() {
+                      //       grammarSectionViewmodel.updateAnswer(value);
+                      //     });
+                      //   },
+                      // ),
+                      _buildQuestion(
+                          question: currentQuestion,
+                          onChanged: (value) {
+                            grammarSectionViewmodel.updateAnswer(value);
+                          },
+                          answerState: grammarSectionViewmodel.answerState),
                     ],
                   ),
                 ),
@@ -89,16 +116,16 @@ class _GrammarPracticeState extends State<GrammarPractice> {
             ),
             EvaluationSection(
                 onContinue: () {},
-                state: answerState,
-                onPressed: switch (answerState) {
+                state: grammarSectionViewmodel.answerState,
+                onPressed: switch (grammarSectionViewmodel.answerState) {
                   EvaluationState.correct => () {
                       // TODO: move on to next question or screen
                     },
                   EvaluationState.incorrect => () {
-                      evaluateAnswer();
+                      grammarSectionViewmodel.evaluateAnswer();
                     },
                   EvaluationState.empty => () {
-                      evaluateAnswer();
+                      grammarSectionViewmodel.evaluateAnswer();
                     },
                 }),
           ],
@@ -106,12 +133,24 @@ class _GrammarPracticeState extends State<GrammarPractice> {
       ),
     );
   }
+}
 
-  void evaluateAnswer() {
-    setState(() {
-      answerState = fullSentence.toLowerCase() == userAnswer.toLowerCase()
-          ? EvaluationState.correct
-          : EvaluationState.incorrect;
-    });
-  }
+Widget _buildQuestion(
+    {required GrammarQuestionModel question,
+    required Function(String) onChanged,
+    required EvaluationState answerState}) {
+  return switch (question.questionType) {
+    QuestionType.sentenceForming => SentenceFormingQuestion(
+        fullSentence: question.question,
+        words: question.words,
+        onChanged: onChanged,
+        answerState: answerState,
+      ),
+    QuestionType.youtubeLesson => YouTubeVideoPlayer(
+        videoId: question.youtubeUrl!,
+      ),
+    _ => SizedBox(
+        child: Text("Wrong question type! ${question.questionType}"),
+      ),
+  };
 }

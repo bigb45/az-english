@@ -45,7 +45,7 @@ class ReadingQuestionModel extends BaseQuestion {
   @override
   factory ReadingQuestionModel.fromMap(Map<String, dynamic> map) {
     return ReadingQuestionModel(
-      // TODO: chagne questionTyp to use enum
+      // TODO: chagne questionType to use enum
       questionType: switch (map['questionType']) {
         'multipleChoice' => QuestionType.multipleChoice,
         'mcq' => QuestionType.multipleChoice,

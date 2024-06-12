@@ -83,41 +83,42 @@ class _SentenceFormingQuestionState extends State<SentenceFormingQuestion> {
                   ),
                   Column(
                     children: [
-                      Container(
+                      SizedBox(
                         height: 200.w,
                         width: double.infinity,
                         child: Wrap(
-                            alignment: WrapAlignment.start,
-                            runSpacing: Constants.padding20,
-                            children: [
-                              Text(widget.partialSentence?[0] ?? "",
-                                  style: TextStyles.bodyLarge),
-                              ...orderedWords.map(
-                                (word) {
-                                  return Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: Constants.padding4),
-                                    child: WordChip(
-                                      onPressed: widget.answerState ==
-                                              EvaluationState.correct
-                                          ? null
-                                          : () {
-                                              setState(() {
-                                                orderedWords.remove(word);
-                                                word.isSelected = false;
-                                                widget.onChanged(
-                                                  orderedWords
-                                                      .map((e) => e.text)
-                                                      .join(" "),
-                                                );
-                                              });
-                                            },
-                                      text: word.text,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ]),
+                          alignment: WrapAlignment.start,
+                          runSpacing: Constants.padding20,
+                          children: [
+                            Text(widget.partialSentence?[0] ?? "",
+                                style: TextStyles.bodyLarge),
+                            ...orderedWords.map(
+                              (word) {
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: Constants.padding4),
+                                  child: WordChip(
+                                    onPressed: widget.answerState ==
+                                            EvaluationState.correct
+                                        ? null
+                                        : () {
+                                            setState(() {
+                                              orderedWords.remove(word);
+                                              word.isSelected = false;
+                                              widget.onChanged(
+                                                orderedWords
+                                                    .map((e) => e.text)
+                                                    .join(" "),
+                                              );
+                                            });
+                                          },
+                                    text: word.text,
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

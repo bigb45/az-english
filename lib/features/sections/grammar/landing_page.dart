@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/sections/grammar/grammar_section_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class GrammarSection extends StatefulWidget {
   const GrammarSection({super.key});
@@ -17,6 +19,14 @@ class GrammarSection extends StatefulWidget {
 }
 
 class _GrammarSectionState extends State<GrammarSection> {
+  late GrammarSectionViewmodel viewmodel;
+  @override
+  void initState() {
+    super.initState();
+    viewmodel = Provider.of<GrammarSectionViewmodel>(context, listen: false);
+    Future.microtask(() => viewmodel.myInit());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

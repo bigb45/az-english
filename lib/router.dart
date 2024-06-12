@@ -13,6 +13,7 @@ import 'package:ez_english/features/sections/vocabulary/landing_page.dart';
 import 'package:ez_english/features/sections/vocabulary/words_list.dart';
 import 'package:ez_english/features/sections/writing/landing_page.dart';
 import 'package:ez_english/features/sections/writing/practice.dart';
+import 'package:ez_english/youtube.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -52,6 +53,18 @@ final loggedInRouter = GoRouter(
         );
       }),
     ),
+    GoRoute(
+        path: '/youtube',
+        builder: (context, state) => Scaffold(
+                body: Column(
+              children: const [
+                Text("widgets"),
+                YouTubeVideoPlayer(
+                  videoId: "DoKYYLZVU98",
+                ),
+                Text("other widgets")
+              ],
+            ))),
     GoRoute(
       path: '/landing_page/:levelId/:sectionId',
       builder: ((context, state) {

@@ -1,6 +1,7 @@
 import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class Results extends StatefulWidget {
@@ -31,9 +32,15 @@ class _ResultsState extends State<Results> {
                 await _dataViewmodel.saveLevelToFirestore(level);
               }
             },
-            child: Text("Add data"),
+            child: const Text("Add data"),
           ),
-          Center(
+          ElevatedButton(
+            onPressed: () {
+              context.push('/youtube');
+            },
+            child: const Text("To Youtube"),
+          ),
+          const Center(
             child: Text('Results'),
           ),
         ],

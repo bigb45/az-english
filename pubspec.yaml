@@ -36,6 +36,7 @@ dependencies:
   email_validator: ^2.1.17
   cloud_firestore: ^4.17.3
   excel: ^4.0.3
+  youtube_player_flutter: ^9.0.1
 
 dev_dependencies:
   flutter_test:

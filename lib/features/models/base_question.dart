@@ -41,11 +41,18 @@ abstract class BaseQuestion<T> {
 }
 
 enum QuestionType {
+  // reading question types
   multipleChoice,
   dictation,
   speaking,
+
+  // writing question types
   findWordsFromPassage,
   answerQuestionsFromPassage,
+
+  // grammar question types
+  sentenceForming,
+  youtubeLesson,
 }
 
 extension QuestionTypeExtension on QuestionType {

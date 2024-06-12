@@ -43,7 +43,10 @@ class ReadingQuestionViewmodel extends BaseViewModel {
         .sectionProgress![sectionName]!.lastStoppedQuestionIndex;
     try {
       _questions = await _firestoreService.fetchQuestions(
-          _sectionName!, _levelName!, lastQuestionIndex);
+        _sectionName!,
+        _levelName!,
+        lastQuestionIndex,
+      );
       error = null;
     } on CustomException catch (e) {
       // error = e as CustomException;

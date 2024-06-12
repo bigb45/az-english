@@ -37,9 +37,8 @@ class _ReadingPracticeState extends State<ReadingPractice> {
   EvaluationState answerState = EvaluationState.empty;
   @override
   Widget build(BuildContext context) {
-    BaseQuestion baseCurrentQuestion = questions[currentQuestionIndex];
     ReadingQuestionModel currentQuestion =
-        baseCurrentQuestion as ReadingQuestionModel;
+        questions[currentQuestionIndex] as ReadingQuestionModel;
 
     return PopScope(
       canPop: false,
