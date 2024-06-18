@@ -1,15 +1,11 @@
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
-import 'package:ez_english/features/sections/grammar/components/sentence_forming_question.dart';
 import 'package:ez_english/features/sections/grammar/grammar_section_viewmodel.dart';
-import 'package:ez_english/features/sections/models/sentence_forming_question_model.dart';
-import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 import 'package:ez_english/features/sections/reading/practice.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
-import 'package:ez_english/youtube.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +34,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
     grammarSectionViewmodel = Provider.of<GrammarSectionViewmodel>(context);
 
     dynamic currentQuestion = questions[grammarSectionViewmodel.currentIndex];
-    print("current question: $currentQuestion");
+
     return PopScope(
       canPop: false,
       onPopInvoked: (canPop) {
