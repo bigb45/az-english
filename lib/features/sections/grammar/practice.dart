@@ -22,9 +22,6 @@ class GrammarPractice extends StatefulWidget {
 }
 
 class _GrammarPracticeState extends State<GrammarPractice> {
-  // String userAnswer = "";
-  // final String fullSentence = "A cat is sleeping";
-  // final String options = "cat is sleeping are am the a";
   List<BaseQuestion> questions = [];
   late GrammarSectionViewmodel grammarSectionViewmodel;
 
@@ -36,12 +33,12 @@ class _GrammarPracticeState extends State<GrammarPractice> {
     questions = grammarSectionViewmodel.questions;
   }
 
-// TODO: move answer state to viewmodel
   @override
   Widget build(BuildContext context) {
     grammarSectionViewmodel = Provider.of<GrammarSectionViewmodel>(context);
 
-    GrammarQuestionModel currentQuestion = questions[0] as GrammarQuestionModel;
+    GrammarQuestionModel currentQuestion =
+        questions[grammarSectionViewmodel.currentIndex] as GrammarQuestionModel;
     return PopScope(
       canPop: false,
       onPopInvoked: (canPop) {
@@ -106,19 +103,13 @@ class _GrammarPracticeState extends State<GrammarPractice> {
               ),
             ),
             EvaluationSection(
-                onContinue: () {},
-                state: grammarSectionViewmodel.answerState,
-                onPressed: switch (grammarSectionViewmodel.answerState) {
-                  EvaluationState.correct => () {
-                      // TODO: move on to next question or screen
-                    },
-                  EvaluationState.incorrect => () {
-                      grammarSectionViewmodel.evaluateAnswer();
-                    },
-                  EvaluationState.empty => () {
-                      grammarSectionViewmodel.evaluateAnswer();
-                    },
-                }),
+              onContinue: () {
+                print("next question");
+                grammarSectionViewmodel.updateSectionProgress();
+              },
+              onPressed: grammarSectionViewmodel.evaluateAnswer,
+              state: grammarSectionViewmodel.answerState,
+            ),
           ],
         ),
       ),

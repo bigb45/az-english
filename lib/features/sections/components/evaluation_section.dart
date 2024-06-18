@@ -62,7 +62,8 @@ class _EvaluationSectionState extends State<EvaluationSection> {
               },
               text: switch (widget.state) {
                 EvaluationState.empty => "check",
-                _ => "continue",
+                EvaluationState.incorrect => "check",
+                EvaluationState.correct => "continue",
               },
             ),
           ],

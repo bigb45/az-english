@@ -9,12 +9,8 @@ class GrammarSectionViewmodel extends BaseViewModel {
 
   List<BaseQuestion> _questions = [];
   bool _isLoading = false;
-  int _currentQuestionIndex = 0;
   String _userAnswer = "";
-  EvaluationState _answerState = EvaluationState.empty;
 
-  EvaluationState get answerState => _answerState;
-  int get currentQuestionIndex => _currentQuestionIndex;
   List<BaseQuestion> get questions => _questions;
   bool get isLoding => _isLoading;
   String get userAnswer => _userAnswer;
@@ -22,9 +18,17 @@ class GrammarSectionViewmodel extends BaseViewModel {
   @override
   void init() {}
 
+  @override
+  void dispose() {
+    answerState = EvaluationState.empty;
+    currentIndex = 0;
+    _userAnswer = "";
+    super.dispose();
+  }
+
   void myInit() async {
     // reset answerState
-    _answerState = EvaluationState.empty;
+    answerState = EvaluationState.empty;
     fetchQuestions();
   }
 
@@ -36,35 +40,39 @@ class GrammarSectionViewmodel extends BaseViewModel {
 
       _questions = [
         GrammarQuestionModel(
-            questionType: QuestionType.youtubeLesson,
-            question: "Watch the following video",
-            words: "",
-            correctAnswer: "",
-            youtubeUrl: "JGwWNGJdvx8"),
-        GrammarQuestionModel(
           questionType: QuestionType.sentenceForming,
           question: "A cat is sleeping",
           words: "cat is sleeping are am the a",
           correctAnswer: "A cat is sleeping",
         ),
+        GrammarQuestionModel(
+            questionType: QuestionType.youtubeLesson,
+            question: "Watch the following video",
+            words: "",
+            correctAnswer: "",
+            youtubeUrl: "JGwWNGJdvx8"),
       ];
       notifyListeners();
     } catch (e) {
       print("error while fetching questions: $e");
-
       // TODO: show error in ui
     }
   }
 
   void evaluateAnswer() {
-    _answerState = (questions[_currentQuestionIndex] as GrammarQuestionModel)
-                .correctAnswer
-                .toLowerCase() ==
-            userAnswer.toLowerCase()
-        ? EvaluationState.correct
-        : EvaluationState.incorrect;
-
-    notifyListeners();
+    answerState = switch (questions[currentIndex].questionType) {
+      QuestionType.sentenceForming =>
+        (questions[currentIndex] as GrammarQuestionModel)
+                    .correctAnswer
+                    .toLowerCase() ==
+                userAnswer.toLowerCase()
+            ? EvaluationState.correct
+            : EvaluationState.incorrect,
+      QuestionType.youtubeLesson => EvaluationState.correct,
+      _ => throw UnimplementedError(),
+    };
+    print(
+        "updating state: $currentIndex $answerState, ${(questions[currentIndex] as GrammarQuestionModel).correctAnswer}, $userAnswer");
   }
 
   void updateAnswer(String newAnswer) {
@@ -73,7 +81,10 @@ class GrammarSectionViewmodel extends BaseViewModel {
   }
 
   void updateSectionProgress() {
-    _currentQuestionIndex++;
-    notifyListeners();
+    if (questions.length - 1 > currentIndex) {
+      currentIndex++;
+      _userAnswer = "";
+    }
+    answerState = EvaluationState.empty;
   }
 }
