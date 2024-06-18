@@ -2,7 +2,8 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
-import 'package:ez_english/features/sections/grammar/model/grammar_question_model.dart';
+import 'package:ez_english/features/sections/models/sentence_forming_question_model.dart';
+import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 
 class GrammarSectionViewmodel extends BaseViewModel {
   final FirestoreService _firestoreService = FirestoreService();
@@ -39,18 +40,12 @@ class GrammarSectionViewmodel extends BaseViewModel {
       // _questions = await _firestoreService.fetchQuestions("grammar", "1", 0);
 
       _questions = [
-        GrammarQuestionModel(
-          questionType: QuestionType.sentenceForming,
-          question: "A cat is sleeping",
+        SentenceFormingQuestionModel(
+          question: "Form a sentence from the words below:",
           words: "cat is sleeping are am the a",
           correctAnswer: "A cat is sleeping",
         ),
-        GrammarQuestionModel(
-            questionType: QuestionType.youtubeLesson,
-            question: "Watch the following video",
-            words: "",
-            correctAnswer: "",
-            youtubeUrl: "JGwWNGJdvx8"),
+        YoutubeLessonModel(youtubeUrl: "JGwWNGJdvx8"),
       ];
       notifyListeners();
     } catch (e) {
@@ -62,7 +57,7 @@ class GrammarSectionViewmodel extends BaseViewModel {
   void evaluateAnswer() {
     answerState = switch (questions[currentIndex].questionType) {
       QuestionType.sentenceForming =>
-        (questions[currentIndex] as GrammarQuestionModel)
+        (questions[currentIndex] as SentenceFormingQuestionModel)
                     .correctAnswer
                     .toLowerCase() ==
                 userAnswer.toLowerCase()
@@ -72,7 +67,7 @@ class GrammarSectionViewmodel extends BaseViewModel {
       _ => throw UnimplementedError(),
     };
     print(
-        "updating state: $currentIndex $answerState, ${(questions[currentIndex] as GrammarQuestionModel).correctAnswer}, $userAnswer");
+        "updating state: $currentIndex $answerState, ${(questions[currentIndex] as SentenceFormingQuestionModel).correctAnswer}, $userAnswer");
   }
 
   void updateAnswer(String newAnswer) {
@@ -80,7 +75,7 @@ class GrammarSectionViewmodel extends BaseViewModel {
     notifyListeners();
   }
 
-  void updateSectionProgress() {
+  void incrementIndex() {
     if (questions.length - 1 > currentIndex) {
       currentIndex++;
       _userAnswer = "";

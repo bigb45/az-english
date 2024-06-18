@@ -7,6 +7,7 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -18,7 +19,7 @@ class ReadingQuestionViewmodel extends BaseViewModel {
   UserModel? _userData;
   String? get sectionName => _sectionName;
   String? get levelName => _levelName;
-
+  dynamic userAnswer = "";
   final FirestoreService _firestoreService = FirestoreService();
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
 
@@ -30,7 +31,6 @@ class ReadingQuestionViewmodel extends BaseViewModel {
   FutureOr<void> init() {}
 
   void setValuesAndInit() async {
-    // _sectionName = RouteConstants.getSectionName(sectionId!);
     _sectionName = "reading";
     _levelName = RouteConstants.getLevelName(levelId!);
     await getUserData(_firebaseAuthService.getUser()!.uid);
@@ -95,5 +95,26 @@ class ReadingQuestionViewmodel extends BaseViewModel {
   void _handleError(String e) {
     // TODO: separate UI logic from business logic
     Utils.showSnackBar(e);
+  }
+
+  void incrementIndex() {
+    if (currentIndex < questions.length - 1) {
+      currentIndex++;
+    }
+  }
+
+  void updateAnswer(String newAnswer) {
+    userAnswer = newAnswer;
+    notifyListeners();
+  }
+
+  void evaluateAnswer() {
+    answerState = switch (_questions[currentIndex].questionType) {
+      QuestionType.multipleChoice =>
+        ((_questions[currentIndex]).imageUrl == null)
+            ? EvaluationState.correct
+            : EvaluationState.incorrect,
+      _ => EvaluationState.correct,
+    };
   }
 }

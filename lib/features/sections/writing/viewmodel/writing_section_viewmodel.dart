@@ -7,14 +7,16 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:ez_english/features/sections/components/evaluation_section.dart';
 
 class WritingSectionViewmodel extends BaseViewModel {
   final sectionId = "2";
   final _sectionName = "writing";
-  int _currentQuestionIndex = 0;
   String? _levelName;
   String? levelId;
   List<BaseQuestion> _questions = [];
+  String _userAnswer = "";
+
   // List<BaseQuestion> _questions = [
   //   MultipleChoiceQuestionModel(
   //     options: [
@@ -37,8 +39,7 @@ class WritingSectionViewmodel extends BaseViewModel {
   // ];
 
   get questions => _questions;
-  get currentQuestionIndex => _currentQuestionIndex;
-
+  get userAnswer => _userAnswer;
   final FirestoreService _firestoreService = FirestoreService();
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   @override
@@ -73,9 +74,22 @@ class WritingSectionViewmodel extends BaseViewModel {
     }
   }
 
+  void updateAnswer(String answer) {
+    _userAnswer = answer;
+    notifyListeners();
+  }
+
+  void evaluateAnswer() {
+    if (_questions[currentIndex].answer == _userAnswer) {
+      answerState = EvaluationState.correct;
+    } else {
+      answerState = EvaluationState.incorrect;
+    }
+  }
+
   void nextQuestion() {
-    if (_currentQuestionIndex < _questions.length - 1) {
-      _currentQuestionIndex++;
+    if (currentIndex < _questions.length - 1) {
+      currentIndex = currentIndex + 1;
       notifyListeners();
     }
   }
