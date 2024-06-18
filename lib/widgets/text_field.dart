@@ -11,9 +11,11 @@ class CustomTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final bool? isPasswordField;
   final TextFieldType? fieldType;
+  final Function(String)? onChanged;
   const CustomTextField({
     super.key,
     required this.controller,
+    this.onChanged,
     this.focusNode,
     this.hintText,
     this.maxLines = 1,
@@ -44,6 +46,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
         });
       },
       child: TextFormField(
+        onChanged: (value) {
+          widget.onChanged != null ? widget.onChanged!(value) : null;
+        },
         autovalidateMode: AutovalidateMode.disabled,
         validator: widget.validator,
         maxLines: widget.maxLines,
