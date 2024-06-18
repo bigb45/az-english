@@ -6,9 +6,9 @@ import 'package:ez_english/features/auth/screens/sign_in.dart';
 import 'package:ez_english/features/auth/screens/sign_up.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
 import 'package:ez_english/features/sections/grammar/practice.dart';
-import 'package:ez_english/features/sections/practice_screen.dart';
 import 'package:ez_english/features/sections/reading/landing_page.dart';
 import 'package:ez_english/features/sections/reading/practice.dart';
+import 'package:ez_english/features/sections/sections_screen.dart';
 import 'package:ez_english/features/sections/vocabulary/landing_page.dart';
 import 'package:ez_english/features/sections/vocabulary/words_list.dart';
 import 'package:ez_english/features/sections/writing/landing_page.dart';
@@ -47,7 +47,7 @@ final loggedInRouter = GoRouter(
       path: '/level/:levelId',
       builder: ((context, state) {
         final levelId = state.pathParameters['levelId'] ?? "-1";
-        return PracticeScreen(
+        return PracticeSections(
           levelId: levelId,
           levelName: RouteConstants.getLevelName(levelId),
         );

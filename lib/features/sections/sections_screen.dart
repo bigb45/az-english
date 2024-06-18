@@ -6,21 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class PracticeScreen extends StatefulWidget {
+class PracticeSections extends StatefulWidget {
   // TODO: use levelId to fetch title and exercises for the level via viewmodel
   final String levelId;
   final String levelName;
-  const PracticeScreen({
+  const PracticeSections({
     Key? key,
     required this.levelId,
     required this.levelName,
   }) : super(key: key);
 
   @override
-  State<PracticeScreen> createState() => _PracticeScreenState();
+  State<PracticeSections> createState() => _PracticeSectionsState();
 }
 
-class _PracticeScreenState extends State<PracticeScreen> {
+class _PracticeSectionsState extends State<PracticeSections> {
   late List<String> hintTexts = [];
   late List<String?> imageAssets = [];
   late List<Color> backgroundColors = [];
