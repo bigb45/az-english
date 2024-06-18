@@ -6,6 +6,7 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/network/apis_constants.dart';
 import 'package:ez_english/core/network/custom_response.dart';
 import 'package:ez_english/core/network/network_helper.dart';
+import 'package:ez_english/features/sections/models/speaking_question_model.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/microphone_button.dart';
@@ -16,7 +17,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class SpeakingQuestion extends StatefulWidget {
+  final SpeakingQuestionModel question;
   const SpeakingQuestion({
+    required this.question,
     super.key,
   });
 

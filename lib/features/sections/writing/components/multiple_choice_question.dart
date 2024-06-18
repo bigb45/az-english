@@ -1,8 +1,9 @@
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
+
+import '../../models/multiple_choice_question_model.dart';
 
 class MultipleChoiceQuestion extends StatefulWidget {
   final MultipleChoiceQuestionModel question;
