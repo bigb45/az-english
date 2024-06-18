@@ -10,6 +10,9 @@ import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../sections/models/dictation_question_model.dart';
+import '../../sections/models/multiple_choice_question_model.dart';
+
 class UploadDataViewmodel extends ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
 

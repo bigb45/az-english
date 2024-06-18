@@ -6,7 +6,7 @@ import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/models/user.dart';
-import 'package:ez_english/features/sections/reading/model/reading_question.dart';
+import 'package:ez_english/features/sections/models/reading_question_model.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
