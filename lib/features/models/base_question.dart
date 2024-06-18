@@ -1,16 +1,19 @@
-import 'package:ez_english/features/sections/writing/practice.dart';
+import '../sections/models/dictation_question_model.dart';
 
 abstract class BaseQuestion<T> {
   String questionTextInEnglish;
   String questionTextInArabic;
+  // TODO: make image URL and voice URL specific to the question type or nullable
   String imageUrl;
   String voiceUrl;
+  T? answer;
   QuestionType? questionType;
   BaseQuestion({
     required this.questionTextInEnglish,
     required this.questionTextInArabic,
     required this.imageUrl,
     required this.voiceUrl,
+    this.answer,
     this.questionType,
   });
 
