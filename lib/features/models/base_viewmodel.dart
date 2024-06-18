@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:flutter/material.dart';
 
 abstract class BaseViewModel extends ChangeNotifier {
@@ -9,6 +10,9 @@ abstract class BaseViewModel extends ChangeNotifier {
   CustomException? _error;
   bool _isDisposed = false;
   bool _isInitializeDone = false;
+  int _currentIndex = 0;
+  EvaluationState _answerState = EvaluationState.empty;
+
   final FirestoreService firestoreService = FirestoreService();
 
   FutureOr<void> _initState;
@@ -45,6 +49,14 @@ abstract class BaseViewModel extends ChangeNotifier {
   bool get isDisposed => _isDisposed;
   bool get isInitialized => _isInitializeDone;
   CustomException? get error => _error;
+  int get currentIndex => _currentIndex;
+  EvaluationState get answerState => _answerState;
+
+  @protected
+  set currentIndex(int newValue) {
+    _currentIndex = newValue;
+    notifyListeners();
+  }
 
   @protected
   set isLoading(bool value) {
@@ -60,5 +72,11 @@ abstract class BaseViewModel extends ChangeNotifier {
     scheduleMicrotask(() {
       if (!_isDisposed) notifyListeners();
     });
+  }
+
+  @protected
+  set answerState(EvaluationState value) {
+    _answerState = value;
+    notifyListeners();
   }
 }
