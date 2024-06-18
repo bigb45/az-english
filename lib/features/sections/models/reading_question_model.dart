@@ -4,12 +4,10 @@ import 'package:ez_english/features/models/base_question.dart';
 
 // TODO will change this class after finishing the input class
 class ReadingQuestionModel extends BaseQuestion {
-  final String? answer;
-
   ReadingQuestionModel({
-    required super.questionType,
     required String question,
-    required this.answer,
+    required super.questionType,
+    required super.answer,
   }) : super(
           questionTextInEnglish: question,
           questionTextInArabic: "",
@@ -45,7 +43,6 @@ class ReadingQuestionModel extends BaseQuestion {
   @override
   factory ReadingQuestionModel.fromMap(Map<String, dynamic> map) {
     return ReadingQuestionModel(
-      // TODO: chagne questionType to use enum
       questionType: switch (map['questionType']) {
         'multipleChoice' => QuestionType.multipleChoice,
         'mcq' => QuestionType.multipleChoice,
