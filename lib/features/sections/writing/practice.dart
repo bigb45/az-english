@@ -14,6 +14,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../models/dictation_question_model.dart';
+import '../models/multiple_choice_question_model.dart';
+
 class WritingPractice extends StatefulWidget {
   const WritingPractice({super.key});
 
@@ -32,7 +35,7 @@ class _WritingPracticeState extends State<WritingPractice> {
     viewmodel = Provider.of<WritingSectionViewmodel>(context, listen: false);
   }
 
-  final TextEditingController _controller = TextEditingController();
+  // final TextEditingController _controller = TextEditingController();
 
   RadioItemData? selectedOption;
   @override
@@ -104,12 +107,13 @@ class _WritingPracticeState extends State<WritingPractice> {
             EvaluationSection(
               state: evaluationState,
               onContinue: () {
+                // TODO: update this to new standard
                 viewmodel.nextQuestion();
                 setState(() {
                   evaluationState = EvaluationState.empty;
                 });
               },
-              onPressed: checkQuestion,
+              onPressed: viewmodel.evaluateAnswer,
             )
           ],
         ),
@@ -121,7 +125,9 @@ class _WritingPracticeState extends State<WritingPractice> {
     switch (question.questionType) {
       case QuestionType.dictation:
         return DictationQuestion(
-          controller: _controller,
+          onAnswerChanged: (value) {
+            viewmodel.updateAnswer(value);
+          },
           question: question,
         );
       case QuestionType.multipleChoice:
@@ -140,116 +146,28 @@ class _WritingPracticeState extends State<WritingPractice> {
     }
   }
 
-  void checkQuestion() {
-    final condition = switch (currentQuestion.questionType) {
-      QuestionType.multipleChoice =>
-        (currentQuestion as MultipleChoiceQuestionModel).validateQuestion(
-            correctAnswer:
-                (currentQuestion as MultipleChoiceQuestionModel).answer,
-            userAnswer: selectedOption),
-      QuestionType.dictation => (currentQuestion as DictationQuestionModel)
-          .validateQuestion(
-              correctAnswer: (currentQuestion as DictationQuestionModel).answer,
-              userAnswer: _controller.text),
-      _ => false,
-    };
+// TODO: move answer validation to viewmodel
+  // void checkQuestion() {
+  //   final condition = switch (currentQuestion.questionType) {
+  //     QuestionType.multipleChoice =>
+  //       (currentQuestion as MultipleChoiceQuestionModel).validateQuestion(
+  //           correctAnswer:
+  //               (currentQuestion as MultipleChoiceQuestionModel).answer,
+  //           userAnswer: selectedOption),
+  //     QuestionType.dictation => (currentQuestion as DictationQuestionModel)
+  //         .validateQuestion(
+  //             correctAnswer: (currentQuestion as DictationQuestionModel).answer,
+  //             userAnswer: _controller.text),
+  //     _ => false,
+  //   };
 
-    setState(() {
-      switch (condition) {
-        case true:
-          evaluationState = EvaluationState.correct;
-        // viewmodel.nextQuestion();
-        case false:
-          evaluationState = EvaluationState.incorrect;
-      }
-    });
-  }
-}
-
-class DictationQuestionModel extends BaseQuestion {
-  final String answer;
-
-  DictationQuestionModel({
-    required this.answer,
-    required super.questionTextInEnglish,
-    required super.questionTextInArabic,
-    super.questionType = QuestionType.dictation,
-    required super.imageUrl,
-    required super.voiceUrl,
-  });
-
-  @override
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> baseMap = super.toMap();
-    baseMap['answer'] = answer;
-    return baseMap;
-  }
-
-  factory DictationQuestionModel.fromMap(Map<String, dynamic> json) {
-    return DictationQuestionModel(
-      answer: json['answer'],
-      questionTextInEnglish: json['questionTextInEnglish'],
-      questionTextInArabic: json['questionTextInArabic'],
-      imageUrl: json['imageUrl'],
-      voiceUrl: json['voiceUrl'],
-    );
-  }
-
-  bool validateQuestion({String? correctAnswer, required String userAnswer}) {
-    correctAnswer = correctAnswer ?? answer;
-
-    correctAnswer = correctAnswer.normalize();
-    userAnswer = userAnswer.normalize();
-
-    if (userAnswer == correctAnswer) {
-      print("correct");
-    } else {
-      print(
-          "incorrect, user answered: $userAnswer, correct answer: $correctAnswer");
-    }
-    return userAnswer == correctAnswer;
-  }
-}
-
-class MultipleChoiceQuestionModel<T> extends BaseQuestion {
-  final List<RadioItemData> options;
-  final RadioItemData answer;
-
-  MultipleChoiceQuestionModel(
-      {required this.options,
-      required this.answer,
-      required super.questionTextInArabic,
-      required super.questionTextInEnglish,
-      required super.imageUrl,
-      super.voiceUrl = "",
-      super.questionType = QuestionType.multipleChoice});
-  // : assert(options.contains(answer), "answer must be one of the options");
-
-  @override
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> baseMap = super.toMap();
-    return {
-      ...baseMap,
-      'options': options.map((option) => option.toMap()).toList(),
-      'answer': answer.toMap(),
-    };
-  }
-
-  factory MultipleChoiceQuestionModel.fromMap(Map<String, dynamic> map) {
-    return MultipleChoiceQuestionModel(
-      options: (map['options'] as List<Map<String, dynamic>>)
-          .map((option) => RadioItemData.fromMap(option))
-          .toList(),
-      answer: RadioItemData.fromMap(map['answer']),
-      questionTextInEnglish: map['questionTextInEnglish'],
-      questionTextInArabic: map['questionTextInArabic'],
-      imageUrl: map['imageUrl'],
-      voiceUrl: map['voiceUrl'],
-    );
-  }
-  bool validateQuestion(
-      {required RadioItemData correctAnswer,
-      required RadioItemData? userAnswer}) {
-    return userAnswer?.value == correctAnswer.value;
-  }
+  //   setState(() {
+  //     switch (condition) {
+  //       case true:
+  //         evaluationState = EvaluationState.correct;
+  //       case false:
+  //         evaluationState = EvaluationState.incorrect;
+  //     }
+  //   });
+  // }
 }
