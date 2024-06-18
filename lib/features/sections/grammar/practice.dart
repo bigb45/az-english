@@ -3,7 +3,9 @@ import 'package:ez_english/features/sections/components/evaluation_section.dart'
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
 import 'package:ez_english/features/sections/grammar/components/sentence_forming_question.dart';
 import 'package:ez_english/features/sections/grammar/grammar_section_viewmodel.dart';
-import 'package:ez_english/features/sections/grammar/model/grammar_question_model.dart';
+import 'package:ez_english/features/sections/models/sentence_forming_question_model.dart';
+import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
+import 'package:ez_english/features/sections/reading/practice.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
@@ -13,8 +15,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class GrammarPractice extends StatefulWidget {
-  // final String fullSentence;
-  // final String options;
   const GrammarPractice({super.key});
 
   @override
@@ -37,8 +37,8 @@ class _GrammarPracticeState extends State<GrammarPractice> {
   Widget build(BuildContext context) {
     grammarSectionViewmodel = Provider.of<GrammarSectionViewmodel>(context);
 
-    GrammarQuestionModel currentQuestion =
-        questions[grammarSectionViewmodel.currentIndex] as GrammarQuestionModel;
+    dynamic currentQuestion = questions[grammarSectionViewmodel.currentIndex];
+    print("current question: $currentQuestion");
     return PopScope(
       canPop: false,
       onPopInvoked: (canPop) {
@@ -90,7 +90,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                       const ProgressBar(value: 20),
 
                       Center(
-                        child: _buildQuestion(
+                        child: buildQuestionWidget(
                             question: currentQuestion,
                             onChanged: (value) {
                               grammarSectionViewmodel.updateAnswer(value);
@@ -105,7 +105,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
             EvaluationSection(
               onContinue: () {
                 print("next question");
-                grammarSectionViewmodel.updateSectionProgress();
+                grammarSectionViewmodel.incrementIndex();
               },
               onPressed: grammarSectionViewmodel.evaluateAnswer,
               state: grammarSectionViewmodel.answerState,
@@ -117,22 +117,21 @@ class _GrammarPracticeState extends State<GrammarPractice> {
   }
 }
 
-Widget _buildQuestion(
-    {required GrammarQuestionModel question,
-    required Function(String) onChanged,
-    required EvaluationState answerState}) {
-  return switch (question.questionType) {
-    QuestionType.sentenceForming => SentenceFormingQuestion(
-        fullSentence: question.question,
-        words: question.words,
-        onChanged: onChanged,
-        answerState: answerState,
-      ),
-    QuestionType.youtubeLesson => YouTubeVideoPlayer(
-        videoId: question.youtubeUrl!,
-      ),
-    _ => SizedBox(
-        child: Text("Wrong question type! ${question.questionType}"),
-      ),
-  };
-}
+// Widget _buildQuestion(
+//     {required BaseQuestion question,
+//     required Function(String) onChanged,
+//     required EvaluationState answerState}) {
+//   return switch (question.questionType) {
+//     QuestionType.sentenceForming => SentenceFormingQuestion(
+//         question: question as SentenceFormingQuestionModel,
+//         onChanged: onChanged,
+//         answerState: answerState,
+//       ),
+//     QuestionType.youtubeLesson => YouTubeVideoPlayer(
+//         videoId: (question as YoutubeLessonModel).youtubeUrl!,
+//       ),
+//     _ => SizedBox(
+//         child: Text("Unsupported question type ${question.questionType}"),
+//       ),
+//   };
+// }
