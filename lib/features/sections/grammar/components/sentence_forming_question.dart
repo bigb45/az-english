@@ -1,5 +1,6 @@
 import 'package:ez_english/core/Constants.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
+import 'package:ez_english/features/sections/models/sentence_forming_question_model.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/word_chip.dart';
@@ -7,18 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SentenceFormingQuestion extends StatefulWidget {
-  final String fullSentence;
-  // TODO: figure out how to make the same question incorporate partial sentences
-  final List<String>? partialSentence;
-  final String words;
+  final SentenceFormingQuestionModel question;
   final EvaluationState answerState;
   final Function(String) onChanged;
 
   const SentenceFormingQuestion({
     super.key,
-    this.partialSentence,
-    required this.fullSentence,
-    required this.words,
+    required this.question,
     required this.answerState,
     required this.onChanged,
   });
@@ -34,8 +30,10 @@ class _SentenceFormingQuestionState extends State<SentenceFormingQuestion> {
   @override
   void initState() {
     super.initState();
-    words =
-        widget.words.split(" ").map((word) => WordChipString(word)).toList();
+    words = widget.question.words
+        .split(" ")
+        .map((word) => WordChipString(word))
+        .toList();
     words.shuffle();
   }
 
@@ -90,7 +88,7 @@ class _SentenceFormingQuestionState extends State<SentenceFormingQuestion> {
                           alignment: WrapAlignment.start,
                           runSpacing: Constants.padding20,
                           children: [
-                            Text(widget.partialSentence?[0] ?? "",
+                            Text(widget.question.partialSentence?[0] ?? "",
                                 style: TextStyles.bodyLarge),
                             ...orderedWords.map(
                               (word) {
