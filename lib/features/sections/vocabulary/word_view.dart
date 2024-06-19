@@ -1,4 +1,5 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/vocabulary/components/word_list_tile.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -75,7 +76,7 @@ class WordView extends StatelessWidget {
                       ),
                       SizedBox(height: 20.h),
                       Text(
-                        type == WordType.noun ? "Noun" : "Verb",
+                        type == WordType.word ? "Noun" : "Verb",
                         style: TextStyles.wordType.copyWith(
                           fontSize: 20.sp,
                           color: Colors.white70,
@@ -83,7 +84,7 @@ class WordView extends StatelessWidget {
                       ),
                       SizedBox(height: 10.h),
                       Text(
-                        wordData.definition,
+                        wordData.definition ?? "",
                         style: TextStyles.practiceCardSecondaryText.copyWith(
                           color: Colors.white70,
                         ),
@@ -156,19 +157,4 @@ class WordView extends StatelessWidget {
       ),
     );
   }
-}
-
-class WordDefinition {
-  final String word;
-  final WordType type;
-  final String definition;
-  final List<String>? exampleUsage;
-  final String? tenses;
-  const WordDefinition(
-    this.definition,
-    this.exampleUsage,
-    this.tenses, {
-    required this.word,
-    required this.type,
-  });
 }

@@ -1,4 +1,5 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -62,8 +63,9 @@ class WordListTile extends StatelessWidget {
                       // TODO: change this to a switch case
                       Text(
                           switch (type) {
-                            WordType.noun => "Noun",
+                            WordType.word => "Noun",
                             WordType.verb => "Verb",
+                            WordType.sentence => "Sentence",
                           },
                           style: TextStyles.wordType),
                     ],
@@ -78,9 +80,4 @@ class WordListTile extends StatelessWidget {
       ),
     );
   }
-}
-
-enum WordType {
-  verb,
-  noun,
 }

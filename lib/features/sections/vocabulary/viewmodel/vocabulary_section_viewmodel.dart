@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:ez_english/features/models/base_viewmodel.dart';
+import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/vocabulary/components/word_list_tile.dart';
 import 'package:ez_english/features/sections/vocabulary/words_list.dart';
 

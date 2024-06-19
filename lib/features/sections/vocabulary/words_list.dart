@@ -1,3 +1,4 @@
+import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/vocabulary/components/word_list_tile.dart';
 import 'package:ez_english/features/sections/vocabulary/viewmodel/vocabulary_section_viewmodel.dart';
 import 'package:ez_english/features/sections/vocabulary/word_view.dart';
@@ -60,17 +61,18 @@ class WordsListView extends StatelessWidget {
                           pageTitle: pageTitle,
                           pageSubtitle: pageSubtitle,
                           // TODO: pass actual word definition & examples from data model
-                          wordData: const WordDefinition(
-                              "to look at or inspect.",
-                              [
-                                "the public can view the famous hall with its unique staircase",
-                                // "Viewing the exhibit was a great experience",
-                                // "I have viewed the document and it looks good",
-                                // "Outsiders are not allowed to view the computers",
-                              ],
-                              "View, Viewed, Viewed",
-                              word: "View",
-                              type: WordType.verb),
+                          wordData: WordDefinition(
+                            word: "View",
+                            type: WordType.verb,
+                            definition: "to look at or inspect.",
+                            exampleUsage: [
+                              "the public can view the famous hall with its unique staircase",
+                              // "Viewing the exhibit was a great experience",
+                              // "I have viewed the document and it looks good",
+                              // "Outsiders are not allowed to view the computers",
+                            ],
+                            tenses: "View, Viewed, Viewed",
+                          ),
                         ),
                       ),
                     );
