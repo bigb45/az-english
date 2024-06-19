@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../util/build_question.dart';
+
 class GrammarPractice extends StatefulWidget {
   const GrammarPractice({super.key});
 
@@ -86,7 +88,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                       const ProgressBar(value: 20),
 
                       Center(
-                        child: buildQuestionWidget(
+                        child: buildQuestion(
                             question: currentQuestion,
                             onChanged: (value) {
                               grammarSectionViewmodel.updateAnswer(value);

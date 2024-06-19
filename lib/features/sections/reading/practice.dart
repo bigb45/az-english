@@ -21,6 +21,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import '../util/build_question.dart';
+
 class ReadingPractice extends StatefulWidget {
   const ReadingPractice({super.key});
 
@@ -112,7 +114,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                             EdgeInsets.symmetric(vertical: Constants.padding8),
                         child: const ProgressBar(value: 20),
                       ),
-                      buildQuestionWidget(
+                      buildQuestion(
                         question: currentQuestion,
                         onChanged: (value) {
                           readingSectionViewmodel.updateAnswer(value);
@@ -138,48 +140,5 @@ class _ReadingPracticeState extends State<ReadingPractice> {
         ),
       ),
     );
-  }
-}
-
-// TODO: move this to separate file
-Widget buildQuestionWidget(
-    {required BaseQuestion question,
-    required Function(String) onChanged,
-    required EvaluationState answerState}) {
-  switch (question.questionType) {
-    case QuestionType.speaking:
-      return SpeakingQuestion(
-        question: question as SpeakingQuestionModel,
-      );
-
-    case QuestionType.sentenceForming:
-      return SentenceFormingQuestion(
-        question: question as SentenceFormingQuestionModel,
-        onChanged: onChanged,
-        answerState: answerState,
-      );
-
-    case QuestionType.multipleChoice:
-      return const MultipleChoiceQuestion();
-
-    case QuestionType.dictation:
-      return DictationQuestion(
-        onAnswerChanged: onChanged,
-        question: question as DictationQuestionModel,
-      );
-
-    case QuestionType.findWordsFromPassage:
-      return const Text("Find Words From Passage Question");
-
-    case QuestionType.answerQuestionsFromPassage:
-      return const Text("Answer Questions From Passage Question");
-
-    case QuestionType.youtubeLesson:
-      return YouTubeVideoPlayer(
-        videoId: (question as YoutubeLessonModel).youtubeUrl!,
-      );
-
-    default:
-      return const Text("Unsupported Question Type");
   }
 }
