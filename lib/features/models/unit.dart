@@ -6,12 +6,13 @@ class Unit {
   String name;
   String? descriptionInEnglish;
   String? descriptionInArabic;
+
   List<BaseQuestion> questions;
 
   Unit(
       {required this.name,
-      required this.descriptionInEnglish,
-      required this.descriptionInArabic,
+      this.descriptionInEnglish,
+      this.descriptionInArabic,
       required this.questions});
   factory Unit.fromMap(Map<String, dynamic> map) {
     return Unit(
