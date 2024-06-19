@@ -1,3 +1,4 @@
+import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
@@ -160,7 +161,7 @@ class Components extends StatelessWidget {
                     SizedBox(height: 20.h),
                     WordListTile(
                         word: "View",
-                        type: WordType.noun,
+                        type: WordType.word,
                         isNew: false,
                         onTap: () {
                           print("navigate to word details");
