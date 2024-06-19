@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:just_audio/just_audio.dart';
 
-import '../../models/dictation_question_model.dart';
+import '../models/dictation_question_model.dart';
 
 class DictationQuestion extends StatefulWidget {
   final TextEditingController controller = TextEditingController();

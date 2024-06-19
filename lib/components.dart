@@ -10,7 +10,7 @@ import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:ez_english/widgets/result_card.dart';
 import 'package:ez_english/widgets/text_field.dart';
-import 'package:ez_english/features/sections/vocabulary/components/word_list_tile.dart';
+import 'package:ez_english/features/sections/components/word_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';

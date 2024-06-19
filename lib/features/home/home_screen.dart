@@ -1,17 +1,17 @@
-import 'package:ez_english/features/account/account.dart';
+import 'package:ez_english/features/home/account.dart';
 import 'package:ez_english/features/levels/screens/level_selection.dart';
-import 'package:ez_english/features/result/Results.dart';
+import 'package:ez_english/features/home/Results.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
 
-class MainApp extends StatefulWidget {
-  const MainApp({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<MainApp> createState() => _MainAppState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _MainAppState extends State<MainApp> {
+class _HomeScreenState extends State<HomeScreen> {
   int _pageIndex = 0;
 
   final PageController _pageController = PageController();
