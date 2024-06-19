@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:ez_english/features/models/base_question.dart';
 
+// TODO: refactor reading question model to be more specific
 // TODO will change this class after finishing the input class
 class ReadingQuestionModel extends BaseQuestion {
   ReadingQuestionModel({

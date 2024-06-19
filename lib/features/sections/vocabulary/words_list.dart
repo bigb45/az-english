@@ -1,5 +1,5 @@
+import 'package:ez_english/features/sections/components/word_list_tile.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
-import 'package:ez_english/features/sections/vocabulary/components/word_list_tile.dart';
 import 'package:ez_english/features/sections/vocabulary/viewmodel/vocabulary_section_viewmodel.dart';
 import 'package:ez_english/features/sections/vocabulary/word_view.dart';
 import 'package:ez_english/theme/palette.dart';

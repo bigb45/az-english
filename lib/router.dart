@@ -4,6 +4,7 @@ import 'package:ez_english/components.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/auth/screens/sign_in.dart';
 import 'package:ez_english/features/auth/screens/sign_up.dart';
+import 'package:ez_english/features/sections/components/youtube_lesson.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
 import 'package:ez_english/features/sections/grammar/practice.dart';
 import 'package:ez_english/features/sections/reading/landing_page.dart';
@@ -13,11 +14,10 @@ import 'package:ez_english/features/sections/vocabulary/landing_page.dart';
 import 'package:ez_english/features/sections/vocabulary/words_list.dart';
 import 'package:ez_english/features/sections/writing/landing_page.dart';
 import 'package:ez_english/features/sections/writing/practice.dart';
-import 'package:ez_english/youtube.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'features/main_app.dart';
+import 'features/home/home_screen.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -41,7 +41,7 @@ final loggedInRouter = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: ((context, state) => MainApp()),
+      builder: ((context, state) => HomeScreen()),
     ),
     GoRoute(
       path: '/level/:levelId',

@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:ez_english/features/models/base_question.dart';
-import 'package:ez_english/features/sections/writing/components/dictation_question.dart';
+import 'package:ez_english/features/sections/components/dictation_question.dart';
 
 class DictationQuestionModel extends BaseQuestion {
   final String answer;

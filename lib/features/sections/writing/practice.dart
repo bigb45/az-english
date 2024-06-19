@@ -3,7 +3,7 @@
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
-import 'package:ez_english/features/sections/writing/components/dictation_question.dart';
+import 'package:ez_english/features/sections/components/dictation_question.dart';
 import 'package:ez_english/features/sections/writing/components/multiple_choice_question.dart';
 import 'package:ez_english/features/sections/writing/viewmodel/writing_section_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
