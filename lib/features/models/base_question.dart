@@ -56,6 +56,9 @@ enum QuestionType {
   // grammar question types
   sentenceForming,
   youtubeLesson,
+
+  //vocabulary
+  vocabulary,
 }
 
 extension QuestionTypeExtension on QuestionType {
