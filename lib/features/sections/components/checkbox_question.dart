@@ -5,16 +5,16 @@ import 'package:ez_english/widgets/checkbox.dart';
 import 'package:ez_english/widgets/expandable_text.dart';
 import 'package:flutter/material.dart';
 
-class MultipleSelectQuestion extends StatefulWidget {
-  const MultipleSelectQuestion({
+class CheckboxQuestion extends StatefulWidget {
+  const CheckboxQuestion({
     super.key,
   });
 
   @override
-  State<MultipleSelectQuestion> createState() => _MultipleSelectQuestionState();
+  State<CheckboxQuestion> createState() => _CheckboxQuestionState();
 }
 
-class _MultipleSelectQuestionState extends State<MultipleSelectQuestion> {
+class _CheckboxQuestionState extends State<CheckboxQuestion> {
   bool _isFocused = false;
   bool _isReadMore = false;
   String readMoreText = AppStrings.mcQuestionReadMoreText;
