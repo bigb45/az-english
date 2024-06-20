@@ -46,7 +46,7 @@ class UploadDataViewmodel extends ChangeNotifier {
           String questionArabic = csvParts[6]!.value.toString().trim();
           String questionText = csvParts[7]!.value.toString();
           List<String> questionAnswerOrOptionsInMCQ =
-              csvParts[8]!.value.toString().split(',');
+              csvParts[8]!.value.toString().split(';');
           String mcqAnswer = csvParts[9]!.value.toString();
           String questionType = csvParts[10]!.value.toString().trim();
           String titleInEnglish = csvParts[11]!.value.toString().trim();
@@ -106,7 +106,7 @@ class UploadDataViewmodel extends ChangeNotifier {
           List<BaseQuestion> questions = [];
           switch (QuestionTypeExtension.fromString(questionType)) {
             case QuestionType.dictation:
-              questions = questionText.split(',').map((word) {
+              questions = questionText.split(';').map((word) {
                 return DictationQuestionModel(
                   questionTextInEnglish: questionEnglish,
                   questionTextInArabic: questionArabic,
@@ -119,10 +119,9 @@ class UploadDataViewmodel extends ChangeNotifier {
             case QuestionType.multipleChoice:
               questions = [
                 MultipleChoiceQuestionModel(
-                  questionTextInEnglish: questionText[
-                      0], // This represent the question in english and arabic : What is the name of the smart boy in the story? ​ما اسم الولد الذكي في القصة؟
-                  questionTextInArabic: questionText[
-                      1], // TODO Need to add this to the MCQ screen which is a text after the main question and before options : The name of the smart boy is ______ .
+                  questionTextInEnglish: questionEnglish,
+                  questionTextInArabic: questionArabic,
+                  questionSentence: questionText,
                   imageUrl: '',
                   voiceUrl: '',
                   options:
@@ -153,7 +152,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   titleInArabic: titleInArabic,
                   passageInEnglish: passageInEnglish,
                   passageInArabic: passageInArabic,
-                  words: questionText.split(','),
+                  words: questionText.split(';'),
                   answers: questionAnswerOrOptionsInMCQ,
                 )
               ];
@@ -167,7 +166,7 @@ class UploadDataViewmodel extends ChangeNotifier {
             case QuestionType.youtubeLesson:
             // TODO: Handle this case.
             case QuestionType.vocabulary:
-              questions = questionText.split(',').map((word) {
+              questions = questionText.split(';').map((word) {
                 return WordDefinition(
                   word: word,
                   type: WordTypeExtension.fromString(questionEnglish),
@@ -181,7 +180,7 @@ class UploadDataViewmodel extends ChangeNotifier {
               }).toList();
             case QuestionType.fillTheBlanks:
               questions =
-                  questionText.split(',').asMap().entries.map((question) {
+                  questionText.split(';').asMap().entries.map((question) {
                 int index = question.key;
                 String questionText = question.value;
                 return FillTheBlanksQuestionModel(
