@@ -59,6 +59,9 @@ enum QuestionType {
   sentenceForming,
   youtubeLesson,
 
+  //passage with multiple questions
+  passage,
+
   //vocabulary
   vocabulary,
 
