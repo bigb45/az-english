@@ -15,7 +15,11 @@ class WritingSectionViewmodel extends BaseViewModel {
   String? _levelName;
   String? levelId;
   List<BaseQuestion> _questions = [];
-  String _userAnswer = "";
+  // TODO: handle dynamic user answer for different question types
+  // maybe make base answer class? and extend it for each question type
+  // and each answer class will have its own validation method
+
+  dynamic _userAnswer;
 
   // List<BaseQuestion> _questions = [
   //   MultipleChoiceQuestionModel(
@@ -74,7 +78,7 @@ class WritingSectionViewmodel extends BaseViewModel {
     }
   }
 
-  void updateAnswer(String answer) {
+  void updateAnswer<T>(T answer) {
     _userAnswer = answer;
     notifyListeners();
   }
@@ -87,7 +91,7 @@ class WritingSectionViewmodel extends BaseViewModel {
     }
   }
 
-  void nextQuestion() {
+  void incrementIndex() {
     if (currentIndex < _questions.length - 1) {
       currentIndex = currentIndex + 1;
       notifyListeners();

@@ -35,7 +35,8 @@ class _GrammarPracticeState extends State<GrammarPractice> {
   Widget build(BuildContext context) {
     grammarSectionViewmodel = Provider.of<GrammarSectionViewmodel>(context);
 
-    dynamic currentQuestion = questions[grammarSectionViewmodel.currentIndex];
+    BaseQuestion currentQuestion =
+        questions[grammarSectionViewmodel.currentIndex];
 
     return PopScope(
       canPop: false,
@@ -102,7 +103,6 @@ class _GrammarPracticeState extends State<GrammarPractice> {
             ),
             EvaluationSection(
               onContinue: () {
-                print("next question");
                 grammarSectionViewmodel.incrementIndex();
               },
               onPressed: grammarSectionViewmodel.evaluateAnswer,

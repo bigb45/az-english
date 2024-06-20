@@ -10,7 +10,7 @@ class GrammarSectionViewmodel extends BaseViewModel {
 
   List<BaseQuestion> _questions = [];
   bool _isLoading = false;
-  String _userAnswer = "";
+  dynamic _userAnswer;
 
   List<BaseQuestion> get questions => _questions;
   bool get isLoding => _isLoading;
@@ -46,6 +46,12 @@ class GrammarSectionViewmodel extends BaseViewModel {
           correctAnswer: "A cat is sleeping",
         ),
         YoutubeLessonModel(youtubeUrl: "JGwWNGJdvx8"),
+        // MultipleChoiceQuestionModel(
+        //     options: options,
+        //     answer: answer,
+        //     questionTextInArabic: questionTextInArabic,
+        //     questionTextInEnglish: questionTextInEnglish,
+        //     imageUrl: imageUrl)
       ];
       notifyListeners();
     } catch (e) {
@@ -70,7 +76,7 @@ class GrammarSectionViewmodel extends BaseViewModel {
         "updating state: $currentIndex $answerState, ${(questions[currentIndex] as SentenceFormingQuestionModel).correctAnswer}, $userAnswer");
   }
 
-  void updateAnswer(String newAnswer) {
+  void updateAnswer<T>(T newAnswer) {
     _userAnswer = newAnswer;
     notifyListeners();
   }
