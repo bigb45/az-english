@@ -3,6 +3,7 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/levels/data/models/reading_question.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/level.dart';
+import 'package:ez_english/features/models/reading_unit.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
@@ -42,7 +43,7 @@ class UploadDataViewmodel extends ChangeNotifier {
           String questionEnglish = csvParts[5]!.value.toString().trim();
           String questionArabic = csvParts[6]!.value.toString().trim();
           List<String> questionText = csvParts[7]!.value.toString().split(',');
-          List<String> questionAnswer =
+          List<String> questionAnswerOrAnswersInMCQ =
               csvParts[8]!.value.toString().split(',');
           String mcqAnswer = csvParts[9]!.value.toString();
           String questionType = csvParts[10]!.value.toString().trim();
@@ -76,14 +77,27 @@ class UploadDataViewmodel extends ChangeNotifier {
           // Check if the unit already exists in the existing section
           var existingUnit = existingSection?.units.firstWhere(
             (unit) => unit.name == unitName,
-            orElse: () => Unit(
-              name: unitName,
-              descriptionInEnglish:
-                  descriptionEnglish != '-' ? descriptionEnglish : null,
-              descriptionInArabic:
-                  descriptionArabic != '-' ? descriptionArabic : null,
-              questions: [], // Initialize an empty list of questions
-            ),
+            orElse: () => sectionName == "Reading"
+                ? ReadingUnit(
+                    name: unitName,
+                    questions: [],
+                    passageInEnglish: passageInEnglish,
+                    passageInArabic: passageInArabic,
+                    titleInEnglish: titleInEnglish,
+                    titleInArabic: titleInArabic,
+                    descriptionInEnglish:
+                        descriptionEnglish != '-' ? descriptionEnglish : null,
+                    descriptionInArabic:
+                        descriptionArabic != '-' ? descriptionArabic : null,
+                  )
+                : Unit(
+                    name: unitName,
+                    descriptionInEnglish:
+                        descriptionEnglish != '-' ? descriptionEnglish : null,
+                    descriptionInArabic:
+                        descriptionArabic != '-' ? descriptionArabic : null,
+                    questions: [], // Initialize an empty list of questions
+                  ),
           );
 
           // Add questions dynamically based on the row data
@@ -103,17 +117,21 @@ class UploadDataViewmodel extends ChangeNotifier {
             case QuestionType.multipleChoice:
               questions = [
                 MultipleChoiceQuestionModel(
-                  questionTextInEnglish: questionEnglish,
-                  questionTextInArabic: questionArabic,
+                  questionTextInEnglish: questionText[
+                      0], // This represent the question in english and arabic : What is the name of the smart boy in the story? ​ما اسم الولد الذكي في القصة؟
+                  questionTextInArabic: questionText[
+                      1], // TODO Need to add this to the MCQ screen which is a text after the main question and before options : The name of the smart boy is ______ .
                   imageUrl: '',
                   voiceUrl: '',
-                  options: questionText.asMap().entries.map((entry) {
+                  options:
+                      questionAnswerOrAnswersInMCQ.asMap().entries.map((entry) {
                     int index = entry.key;
                     String option = entry.value;
                     return RadioItemData(
                         value: index.toString(), title: option);
                   }).toList(), // Assign index as the value
-                  answer: RadioItemData(title: questionAnswer[0], value: '0'),
+                  answer: RadioItemData(
+                      title: questionAnswerOrAnswersInMCQ[0], value: mcqAnswer),
                 )
               ];
               break;
@@ -131,7 +149,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   passageInEnglish: passageInEnglish,
                   passageInArabic: passageInArabic,
                   words: questionText,
-                  answers: questionAnswer,
+                  answers: questionAnswerOrAnswersInMCQ,
                 )
               ];
               break;
@@ -156,6 +174,8 @@ class UploadDataViewmodel extends ChangeNotifier {
                   },
                 );
               }).toList();
+            default:
+              questions = [];
           }
 
           // Add the questions to the existing unit

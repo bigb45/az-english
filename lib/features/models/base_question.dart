@@ -59,6 +59,9 @@ enum QuestionType {
 
   //vocabulary
   vocabulary,
+
+  //other
+  other,
 }
 
 extension QuestionTypeExtension on QuestionType {
@@ -69,7 +72,7 @@ extension QuestionTypeExtension on QuestionType {
   static QuestionType fromString(String str) {
     return QuestionType.values.firstWhere(
       (e) => e.toString().split('.').last == str,
-      orElse: () => QuestionType.dictation, // Default to dictation if not found
+      orElse: () => QuestionType.other, // Default to dictation if not found
     );
   }
 }
