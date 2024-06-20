@@ -6,6 +6,7 @@ import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/reading_unit.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/unit.dart';
+import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:ez_english/widgets/radio_button.dart';
@@ -174,6 +175,19 @@ class UploadDataViewmodel extends ChangeNotifier {
                   },
                 );
               }).toList();
+            case QuestionType.fillTheBlanks:
+              questions = questionText.asMap().entries.map((question) {
+                int index = question.key;
+                String questionText = question.value;
+                return FillTheBlanksQuestionModel(
+                  answer: questionAnswerOrAnswersInMCQ[index],
+                  questionTextInEnglish: questionText,
+                  questionTextInArabic: '',
+                  imageUrl: '',
+                  voiceUrl: '',
+                );
+              }).toList();
+
             default:
               questions = [];
           }
