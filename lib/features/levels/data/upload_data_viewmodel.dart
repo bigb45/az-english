@@ -3,7 +3,7 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/levels/data/models/reading_question.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/level.dart';
-import 'package:ez_english/features/models/reading_unit.dart';
+import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
@@ -31,6 +31,7 @@ class UploadDataViewmodel extends ChangeNotifier {
       // Decode Excel data
       var excel = Excel.decodeBytes(bytes);
       var sheet = excel.tables.keys.first;
+      PassageQuestionModel? currentPassage;
       String? convertToNull(String value) {
         return value == '-' ? null : value;
       }
@@ -94,28 +95,19 @@ class UploadDataViewmodel extends ChangeNotifier {
           // Check if the unit already exists in the existing section
           var existingUnit = existingSection?.units.firstWhere(
             (unit) => unit.name == unitName,
-            orElse: () => sectionName == "Reading"
-                ? ReadingUnit(
-                    name: unitName,
-                    questions: [],
-                    passageInEnglish: passageInEnglish,
-                    passageInArabic: passageInArabic,
-                    titleInEnglish: titleInEnglish,
-                    titleInArabic: titleInArabic,
-                    descriptionInEnglish:
-                        descriptionEnglish != '-' ? descriptionEnglish : null,
-                    descriptionInArabic:
-                        descriptionArabic != '-' ? descriptionArabic : null,
-                  )
-                : Unit(
-                    name: unitName,
-                    descriptionInEnglish:
-                        descriptionEnglish != '-' ? descriptionEnglish : null,
-                    descriptionInArabic:
-                        descriptionArabic != '-' ? descriptionArabic : null,
-                    questions: [], // Initialize an empty list of questions
-                  ),
+            orElse: () => Unit(
+              name: unitName,
+              descriptionInEnglish:
+                  descriptionEnglish != '-' ? descriptionEnglish : null,
+              descriptionInArabic:
+                  descriptionArabic != '-' ? descriptionArabic : null,
+              questions: [], // Initialize an empty list of questions
+            ),
           );
+
+          if (sectionName != "Reading") {
+            currentPassage = null;
+          }
 
           // Add questions dynamically based on the row data
           List<BaseQuestion?> questions = [];
@@ -131,6 +123,11 @@ class UploadDataViewmodel extends ChangeNotifier {
                     );
                   }).toList() ??
                   [];
+              if (currentPassage != null) {
+                currentPassage.questions.addAll(questions);
+                questions = [];
+              }
+
               break;
             case QuestionType.multipleChoice:
               questions = [
@@ -154,6 +151,10 @@ class UploadDataViewmodel extends ChangeNotifier {
                           int.tryParse(mcqAnswer)!]!),
                 )
               ];
+              if (currentPassage != null) {
+                currentPassage.questions.addAll(questions);
+                questions = [];
+              }
               break;
             case QuestionType.findWordsFromPassage:
             case QuestionType.answerQuestionsFromPassage:
@@ -172,15 +173,22 @@ class UploadDataViewmodel extends ChangeNotifier {
                   answers: questionAnswerOrOptionsInMCQ,
                 )
               ];
+              if (currentPassage != null) {
+                currentPassage.questions.addAll(questions);
+                questions = [];
+              }
+
               break;
 
             case QuestionType.speaking:
-            // TODO: Handle this case.
+              // TODO: Handle this case.
+              throw Exception(UnimplementedError());
             case QuestionType.sentenceForming:
               // TODO: Handle this case.
               throw Exception(UnimplementedError());
             case QuestionType.youtubeLesson:
-            // TODO: Handle this case.
+              // TODO: Handle this case.
+              throw Exception(UnimplementedError());
             case QuestionType.vocabulary:
               questions = questionText?.split(';').map((word) {
                     return WordDefinition(
@@ -195,6 +203,11 @@ class UploadDataViewmodel extends ChangeNotifier {
                     );
                   }).toList() ??
                   [];
+              if (currentPassage != null) {
+                currentPassage.questions.addAll(questions);
+                questions = [];
+              }
+              break;
             case QuestionType.fillTheBlanks:
               questions =
                   questionText?.split(';').asMap().entries.map((question) {
@@ -209,6 +222,11 @@ class UploadDataViewmodel extends ChangeNotifier {
                         );
                       }).toList() ??
                       [];
+              if (currentPassage != null) {
+                currentPassage.questions.addAll(questions);
+                questions = [];
+              }
+              break;
             case QuestionType.listening:
               questions = [
                 ListeningQuestionModel(
@@ -217,12 +235,34 @@ class UploadDataViewmodel extends ChangeNotifier {
                   questionTextInArabic: questionArabic,
                 )
               ];
+              if (currentPassage != null) {
+                currentPassage.questions.addAll(questions);
+                questions = [];
+              }
+              break;
+            case QuestionType.passage:
+              currentPassage = PassageQuestionModel(
+                questions: [],
+                passageInEnglish: passageInEnglish,
+                passageInArabic: passageInArabic,
+                titleInEnglish: titleInEnglish,
+                titleInArabic: titleInArabic,
+                questionTextInEnglish: questionEnglish,
+                questionTextInArabic: questionArabic,
+                imageUrl: '',
+                voiceUrl: '',
+              );
+              break;
             default:
               questions = [];
           }
 
-          // Add the questions to the existing unit
-          existingUnit?.questions.addAll(questions);
+          if (currentPassage != null && currentPassage.questions.isEmpty) {
+            existingUnit?.questions.add(currentPassage);
+          } else {
+            // Add the questions to the existing unit
+            existingUnit?.questions.addAll(questions);
+          }
 
           // Add the unit to the section if it's not already added
           if (!existingSection!.units.contains(existingUnit)) {
