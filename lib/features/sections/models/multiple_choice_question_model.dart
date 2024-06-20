@@ -5,12 +5,14 @@ import 'package:ez_english/widgets/radio_button.dart';
 
 class MultipleChoiceQuestionModel<T> extends BaseQuestion<RadioItemData> {
   final List<RadioItemData> options;
+  final String? questionSentence;
   final String? paragraph;
   @override
   final RadioItemData answer;
 
   MultipleChoiceQuestionModel(
       {required this.options,
+      this.questionSentence,
       this.paragraph,
       required this.answer,
       required super.questionTextInArabic,
@@ -27,6 +29,7 @@ class MultipleChoiceQuestionModel<T> extends BaseQuestion<RadioItemData> {
       ...baseMap,
       'options': options.map((option) => option.toMap()).toList(),
       'answer': answer.toMap(),
+      'questionSentence': questionSentence
     };
   }
 
@@ -40,6 +43,7 @@ class MultipleChoiceQuestionModel<T> extends BaseQuestion<RadioItemData> {
       questionTextInArabic: map['questionTextInArabic'],
       imageUrl: map['imageUrl'],
       voiceUrl: map['voiceUrl'],
+      questionSentence: map['questionSentence'],
     );
   }
   bool validateQuestion(
