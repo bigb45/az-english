@@ -4,9 +4,9 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 
 class ListeningQuestionModel extends BaseQuestion {
-  final String word;
+  final List<String?> words;
   ListeningQuestionModel(
-      {required this.word,
+      {required this.words,
       required super.questionTextInEnglish,
       required super.questionTextInArabic,
       super.imageUrl,
@@ -17,14 +17,14 @@ class ListeningQuestionModel extends BaseQuestion {
     Map<String, dynamic> baseMap = super.toMap();
     return {
       ...baseMap,
-      'word': word,
+      'words': words,
     };
   }
 
   @override
   factory ListeningQuestionModel.fromMap(Map<String, dynamic> map) {
     return ListeningQuestionModel(
-      word: map['word'],
+      words: map['word'],
       questionTextInEnglish: map['questionTextInEnglish'],
       questionTextInArabic: 'questionTextInArabic',
       imageUrl: map['imageUrl'],

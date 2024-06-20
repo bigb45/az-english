@@ -184,7 +184,7 @@ class UploadDataViewmodel extends ChangeNotifier {
             case QuestionType.vocabulary:
               questions = questionText?.split(';').map((word) {
                     return WordDefinition(
-                      word: word,
+                      word: word.split(":")[0].toString(),
                       type: WordTypeExtension.fromString(questionEnglish!),
                       definition: switch (
                           WordTypeExtension.fromString(questionEnglish)) {
@@ -212,7 +212,7 @@ class UploadDataViewmodel extends ChangeNotifier {
             case QuestionType.listening:
               questions = [
                 ListeningQuestionModel(
-                  word: questionText!,
+                  words: questionText!.split(";"),
                   questionTextInEnglish: questionEnglish,
                   questionTextInArabic: questionArabic,
                 )
