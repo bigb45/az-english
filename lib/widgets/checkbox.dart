@@ -27,7 +27,8 @@ class _CheckboxGroupState extends State<CheckboxGroup> {
                 setState(() {
                   option.value = state == CheckboxState.checked;
 
-                  widget.onChanged(widget.options);
+                  widget.onChanged(
+                      widget.options.where((e) => e.value!).toList());
                 });
               },
             ));
