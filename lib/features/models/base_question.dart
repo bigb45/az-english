@@ -3,18 +3,17 @@ import '../sections/models/dictation_question_model.dart';
 abstract class BaseQuestion<T> {
   String questionTextInEnglish;
   String questionTextInArabic;
-  // TODO: make image URL and voice URL specific to the question type or nullable
-  String imageUrl;
-  String voiceUrl;
+  String? imageUrl;
+  String? voiceUrl;
   T? answer;
-  QuestionType? questionType;
+  QuestionType questionType;
   BaseQuestion({
     required this.questionTextInEnglish,
     required this.questionTextInArabic,
     required this.imageUrl,
     required this.voiceUrl,
     this.answer,
-    this.questionType,
+    required this.questionType,
   });
 
   Map<String, dynamic> toMap() {
@@ -22,9 +21,10 @@ abstract class BaseQuestion<T> {
       'questionTextInEnglish': questionTextInEnglish,
       'questionTextInArabic': questionTextInArabic,
       'imageUrl': imageUrl,
+      'voiceUrl': voiceUrl,
       'description': voiceUrl,
       'answer': answer, //TODO Is there a need for any type conversion here ?
-      "questionType": questionType!.toShortString(),
+      "questionType": questionType.toShortString(),
     };
   }
 
@@ -61,6 +61,9 @@ enum QuestionType {
 
   //vocabulary
   vocabulary,
+
+  //listening
+  listening,
 
   //other
   other,
