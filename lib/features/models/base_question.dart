@@ -23,6 +23,7 @@ abstract class BaseQuestion<T> {
       'questionTextInArabic': questionTextInArabic,
       'imageUrl': imageUrl,
       'description': voiceUrl,
+      'answer': answer, //TODO Is there a need for any type conversion here ?
       "questionType": questionType!.toShortString(),
     };
   }
@@ -48,6 +49,7 @@ enum QuestionType {
   multipleChoice,
   dictation,
   speaking,
+  fillTheBlanks,
 
   // writing question types
   findWordsFromPassage,
