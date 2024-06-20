@@ -7,7 +7,7 @@ class Unit {
   String? descriptionInEnglish;
   String? descriptionInArabic;
 
-  List<BaseQuestion> questions;
+  List<BaseQuestion?> questions;
 
   Unit(
       {required this.name,
@@ -32,7 +32,7 @@ class Unit {
       'name': name,
       'descriptionInEnglish': descriptionInEnglish,
       'descriptionInArabic': descriptionInArabic,
-      'questions': questions.map((q) => q.toMap()).toList(),
+      'questions': questions.map((q) => q?.toMap()).toList(),
     };
   }
 

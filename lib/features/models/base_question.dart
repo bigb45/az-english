@@ -1,8 +1,8 @@
 import '../sections/models/dictation_question_model.dart';
 
 abstract class BaseQuestion<T> {
-  String questionTextInEnglish;
-  String questionTextInArabic;
+  String? questionTextInEnglish;
+  String? questionTextInArabic;
   String? imageUrl;
   String? voiceUrl;
   T? answer;

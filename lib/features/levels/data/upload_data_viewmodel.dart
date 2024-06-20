@@ -31,6 +31,9 @@ class UploadDataViewmodel extends ChangeNotifier {
       // Decode Excel data
       var excel = Excel.decodeBytes(bytes);
       var sheet = excel.tables.keys.first;
+      String? convertToNull(String value) {
+        return value == '-' ? null : value;
+      }
 
       for (var csvParts in excel.tables[sheet]!.rows) {
         if (csvParts.any((cell) =>
@@ -40,19 +43,31 @@ class UploadDataViewmodel extends ChangeNotifier {
           String levelName = csvParts[0]!.value.toString().trim();
           String sectionName = csvParts[1]!.value.toString().trim();
           String unitName = csvParts[2]!.value.toString().trim();
-          String descriptionEnglish = csvParts[3]!.value.toString().trim();
-          String descriptionArabic = csvParts[4]!.value.toString().trim();
-          String questionEnglish = csvParts[5]!.value.toString().trim();
-          String questionArabic = csvParts[6]!.value.toString().trim();
-          String questionText = csvParts[7]!.value.toString();
-          List<String> questionAnswerOrOptionsInMCQ =
-              csvParts[8]!.value.toString().split(';');
-          String mcqAnswer = csvParts[9]!.value.toString();
+          String? descriptionEnglish =
+              convertToNull(csvParts[3]!.value.toString().trim());
+          String? descriptionArabic =
+              convertToNull(csvParts[4]!.value.toString().trim());
+          String? questionEnglish =
+              convertToNull(csvParts[5]!.value.toString().trim());
+          String? questionArabic =
+              convertToNull(csvParts[6]!.value.toString().trim());
+          String? questionText = convertToNull(csvParts[7]!.value.toString());
+          List<String?> questionAnswerOrOptionsInMCQ = csvParts[8]!
+              .value
+              .toString()
+              .split(';')
+              .map(convertToNull)
+              .toList();
+          String? mcqAnswer = convertToNull(csvParts[9]!.value.toString());
           String questionType = csvParts[10]!.value.toString().trim();
-          String titleInEnglish = csvParts[11]!.value.toString().trim();
-          String titleInArabic = csvParts[12]!.value.toString().trim();
-          String passageInEnglish = csvParts[13]!.value.toString().trim();
-          String passageInArabic = csvParts[14]!.value.toString().trim();
+          String? titleInEnglish =
+              convertToNull(csvParts[11]!.value.toString().trim());
+          String? titleInArabic =
+              convertToNull(csvParts[12]!.value.toString().trim());
+          String? passageInEnglish =
+              convertToNull(csvParts[13]!.value.toString().trim());
+          String? passageInArabic =
+              convertToNull(csvParts[14]!.value.toString().trim());
 
           // Check if the level already exists in the levels map
           var existingLevel = levels.firstWhere(
@@ -103,18 +118,19 @@ class UploadDataViewmodel extends ChangeNotifier {
           );
 
           // Add questions dynamically based on the row data
-          List<BaseQuestion> questions = [];
+          List<BaseQuestion?> questions = [];
           switch (QuestionTypeExtension.fromString(questionType)) {
             case QuestionType.dictation:
-              questions = questionText.split(';').map((word) {
-                return DictationQuestionModel(
-                  questionTextInEnglish: questionEnglish,
-                  questionTextInArabic: questionArabic,
-                  imageUrl: '',
-                  voiceUrl: '',
-                  answer: word,
-                );
-              }).toList();
+              questions = questionText?.split(';').map((word) {
+                    return DictationQuestionModel(
+                      questionTextInEnglish: questionEnglish,
+                      questionTextInArabic: questionArabic,
+                      imageUrl: '',
+                      voiceUrl: '',
+                      answer: word,
+                    );
+                  }).toList() ??
+                  [];
               break;
             case QuestionType.multipleChoice:
               questions = [
@@ -127,15 +143,15 @@ class UploadDataViewmodel extends ChangeNotifier {
                   options:
                       questionAnswerOrOptionsInMCQ.asMap().entries.map((entry) {
                     int index = entry.key;
-                    String option = entry.value;
+                    String option = entry.value!;
                     return RadioItemData(
                         value: index.toString(), title: option);
                   }).toList(), // Assign index as the value
                   answer: RadioItemData(
                       title: questionAnswerOrOptionsInMCQ[
-                          int.tryParse(mcqAnswer)!],
+                          int.tryParse(mcqAnswer!)!]!,
                       value: questionAnswerOrOptionsInMCQ[
-                          int.tryParse(mcqAnswer)!]),
+                          int.tryParse(mcqAnswer)!]!),
                 )
               ];
               break;
@@ -152,7 +168,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   titleInArabic: titleInArabic,
                   passageInEnglish: passageInEnglish,
                   passageInArabic: passageInArabic,
-                  words: questionText.split(';'),
+                  words: questionText?.split(';'),
                   answers: questionAnswerOrOptionsInMCQ,
                 )
               ];
@@ -166,35 +182,37 @@ class UploadDataViewmodel extends ChangeNotifier {
             case QuestionType.youtubeLesson:
             // TODO: Handle this case.
             case QuestionType.vocabulary:
-              questions = questionText.split(';').map((word) {
-                return WordDefinition(
-                  word: word,
-                  type: WordTypeExtension.fromString(questionEnglish),
-                  definition: switch (
-                      WordTypeExtension.fromString(questionEnglish)) {
-                    WordType.sentence => null,
-                    WordType.verb => word.split(":")[1].toString(),
-                    WordType.word => word.split(":")[1].toString(),
-                  },
-                );
-              }).toList();
+              questions = questionText?.split(';').map((word) {
+                    return WordDefinition(
+                      word: word,
+                      type: WordTypeExtension.fromString(questionEnglish!),
+                      definition: switch (
+                          WordTypeExtension.fromString(questionEnglish)) {
+                        WordType.sentence => null,
+                        WordType.verb => word.split(":")[1].toString(),
+                        WordType.word => word.split(":")[1].toString(),
+                      },
+                    );
+                  }).toList() ??
+                  [];
             case QuestionType.fillTheBlanks:
               questions =
-                  questionText.split(';').asMap().entries.map((question) {
-                int index = question.key;
-                String questionText = question.value;
-                return FillTheBlanksQuestionModel(
-                  answer: questionAnswerOrOptionsInMCQ[index],
-                  questionTextInEnglish: questionText,
-                  questionTextInArabic: '',
-                  imageUrl: '',
-                  voiceUrl: '',
-                );
-              }).toList();
+                  questionText?.split(';').asMap().entries.map((question) {
+                        int index = question.key;
+                        String questionText = question.value;
+                        return FillTheBlanksQuestionModel(
+                          answer: questionAnswerOrOptionsInMCQ[index],
+                          questionTextInEnglish: questionText,
+                          questionTextInArabic: '',
+                          imageUrl: '',
+                          voiceUrl: '',
+                        );
+                      }).toList() ??
+                      [];
             case QuestionType.listening:
               questions = [
                 ListeningQuestionModel(
-                  word: questionText,
+                  word: questionText!,
                   questionTextInEnglish: questionEnglish,
                   questionTextInArabic: questionArabic,
                 )

@@ -62,7 +62,8 @@ class _GenericMultipleChoiceQuestionState
               children: [
                 Expanded(
                   child: Text(
-                    widget.question.questionTextInEnglish,
+                    widget.question.questionTextInEnglish ??
+                        "Please Choose one of the choices", // TODO: Add a default question text if the text is null
                     style: TextStyles.practiceCardSecondaryText
                         .copyWith(height: 2),
                     maxLines: 5,
