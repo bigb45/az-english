@@ -1,27 +1,40 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/expandable_text.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 
-import '../../models/multiple_choice_question_model.dart';
+import '../models/multiple_choice_question_model.dart';
 
-class MultipleChoiceQuestion extends StatefulWidget {
+class GenericMultipleChoiceQuestion<T> extends StatefulWidget {
   final MultipleChoiceQuestionModel question;
-  final List<RadioItemData> options;
   final String? image;
   final Function(RadioItemData) onChanged;
-  const MultipleChoiceQuestion(
+  const GenericMultipleChoiceQuestion(
       {super.key,
       required this.question,
-      required this.options,
+      // required this.options,
       required this.onChanged,
       this.image});
 
   @override
-  State<MultipleChoiceQuestion> createState() => _MultipleChoiceQuestionState();
+  State<GenericMultipleChoiceQuestion> createState() =>
+      _GenericMultipleChoiceQuestionState();
 }
 
-class _MultipleChoiceQuestionState extends State<MultipleChoiceQuestion> {
+class _GenericMultipleChoiceQuestionState
+    extends State<GenericMultipleChoiceQuestion> {
+  bool _isFocused = false;
+  late bool _isReadMore;
+  RadioItemData? selectedOption;
+
+  @override
+  void initState() {
+    super.initState();
+    _isReadMore = widget.question.paragraph != null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -30,10 +43,19 @@ class _MultipleChoiceQuestionState extends State<MultipleChoiceQuestion> {
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            Constants.gapH24,
+            _isReadMore
+                ? ExpandableTextBox(
+                    questionText: widget.question.paragraph!,
+                    isFocused: _isFocused,
+                    isReadMore: _isReadMore,
+                    readMoreText: AppStrings.mcQuestionReadMoreText)
+                : const SizedBox(),
+            Constants.gapH24,
             if (widget.image == null)
               const SizedBox() // placeholder
             else
-              Image.asset(widget.image!),
+              Image.network(widget.image!),
             SizedBox(height: Constants.padding20),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -49,12 +71,14 @@ class _MultipleChoiceQuestionState extends State<MultipleChoiceQuestion> {
               ],
             ),
             RadioGroup(
-              onChanged: (newValue) {
-                widget.onChanged(newValue);
-                print("new value: ${newValue.title}");
+              onChanged: (newSelection) {
+                setState(() {
+                  _isFocused = false;
+                  selectedOption = newSelection;
+                  widget.onChanged(newSelection);
+                });
               },
-              options: widget.options,
-              // TODO: fix selection removal on setState issue
+              options: widget.question.options,
               selectedOption: null,
             ),
             SizedBox(height: Constants.padding20),
