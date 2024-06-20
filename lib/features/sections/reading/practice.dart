@@ -2,20 +2,11 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
-import 'package:ez_english/features/sections/components/multiple_choice_question.dart';
-import 'package:ez_english/features/sections/components/sentence_forming_question.dart';
-import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/models/reading_question_model.dart';
-import 'package:ez_english/features/sections/models/sentence_forming_question_model.dart';
-import 'package:ez_english/features/sections/models/speaking_question_model.dart';
-import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
-import 'package:ez_english/features/sections/components/speaking_question.dart';
 import 'package:ez_english/features/sections/reading/view_model/reading_section_viewmodel.dart';
-import 'package:ez_english/features/sections/components/dictation_question.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
-import 'package:ez_english/features/sections/components/youtube_lesson.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -117,7 +108,8 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                       buildQuestion(
                         question: currentQuestion,
                         onChanged: (value) {
-                          readingSectionViewmodel.updateAnswer(value);
+                          // handle the case for different question types
+                          readingSectionViewmodel.updateAnswer(value as String);
                         },
                         answerState: readingSectionViewmodel.answerState,
                       )

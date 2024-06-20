@@ -103,13 +103,14 @@ class ReadingQuestionViewmodel extends BaseViewModel {
     }
   }
 
-  void updateAnswer(String newAnswer) {
+  void updateAnswer<T>(T newAnswer) {
     userAnswer = newAnswer;
     notifyListeners();
   }
 
   void evaluateAnswer() {
     answerState = switch (_questions[currentIndex].questionType) {
+      // TODO: fix this
       QuestionType.multipleChoice =>
         ((_questions[currentIndex]).imageUrl == null)
             ? EvaluationState.correct
