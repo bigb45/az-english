@@ -3,8 +3,7 @@
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
-import 'package:ez_english/features/sections/components/dictation_question.dart';
-import 'package:ez_english/features/sections/writing/components/multiple_choice_question.dart';
+import 'package:ez_english/features/sections/util/build_question.dart';
 import 'package:ez_english/features/sections/writing/viewmodel/writing_section_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -15,7 +14,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../models/dictation_question_model.dart';
-import '../models/multiple_choice_question_model.dart';
 
 class WritingPractice extends StatefulWidget {
   const WritingPractice({super.key});
@@ -25,8 +23,6 @@ class WritingPractice extends StatefulWidget {
 }
 
 class _WritingPracticeState extends State<WritingPractice> {
-  EvaluationState evaluationState = EvaluationState.empty;
-
   late WritingSectionViewmodel viewmodel;
   late BaseQuestion currentQuestion;
   @override
@@ -98,20 +94,21 @@ class _WritingPracticeState extends State<WritingPractice> {
                         padding: EdgeInsets.symmetric(vertical: 8.0),
                         child: ProgressBar(value: 20),
                       ),
-                      buildQuestionWidget(currentQuestion)
+                      buildQuestion(
+                        answerState: viewmodel.answerState,
+                        onChanged: viewmodel.updateAnswer,
+                        question: currentQuestion,
+                      )
                     ],
                   ),
                 ),
               ),
             ),
             EvaluationSection(
-              state: evaluationState,
+              state: viewmodel.answerState,
               onContinue: () {
                 // TODO: update this to new standard
-                viewmodel.nextQuestion();
-                setState(() {
-                  evaluationState = EvaluationState.empty;
-                });
+                viewmodel.incrementIndex();
               },
               onPressed: viewmodel.evaluateAnswer,
             )
@@ -121,30 +118,30 @@ class _WritingPracticeState extends State<WritingPractice> {
     );
   }
 
-  Widget buildQuestionWidget<T extends BaseQuestion>(question) {
-    switch (question.questionType) {
-      case QuestionType.dictation:
-        return DictationQuestion(
-          onAnswerChanged: (value) {
-            viewmodel.updateAnswer(value);
-          },
-          question: question,
-        );
-      case QuestionType.multipleChoice:
-        return MultipleChoiceQuestion(
-          question: question,
-          options: question.options!,
-          onChanged: (value) {
-            selectedOption = value;
-          },
-        );
-      // Add more cases for other question types if needed
-      default:
-        return const SizedBox(
-          child: Text("Check buildQuestionWidget"),
-        ); // Default case
-    }
-  }
+  // Widget buildQuestionWidget<T extends BaseQuestion>(question) {
+  //   switch (question.questionType) {
+  //     case QuestionType.dictation:
+  //       return DictationQuestion(
+  //         onAnswerChanged: (value) {
+  //           viewmodel.updateAnswer(value);
+  //         },
+  //         question: question,
+  //       );
+  //     case QuestionType.multipleChoice:
+  //       return WritingMultipleChoiceQuestion(
+  //         question: question,
+  //         // options: question.options!,
+  //         onChanged: (value) {
+  //           selectedOption = value;
+  //         },
+  //       );
+  //     // Add more cases for other question types if needed
+  //     default:
+  //       return const SizedBox(
+  //         child: Text("Check buildQuestionWidget"),
+  //       );
+  //   }
+  // }
 
 // TODO: move answer validation to viewmodel
   // void checkQuestion() {
