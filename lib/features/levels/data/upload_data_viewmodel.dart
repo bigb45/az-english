@@ -7,6 +7,7 @@ import 'package:ez_english/features/models/reading_unit.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
+import 'package:ez_english/features/sections/models/listening_question_model.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:ez_english/widgets/radio_button.dart';
@@ -43,8 +44,8 @@ class UploadDataViewmodel extends ChangeNotifier {
           String descriptionArabic = csvParts[4]!.value.toString().trim();
           String questionEnglish = csvParts[5]!.value.toString().trim();
           String questionArabic = csvParts[6]!.value.toString().trim();
-          List<String> questionText = csvParts[7]!.value.toString().split(',');
-          List<String> questionAnswerOrAnswersInMCQ =
+          String questionText = csvParts[7]!.value.toString();
+          List<String> questionAnswerOrOptionsInMCQ =
               csvParts[8]!.value.toString().split(',');
           String mcqAnswer = csvParts[9]!.value.toString();
           String questionType = csvParts[10]!.value.toString().trim();
@@ -105,7 +106,7 @@ class UploadDataViewmodel extends ChangeNotifier {
           List<BaseQuestion> questions = [];
           switch (QuestionTypeExtension.fromString(questionType)) {
             case QuestionType.dictation:
-              questions = questionText.map((word) {
+              questions = questionText.split(',').map((word) {
                 return DictationQuestionModel(
                   questionTextInEnglish: questionEnglish,
                   questionTextInArabic: questionArabic,
@@ -125,14 +126,17 @@ class UploadDataViewmodel extends ChangeNotifier {
                   imageUrl: '',
                   voiceUrl: '',
                   options:
-                      questionAnswerOrAnswersInMCQ.asMap().entries.map((entry) {
+                      questionAnswerOrOptionsInMCQ.asMap().entries.map((entry) {
                     int index = entry.key;
                     String option = entry.value;
                     return RadioItemData(
                         value: index.toString(), title: option);
                   }).toList(), // Assign index as the value
                   answer: RadioItemData(
-                      title: questionAnswerOrAnswersInMCQ[0], value: mcqAnswer),
+                      title: questionAnswerOrOptionsInMCQ[
+                          int.tryParse(mcqAnswer)!],
+                      value: questionAnswerOrOptionsInMCQ[
+                          int.tryParse(mcqAnswer)!]),
                 )
               ];
               break;
@@ -149,8 +153,8 @@ class UploadDataViewmodel extends ChangeNotifier {
                   titleInArabic: titleInArabic,
                   passageInEnglish: passageInEnglish,
                   passageInArabic: passageInArabic,
-                  words: questionText,
-                  answers: questionAnswerOrAnswersInMCQ,
+                  words: questionText.split(','),
+                  answers: questionAnswerOrOptionsInMCQ,
                 )
               ];
               break;
@@ -163,7 +167,7 @@ class UploadDataViewmodel extends ChangeNotifier {
             case QuestionType.youtubeLesson:
             // TODO: Handle this case.
             case QuestionType.vocabulary:
-              questions = questionText.map((word) {
+              questions = questionText.split(',').map((word) {
                 return WordDefinition(
                   word: word,
                   type: WordTypeExtension.fromString(questionEnglish),
@@ -176,18 +180,26 @@ class UploadDataViewmodel extends ChangeNotifier {
                 );
               }).toList();
             case QuestionType.fillTheBlanks:
-              questions = questionText.asMap().entries.map((question) {
+              questions =
+                  questionText.split(',').asMap().entries.map((question) {
                 int index = question.key;
                 String questionText = question.value;
                 return FillTheBlanksQuestionModel(
-                  answer: questionAnswerOrAnswersInMCQ[index],
+                  answer: questionAnswerOrOptionsInMCQ[index],
                   questionTextInEnglish: questionText,
                   questionTextInArabic: '',
                   imageUrl: '',
                   voiceUrl: '',
                 );
               }).toList();
-
+            case QuestionType.listening:
+              questions = [
+                ListeningQuestionModel(
+                  word: questionText,
+                  questionTextInEnglish: questionEnglish,
+                  questionTextInArabic: questionArabic,
+                )
+              ];
             default:
               questions = [];
           }
