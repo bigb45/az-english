@@ -32,6 +32,8 @@ class UploadDataViewmodel extends ChangeNotifier {
       var excel = Excel.decodeBytes(bytes);
       var sheet = excel.tables.keys.first;
       PassageQuestionModel? currentPassage;
+      String? previousSectionName;
+
       String? convertToNull(String value) {
         return value == '-' ? null : value;
       }
@@ -105,9 +107,11 @@ class UploadDataViewmodel extends ChangeNotifier {
             ),
           );
 
-          if (sectionName != "Reading") {
+          if (previousSectionName != null &&
+              previousSectionName != sectionName) {
             currentPassage = null;
           }
+          previousSectionName = sectionName;
 
           // Add questions dynamically based on the row data
           List<BaseQuestion?> questions = [];
