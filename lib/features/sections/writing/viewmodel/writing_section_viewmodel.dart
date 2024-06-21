@@ -8,39 +8,50 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
+import 'package:ez_english/features/sections/models/dictation_question_model.dart';
+import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
+import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
+import 'package:ez_english/features/sections/models/string_answer.dart';
+import 'package:ez_english/widgets/radio_button.dart';
 
 class WritingSectionViewmodel extends BaseViewModel {
   final sectionId = "2";
-  final _sectionName = "writing";
+  // final _sectionName = "writing";
+  // ignore: unused_field
   String? _levelName;
   String? levelId;
-  List<BaseQuestion> _questions = [];
+  final List<BaseQuestion> _questions = [
+    MultipleChoiceQuestionModel(
+      questionTextInArabic: "What is the plural of 'goose'?",
+      questionTextInEnglish: "What is the plural of 'goose'?",
+      options: [
+        RadioItemData(title: "Geese", value: "geese"),
+        RadioItemData(title: "Gooses", value: "gooses"),
+        RadioItemData(title: "Geeses", value: "geeses"),
+        RadioItemData(title: "Gees", value: "gees"),
+      ],
+      // questionText: "What is the plural of 'goose'?",
+      imageUrl: "",
+      // voiceUrl: "",
+      answer: MultipleChoiceAnswer(
+        answer: RadioItemData(title: "Geese", value: "geese"),
+      ),
+    ),
+    DictationQuestionModel(
+      questionTextInArabic: "Dictate the following text",
+      questionTextInEnglish: "Dictate the following text",
+      voiceUrl: "",
+      speakableText: "The quick brown fox",
+      answer: StringAnswer(
+        answer: "The quick brown fox",
+      ),
+    ),
+  ];
+
   // TODO: handle dynamic user answer for different question types
   // maybe make base answer class? and extend it for each question type
   // and each answer class will have its own validation method
-
   dynamic _userAnswer;
-
-  // List<BaseQuestion> _questions = [
-  //   MultipleChoiceQuestionModel(
-  //     options: [
-  //       RadioItemData(title: "Geese", value: "geese"),
-  //       RadioItemData(title: "Gooses", value: "gooses"),
-  //       RadioItemData(title: "Geeses", value: "geeses"),
-  //       RadioItemData(title: "Gees", value: "gees"),
-  //     ],
-  //     questionText: "What is the plural of 'goose'?",
-  //     imageUrl: "",
-  //     voiceUrl: "",
-  //     answer: RadioItemData(title: "Geese", value: "geese"),
-  //   ),
-  //   DictationQuestionModel(
-  //     questionText: "Dictate the following text",
-  //     imageUrl: "",
-  //     voiceUrl: "",
-  //     answer: "Dictate the following text",
-  //   ),
-  // ];
 
   get questions => _questions;
   get userAnswer => _userAnswer;
@@ -62,8 +73,8 @@ class WritingSectionViewmodel extends BaseViewModel {
     // int lastQuestionIndex = userData.levelsProgress![_levelName]!
     //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
-      _questions =
-          await _firestoreService.fetchQuestions(_sectionName, _levelName!, 0);
+      // _questions =
+      //     await _firestoreService.fetchQuestions(_sectionName, _levelName!, 0);
       error = null;
     } on CustomException catch (e) {
       error = e;
