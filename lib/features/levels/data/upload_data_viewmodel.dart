@@ -213,10 +213,17 @@ class UploadDataViewmodel extends ChangeNotifier {
                   questionText?.split(';').asMap().entries.map((question) {
                         int index = question.key;
                         String questionText = question.value;
+                        List<String> questionParts = questionText.split(":");
                         return FillTheBlanksQuestionModel(
+                          questionInEnglish: questionParts.isNotEmpty
+                              ? questionParts[0]
+                              : null,
+                          questionInArabic: questionParts.length > 1
+                              ? questionParts[1]
+                              : null,
                           answer: questionAnswerOrOptionsInMCQ[index],
-                          questionTextInEnglish: questionText,
-                          questionTextInArabic: '',
+                          questionTextInEnglish: questionEnglish,
+                          questionTextInArabic: questionArabic,
                           imageUrl: '',
                           voiceUrl: '',
                         );
