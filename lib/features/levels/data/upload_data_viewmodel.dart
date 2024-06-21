@@ -151,7 +151,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   }).toList(), // Assign index as the value
                   answer: MultipleChoiceAnswer(
                     answer: RadioItemData(
-                      title: questionAnswerOrAnswersInMCQ[0],
+                      title: questionAnswerOrOptionsInMCQ[0] ?? "",
                       value: mcqAnswer ?? "",
                     ),
                   ),
@@ -215,17 +215,20 @@ class UploadDataViewmodel extends ChangeNotifier {
               }
               break;
             case QuestionType.fillTheBlanks:
-              questions = questionText.asMap().entries.map((question) {
-                int index = question.key;
-                String questionText = question.value;
-                return FillTheBlanksQuestionModel(
-                  answer: questionAnswerOrAnswersInMCQ[index],
-                  questionTextInEnglish: questionText,
-                  questionTextInArabic: '',
-                  imageUrl: '',
-                  voiceUrl: '',
-                );
-              }).toList();
+            // TODO: fix error caused by questionText.asMap()
+            // questions =
+            //     questionText.asMap().entries.map((question) {
+            //   int index = question.key;
+            //   String questionText = question.value;
+            //   return FillTheBlanksQuestionModel(
+            //     answer:
+            //         StringAnswer(answer: questionAnswerOrOptionsInMCQ[index]),
+            //     questionTextInEnglish: questionText,
+            //     questionTextInArabic: '',
+            //     imageUrl: '',
+            //     voiceUrl: '',
+            //   );
+            // }).toList();
 
             default:
               questions = [];
