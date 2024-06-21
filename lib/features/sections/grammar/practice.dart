@@ -114,22 +114,3 @@ class _GrammarPracticeState extends State<GrammarPractice> {
     );
   }
 }
-
-// Widget _buildQuestion(
-//     {required BaseQuestion question,
-//     required Function(String) onChanged,
-//     required EvaluationState answerState}) {
-//   return switch (question.questionType) {
-//     QuestionType.sentenceForming => SentenceFormingQuestion(
-//         question: question as SentenceFormingQuestionModel,
-//         onChanged: onChanged,
-//         answerState: answerState,
-//       ),
-//     QuestionType.youtubeLesson => YouTubeVideoPlayer(
-//         videoId: (question as YoutubeLessonModel).youtubeUrl!,
-//       ),
-//     _ => SizedBox(
-//         child: Text("Unsupported question type ${question.questionType}"),
-//       ),
-//   };
-// }

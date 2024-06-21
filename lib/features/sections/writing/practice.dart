@@ -13,8 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../models/dictation_question_model.dart';
-
 class WritingPractice extends StatefulWidget {
   const WritingPractice({super.key});
 
@@ -31,19 +29,11 @@ class _WritingPracticeState extends State<WritingPractice> {
     viewmodel = Provider.of<WritingSectionViewmodel>(context, listen: false);
   }
 
-  // final TextEditingController _controller = TextEditingController();
-
   RadioItemData? selectedOption;
   @override
   Widget build(BuildContext context) {
-    viewmodel = Provider.of<WritingSectionViewmodel>(context, listen: false);
-    // currentQuestion = viewmodel.questions[viewmodel.currentQuestionIndex];
-    currentQuestion = DictationQuestionModel(
-        answer: "test",
-        questionTextInEnglish: "test",
-        imageUrl: "",
-        voiceUrl: "",
-        questionTextInArabic: '');
+    viewmodel = Provider.of<WritingSectionViewmodel>(context);
+    currentQuestion = viewmodel.questions[viewmodel.currentIndex];
 
     return PopScope(
       canPop: false,
