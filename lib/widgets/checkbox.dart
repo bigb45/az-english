@@ -1,4 +1,5 @@
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -20,7 +21,10 @@ class _CheckboxGroupState extends State<CheckboxGroup> {
       children: List.generate(widget.options.length, (index) {
         CheckboxData option = widget.options[index];
         return ListTile(
-            title: Text(option.title),
+            title: Text(
+              option.title,
+              style: TextStyles.optionTextStyle,
+            ),
             leading: CustomCheckbox(
               state: CheckboxState.unchecked,
               onChanged: (state) {
