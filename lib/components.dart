@@ -6,7 +6,7 @@ import 'package:ez_english/widgets/selectable_card.dart';
 import 'package:ez_english/widgets/checkbox.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:ez_english/widgets/menu.dart';
-import 'package:ez_english/widgets/microphone_button.dart';
+import 'package:ez_english/widgets/audio_control_button.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:ez_english/widgets/result_card.dart';
