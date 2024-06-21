@@ -8,7 +8,7 @@ class ReadingQuestion extends BaseQuestion {
   String? titleInEnglish;
   String? titleInArabic;
   List<String>? words;
-  List<String>? answers;
+  List<String?> answers;
 
   ReadingQuestion({
     required super.questionTextInEnglish,
@@ -21,7 +21,7 @@ class ReadingQuestion extends BaseQuestion {
     this.passageInEnglish,
     this.passageInArabic,
     this.words,
-    this.answers,
+    required this.answers,
   });
   @override
   Map<String, dynamic> toMap() {
@@ -51,7 +51,7 @@ class ReadingQuestion extends BaseQuestion {
       titleInArabic:
           map['titleInArabic'] != null ? map['titleInArabic'] as String : null,
       words: map['words'] != null ? map['words'] as List<String> : null,
-      answers: map['answers'] != null ? map['answers'] as List<String> : null,
+      answers: map['answers'] as List<String?>,
       questionTextInEnglish: map['questionTextInEnglish'],
       imageUrl: map['imageUrl'],
       voiceUrl: map['voiceUrl'],

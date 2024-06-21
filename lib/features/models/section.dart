@@ -2,7 +2,7 @@ import 'package:ez_english/features/models/unit.dart';
 
 class Section {
   String name;
-  String description;
+  String? description;
   List<Unit> units;
 
   Section({required this.name, required this.description, required this.units});

@@ -16,7 +16,7 @@ abstract class BaseQuestion<T> {
     required this.imageUrl,
     required this.voiceUrl,
     this.answer,
-    this.questionType,
+    required this.questionType,
   });
 
   Map<String, dynamic> toMap() {
@@ -24,6 +24,7 @@ abstract class BaseQuestion<T> {
       'questionTextInEnglish': questionTextInEnglish,
       'questionTextInArabic': questionTextInArabic,
       'imageUrl': imageUrl,
+      'voiceUrl': voiceUrl,
       'description': voiceUrl,
       'answer': answer, //TODO Is there a need for any type conversion here ?
       "questionType": questionType!.toShortString(),
@@ -61,8 +62,14 @@ enum QuestionType {
   sentenceForming,
   youtubeLesson,
 
+  //passage with multiple questions
+  passage,
+
   //vocabulary
   vocabulary,
+
+  //listening
+  listening,
 
   //other
   other,

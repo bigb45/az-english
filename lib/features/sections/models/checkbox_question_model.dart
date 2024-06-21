@@ -13,9 +13,11 @@ class CheckboxQuestionModel extends BaseQuestion<List<CheckboxData>> {
     this.paragraph,
     required super.answer,
   }) : super(
-          questionTextInEnglish: questionText,
-          questionTextInArabic: questionText,
-          imageUrl: "",
-          voiceUrl: "",
-        );
+            questionTextInEnglish: questionText,
+            questionTextInArabic: questionText,
+            imageUrl: "",
+            voiceUrl: "",
+            questionType:
+                QuestionType.multipleChoice //TODO add checkbox question type
+            );
 }

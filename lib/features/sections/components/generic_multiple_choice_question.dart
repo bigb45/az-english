@@ -53,26 +53,13 @@ class _GenericMultipleChoiceQuestionState
             else
               Image.network(widget.image!),
             SizedBox(height: Constants.padding20),
-
             Text(
-              widget.question.questionTextInEnglish,
+              widget.question.questionTextInEnglish ??
+                  "Please Choose one of the choices", // TODO: Add a default question text if the text is null
               style: TextStyles.questionTextStyle.copyWith(height: 2),
               maxLines: 5,
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.start,
-            //   children: [
-            //     Expanded(
-            //       child: Text(
-            //         widget.question.questionTextInEnglish,
-            //         style: TextStyles.questionTextStyle.copyWith(height: 2),
-            //         maxLines: 5,
-            //       ),
-            //     ),
-            //   ],
-            // ),
             Constants.gapH24,
-
             RadioGroup(
               onChanged: (newSelection) {
                 setState(() {

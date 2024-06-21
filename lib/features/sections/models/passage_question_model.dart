@@ -3,31 +3,38 @@ import 'dart:convert';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/unit.dart';
 
-class ReadingUnit extends Unit {
+class PassageQuestionModel extends BaseQuestion {
   String? passageInEnglish;
   String? passageInArabic;
   String? titleInArabic;
   String? titleInEnglish;
-  ReadingUnit(
+  List<BaseQuestion?> questions;
+  PassageQuestionModel(
       {this.passageInArabic,
       this.passageInEnglish,
       this.titleInArabic,
       this.titleInEnglish,
-      required super.name,
-      required super.questions,
-      super.descriptionInArabic,
-      super.descriptionInEnglish});
+      required this.questions,
+      required super.questionTextInEnglish,
+      required super.questionTextInArabic,
+      required super.imageUrl,
+      required super.voiceUrl,
+      super.questionType = QuestionType.passage});
 
-  factory ReadingUnit.fromMap(Map<String, dynamic> map) {
-    return ReadingUnit(
+  factory PassageQuestionModel.fromMap(Map<String, dynamic> map) {
+    return PassageQuestionModel(
       passageInEnglish: map['passageInEnglish'] ?? "No English Passage",
       passageInArabic: map['passageInArabic'] ?? "No Arabic Passage",
       titleInArabic: map['titleInArabic'] ?? "No title in Arabic",
       titleInEnglish: map['titleInEnglish'] ?? "No title in English",
-      name: map['name'] ?? '',
       questions: (map['questions'] as List)
           .map((item) => BaseQuestion.fromMap(item))
           .toList(),
+      questionTextInEnglish: map['questionTextInEnglish'],
+      questionTextInArabic: map['questionTextInArabic'],
+      imageUrl: map['imageUrl'],
+      voiceUrl: map['voiceUrl'],
+      questionType: QuestionType.passage,
     );
   }
 
@@ -39,11 +46,13 @@ class ReadingUnit extends Unit {
       'passageInEnglish': passageInEnglish,
       'passageInArabic': passageInArabic,
       'titleInArabic': titleInArabic,
-      "titleInEnglish": titleInEnglish
+      "titleInEnglish": titleInEnglish,
+      "questions": questions.map((question) => question?.toMap()).toList()
     };
   }
 
-  factory ReadingUnit.fromJson(String data) {
-    return ReadingUnit.fromMap(json.decode(data) as Map<String, dynamic>);
+  factory PassageQuestionModel.fromJson(String data) {
+    return PassageQuestionModel.fromMap(
+        json.decode(data) as Map<String, dynamic>);
   }
 }

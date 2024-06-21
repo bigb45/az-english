@@ -15,11 +15,11 @@ class WordDefinition extends BaseQuestion {
     this.exampleUsage,
     this.tenses,
   }) : super(
-          questionTextInEnglish: "",
-          questionTextInArabic: "",
-          imageUrl: "",
-          voiceUrl: "",
-        );
+            questionTextInEnglish: "",
+            questionTextInArabic: "",
+            imageUrl: "",
+            voiceUrl: "",
+            questionType: QuestionType.vocabulary);
   @override
   Map<String, dynamic> toMap() {
     return {

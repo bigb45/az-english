@@ -3,11 +3,11 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/levels/data/models/reading_question.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/level.dart';
-import 'package:ez_english/features/models/reading_unit.dart';
+import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
+import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
-import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
 import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/widgets/radio_button.dart';
@@ -31,6 +31,12 @@ class UploadDataViewmodel extends ChangeNotifier {
       // Decode Excel data
       var excel = Excel.decodeBytes(bytes);
       var sheet = excel.tables.keys.first;
+      PassageQuestionModel? currentPassage;
+      String? previousSectionName;
+
+      String? convertToNull(String value) {
+        return value == '-' ? null : value;
+      }
 
       for (var csvParts in excel.tables[sheet]!.rows) {
         if (csvParts.any((cell) =>
@@ -40,19 +46,31 @@ class UploadDataViewmodel extends ChangeNotifier {
           String levelName = csvParts[0]!.value.toString().trim();
           String sectionName = csvParts[1]!.value.toString().trim();
           String unitName = csvParts[2]!.value.toString().trim();
-          String descriptionEnglish = csvParts[3]!.value.toString().trim();
-          String descriptionArabic = csvParts[4]!.value.toString().trim();
-          String questionEnglish = csvParts[5]!.value.toString().trim();
-          String questionArabic = csvParts[6]!.value.toString().trim();
-          List<String> questionText = csvParts[7]!.value.toString().split(',');
-          List<String> questionAnswerOrAnswersInMCQ =
-              csvParts[8]!.value.toString().split(',');
-          String mcqAnswer = csvParts[9]!.value.toString();
+          String? descriptionEnglish =
+              convertToNull(csvParts[3]!.value.toString().trim());
+          String? descriptionArabic =
+              convertToNull(csvParts[4]!.value.toString().trim());
+          String? questionEnglish =
+              convertToNull(csvParts[5]!.value.toString().trim());
+          String? questionArabic =
+              convertToNull(csvParts[6]!.value.toString().trim());
+          String? questionText = convertToNull(csvParts[7]!.value.toString());
+          List<String?> questionAnswerOrOptionsInMCQ = csvParts[8]!
+              .value
+              .toString()
+              .split(';')
+              .map(convertToNull)
+              .toList();
+          String? mcqAnswer = convertToNull(csvParts[9]!.value.toString());
           String questionType = csvParts[10]!.value.toString().trim();
-          String titleInEnglish = csvParts[11]!.value.toString().trim();
-          String titleInArabic = csvParts[12]!.value.toString().trim();
-          String passageInEnglish = csvParts[13]!.value.toString().trim();
-          String passageInArabic = csvParts[14]!.value.toString().trim();
+          String? titleInEnglish =
+              convertToNull(csvParts[11]!.value.toString().trim());
+          String? titleInArabic =
+              convertToNull(csvParts[12]!.value.toString().trim());
+          String? passageInEnglish =
+              convertToNull(csvParts[13]!.value.toString().trim());
+          String? passageInArabic =
+              convertToNull(csvParts[14]!.value.toString().trim());
 
           // Check if the level already exists in the levels map
           var existingLevel = levels.firstWhere(
@@ -79,75 +97,77 @@ class UploadDataViewmodel extends ChangeNotifier {
           // Check if the unit already exists in the existing section
           var existingUnit = existingSection?.units.firstWhere(
             (unit) => unit.name == unitName,
-            orElse: () => sectionName == "Reading"
-                ? ReadingUnit(
-                    name: unitName,
-                    questions: [],
-                    passageInEnglish: passageInEnglish,
-                    passageInArabic: passageInArabic,
-                    titleInEnglish: titleInEnglish,
-                    titleInArabic: titleInArabic,
-                    descriptionInEnglish:
-                        descriptionEnglish != '-' ? descriptionEnglish : null,
-                    descriptionInArabic:
-                        descriptionArabic != '-' ? descriptionArabic : null,
-                  )
-                : Unit(
-                    name: unitName,
-                    descriptionInEnglish:
-                        descriptionEnglish != '-' ? descriptionEnglish : null,
-                    descriptionInArabic:
-                        descriptionArabic != '-' ? descriptionArabic : null,
-                    questions: [], // Initialize an empty list of questions
-                  ),
+            orElse: () => Unit(
+              name: unitName,
+              descriptionInEnglish:
+                  descriptionEnglish != '-' ? descriptionEnglish : null,
+              descriptionInArabic:
+                  descriptionArabic != '-' ? descriptionArabic : null,
+              questions: [], // Initialize an empty list of questions
+            ),
           );
 
+          if (previousSectionName != null &&
+              previousSectionName != sectionName) {
+            currentPassage = null;
+          }
+          previousSectionName = sectionName;
+
           // Add questions dynamically based on the row data
-          List<BaseQuestion> questions = [];
+          List<BaseQuestion?> questions = [];
           switch (QuestionTypeExtension.fromString(questionType)) {
             case QuestionType.dictation:
-              questions = questionText.map((word) {
-                return DictationQuestionModel(
-                  questionTextInEnglish: questionEnglish,
-                  questionTextInArabic: questionArabic,
-                  // imageUrl: '',
-                  voiceUrl: '',
-                  speakableText: word,
-                  answer: StringAnswer(answer: word),
-                );
-              }).toList();
+              questions = questionText?.split(';').map((word) {
+                    return DictationQuestionModel(
+                      questionTextInEnglish: questionEnglish ?? "",
+                      questionTextInArabic: questionArabic ?? "",
+                      // imageUrl: '',
+                      voiceUrl: '',
+                      speakableText: word,
+                      answer: StringAnswer(answer: word),
+                    );
+                  }).toList() ??
+                  [];
+              if (currentPassage != null) {
+                currentPassage.questions.addAll(questions);
+                questions = [];
+              }
+
               break;
             case QuestionType.multipleChoice:
               questions = [
                 MultipleChoiceQuestionModel(
-                  questionTextInEnglish: questionText[
-                      0], // This represent the question in english and arabic : What is the name of the smart boy in the story? ​ما اسم الولد الذكي في القصة؟
-                  questionTextInArabic: questionText[
-                      1], // TODO Need to add this to the MCQ screen which is a text after the main question and before options : The name of the smart boy is ______ .
+                  questionTextInEnglish: questionEnglish ?? "",
+                  questionTextInArabic: questionArabic ?? "",
+                  paragraph: questionText,
                   imageUrl: '',
                   // voiceUrl: '',
                   options:
-                      questionAnswerOrAnswersInMCQ.asMap().entries.map((entry) {
+                      questionAnswerOrOptionsInMCQ.asMap().entries.map((entry) {
                     int index = entry.key;
-                    String option = entry.value;
+                    String option = entry.value!;
                     return RadioItemData(
                         value: index.toString(), title: option);
                   }).toList(), // Assign index as the value
                   answer: MultipleChoiceAnswer(
                     answer: RadioItemData(
                       title: questionAnswerOrAnswersInMCQ[0],
-                      value: mcqAnswer,
+                      value: mcqAnswer ?? "",
                     ),
                   ),
                 ),
               ];
+              if (currentPassage != null) {
+                currentPassage.questions.addAll(questions);
+                questions = [];
+              }
               break;
             case QuestionType.findWordsFromPassage:
             case QuestionType.answerQuestionsFromPassage:
               questions = [
                 ReadingQuestion(
-                  questionTextInEnglish: questionEnglish,
-                  questionTextInArabic: questionArabic,
+                  questionTextInEnglish: questionEnglish ?? "",
+                  questionTextInArabic: questionArabic ?? "",
                   imageUrl: '',
                   voiceUrl: '',
                   questionType: QuestionTypeExtension.fromString(questionType),
@@ -155,40 +175,51 @@ class UploadDataViewmodel extends ChangeNotifier {
                   titleInArabic: titleInArabic,
                   passageInEnglish: passageInEnglish,
                   passageInArabic: passageInArabic,
-                  words: questionText,
-                  answers: questionAnswerOrAnswersInMCQ,
+                  words: questionText?.split(';'),
+                  answers: questionAnswerOrOptionsInMCQ,
                 )
               ];
+              if (currentPassage != null) {
+                currentPassage.questions.addAll(questions);
+                questions = [];
+              }
+
               break;
 
             case QuestionType.speaking:
-            // TODO: Handle this case.
+              // TODO: Handle this case.
+              throw Exception(UnimplementedError());
             case QuestionType.sentenceForming:
               // TODO: Handle this case.
               throw Exception(UnimplementedError());
             case QuestionType.youtubeLesson:
-            // TODO: Handle this case.
+              // TODO: Handle this case.
+              throw Exception(UnimplementedError());
             case QuestionType.vocabulary:
-              questions = questionText.map((word) {
-                return WordDefinition(
-                  word: word,
-                  type: WordTypeExtension.fromString(questionEnglish),
-                  definition: switch (
-                      WordTypeExtension.fromString(questionEnglish)) {
-                    WordType.sentence => null,
-                    WordType.verb => word.split(":")[1].toString(),
-                    WordType.word => word.split(":")[1].toString(),
-                  },
-                );
-              }).toList();
+              questions = questionText?.split(';').map((word) {
+                    return WordDefinition(
+                      word: word.split(":")[0].toString(),
+                      type: WordTypeExtension.fromString(questionEnglish!),
+                      definition: switch (
+                          WordTypeExtension.fromString(questionEnglish)) {
+                        WordType.sentence => null,
+                        WordType.verb => word.split(":")[1].toString(),
+                        WordType.word => word.split(":")[1].toString(),
+                      },
+                    );
+                  }).toList() ??
+                  [];
+              if (currentPassage != null) {
+                currentPassage.questions.addAll(questions);
+                questions = [];
+              }
+              break;
             case QuestionType.fillTheBlanks:
               questions = questionText.asMap().entries.map((question) {
                 int index = question.key;
                 String questionText = question.value;
                 return FillTheBlanksQuestionModel(
-                  answer: StringAnswer(
-                    answer: questionAnswerOrAnswersInMCQ[index],
-                  ),
+                  answer: questionAnswerOrAnswersInMCQ[index],
                   questionTextInEnglish: questionText,
                   questionTextInArabic: '',
                   imageUrl: '',
@@ -200,8 +231,12 @@ class UploadDataViewmodel extends ChangeNotifier {
               questions = [];
           }
 
-          // Add the questions to the existing unit
-          existingUnit?.questions.addAll(questions);
+          if (currentPassage != null && currentPassage.questions.isEmpty) {
+            existingUnit?.questions.add(currentPassage);
+          } else {
+            // Add the questions to the existing unit
+            existingUnit?.questions.addAll(questions);
+          }
 
           // Add the unit to the section if it's not already added
           if (!existingSection!.units.contains(existingUnit)) {
