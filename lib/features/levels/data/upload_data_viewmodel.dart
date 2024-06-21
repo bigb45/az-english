@@ -7,8 +7,9 @@ import 'package:ez_english/features/models/reading_unit.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
+import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
+import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
-import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -109,9 +110,10 @@ class UploadDataViewmodel extends ChangeNotifier {
                 return DictationQuestionModel(
                   questionTextInEnglish: questionEnglish,
                   questionTextInArabic: questionArabic,
-                  imageUrl: '',
+                  // imageUrl: '',
                   voiceUrl: '',
-                  answer: word,
+                  speakableText: word,
+                  answer: StringAnswer(answer: word),
                 );
               }).toList();
               break;
@@ -123,7 +125,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   questionTextInArabic: questionText[
                       1], // TODO Need to add this to the MCQ screen which is a text after the main question and before options : The name of the smart boy is ______ .
                   imageUrl: '',
-                  voiceUrl: '',
+                  // voiceUrl: '',
                   options:
                       questionAnswerOrAnswersInMCQ.asMap().entries.map((entry) {
                     int index = entry.key;
@@ -131,9 +133,13 @@ class UploadDataViewmodel extends ChangeNotifier {
                     return RadioItemData(
                         value: index.toString(), title: option);
                   }).toList(), // Assign index as the value
-                  answer: RadioItemData(
-                      title: questionAnswerOrAnswersInMCQ[0], value: mcqAnswer),
-                )
+                  answer: MultipleChoiceAnswer(
+                    answer: RadioItemData(
+                      title: questionAnswerOrAnswersInMCQ[0],
+                      value: mcqAnswer,
+                    ),
+                  ),
+                ),
               ];
               break;
             case QuestionType.findWordsFromPassage:
@@ -180,7 +186,9 @@ class UploadDataViewmodel extends ChangeNotifier {
                 int index = question.key;
                 String questionText = question.value;
                 return FillTheBlanksQuestionModel(
-                  answer: questionAnswerOrAnswersInMCQ[index],
+                  answer: StringAnswer(
+                    answer: questionAnswerOrAnswersInMCQ[index],
+                  ),
                   questionTextInEnglish: questionText,
                   questionTextInArabic: '',
                   imageUrl: '',

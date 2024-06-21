@@ -1,7 +1,7 @@
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/widgets/checkbox.dart';
 
-class CheckboxQuestionModel extends BaseQuestion {
+class CheckboxQuestionModel extends BaseQuestion<List<CheckboxData>> {
   final List<CheckboxData> options;
   final String? paragraph;
   final String questionText;

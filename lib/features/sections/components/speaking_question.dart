@@ -9,7 +9,7 @@ import 'package:ez_english/core/network/network_helper.dart';
 import 'package:ez_english/features/sections/models/speaking_question_model.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';
-import 'package:ez_english/widgets/microphone_button.dart';
+import 'package:ez_english/widgets/audio_control_button.dart';
 import 'package:ez_english/widgets/text_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';

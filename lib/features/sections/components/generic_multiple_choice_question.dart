@@ -12,11 +12,7 @@ class GenericMultipleChoiceQuestion<T> extends StatefulWidget {
   final String? image;
   final Function(RadioItemData) onChanged;
   const GenericMultipleChoiceQuestion(
-      {super.key,
-      required this.question,
-      // required this.options,
-      required this.onChanged,
-      this.image});
+      {super.key, required this.question, required this.onChanged, this.image});
 
   @override
   State<GenericMultipleChoiceQuestion> createState() =>
@@ -57,19 +53,26 @@ class _GenericMultipleChoiceQuestionState
             else
               Image.network(widget.image!),
             SizedBox(height: Constants.padding20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    widget.question.questionTextInEnglish,
-                    style: TextStyles.practiceCardSecondaryText
-                        .copyWith(height: 2),
-                    maxLines: 5,
-                  ),
-                ),
-              ],
+
+            Text(
+              widget.question.questionTextInEnglish,
+              style: TextStyles.questionTextStyle.copyWith(height: 2),
+              maxLines: 5,
             ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.start,
+            //   children: [
+            //     Expanded(
+            //       child: Text(
+            //         widget.question.questionTextInEnglish,
+            //         style: TextStyles.questionTextStyle.copyWith(height: 2),
+            //         maxLines: 5,
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            Constants.gapH24,
+
             RadioGroup(
               onChanged: (newSelection) {
                 setState(() {

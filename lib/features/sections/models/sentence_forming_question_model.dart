@@ -1,4 +1,5 @@
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/sections/models/string_answer.dart';
 
 class SentenceFormingQuestionModel extends BaseQuestion<String> {
   final String words;
@@ -16,5 +17,5 @@ class SentenceFormingQuestionModel extends BaseQuestion<String> {
             imageUrl: '',
             voiceUrl: '',
             questionType: QuestionType.sentenceForming,
-            answer: correctAnswer);
+            answer: StringAnswer(answer: correctAnswer));
 }

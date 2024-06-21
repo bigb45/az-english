@@ -1,3 +1,5 @@
+import 'package:ez_english/features/models/base_answer.dart';
+
 import '../sections/models/dictation_question_model.dart';
 
 abstract class BaseQuestion<T> {
@@ -6,7 +8,7 @@ abstract class BaseQuestion<T> {
   // TODO: make image URL and voice URL specific to the question type or nullable
   String imageUrl;
   String voiceUrl;
-  T? answer;
+  BaseAnswer? answer;
   QuestionType? questionType;
   BaseQuestion({
     required this.questionTextInEnglish,

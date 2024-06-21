@@ -3,17 +3,25 @@
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/dictation_question.dart';
 
-class DictationQuestionModel extends BaseQuestion {
-  final String answer;
+class DictationQuestionModel extends BaseQuestion<String> {
+  // final String answer;
+  final String speakableText;
+  final String questionTextInArabic;
+  final String questionTextInEnglish;
 
   DictationQuestionModel({
-    required this.answer,
-    required super.questionTextInEnglish,
-    required super.questionTextInArabic,
-    super.questionType = QuestionType.dictation,
-    required super.imageUrl,
+    required this.questionTextInArabic,
+    required this.questionTextInEnglish,
+    // required this.answer,
+    required super.answer,
     required super.voiceUrl,
-  });
+    required this.speakableText,
+  }) : super(
+          questionType: QuestionType.dictation,
+          imageUrl: "",
+          questionTextInArabic: questionTextInArabic,
+          questionTextInEnglish: questionTextInEnglish,
+        );
 
   @override
   Map<String, dynamic> toMap() {
@@ -27,23 +35,24 @@ class DictationQuestionModel extends BaseQuestion {
       answer: json['answer'],
       questionTextInEnglish: json['questionTextInEnglish'],
       questionTextInArabic: json['questionTextInArabic'],
-      imageUrl: json['imageUrl'],
+      // imageUrl: json['imageUrl'],
+      speakableText: json['answer'],
       voiceUrl: json['voiceUrl'],
     );
   }
 
-  bool validateQuestion({String? correctAnswer, required String userAnswer}) {
-    correctAnswer = correctAnswer ?? answer;
+  // bool validateQuestion({String? correctAnswer, required String userAnswer}) {
+  //   correctAnswer = correctAnswer ?? answer;
 
-    correctAnswer = correctAnswer.normalize();
-    userAnswer = userAnswer.normalize();
+  //   correctAnswer = correctAnswer.normalize();
+  //   userAnswer = userAnswer.normalize();
 
-    if (userAnswer == correctAnswer) {
-      print("correct");
-    } else {
-      print(
-          "incorrect, user answered: $userAnswer, correct answer: $correctAnswer");
-    }
-    return userAnswer == correctAnswer;
-  }
+  //   if (userAnswer == correctAnswer) {
+  //     print("correct");
+  //   } else {
+  //     print(
+  //         "incorrect, user answered: $userAnswer, correct answer: $correctAnswer");
+  //   }
+  //   return userAnswer == correctAnswer;
+  // }
 }
