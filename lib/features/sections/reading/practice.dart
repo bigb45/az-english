@@ -2,7 +2,6 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
-import 'package:ez_english/features/sections/models/reading_question_model.dart';
 import 'package:ez_english/features/sections/reading/view_model/reading_section_viewmodel.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -36,8 +35,8 @@ class _ReadingPracticeState extends State<ReadingPractice> {
 
   @override
   Widget build(BuildContext context) {
-    ReadingQuestionModel currentQuestion =
-        questions[readingSectionViewmodel.currentIndex] as ReadingQuestionModel;
+    BaseQuestion currentQuestion =
+        questions[readingSectionViewmodel.currentIndex];
 
     return PopScope(
       canPop: false,
