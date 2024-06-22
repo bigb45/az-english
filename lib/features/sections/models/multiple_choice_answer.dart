@@ -4,7 +4,7 @@ import 'package:ez_english/widgets/radio_button.dart';
 class MultipleChoiceAnswer extends BaseAnswer<RadioItemData> {
   MultipleChoiceAnswer({
     required RadioItemData answer,
-  }) : super(answerType: AnswerType.multipleChoice);
+  }) : super(answerType: AnswerType.multipleChoice, answer: answer);
 
   @override
   Map<String, dynamic> toMap() {

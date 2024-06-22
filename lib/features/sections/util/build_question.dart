@@ -1,3 +1,4 @@
+import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/dictation_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
@@ -9,12 +10,13 @@ import 'package:ez_english/features/sections/models/dictation_question_model.dar
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
 import 'package:ez_english/features/sections/models/sentence_forming_question_model.dart';
 import 'package:ez_english/features/sections/models/speaking_question_model.dart';
+import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 import 'package:flutter/material.dart';
 
-Widget buildQuestion<T>(
+Widget buildQuestion(
     {required BaseQuestion question,
-    required Function(T) onChanged,
+    required Function(BaseAnswer) onChanged,
     required EvaluationState answerState}) {
   switch (question.questionType) {
     case QuestionType.speaking:
@@ -25,21 +27,23 @@ Widget buildQuestion<T>(
     case QuestionType.sentenceForming:
       return SentenceFormingQuestion(
         question: question as SentenceFormingQuestionModel,
-        onChanged: (value) => onChanged(value as T),
+        onChanged: (value) => onChanged(value as StringAnswer),
         answerState: answerState,
       );
 
     case QuestionType.multipleChoice:
       return GenericMultipleChoiceQuestion(
         question: question as MultipleChoiceQuestionModel,
-        onChanged: (value) => onChanged(value as T),
+        onChanged: (value) {
+          onChanged(value);
+        },
       );
 
     // return const Text("Multiple Choice Question");
 
     case QuestionType.dictation:
       return DictationQuestion(
-        onAnswerChanged: (value) => onChanged(value as T),
+        onAnswerChanged: (value) => onChanged(value as StringAnswer),
         question: question as DictationQuestionModel,
       );
 

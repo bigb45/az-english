@@ -1,4 +1,5 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/expandable_text.dart';
@@ -10,7 +11,7 @@ import '../models/multiple_choice_question_model.dart';
 class GenericMultipleChoiceQuestion<T> extends StatefulWidget {
   final MultipleChoiceQuestionModel question;
   final String? image;
-  final Function(RadioItemData) onChanged;
+  final Function(MultipleChoiceAnswer) onChanged;
   const GenericMultipleChoiceQuestion(
       {super.key, required this.question, required this.onChanged, this.image});
 
@@ -65,7 +66,7 @@ class _GenericMultipleChoiceQuestionState
                 setState(() {
                   _isFocused = false;
                   selectedOption = newSelection;
-                  widget.onChanged(newSelection);
+                  widget.onChanged(MultipleChoiceAnswer(answer: newSelection));
                 });
               },
               options: widget.question.options,

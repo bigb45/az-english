@@ -20,12 +20,12 @@ class ReadingSection extends StatefulWidget {
 }
 
 class _ReadingSectionState extends State<ReadingSection> {
-  late ReadingQuestionViewmodel readingSectionVm;
+  late ReadingSectionViewmodel readingSectionVm;
 
   @override
   void initState() {
     readingSectionVm =
-        Provider.of<ReadingQuestionViewmodel>(context, listen: false);
+        Provider.of<ReadingSectionViewmodel>(context, listen: false);
     readingSectionVm.levelId = widget.levelId;
     // no need to pass section Id since each viewmodel is already knows its section
     // readingSectionVm.sectionId = widget.sectionId;

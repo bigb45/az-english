@@ -22,13 +22,13 @@ class ReadingPractice extends StatefulWidget {
 }
 
 class _ReadingPracticeState extends State<ReadingPractice> {
-  late ReadingQuestionViewmodel readingSectionViewmodel;
+  late ReadingSectionViewmodel readingSectionViewmodel;
   late List<BaseQuestion> questions = [];
 
   @override
   void initState() {
     readingSectionViewmodel =
-        Provider.of<ReadingQuestionViewmodel>(context, listen: false);
+        Provider.of<ReadingSectionViewmodel>(context, listen: false);
     questions = readingSectionViewmodel.questions;
 
     super.initState();
@@ -119,7 +119,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                         question: currentQuestion,
                         onChanged: (value) {
                           // handle the case for different question types
-                          readingSectionViewmodel.updateAnswer(value as String);
+                          readingSectionViewmodel.updateAnswer(value);
                         },
                         answerState: readingSectionViewmodel.answerState,
                       )

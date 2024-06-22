@@ -4,20 +4,20 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class ReadingQuestionViewmodel extends BaseViewModel {
+class ReadingSectionViewmodel extends BaseViewModel {
   String? levelId;
   String? _sectionName = "reading";
   String? _levelName;
   UserModel? _userData;
-  String? get sectionName => _sectionName;
   String? get levelName => _levelName;
-  dynamic userAnswer = "";
+
   final FirestoreService _firestoreService = FirestoreService();
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
 
@@ -37,10 +37,10 @@ class ReadingQuestionViewmodel extends BaseViewModel {
   Future<void> fetchQuestions() async {
     isLoading = true;
     int lastQuestionIndex = _userData!.levelsProgress![levelName]!
-        .sectionProgress![sectionName]!.lastStoppedQuestionIndex;
+        .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
       _questions = await _firestoreService.fetchQuestions(
-        _sectionName!,
+        RouteConstants.readingSectionName,
         _levelName!,
         lastQuestionIndex,
       );
@@ -70,7 +70,7 @@ class ReadingQuestionViewmodel extends BaseViewModel {
       await _firestoreService.updateQuestionProgress(
           userId: currentUser!.uid,
           levelName: levelName!,
-          sectionName: sectionName!,
+          sectionName: RouteConstants.readingSectionName,
           newQuestionIndex: newQuestionIndex);
       error = null;
     } on CustomException catch (e) {
@@ -100,8 +100,10 @@ class ReadingQuestionViewmodel extends BaseViewModel {
     }
   }
 
-  void updateAnswer<T>(T newAnswer) {
-    userAnswer = newAnswer;
+  void updateAnswer(BaseAnswer newAnswer) {
+    // userAnswer = newAnswer;
+    _questions[currentIndex].answer = newAnswer;
+    print("${newAnswer.answer.title}");
     notifyListeners();
   }
 
