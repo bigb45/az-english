@@ -8,7 +8,9 @@ abstract class BaseQuestion<T> {
   String? questionTextInArabic;
   String? imageUrl;
   String? voiceUrl;
+  // correct answer
   BaseAnswer<T>? answer;
+  BaseAnswer<T>? userAnswer;
   QuestionType questionType;
   BaseQuestion({
     required this.questionTextInEnglish,
@@ -18,6 +20,10 @@ abstract class BaseQuestion<T> {
     this.answer,
     required this.questionType,
   });
+
+  bool evaluateAnswer() {
+    return answer?.validate(userAnswer) ?? false;
+  }
 
   Map<String, dynamic> toMap() {
     return {

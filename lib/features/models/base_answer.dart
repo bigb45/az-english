@@ -1,7 +1,8 @@
 abstract class BaseAnswer<T> {
   final AnswerType answerType;
   T? answer;
-  bool validate(T userAnswer);
+  T? userAnswer;
+  bool? validate(BaseAnswer? userAnswer);
   Map<String, dynamic> toMap();
   BaseAnswer({required this.answerType, this.answer});
 }
