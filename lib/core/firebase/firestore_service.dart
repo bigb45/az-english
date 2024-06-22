@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
+import 'package:ez_english/core/network/apis_constants.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/section.dart';
@@ -43,17 +44,19 @@ class FirestoreService {
           .collection(FirestoreConstants.sectionsCollection)
           .doc(sectionName)
           .collection(FirestoreConstants.unitsCollection)
+          //TODO: Unit's name needs to be dynamic, based on the order of sections for each day
           .doc("Unit1")
           .get();
       if (levelDoc.exists) {
         Map<String, dynamic> data = levelDoc.data() as Map<String, dynamic>;
 
-        if (data.containsKey('questions')) {
-          List<dynamic> questionsData = data['questions'];
+        if (data.containsKey(FirestoreConstants.questionsField)) {
+          List<dynamic> questionsData = data[FirestoreConstants.questionsField];
           // print(data['questions']);
           // Ensure the startIndex is within bounds
           if (sectionName == RouteConstants.readingSectionName) {
-            questionsData = data["questions"][0]["questions"];
+            questionsData = data[FirestoreConstants.questionsField][0]
+                [FirestoreConstants.questionsField];
             // print(questionsData);
           }
 
@@ -81,8 +84,9 @@ class FirestoreService {
       required String sectionName,
       required int newQuestionIndex}) async {
     try {
-      DocumentReference userDocRef =
-          FirebaseFirestore.instance.collection('Users').doc(userId);
+      DocumentReference userDocRef = FirebaseFirestore.instance
+          .collection(FirestoreConstants.usersCollections)
+          .doc(userId);
 
       FieldPath lastStoppedQuestionIndex = FieldPath([
         'levelsProgress',
@@ -139,8 +143,8 @@ class FirestoreService {
 
   Future<void> uploadLevelToFirestore(Level level) async {
     try {
-      CollectionReference levelsCollection =
-          FirebaseFirestore.instance.collection('LevelsTest');
+      CollectionReference levelsCollection = FirebaseFirestore.instance
+          .collection(FirestoreConstants.levelsCollection);
 
       Map<String, dynamic> levelMetadata = {
         'name': level.name,
@@ -153,13 +157,15 @@ class FirestoreService {
           'name': section.name,
           'description': section.description,
         };
-        CollectionReference sectionsCollection =
-            levelsCollection.doc(level.name).collection('sections');
+        CollectionReference sectionsCollection = levelsCollection
+            .doc(level.name)
+            .collection(FirestoreConstants.sectionsCollection);
         await sectionsCollection.doc(section.name).set(sectionMetadata);
 
         for (Unit unit in section.units) {
-          CollectionReference unitsCollection =
-              sectionsCollection.doc(section.name).collection('units');
+          CollectionReference unitsCollection = sectionsCollection
+              .doc(section.name)
+              .collection(FirestoreConstants.levelsCollection);
           Map<String, dynamic> unitData = unit.toMap();
           await unitsCollection.doc(unit.name).set(unitData);
         }

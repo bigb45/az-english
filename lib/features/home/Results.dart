@@ -1,4 +1,5 @@
 import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
+import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -31,11 +32,24 @@ class _ResultsState extends State<Results> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
       ),
-      body: Center(
-        child: Text(
-          AppStrings.resultScreenText,
-          style: TextStyles.bodyLarge,
-        ),
+      body: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () async {
+              List<Level> levels = await _dataViewmodel.parseData();
+              for (Level level in levels) {
+                await _dataViewmodel.saveLevelToFirestore(level);
+              }
+            },
+            child: const Text("Add data"),
+          ),
+          Center(
+            child: Text(
+              AppStrings.resultScreenText,
+              style: TextStyles.bodyLarge,
+            ),
+          ),
+        ],
       ),
       // Column(
       //   children: [

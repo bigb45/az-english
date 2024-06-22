@@ -12,7 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class ReadingQuestionViewmodel extends BaseViewModel {
   String? levelId;
-  String? _sectionName = "Reading";
+  String? _sectionName = "reading";
   String? _levelName;
   UserModel? _userData;
   String? get sectionName => _sectionName;
@@ -37,7 +37,7 @@ class ReadingQuestionViewmodel extends BaseViewModel {
   Future<void> fetchQuestions() async {
     isLoading = true;
     int lastQuestionIndex = _userData!.levelsProgress![levelName]!
-        .sectionProgress!["reading"]!.lastStoppedQuestionIndex;
+        .sectionProgress![sectionName]!.lastStoppedQuestionIndex;
     try {
       _questions = await _firestoreService.fetchQuestions(
         _sectionName!,
