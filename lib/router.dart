@@ -147,7 +147,12 @@ final loggedInRouter = GoRouter(
                         // ignore: avoid_print
                         {print("new value: ${value.map((e) => e.title)}")},
                     answer: CheckboxAnswer(
-                        answer: [CheckboxData(title: "Option 1")]),
+                      answer: [
+                        CheckboxData(
+                          title: "Option 1",
+                        ),
+                      ],
+                    ),
                     questionText: "Select the correct sentences",
                     paragraph: "This is a paragraph",
                     options: [

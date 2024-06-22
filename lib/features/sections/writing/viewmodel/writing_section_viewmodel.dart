@@ -4,6 +4,7 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
@@ -16,8 +17,7 @@ import 'package:ez_english/widgets/radio_button.dart';
 
 class WritingSectionViewmodel extends BaseViewModel {
   final sectionId = "2";
-  // final _sectionName = "writing";
-  // ignore: unused_field
+
   String? _levelName;
   String? levelId;
   final List<BaseQuestion> _questions = [
@@ -48,13 +48,10 @@ class WritingSectionViewmodel extends BaseViewModel {
     ),
   ];
 
-  // TODO: handle dynamic user answer for different question types
-  // maybe make base answer class? and extend it for each question type
-  // and each answer class will have its own validation method
-  dynamic _userAnswer;
+  // dynamic _userAnswer;
 
   get questions => _questions;
-  get userAnswer => _userAnswer;
+  // get userAnswer => _userAnswer;
   final FirestoreService _firestoreService = FirestoreService();
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   @override
@@ -89,13 +86,13 @@ class WritingSectionViewmodel extends BaseViewModel {
     }
   }
 
-  void updateAnswer<T>(T answer) {
-    _userAnswer = answer;
+  void updateAnswer(BaseAnswer answer) {
+    _questions[currentIndex].userAnswer = answer;
     notifyListeners();
   }
 
   void evaluateAnswer() {
-    if (_questions[currentIndex].answer == _userAnswer) {
+    if (_questions[currentIndex].evaluateAnswer()) {
       answerState = EvaluationState.correct;
     } else {
       answerState = EvaluationState.incorrect;
