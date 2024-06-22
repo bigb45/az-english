@@ -64,7 +64,6 @@ class FirestoreService {
           for (var mapData in filteredQuestionsData) {
             BaseQuestion question =
                 BaseQuestion.fromMap(mapData as Map<String, dynamic>);
-            print(mapData);
             questions.add(question);
           }
         }

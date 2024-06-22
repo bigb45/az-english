@@ -6,11 +6,8 @@ import 'package:ez_english/widgets/radio_button.dart';
 
 class MultipleChoiceQuestionModel<T> extends BaseQuestion<RadioItemData> {
   final List<RadioItemData> options;
-  // final String? questionSentence;
   final String? paragraph;
   @override
-  // final RadioItemData answer;
-
   MultipleChoiceQuestionModel({
     required this.options,
     this.paragraph,
