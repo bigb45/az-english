@@ -46,101 +46,104 @@ class _ReadingPracticeState extends State<ReadingPractice> {
         ),
       ));
     }
+
     BaseQuestion? currentQuestion =
         questions[readingSectionViewmodel.currentIndex];
 
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (canPop) {
-        showLeaveAlertDialog(context, onConfirm: () async {
-          await readingSectionViewmodel
-              .updateSectionProgress(readingSectionViewmodel.currentIndex);
-        });
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.close,
-                color: Palette.primaryText,
-              ),
-              onPressed: () {
-                showLeaveAlertDialog(
-                  context,
-                  onConfirm: () async {
-                    await readingSectionViewmodel.updateSectionProgress(
-                        readingSectionViewmodel.currentIndex);
+    return Consumer<ReadingSectionViewmodel>(
+      builder: (context, readingSectionViewmodel, child) {
+        return PopScope(
+          canPop: false,
+          onPopInvoked: (canPop) {
+            showLeaveAlertDialog(context, onConfirm: () async {
+              await readingSectionViewmodel
+                  .updateSectionProgress(readingSectionViewmodel.currentIndex);
+            });
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.close,
+                    color: Palette.primaryText,
+                  ),
+                  onPressed: () {
+                    showLeaveAlertDialog(
+                      context,
+                      onConfirm: () async {
+                        await readingSectionViewmodel.updateSectionProgress(
+                            readingSectionViewmodel.currentIndex);
+                      },
+                    );
                   },
-                );
-              },
-            ),
-          ],
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
-          backgroundColor: Palette.secondary,
-          title: ListTile(
-            contentPadding: const EdgeInsets.only(left: 0, right: 0),
-            title: Text(
-              AppStrings.readingSectionPracticeAppbarTitle,
-              style: TextStyle(
-                fontSize: 24.sp,
-                color: Palette.primaryText,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            // TODO change subtitle to dymaic string from the API
-            subtitle: Text(
-              "Daily Conversations",
-              style: TextStyle(
-                fontSize: 17.sp,
-                color: Palette.primaryText,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: Constants.padding8),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: Constants.padding8),
-                        child: const ProgressBar(value: 20),
-                      ),
-                      buildQuestion(
-                        question: currentQuestion,
-                        onChanged: (value) {
-                          // handle the case for different question types
-                          readingSectionViewmodel.updateAnswer(value);
-                        },
-                        answerState: readingSectionViewmodel.answerState,
-                      )
-                    ],
+                ),
+              ],
+              systemOverlayStyle: SystemUiOverlayStyle.dark,
+              backgroundColor: Palette.secondary,
+              title: ListTile(
+                contentPadding: const EdgeInsets.only(left: 0, right: 0),
+                title: Text(
+                  AppStrings.readingSectionPracticeAppbarTitle,
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    color: Palette.primaryText,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                // TODO change subtitle to dymaic string from the API
+                subtitle: Text(
+                  "Daily Conversations",
+                  style: TextStyle(
+                    fontSize: 17.sp,
+                    color: Palette.primaryText,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
             ),
-            EvaluationSection(
-              onContinue: () {
-                readingSectionViewmodel.incrementIndex();
-              },
-              onPressed: () {
-                setState(() {
-                  readingSectionViewmodel.evaluateAnswer();
-                });
-              },
-            )
-          ],
-        ),
-      ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: Constants.padding8),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: Constants.padding8),
+                            child: const ProgressBar(value: 20),
+                          ),
+                          buildQuestion(
+                            question: currentQuestion,
+                            onChanged: (value) {
+                              // handle the case for different question types
+                              readingSectionViewmodel.updateAnswer(value);
+                            },
+                            answerState: readingSectionViewmodel.answerState,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                EvaluationSection(
+                  state: readingSectionViewmodel.answerState,
+                  onContinue: () {
+                    readingSectionViewmodel.incrementIndex();
+                  },
+                  onPressed: readingSectionViewmodel.evaluateAnswer,
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
