@@ -1,4 +1,7 @@
 import 'package:ez_english/features/models/base_answer.dart';
+import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
+import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
+import 'package:ez_english/widgets/radio_button.dart';
 
 import '../sections/models/dictation_question_model.dart';
 
@@ -38,12 +41,28 @@ abstract class BaseQuestion<T> {
     switch (questionType) {
       case QuestionType.dictation:
         return DictationQuestionModel.fromMap(json);
-      // case QuestionType.multipleChoice:
-      //   return MultipleChoiceQuestionModel.fromMap(json);
+      case QuestionType.multipleChoice:
+        return MultipleChoiceQuestionModel.fromMap(json);
       // Add cases for other question types
       default:
-        throw Exception('Unknown question type: $questionType');
+        // throw Exception('Unknown question type: $questionType');
+        print("Unknwon question type: $questionType");
     }
+    return MultipleChoiceQuestionModel(
+        options: [
+          RadioItemData(title: "option1", value: "option1"),
+          RadioItemData(title: "option2", value: "option2"),
+          RadioItemData(title: "option3", value: "option3"),
+        ],
+        answer: MultipleChoiceAnswer(
+          answer: RadioItemData(
+            title: "",
+            value: "",
+          ),
+        ),
+        questionTextInArabic: "questionTextInArabic",
+        questionTextInEnglish: "questionTextInEnglish",
+        imageUrl: "");
   }
 }
 

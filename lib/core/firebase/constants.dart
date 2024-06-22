@@ -1,7 +1,7 @@
 class FirestoreConstants {
-  static String levelsCollection = "Levels";
+  static String levelsCollection = "LevelsTest";
   static String usersCollections = "Users";
   static String questionsCollection = "Questions";
-  static String sectionsCollection = "Sections";
-  static String unitsCollection = "Units";
+  static String sectionsCollection = "sections";
+  static String unitsCollection = "units";
 }

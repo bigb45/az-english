@@ -45,6 +45,12 @@ class RouteConstants {
     "3": "grammar",
   };
 
+// TODO: change to lower case
+  static const String readingSectionName = "Reading";
+  static const String writingSectionName = "writing";
+  static const String vocabularySectionName = "vocabulary";
+  static const String grammarSectionName = "grammar";
+
   static String getSectionName(String sectionId) {
     return sectionIdName[sectionId]!;
   }

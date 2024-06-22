@@ -5,6 +5,7 @@ import 'package:ez_english/features/sections/components/leave_alert_dialog.dart'
 import 'package:ez_english/features/sections/reading/view_model/reading_section_viewmodel.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,7 +36,17 @@ class _ReadingPracticeState extends State<ReadingPractice> {
 
   @override
   Widget build(BuildContext context) {
-    BaseQuestion currentQuestion =
+    // handle empty questions
+    if (questions.isEmpty) {
+      return Scaffold(
+          body: Center(
+        child: Text(
+          "No questions found, try again later.",
+          style: TextStyles.bodyLarge,
+        ),
+      ));
+    }
+    BaseQuestion? currentQuestion =
         questions[readingSectionViewmodel.currentIndex];
 
     return PopScope(

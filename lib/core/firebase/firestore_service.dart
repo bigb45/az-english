@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -6,7 +7,6 @@ import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/models/user.dart';
-import 'package:ez_english/features/sections/models/reading_question_model.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -50,13 +50,21 @@ class FirestoreService {
 
         if (data.containsKey('questions')) {
           List<dynamic> questionsData = data['questions'];
+          // print(data['questions']);
           // Ensure the startIndex is within bounds
+          if (sectionName == RouteConstants.readingSectionName) {
+            questionsData = data["questions"][0]["questions"];
+            // print(questionsData);
+          }
+
           if (startIndex < questionsData.length) {
             filteredQuestionsData = questionsData.sublist(startIndex);
           }
+
           for (var mapData in filteredQuestionsData) {
-            ReadingQuestionModel? question =
-                ReadingQuestionModel.fromMap(mapData as Map<String, dynamic>);
+            BaseQuestion question =
+                BaseQuestion.fromMap(mapData as Map<String, dynamic>);
+            print(mapData);
             questions.add(question);
           }
         }
