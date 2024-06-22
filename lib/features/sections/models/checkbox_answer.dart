@@ -12,7 +12,7 @@ class CheckboxAnswer extends BaseAnswer<List<CheckboxData>> {
   }
 
   @override
-  bool validate(List<CheckboxData> userAnswer) {
+  bool validate(BaseAnswer? userAnswer) {
     // TODO: implement validate
     throw UnimplementedError();
   }

@@ -8,7 +8,7 @@ class StringAnswer extends BaseAnswer<String> {
         );
 
   @override
-  bool validate(String userAnswer) {
+  bool validate(BaseAnswer? userAnswer) {
     // TODO: compare answers here and return true or false
     // might change return type to AnswerValidationResult
     return false;
