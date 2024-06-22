@@ -21,7 +21,7 @@ class AppProviders extends StatelessWidget {
           update: (context, auth, levels) => levels!..update(auth),
           create: (BuildContext context) => LevelSelectionViewmodel(),
         ),
-        ChangeNotifierProvider(create: (_) => ReadingQuestionViewmodel()),
+        ChangeNotifierProvider(create: (_) => ReadingSectionViewmodel()),
         ChangeNotifierProvider(create: (_) => WritingSectionViewmodel()),
         ChangeNotifierProvider(create: (_) => VocabularySectionViewmodel()),
         ChangeNotifierProvider(create: (_) => UploadDataViewmodel()),

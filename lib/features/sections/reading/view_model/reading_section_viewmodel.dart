@@ -10,7 +10,7 @@ import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class ReadingQuestionViewmodel extends BaseViewModel {
+class ReadingSectionViewmodel extends BaseViewModel {
   String? levelId;
   String? _sectionName = "Reading";
   String? _levelName;
