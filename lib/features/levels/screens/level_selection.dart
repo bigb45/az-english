@@ -8,7 +8,6 @@ import 'package:ez_english/widgets/selectable_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -29,8 +28,6 @@ class _LevelSelectionState extends State<LevelSelection> {
     //     Provider.of<LevelSelectionViewmodel>(context, listen: false);
   }
 
- 
-
   void navigateToLevel({required int levelId}) {
     context.push('/level/$levelId');
   }
@@ -48,6 +45,7 @@ class _LevelSelectionState extends State<LevelSelection> {
           'Assigned Levels',
           style: TextStyle(color: Palette.primaryText),
         ),
+        centerTitle: true,
       ),
       body: levelSelectionVm.isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -74,8 +72,7 @@ class _LevelSelectionState extends State<LevelSelection> {
                                   isAssigned: level.isAssigned,
                                   cardText: level.description,
                                   onTap: () {
-                                    navigateToLevel(
-                                        levelId: level.id);
+                                    navigateToLevel(levelId: level.id);
                                   },
                                 );
                               },
