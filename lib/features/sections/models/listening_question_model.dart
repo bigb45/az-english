@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:ez_english/features/models/base_question.dart';
-import 'package:ez_english/features/sections/models/word_definition.dart';
 
 class ListeningQuestionModel extends BaseQuestion {
   final List<String?> words;
@@ -9,8 +8,8 @@ class ListeningQuestionModel extends BaseQuestion {
       {required this.words,
       required super.questionTextInEnglish,
       required super.questionTextInArabic,
-      super.imageUrl,
-      super.voiceUrl,
+      required super.imageUrl,
+      required super.voiceUrl,
       super.questionType = QuestionType.listening});
   @override
   Map<String, dynamic> toMap() {

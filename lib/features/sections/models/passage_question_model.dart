@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:ez_english/features/models/base_question.dart';
-import 'package:ez_english/features/models/unit.dart';
 
 class PassageQuestionModel extends BaseQuestion {
   String? passageInEnglish;

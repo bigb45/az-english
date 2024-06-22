@@ -109,13 +109,13 @@ class ReadingQuestionViewmodel extends BaseViewModel {
   }
 
   void evaluateAnswer() {
-    answerState = switch (_questions[currentIndex].questionType) {
-      // TODO: fix this
-      QuestionType.multipleChoice =>
-        ((_questions[currentIndex]).imageUrl == null)
-            ? EvaluationState.correct
-            : EvaluationState.incorrect,
-      _ => EvaluationState.correct,
-    };
+    // answerState = switch (_questions[currentIndex].questionType) {
+    //   // TODO: fix this
+    //   QuestionType.multipleChoice =>
+    //     ((_questions[currentIndex]).imageUrl == null)
+    //         ? EvaluationState.correct
+    //         : EvaluationState.incorrect,
+    //   _ => EvaluationState.correct,
+    // };
   }
 }
