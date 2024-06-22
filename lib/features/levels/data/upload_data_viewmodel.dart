@@ -3,6 +3,7 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/levels/data/models/reading_question.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/level.dart';
+import 'package:ez_english/features/sections/models/listening_question_model.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/features/models/section.dart';
@@ -195,17 +196,30 @@ class UploadDataViewmodel extends ChangeNotifier {
             case QuestionType.youtubeLesson:
               // TODO: Handle this case.
               throw Exception(UnimplementedError());
+
+            case QuestionType
+                  .vocabularyWithListening: // TODO: Should we add the listening ability to all vocabularies
             case QuestionType.vocabulary:
               questions = questionText?.split(';').map((word) {
+                    List<String> questionParts = word.split(":");
+
                     return WordDefinition(
                       word: word.split(":")[0].toString(),
                       type: WordTypeExtension.fromString(questionEnglish!),
                       definition: switch (
                           WordTypeExtension.fromString(questionEnglish)) {
                         WordType.sentence => null,
-                        WordType.verb => word.split(":")[1].toString(),
-                        WordType.word => word.split(":")[1].toString(),
+                        WordType.verb =>
+                          questionParts.length > 1 ? word[1] : null,
+                        WordType.word =>
+                          questionParts.length > 1 ? word[1] : null,
                       },
+                      questionTextInEnglish: questionEnglish,
+                      questionTextInArabic: questionArabic,
+                      questionType:
+                          QuestionTypeExtension.fromString(questionType),
+                      imageUrl: '',
+                      voiceUrl: '',
                     );
                   }).toList() ??
                   [];
@@ -215,21 +229,60 @@ class UploadDataViewmodel extends ChangeNotifier {
               }
               break;
             case QuestionType.fillTheBlanks:
-            // TODO: fix error caused by questionText.asMap()
-            // questions =
-            //     questionText.asMap().entries.map((question) {
-            //   int index = question.key;
-            //   String questionText = question.value;
-            //   return FillTheBlanksQuestionModel(
-            //     answer:
-            //         StringAnswer(answer: questionAnswerOrOptionsInMCQ[index]),
-            //     questionTextInEnglish: questionText,
-            //     questionTextInArabic: '',
-            //     imageUrl: '',
-            //     voiceUrl: '',
-            //   );
-            // }).toList();
-
+              questions =
+                  questionText?.split(';').asMap().entries.map((question) {
+                        int index = question.key;
+                        String questionText = question.value;
+                        List<String> questionParts = questionText.split(":");
+                        return FillTheBlanksQuestionModel(
+                          questionInEnglish: questionParts.isNotEmpty
+                              ? questionParts[0]
+                              : null,
+                          questionInArabic: questionParts.length > 1
+                              ? questionParts[1]
+                              : null,
+                          answer: StringAnswer(
+                              answer: questionAnswerOrOptionsInMCQ[index]),
+                          questionTextInEnglish: questionEnglish,
+                          questionTextInArabic: questionArabic,
+                          imageUrl: '',
+                          voiceUrl: '',
+                        );
+                      }).toList() ??
+                      [];
+              if (currentPassage != null) {
+                currentPassage.questions.addAll(questions);
+                questions = [];
+              }
+              break;
+            case QuestionType.listening:
+              questions = [
+                ListeningQuestionModel(
+                  words: questionText!.split(";"),
+                  questionTextInEnglish: questionEnglish,
+                  questionTextInArabic: questionArabic,
+                  imageUrl: '',
+                  voiceUrl: '',
+                )
+              ];
+              if (currentPassage != null) {
+                currentPassage.questions.addAll(questions);
+                questions = [];
+              }
+              break;
+            case QuestionType.passage:
+              currentPassage = PassageQuestionModel(
+                questions: [],
+                passageInEnglish: passageInEnglish,
+                passageInArabic: passageInArabic,
+                titleInEnglish: titleInEnglish,
+                titleInArabic: titleInArabic,
+                questionTextInEnglish: questionEnglish,
+                questionTextInArabic: questionArabic,
+                imageUrl: '',
+                voiceUrl: '',
+              );
+              break;
             default:
               questions = [];
           }
