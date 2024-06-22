@@ -26,7 +26,7 @@ class MultipleChoiceQuestionModel<T> extends BaseQuestion<RadioItemData> {
     return {
       ...baseMap,
       'options': options.map((option) => option.toMap()).toList(),
-      'answer': answer?.toMap(),
+      // 'answer': answer?.toMap(),
     };
   }
 
@@ -35,8 +35,8 @@ class MultipleChoiceQuestionModel<T> extends BaseQuestion<RadioItemData> {
       options: (map['options'] as List<dynamic>)
           .map((option) => RadioItemData.fromMap(option))
           .toList(),
-      answer:
-          MultipleChoiceAnswer(answer: RadioItemData.fromMap(map['answer'])),
+      answer: MultipleChoiceAnswer(
+          answer: RadioItemData.fromMap(map['answer']['answer'])),
       questionTextInEnglish: map['questionTextInEnglish'],
       questionTextInArabic: map['questionTextInArabic'],
       imageUrl: map['imageUrl'],

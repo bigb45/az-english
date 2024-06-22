@@ -8,8 +8,10 @@ class MultipleChoiceAnswer extends BaseAnswer<RadioItemData> {
 
   @override
   Map<String, dynamic> toMap() {
-    // TODO: implement toMap
-    throw UnimplementedError();
+    return {
+      'answerType': answerType.toString(),
+      'answer': answer!.toMap(), // Call the toMap method of RadioItemData
+    };
   }
 
   @override
