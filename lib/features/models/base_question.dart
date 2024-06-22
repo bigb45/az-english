@@ -1,4 +1,5 @@
 import 'package:ez_english/features/models/base_answer.dart';
+import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
 
 import '../sections/models/dictation_question_model.dart';
 
@@ -25,7 +26,7 @@ abstract class BaseQuestion<T> {
       'imageUrl': imageUrl,
       'voiceUrl': voiceUrl,
       'description': voiceUrl,
-      'answer': answer, //TODO Is there a need for any type conversion here ?
+      'answer': answer?.toMap(),
       "questionType": questionType.toShortString(),
     };
   }
@@ -37,8 +38,8 @@ abstract class BaseQuestion<T> {
     switch (questionType) {
       case QuestionType.dictation:
         return DictationQuestionModel.fromMap(json);
-      // case QuestionType.multipleChoice:
-      //   return MultipleChoiceQuestionModel.fromMap(json);
+      case QuestionType.multipleChoice:
+        return MultipleChoiceQuestionModel.fromMap(json);
       // Add cases for other question types
       default:
         throw Exception('Unknown question type: $questionType');
