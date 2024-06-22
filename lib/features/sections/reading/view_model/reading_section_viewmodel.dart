@@ -8,6 +8,7 @@ import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -36,13 +37,13 @@ class ReadingSectionViewmodel extends BaseViewModel {
 
   Future<void> fetchQuestions() async {
     isLoading = true;
-    int lastQuestionIndex = _userData!.levelsProgress![levelName]!
-        .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
+    // int lastQuestionIndex = _userData!.levelsProgress![levelName]!
+    //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
       _questions = await _firestoreService.fetchQuestions(
         RouteConstants.readingSectionName,
         _levelName!,
-        lastQuestionIndex,
+        0,
       );
       error = null;
     } on CustomException catch (e) {
@@ -64,7 +65,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
     isLoading = true;
 
     // TODO: change this to be dynamic from the API
-    newQuestionIndex = (3 - questions.length) + newQuestionIndex;
+    // newQuestionIndex = (3 - questions.length) + newQuestionIndex;
     notifyListeners();
     try {
       await _firestoreService.updateQuestionProgress(
@@ -101,20 +102,16 @@ class ReadingSectionViewmodel extends BaseViewModel {
   }
 
   void updateAnswer(BaseAnswer newAnswer) {
-    // userAnswer = newAnswer;
-    _questions[currentIndex].answer = newAnswer;
-    print("${newAnswer.answer.title}");
+    _questions[currentIndex].userAnswer = newAnswer;
     notifyListeners();
   }
 
   void evaluateAnswer() {
-    // answerState = switch (_questions[currentIndex].questionType) {
-    //   // TODO: fix this
-    //   QuestionType.multipleChoice =>
-    //     ((_questions[currentIndex]).imageUrl == null)
-    //         ? EvaluationState.correct
-    //         : EvaluationState.incorrect,
-    //   _ => EvaluationState.correct,
-    // };
+    if (_questions[currentIndex].evaluateAnswer()) {
+      answerState = EvaluationState.correct;
+    } else {
+      answerState = EvaluationState.incorrect;
+    }
+    notifyListeners();
   }
 }

@@ -15,8 +15,9 @@ class MultipleChoiceAnswer extends BaseAnswer<RadioItemData> {
   }
 
   @override
-  bool validate(RadioItemData userAnswer) {
-    // TODO: implement validate
-    throw UnimplementedError();
+  bool validate(BaseAnswer? userAnswer) {
+    print(
+        "evaluating multiple choice answer: ${userAnswer?.answer.value}, ${answer?.value}");
+    return userAnswer?.answer.value == answer?.value && userAnswer != null;
   }
 }
