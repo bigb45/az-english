@@ -8,21 +8,22 @@ class WordDefinition extends BaseQuestion {
   final String? definition;
   final List<String>? exampleUsage;
   final String? tenses;
-  WordDefinition({
-    required this.word,
-    required this.type,
-    this.definition,
-    this.exampleUsage,
-    this.tenses,
-  }) : super(
-            questionTextInEnglish: "",
-            questionTextInArabic: "",
-            imageUrl: "",
-            voiceUrl: "",
-            questionType: QuestionType.vocabulary);
+  WordDefinition(
+      {required this.word,
+      required this.type,
+      this.definition,
+      this.exampleUsage,
+      this.tenses,
+      required super.questionTextInEnglish,
+      required super.questionTextInArabic,
+      required super.questionType,
+      required super.imageUrl,
+      required super.voiceUrl});
   @override
   Map<String, dynamic> toMap() {
+    Map<String, dynamic> baseMap = super.toMap();
     return {
+      ...baseMap,
       'word': word,
       'type': type.toShortString(),
       'definition': definition,
@@ -33,16 +34,20 @@ class WordDefinition extends BaseQuestion {
   @override
   factory WordDefinition.fromMap(Map<String, dynamic> map) {
     return WordDefinition(
-      word: map['word'],
-      type: switch (map['questionType']) {
-        'verb' => WordType.verb,
-        'word' => WordType.word,
-        'sentence' => WordType.sentence,
-        null => WordType.sentence,
-        Object() => throw UnimplementedError(),
-      },
-      definition: '',
-    );
+        word: map['word'],
+        type: switch (map['questionType']) {
+          'verb' => WordType.verb,
+          'word' => WordType.word,
+          'sentence' => WordType.sentence,
+          null => WordType.sentence,
+          Object() => throw UnimplementedError(),
+        },
+        definition: map['definition'],
+        questionTextInEnglish: map['questionTextInEnglish'],
+        questionTextInArabic: map['questionTextInArabic'],
+        imageUrl: map['imageUrl'],
+        voiceUrl: map['voiceUrl'],
+        questionType: QuestionTypeExtension.fromString(map['questionType']));
   }
 
   factory WordDefinition.fromJson(String data) {
@@ -65,7 +70,7 @@ extension WordTypeExtension on WordType {
   static WordType fromString(String str) {
     return WordType.values.firstWhere(
       (e) => e.toString().split('.').last == str,
-      orElse: () => WordType.sentence, // Default to dictation if not found
+      orElse: () => WordType.word, // Default to dictation if not found
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/word_list_tile.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/vocabulary/viewmodel/vocabulary_section_viewmodel.dart';
@@ -72,6 +73,11 @@ class WordsListView extends StatelessWidget {
                               // "Outsiders are not allowed to view the computers",
                             ],
                             tenses: "View, Viewed, Viewed",
+                            questionTextInEnglish: '',
+                            questionTextInArabic: '',
+                            questionType: QuestionType.vocabulary,
+                            imageUrl: '',
+                            voiceUrl: '',
                           ),
                         ),
                       ),
