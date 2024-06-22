@@ -117,7 +117,8 @@ final loggedInRouter = GoRouter(
               children: [
                 // MultipleChoiceQuestion(),
                 GenericMultipleChoiceQuestion(
-                  onChanged: (value) => {print("new value: ${value.value}")},
+                  onChanged: (value) =>
+                      {print("new value: ${value.answer?.title}")},
                   question: MultipleChoiceQuestionModel(
                       paragraph: "This is a paragraph",
                       options: [
