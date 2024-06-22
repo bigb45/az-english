@@ -164,7 +164,7 @@ class FirestoreService {
         for (Unit unit in section.units) {
           CollectionReference unitsCollection = sectionsCollection
               .doc(section.name)
-              .collection(FirestoreConstants.levelsCollection);
+              .collection(FirestoreConstants.unitsCollection);
           Map<String, dynamic> unitData = unit.toMap();
           await unitsCollection.doc(unit.name).set(unitData);
         }
