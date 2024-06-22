@@ -229,31 +229,32 @@ class UploadDataViewmodel extends ChangeNotifier {
               }
               break;
             case QuestionType.fillTheBlanks:
-              questions =
-                  questionText?.split(';').asMap().entries.map((question) {
-                        int index = question.key;
-                        String questionText = question.value;
-                        List<String> questionParts = questionText.split(":");
-                        return FillTheBlanksQuestionModel(
-                          questionInEnglish: questionParts.isNotEmpty
-                              ? questionParts[0]
-                              : null,
-                          questionInArabic: questionParts.length > 1
-                              ? questionParts[1]
-                              : null,
-                          answer: StringAnswer(
-                              answer: questionAnswerOrOptionsInMCQ[index]),
-                          questionTextInEnglish: questionEnglish,
-                          questionTextInArabic: questionArabic,
-                          imageUrl: '',
-                          voiceUrl: '',
-                        );
-                      }).toList() ??
-                      [];
-              if (currentPassage != null) {
-                currentPassage.questions.addAll(questions);
-                questions = [];
-              }
+              //TODO: Uncomment this after implementing fill in the blanks question
+              // questions =
+              //     questionText?.split(';').asMap().entries.map((question) {
+              //           int index = question.key;
+              //           String questionText = question.value;
+              //           List<String> questionParts = questionText.split(":");
+              //           return FillTheBlanksQuestionModel(
+              //             questionInEnglish: questionParts.isNotEmpty
+              //                 ? questionParts[0]
+              //                 : null,
+              //             questionInArabic: questionParts.length > 1
+              //                 ? questionParts[1]
+              //                 : null,
+              //             answer: StringAnswer(
+              //                 answer: questionAnswerOrOptionsInMCQ[index]),
+              //             questionTextInEnglish: questionEnglish,
+              //             questionTextInArabic: questionArabic,
+              //             imageUrl: '',
+              //             voiceUrl: '',
+              //           );
+              //         }).toList() ??
+              //         [];
+              // if (currentPassage != null) {
+              //   currentPassage.questions.addAll(questions);
+              //   questions = [];
+              // }
               break;
             case QuestionType.listening:
               questions = [

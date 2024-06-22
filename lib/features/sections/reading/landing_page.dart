@@ -31,7 +31,9 @@ class _ReadingSectionState extends State<ReadingSection> {
     // readingSectionVm.sectionId = widget.sectionId;
 
     // TODO: refactor myInit to use the viewmodel's built in init function
-    readingSectionVm.setValuesAndInit();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      readingSectionVm.setValuesAndInit();
+    });
 
     super.initState();
   }
