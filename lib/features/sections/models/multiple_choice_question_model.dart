@@ -26,7 +26,6 @@ class MultipleChoiceQuestionModel<T> extends BaseQuestion<RadioItemData> {
     return {
       ...baseMap,
       'options': options.map((option) => option.toMap()).toList(),
-      // 'answer': answer?.toMap(),
     };
   }
 
