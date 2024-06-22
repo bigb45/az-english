@@ -35,7 +35,7 @@ class MultipleChoiceQuestionModel<T> extends BaseQuestion<RadioItemData> {
 
   factory MultipleChoiceQuestionModel.fromMap(Map<String, dynamic> map) {
     return MultipleChoiceQuestionModel(
-      options: (map['options'])
+      options: (map['options'] as List<dynamic>)
           .map((option) => RadioItemData.fromMap(option))
           .toList(),
       answer:
