@@ -32,5 +32,10 @@
   "practiceFrequencyPlanTwoDescription": "1 hour every 3 days",
   "vocabularySectionOnboardingAppbarTitle": "Vocabulary section",
   "vocabularySectionOnboardingTitle": "Vocabulary Practice",
-  "vocabularySectionOnboardingDescription": "In this section you will learn new words and their definitions"
+  "vocabularySectionOnboardingDescription": "In this section you will learn new words and their definitions",
+  "accountSettingsScreenTitle": "Account Settings",
+  "resultsScreeenTitle": "Exam Results",
+  "resultScreenText": "Your exam results will be displayed here.",
+  "username": "User Name",
+  "phoneNumber": "Phone Number"
 }

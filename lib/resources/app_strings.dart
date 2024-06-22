@@ -47,4 +47,13 @@ abstract class AppStrings {
       "vocabularySectionOnboardingTitle".tr();
   static final String vocabularySectionOnboardingDescription =
       "vocabularySectionOnboardingDescription".tr();
+
+  static final String accountSettingsScreenTitle =
+      "accountSettingsScreenTitle".tr();
+
+  static final String resultsScreeenTitle = "resultsScreeenTitle".tr();
+  static final String resultScreenText = "resultScreenText".tr();
+
+  static final String username = "username".tr();
+  static final String phoneNumber = "phoneNumber".tr();
 }
