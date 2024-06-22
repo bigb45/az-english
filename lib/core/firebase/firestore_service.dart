@@ -11,7 +11,8 @@ import 'package:ez_english/features/models/user.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-
+  int allQuestionsLength = 0;
+  int filteredQuestionsLength = 0;
   Future<List<Level>> fetchLevels() async {
     try {
       QuerySnapshot snapshot =
@@ -57,11 +58,13 @@ class FirestoreService {
           if (sectionName == RouteConstants.readingSectionName) {
             questionsData = data[FirestoreConstants.questionsField][0]
                 [FirestoreConstants.questionsField];
+            allQuestionsLength = questionsData.length;
             // print(questionsData);
           }
 
           if (startIndex < questionsData.length) {
             filteredQuestionsData = questionsData.sublist(startIndex);
+            filteredQuestionsLength = filteredQuestionsData.length;
           }
 
           for (var mapData in filteredQuestionsData) {
@@ -87,7 +90,7 @@ class FirestoreService {
           .collection(FirestoreConstants.usersCollections)
           .doc(userId);
 
-      FieldPath lastStoppedQuestionIndex = FieldPath([
+      FieldPath lastStoppedQuestionIndexPath = FieldPath([
         'levelsProgress',
         levelName,
         'sectionProgress',
@@ -101,11 +104,13 @@ class FirestoreService {
         "reading",
         "progress"
       ]);
-
+      int lastStoppedQuestionIndex =
+          (allQuestionsLength - filteredQuestionsLength) + newQuestionIndex;
       await userDocRef.update({
-        lastStoppedQuestionIndex: newQuestionIndex,
+        lastStoppedQuestionIndexPath: lastStoppedQuestionIndex,
         sectionProgressIndex:
-            ((newQuestionIndex + 1) / 10 * 100).toStringAsFixed(2)
+            (((lastStoppedQuestionIndex + 1) / allQuestionsLength) * 100)
+                .toString()
       });
     } catch (e) {
       print("Error updating progress: $e");

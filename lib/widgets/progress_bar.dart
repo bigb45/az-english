@@ -7,10 +7,7 @@ class ProgressBar extends StatelessWidget {
   final double maxValue;
   final double value;
   const ProgressBar(
-      {super.key, required this.value, this.minValue = 0, this.maxValue = 100})
-      : assert(minValue < maxValue, "minValue must be less than maxValue"),
-        assert(value >= minValue && value <= maxValue,
-            "value must be between minValue and maxValue");
+      {super.key, required this.value, this.minValue = 0, this.maxValue = 100});
 
   @override
   Widget build(BuildContext context) {

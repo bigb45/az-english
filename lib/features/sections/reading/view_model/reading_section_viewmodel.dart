@@ -29,6 +29,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
   FutureOr<void> init() {}
 
   void setValuesAndInit() async {
+    currentIndex = 0;
     _levelName = RouteConstants.getLevelName(levelId!);
     await getUserData(_firebaseAuthService.getUser()!.uid);
     fetchQuestions();
@@ -62,9 +63,6 @@ class ReadingSectionViewmodel extends BaseViewModel {
   Future<void> updateSectionProgress(int newQuestionIndex) async {
     User? currentUser = _firebaseAuthService.getUser();
     isLoading = true;
-
-    // TODO: change this to be dynamic from the API
-    newQuestionIndex = (3 - questions.length) + newQuestionIndex;
     notifyListeners();
     try {
       await _firestoreService.updateQuestionProgress(
