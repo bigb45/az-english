@@ -1,6 +1,5 @@
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/features/models/user.dart';
-import 'package:ez_english/router.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

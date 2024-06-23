@@ -1,6 +1,7 @@
 import 'package:ez_english/core/Constants.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/models/sentence_forming_question_model.dart';
+import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/word_chip.dart';
@@ -10,7 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SentenceFormingQuestion extends StatefulWidget {
   final SentenceFormingQuestionModel question;
   final EvaluationState answerState;
-  final Function(String) onChanged;
+  final Function(StringAnswer) onChanged;
 
   const SentenceFormingQuestion({
     super.key,
@@ -103,11 +104,11 @@ class _SentenceFormingQuestionState extends State<SentenceFormingQuestion> {
                                             setState(() {
                                               orderedWords.remove(word);
                                               word.isSelected = false;
-                                              widget.onChanged(
-                                                orderedWords
+                                              widget.onChanged(StringAnswer(
+                                                answer: orderedWords
                                                     .map((e) => e.text)
                                                     .join(" "),
-                                              );
+                                              ));
                                             });
                                           },
                                     text: word.text,
@@ -132,7 +133,9 @@ class _SentenceFormingQuestionState extends State<SentenceFormingQuestion> {
               orderedWords.add(value);
               value.isSelected = true;
               widget.onChanged(
-                orderedWords.map((e) => e.text).join(" "),
+                StringAnswer(
+                  answer: orderedWords.map((e) => e.text).join(" "),
+                ),
               );
             });
             // print(
