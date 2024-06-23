@@ -122,7 +122,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                     return DictationQuestionModel(
                       questionTextInEnglish: questionEnglish ?? "",
                       questionTextInArabic: questionArabic ?? "",
-                      // imageUrl: '',
+                      imageUrl: '',
                       voiceUrl: '',
                       speakableText: word,
                       answer: StringAnswer(answer: word),
