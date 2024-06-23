@@ -11,6 +11,7 @@ import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
+import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,6 +73,8 @@ class UploadDataViewmodel extends ChangeNotifier {
               convertToNull(csvParts[13]!.value.toString().trim());
           String? passageInArabic =
               convertToNull(csvParts[14]!.value.toString().trim());
+          String? youtubeUrl =
+              convertToNull(csvParts[15]!.value.toString().trim());
 
           // Check if the level already exists in the levels map
           var existingLevel = levels.firstWhere(
@@ -196,9 +199,22 @@ class UploadDataViewmodel extends ChangeNotifier {
               // TODO: Handle this case.
               throw Exception(UnimplementedError());
             case QuestionType.youtubeLesson:
-              // TODO: Handle this case.
-              throw Exception(UnimplementedError());
+              questions = [
+                YoutubeLessonModel(
+                  youtubeUrl: youtubeUrl,
+                  questionTextInEnglish: questionEnglish ?? "",
+                  questionTextInArabic: questionArabic ?? "",
+                  imageUrl: '',
+                  voiceUrl: '',
+                  questionType: QuestionTypeExtension.fromString(questionType),
+                )
+              ];
+              if (currentPassage != null) {
+                currentPassage.questions.addAll(questions);
+                questions = [];
+              }
 
+              break;
             case QuestionType
                   .vocabularyWithListening: // TODO: Should we add the listening ability to all vocabularies
             case QuestionType.vocabulary:
