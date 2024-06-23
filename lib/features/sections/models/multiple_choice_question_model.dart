@@ -18,7 +18,7 @@ class MultipleChoiceQuestionModel<T> extends BaseQuestion<RadioItemData> {
       required super.questionTextInArabic,
       required super.questionTextInEnglish,
       required super.imageUrl,
-      super.voiceUrl = "",
+      super.voiceUrl,
       super.questionType = QuestionType.multipleChoice});
 
   @override

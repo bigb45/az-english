@@ -11,7 +11,7 @@ class ProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 23.h,
       child: Stack(
         alignment: Alignment.centerLeft,

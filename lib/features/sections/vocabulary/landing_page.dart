@@ -16,7 +16,7 @@ class VocabularySection extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: ListTile(
-          contentPadding: EdgeInsets.only(left: 0, right: 0),
+          contentPadding: const EdgeInsets.only(left: 0, right: 0),
           title: Text(
             AppStrings.vocabularySectionOnboardingAppbarTitle,
             style: TextStyle(
