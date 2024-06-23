@@ -1,4 +1,5 @@
 import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
@@ -10,11 +11,9 @@ class GrammarSectionViewmodel extends BaseViewModel {
 
   List<BaseQuestion> _questions = [];
   bool _isLoading = false;
-  dynamic _userAnswer;
 
   List<BaseQuestion> get questions => _questions;
   bool get isLoding => _isLoading;
-  String get userAnswer => _userAnswer;
 
   @override
   void init() {}
@@ -23,7 +22,6 @@ class GrammarSectionViewmodel extends BaseViewModel {
   void dispose() {
     answerState = EvaluationState.empty;
     currentIndex = 0;
-    _userAnswer = "";
     super.dispose();
   }
 
@@ -61,30 +59,21 @@ class GrammarSectionViewmodel extends BaseViewModel {
   }
 
   void evaluateAnswer() {
-    answerState = switch (questions[currentIndex].questionType) {
-      QuestionType.sentenceForming =>
-        (questions[currentIndex] as SentenceFormingQuestionModel)
-                    .correctAnswer
-                    .toLowerCase() ==
-                userAnswer.toLowerCase()
-            ? EvaluationState.correct
-            : EvaluationState.incorrect,
-      QuestionType.youtubeLesson => EvaluationState.correct,
-      _ => throw UnimplementedError(),
-    };
-    print(
-        "updating state: $currentIndex $answerState, ${(questions[currentIndex] as SentenceFormingQuestionModel).correctAnswer}, $userAnswer");
+    if (questions[currentIndex].evaluateAnswer()) {
+      answerState = EvaluationState.correct;
+    } else {
+      answerState = EvaluationState.incorrect;
+    }
   }
 
-  void updateAnswer<T>(T newAnswer) {
-    _userAnswer = newAnswer;
+  void updateAnswer(BaseAnswer newAnswer) {
+    _questions[currentIndex].userAnswer = newAnswer;
     notifyListeners();
   }
 
   void incrementIndex() {
     if (questions.length - 1 > currentIndex) {
       currentIndex++;
-      _userAnswer = "";
     }
     answerState = EvaluationState.empty;
   }
