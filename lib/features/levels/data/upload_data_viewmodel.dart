@@ -152,8 +152,10 @@ class UploadDataViewmodel extends ChangeNotifier {
                   }).toList(), // Assign index as the value
                   answer: MultipleChoiceAnswer(
                     answer: RadioItemData(
-                      title: questionAnswerOrOptionsInMCQ[0] ?? "",
-                      value: mcqAnswer ?? "",
+                      title: questionAnswerOrOptionsInMCQ[
+                              int.tryParse(mcqAnswer!)!] ??
+                          "",
+                      value: mcqAnswer,
                     ),
                   ),
                 ),
