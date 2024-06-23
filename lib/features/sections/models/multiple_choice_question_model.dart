@@ -7,18 +7,19 @@ import 'package:ez_english/widgets/radio_button.dart';
 class MultipleChoiceQuestionModel<T> extends BaseQuestion<RadioItemData> {
   final List<RadioItemData> options;
   final String? paragraph;
+  final String? questionSentence;
+
   @override
-  MultipleChoiceQuestionModel({
-    required this.options,
-    this.paragraph,
-    required super.answer,
-    required super.questionTextInArabic,
-    required super.questionTextInEnglish,
-    required super.imageUrl,
-  }) : super(
-          voiceUrl: "",
-          questionType: QuestionType.multipleChoice,
-        );
+  MultipleChoiceQuestionModel(
+      {required this.options,
+      this.questionSentence,
+      this.paragraph,
+      required super.answer,
+      required super.questionTextInArabic,
+      required super.questionTextInEnglish,
+      required super.imageUrl,
+      super.voiceUrl = "",
+      super.questionType = QuestionType.multipleChoice});
 
   @override
   Map<String, dynamic> toMap() {
@@ -26,6 +27,7 @@ class MultipleChoiceQuestionModel<T> extends BaseQuestion<RadioItemData> {
     return {
       ...baseMap,
       'options': options.map((option) => option.toMap()).toList(),
+      'questionSentence': questionSentence
     };
   }
 
@@ -38,8 +40,9 @@ class MultipleChoiceQuestionModel<T> extends BaseQuestion<RadioItemData> {
           answer: RadioItemData.fromMap(map['answer']['answer'])),
       questionTextInEnglish: map['questionTextInEnglish'],
       questionTextInArabic: map['questionTextInArabic'],
+      voiceUrl: map['voiceUrl'],
       imageUrl: map['imageUrl'],
-      // voiceUrl: map['voiceUrl'],
+      questionSentence: map['questionSentence'],
     );
   }
   bool validateQuestion(

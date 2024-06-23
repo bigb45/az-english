@@ -140,7 +140,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 MultipleChoiceQuestionModel(
                   questionTextInEnglish: questionEnglish ?? "",
                   questionTextInArabic: questionArabic ?? "",
-                  paragraph: questionText,
+                  questionSentence: questionText,
                   imageUrl: '',
                   // voiceUrl: '',
                   options:
