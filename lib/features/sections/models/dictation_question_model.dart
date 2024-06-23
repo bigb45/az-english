@@ -5,28 +5,25 @@ import 'package:ez_english/features/models/base_question.dart';
 class DictationQuestionModel extends BaseQuestion<String> {
   // final String answer;
   final String speakableText;
-  final String questionTextInArabic;
-  final String questionTextInEnglish;
 
   DictationQuestionModel({
-    required this.questionTextInArabic,
-    required this.questionTextInEnglish,
     // required this.answer,
     required super.answer,
     required super.voiceUrl,
     required this.speakableText,
-  }) : super(
-          questionType: QuestionType.dictation,
-          imageUrl: "",
-          questionTextInArabic: questionTextInArabic,
-          questionTextInEnglish: questionTextInEnglish,
-        );
+    super.questionTextInArabic,
+    super.questionTextInEnglish,
+    super.imageUrl,
+    super.questionType = QuestionType.dictation,
+  });
 
   @override
   Map<String, dynamic> toMap() {
     Map<String, dynamic> baseMap = super.toMap();
-    baseMap['answer'] = answer;
-    return baseMap;
+    return {
+      ...baseMap,
+      "speakableText": speakableText,
+    };
   }
 
   factory DictationQuestionModel.fromMap(Map<String, dynamic> json) {

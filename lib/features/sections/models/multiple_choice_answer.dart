@@ -8,8 +8,9 @@ class MultipleChoiceAnswer extends BaseAnswer<RadioItemData> {
 
   @override
   Map<String, dynamic> toMap() {
+    Map<String, dynamic> baseMap = super.toMap();
     return {
-      'answerType': answerType.toString(),
+      ...baseMap,
       'answer': answer!.toMap(), // Call the toMap method of RadioItemData
     };
   }

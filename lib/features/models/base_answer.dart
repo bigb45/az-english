@@ -3,7 +3,13 @@ abstract class BaseAnswer<T> {
   T? answer;
   T? userAnswer;
   bool? validate(BaseAnswer? userAnswer);
-  Map<String, dynamic> toMap();
+  Map<String, dynamic> toMap() {
+    return {
+      'answerType': answerType.toString(),
+      'answer': answer,
+    };
+  }
+
   BaseAnswer({required this.answerType, this.answer});
 }
 
