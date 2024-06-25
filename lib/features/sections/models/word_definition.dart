@@ -8,9 +8,11 @@ class WordDefinition extends BaseQuestion {
   final String? definition;
   final List<String>? exampleUsage;
   final String? tenses;
+  final bool isNew;
   WordDefinition(
       {required this.word,
       required this.type,
+      this.isNew = false,
       this.definition,
       this.exampleUsage,
       this.tenses,
@@ -27,6 +29,7 @@ class WordDefinition extends BaseQuestion {
       'word': word,
       'type': type.toShortString(),
       'definition': definition,
+      'exampleUsage': exampleUsage,
       // TODO implement exampleUsage and tenses attributes if needed
     };
   }
@@ -35,7 +38,7 @@ class WordDefinition extends BaseQuestion {
   factory WordDefinition.fromMap(Map<String, dynamic> map) {
     return WordDefinition(
         word: map['word'],
-        type: switch (map['questionType']) {
+        type: switch (map['type']) {
           'verb' => WordType.verb,
           'word' => WordType.word,
           'sentence' => WordType.sentence,
@@ -47,6 +50,9 @@ class WordDefinition extends BaseQuestion {
         questionTextInArabic: map['questionTextInArabic'],
         imageUrl: map['imageUrl'],
         voiceUrl: map['voiceUrl'],
+        exampleUsage: map['exampleUsage'] != null
+            ? List<String>.from(map['exampleUsage'])
+            : null,
         questionType: QuestionTypeExtension.fromString(map['questionType']));
   }
 
