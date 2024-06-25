@@ -6,16 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WordListTile extends StatelessWidget {
-  final String word;
-  final WordType type;
-  final bool isNew;
   final Function onTap;
-  const WordListTile(
-      {super.key,
-      required this.word,
-      required this.type,
-      required this.isNew,
-      required this.onTap});
+  final WordDefinition word;
+  const WordListTile({super.key, required this.word, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -31,22 +24,22 @@ class WordListTile extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: Constants.padding20,
-              vertical: isNew ? Constants.padding12 : Constants.padding20),
+              vertical: word.isNew ? Constants.padding12 : Constants.padding20),
           child: Row(
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  isNew
+                  word.isNew
                       ? Text("New", style: TextStyles.indicator)
                       : const SizedBox(),
-                  isNew ? SizedBox(height: 10.h) : const SizedBox(),
+                  word.isNew ? SizedBox(height: 10.h) : const SizedBox(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text(
-                        word,
+                        word.word,
                         style: TextStyles.practiceCardSecondaryText,
                       ),
                       SizedBox(
@@ -61,12 +54,7 @@ class WordListTile extends StatelessWidget {
                         width: 10.w,
                       ),
                       // TODO: change this to a switch case
-                      Text(
-                          switch (type) {
-                            WordType.word => "Noun",
-                            WordType.verb => "Verb",
-                            WordType.sentence => "Sentence",
-                          },
+                      Text(word.type.toShortString(),
                           style: TextStyles.wordType),
                     ],
                   ),

@@ -86,7 +86,9 @@ final loggedInRouter = GoRouter(
           "1" => WritingSection(
               levelId: levelId,
             ),
-          "2" => VocabularySection(),
+          "2" => VocabularySection(
+              levelId: levelId,
+            ),
           "3" => GrammarSection(),
           String() => const Placeholder(),
         };

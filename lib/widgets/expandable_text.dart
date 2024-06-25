@@ -5,17 +5,17 @@ import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class ExpandableTextBox extends StatefulWidget {
-  final bool isReadMore;
+  final bool? isReadMore;
   final String readMoreText;
   bool? isFocused;
-  final String questionText;
+  final String paragraph;
 
   ExpandableTextBox({
     super.key,
-    required this.isReadMore,
+    this.isReadMore,
     required this.readMoreText,
     this.isFocused,
-    required this.questionText,
+    required this.paragraph,
   });
 
   @override
@@ -26,6 +26,8 @@ class _ExpandableTextBoxState extends State<ExpandableTextBox> {
   late bool isReadMore;
   late String readMoreText;
   late bool isFocused;
+  late String formattedParagraph;
+
   @override
   void initState() {
     isFocused = false;
@@ -55,8 +57,8 @@ class _ExpandableTextBoxState extends State<ExpandableTextBox> {
           child: Column(
             children: [
               Text(
-                widget.questionText,
-                maxLines: isReadMore ? 10 : 2,
+                widget.paragraph,
+                maxLines: isReadMore ? 100 : 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyles.readingPracticeTextStyle,
               ),

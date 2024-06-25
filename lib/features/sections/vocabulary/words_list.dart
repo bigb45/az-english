@@ -1,6 +1,7 @@
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/word_list_tile.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
+import 'package:ez_english/features/sections/util/build_question.dart';
 import 'package:ez_english/features/sections/vocabulary/viewmodel/vocabulary_section_viewmodel.dart';
 import 'package:ez_english/features/sections/vocabulary/word_view.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -46,44 +47,32 @@ class WordsListView extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            for (var word in viewmodel.words)
+            for (var word in viewmodel.questions)
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5),
-                child: WordListTile(
-                  word: word.word,
-                  type: word.type,
-                  isNew: word.isNew,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => WordView(
-                          pageTitle: pageTitle,
-                          pageSubtitle: pageSubtitle,
-                          // TODO: pass actual word definition & examples from data model
-                          wordData: WordDefinition(
-                            word: "View",
-                            type: WordType.verb,
-                            definition: "to look at or inspect.",
-                            exampleUsage: [
-                              "the public can view the famous hall with its unique staircase",
-                              // "Viewing the exhibit was a great experience",
-                              // "I have viewed the document and it looks good",
-                              // "Outsiders are not allowed to view the computers",
-                            ],
-                            tenses: "View, Viewed, Viewed",
-                            questionTextInEnglish: '',
-                            questionTextInArabic: '',
-                            questionType: QuestionType.vocabulary,
-                            imageUrl: '',
-                            voiceUrl: '',
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                child: Builder(builder: (context) {
+                  switch (word?.questionType) {
+                    case QuestionType.vocabulary:
+                      return WordListTile(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WordView(
+                                  pageTitle: pageTitle,
+                                  pageSubtitle: pageSubtitle,
+                                  wordData: word),
+                            ),
+                          );
+                        },
+                        word: word as WordDefinition,
+                      );
+                    default:
+                      return Text(
+                          "Unsupported Question Type ${word?.questionType}");
+                  }
+                }),
               ),
           ],
         ),

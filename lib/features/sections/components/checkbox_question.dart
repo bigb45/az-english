@@ -38,7 +38,7 @@ class _CheckboxQuestionState extends State<CheckboxQuestion> {
         Constants.gapH24,
         _isReadMore
             ? ExpandableTextBox(
-                questionText: widget.question.paragraph!,
+                paragraph: widget.question.paragraph!,
                 isFocused: _isFocused,
                 isReadMore: _isReadMore,
                 readMoreText: readMoreText)

@@ -223,13 +223,13 @@ class UploadDataViewmodel extends ChangeNotifier {
                     return WordDefinition(
                       word: word.split(":")[0].toString(),
                       type: WordTypeExtension.fromString(questionEnglish!),
-                      definition: switch (
+                      exampleUsage: switch (
                           WordTypeExtension.fromString(questionEnglish)) {
                         WordType.sentence => null,
                         WordType.verb =>
-                          questionParts.length > 1 ? word[1] : null,
+                          questionParts.length > 1 ? [questionParts[1]] : null,
                         WordType.word =>
-                          questionParts.length > 1 ? word[1] : null,
+                          questionParts.length > 1 ? [questionParts[1]] : null,
                       },
                       questionTextInEnglish: questionEnglish,
                       questionTextInArabic: questionArabic,
