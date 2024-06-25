@@ -52,15 +52,7 @@ class FirestoreService {
 
         if (data.containsKey(FirestoreConstants.questionsField)) {
           List<dynamic> questionsData = data[FirestoreConstants.questionsField];
-
-          // print(data['questions']);
-          // Ensure the startIndex is within bounds
-          if (sectionName == RouteConstants.readingSectionName) {
-            questionsData = data[FirestoreConstants.questionsField][0]
-                [FirestoreConstants.questionsField];
-            allQuestionsLength = questionsData.length;
-            // print(questionsData);
-          }
+          allQuestionsLength = questionsData.length;
 
           if (startIndex < questionsData.length) {
             filteredQuestionsData = questionsData.sublist(startIndex);

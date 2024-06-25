@@ -43,7 +43,7 @@ class _GenericMultipleChoiceQuestionState
             Constants.gapH24,
             _isReadMore
                 ? ExpandableTextBox(
-                    questionText: widget.question.paragraph!,
+                    paragraph: widget.question.paragraph!,
                     isFocused: _isFocused,
                     isReadMore: _isReadMore,
                     readMoreText: AppStrings.mcQuestionReadMoreText)

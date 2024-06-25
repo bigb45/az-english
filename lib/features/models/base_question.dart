@@ -1,5 +1,6 @@
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
+import 'package:ez_english/features/sections/models/passage_question_model.dart';
 
 import '../sections/models/dictation_question_model.dart';
 
@@ -42,6 +43,9 @@ abstract class BaseQuestion<T> {
         QuestionTypeExtension.fromString(json['questionType']);
 
     switch (questionType) {
+      case QuestionType.passage:
+        return PassageQuestionModel.fromMap(json);
+
       case QuestionType.dictation:
         return DictationQuestionModel.fromMap(json);
       case QuestionType.multipleChoice:

@@ -2,10 +2,12 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
+import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/features/sections/reading/view_model/reading_section_viewmodel.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/expandable_text.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,13 +25,15 @@ class ReadingPractice extends StatefulWidget {
 
 class _ReadingPracticeState extends State<ReadingPractice> {
   late ReadingSectionViewmodel readingSectionViewmodel;
-  late List<BaseQuestion> questions = [];
-
+  late List<BaseQuestion?> questions = [];
+  bool _isFocused = false;
+  PassageQuestionModel? passageQuestion;
   @override
   void initState() {
     readingSectionViewmodel =
         Provider.of<ReadingSectionViewmodel>(context, listen: false);
     questions = readingSectionViewmodel.questions;
+    passageQuestion = readingSectionViewmodel.passageQuestion;
 
     super.initState();
   }
@@ -95,7 +99,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                 ),
                 // TODO change subtitle to dymaic string from the API
                 subtitle: Text(
-                  "Daily Conversations",
+                  passageQuestion?.titleInEnglish ?? "Passage",
                   style: TextStyle(
                     fontSize: 17.sp,
                     color: Palette.primaryText,
@@ -119,14 +123,25 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                                 vertical: Constants.padding8),
                             child: const ProgressBar(value: 20),
                           ),
-                          buildQuestion(
-                            question: currentQuestion,
-                            onChanged: (value) {
-                              // handle the case for different question types
-                              readingSectionViewmodel.updateAnswer(value);
-                            },
-                            answerState: readingSectionViewmodel.answerState,
-                          )
+                          passageQuestion != null
+                              ? ExpandableTextBox(
+                                  paragraph: passageQuestion!.passageInEnglish!,
+                                  isFocused: _isFocused,
+                                  readMoreText:
+                                      AppStrings.mcQuestionReadMoreText)
+                              : const SizedBox(),
+                          questions.isNotEmpty
+                              ? buildQuestion(
+                                  question: currentQuestion!,
+                                  onChanged: (value) {
+                                    // handle the case for different question types
+                                    readingSectionViewmodel.updateAnswer(value);
+                                  },
+                                  answerState:
+                                      readingSectionViewmodel.answerState,
+                                )
+                              // TODO: Verify if the 'questions' array can ever be empty and handle this case appropriately.
+                              : const Text("No questions provided"),
                         ],
                       ),
                     ),

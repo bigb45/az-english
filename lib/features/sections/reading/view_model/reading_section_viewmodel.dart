@@ -9,6 +9,7 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
+import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -18,13 +19,14 @@ class ReadingSectionViewmodel extends BaseViewModel {
   String? _levelName;
   UserModel? _userData;
   String? get levelName => _levelName;
-
+  PassageQuestionModel? _passageQuestion;
   final FirestoreService _firestoreService = FirestoreService();
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
 
-  List<BaseQuestion> _questions = [];
+  List<BaseQuestion?> _questions = [];
 
-  List<BaseQuestion> get questions => _questions;
+  List<BaseQuestion?> get questions => _questions;
+  PassageQuestionModel? get passageQuestion => _passageQuestion;
 
   @override
   FutureOr<void> init() {}
@@ -41,11 +43,19 @@ class ReadingSectionViewmodel extends BaseViewModel {
     // int lastQuestionIndex = _userData!.levelsProgress![levelName]!
     //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
-      _questions = await _firestoreService.fetchQuestions(
+      var fetchedQuestions = await _firestoreService.fetchQuestions(
         RouteConstants.readingSectionName,
         _levelName!,
         0,
       );
+      if (fetchedQuestions.isNotEmpty &&
+          fetchedQuestions.first is PassageQuestionModel) {
+        _passageQuestion = fetchedQuestions.first as PassageQuestionModel;
+        _questions = _passageQuestion!.questions;
+      } else {
+        _questions = fetchedQuestions.cast<BaseQuestion>();
+      }
+
       error = null;
     } on CustomException catch (e) {
       // error = e as CustomException;
@@ -96,16 +106,18 @@ class ReadingSectionViewmodel extends BaseViewModel {
   void incrementIndex() {
     if (currentIndex < questions.length - 1) {
       currentIndex++;
+      notifyListeners();
     }
   }
 
   void updateAnswer(BaseAnswer newAnswer) {
-    _questions[currentIndex].userAnswer = newAnswer;
+    _questions[currentIndex]?.userAnswer = newAnswer;
     notifyListeners();
   }
 
   void evaluateAnswer() {
-    if (_questions[currentIndex].evaluateAnswer()) {
+    if (_questions[currentIndex] != null &&
+        _questions[currentIndex]!.evaluateAnswer()) {
       answerState = EvaluationState.correct;
     } else {
       answerState = EvaluationState.incorrect;
