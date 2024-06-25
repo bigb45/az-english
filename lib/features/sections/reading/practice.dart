@@ -24,13 +24,13 @@ class ReadingPractice extends StatefulWidget {
 class _ReadingPracticeState extends State<ReadingPractice> {
   late ReadingSectionViewmodel readingSectionViewmodel;
   late List<BaseQuestion> questions = [];
-
+  late BaseQuestion currentQuestion;
   @override
   void initState() {
     readingSectionViewmodel =
         Provider.of<ReadingSectionViewmodel>(context, listen: false);
     questions = readingSectionViewmodel.questions;
-
+    currentQuestion = questions[readingSectionViewmodel.currentIndex];
     super.initState();
   }
 
@@ -47,11 +47,9 @@ class _ReadingPracticeState extends State<ReadingPractice> {
       ));
     }
 
-    BaseQuestion? currentQuestion =
-        questions[readingSectionViewmodel.currentIndex];
-
     return Consumer<ReadingSectionViewmodel>(
       builder: (context, readingSectionViewmodel, child) {
+        currentQuestion = questions[readingSectionViewmodel.currentIndex];
         return PopScope(
           canPop: false,
           onPopInvoked: (canPop) {
@@ -134,9 +132,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                 ),
                 EvaluationSection(
                   state: readingSectionViewmodel.answerState,
-                  onContinue: () {
-                    readingSectionViewmodel.incrementIndex();
-                  },
+                  onContinue: readingSectionViewmodel.incrementIndex,
                   onPressed: readingSectionViewmodel.evaluateAnswer,
                 )
               ],

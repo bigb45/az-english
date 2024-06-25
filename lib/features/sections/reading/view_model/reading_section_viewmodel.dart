@@ -14,7 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class ReadingSectionViewmodel extends BaseViewModel {
   String? levelId;
-  String? _sectionName = "reading";
+  // String? _sectionName = "reading";
   String? _levelName;
   UserModel? _userData;
   String? get levelName => _levelName;
@@ -95,7 +95,8 @@ class ReadingSectionViewmodel extends BaseViewModel {
 
   void incrementIndex() {
     if (currentIndex < questions.length - 1) {
-      currentIndex++;
+      currentIndex = currentIndex + 1;
+      print("Current index: $currentIndex");
     }
   }
 
