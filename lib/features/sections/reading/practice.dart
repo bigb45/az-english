@@ -120,7 +120,12 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: Constants.padding8),
-                            child: const ProgressBar(value: 20),
+                            child: ProgressBar(
+                              value: readingSectionViewmodel.currentIndex /
+                                  questions.length,
+                              minValue: 0,
+                              maxValue: questions.length.toDouble(),
+                            ),
                           ),
                           passageQuestion != null
                               ? ExpandableTextBox(
