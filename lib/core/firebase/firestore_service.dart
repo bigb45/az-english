@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -33,8 +32,9 @@ class FirestoreService {
   Future<List<BaseQuestion>> fetchQuestions(
     String sectionName,
     String level,
-    int startIndex,
-  ) async {
+    int startIndex, {
+    String unitName = "Unit1",
+  }) async {
     List<BaseQuestion> questions = [];
     List<dynamic> filteredQuestionsData = [];
     try {
@@ -45,7 +45,7 @@ class FirestoreService {
           .doc(sectionName)
           .collection(FirestoreConstants.unitsCollection)
           //TODO: Unit's name needs to be dynamic, based on the order of sections for each day
-          .doc("Unit1")
+          .doc(unitName)
           .get();
       if (levelDoc.exists) {
         Map<String, dynamic> data = levelDoc.data() as Map<String, dynamic>;
