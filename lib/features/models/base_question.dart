@@ -2,6 +2,7 @@ import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
+import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 
 import '../sections/models/dictation_question_model.dart';
 
@@ -49,11 +50,19 @@ abstract class BaseQuestion<T> {
 
       case QuestionType.dictation:
         return DictationQuestionModel.fromMap(json);
+
       case QuestionType.multipleChoice:
         return MultipleChoiceQuestionModel.fromMap(json);
+
       case QuestionType.vocabulary:
+      case QuestionType.vocabularyWithListening:
         return WordDefinition.fromMap(json);
+
+      case QuestionType.youtubeLesson:
+        return YoutubeLessonModel.fromMap(json);
+
       // Add cases for other question types
+
       default:
         throw Exception('Unknown question type: $questionType');
     }

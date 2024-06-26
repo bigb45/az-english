@@ -7,7 +7,6 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
-import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/utils/utils.dart';
@@ -17,7 +16,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
   String? levelId;
   // String? _sectionName = "reading";
   String? _levelName;
-  UserModel? _userData;
+  // UserModel? _userData;
   String? get levelName => _levelName;
   PassageQuestionModel? _passageQuestion;
   final FirestoreService _firestoreService = FirestoreService();
@@ -34,7 +33,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
   void setValuesAndInit() async {
     currentIndex = 0;
     _levelName = RouteConstants.getLevelName(levelId!);
-    await getUserData(_firebaseAuthService.getUser()!.uid);
+    // await getUserData(_firebaseAuthService.getUser()!.uid);
     fetchQuestions();
   }
 
@@ -94,9 +93,9 @@ class ReadingSectionViewmodel extends BaseViewModel {
     }
   }
 
-  Future<void> getUserData(String userId) async {
-    _userData = await _firestoreService.getUser(userId);
-  }
+  // Future<void> getUserData(String userId) async {
+  //   _userData = await _firestoreService.getUser(userId);
+  // }
 
   @Deprecated(
       "Assign error value to error property instead of calling this method")

@@ -178,7 +178,7 @@ class UploadDataViewmodel extends ChangeNotifier {
               }
               break;
             case QuestionType.findWordsFromPassage:
-            case QuestionType.answerQuestionsFromPassage:
+              // case QuestionType.answerQuestionsFromPassage:
               questions = [
                 ReadingQuestion(
                   questionTextInEnglish: questionEnglish ?? "",
