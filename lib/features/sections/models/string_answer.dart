@@ -12,7 +12,7 @@ class StringAnswer extends BaseAnswer<String> {
   bool validate(BaseAnswer? userAnswer) {
     // TODO: compare answers here and return true or false
     // might change return type to AnswerValidationResult
-    print("validating String answer, ${userAnswer?.answer}, $answer");
+    // print("validating String answer, ${userAnswer?.answer}, $answer");
     return answer != null &&
         (userAnswer as StringAnswer).answer?.normalize() == answer?.normalize();
   }

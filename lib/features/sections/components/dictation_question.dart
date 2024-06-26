@@ -21,38 +21,6 @@ class DictationQuestion extends StatefulWidget {
 }
 
 class _DictationQuestionState extends State<DictationQuestion> {
-  // final String apiKey = dotenv.env['AZURE_API_KEY_1'] ?? '';
-
-  // final AudioPlayer player = AudioPlayer();
-  // void getAudioBytes() async {
-  //   String requestBody =
-  //       '<speak version="1.0" xml:lang="en-US"><voice xml:lang="en-US" xml:gender="Female" name="en-US-JennyNeural">${widget.question.answer}</voice></speak>';
-  //   Map<String, dynamic> requestBodyHeaders = {
-  //     'Ocp-Apim-Subscription-Key': apiKey,
-  //     'Content-Type': 'application/ssml+xml',
-  //     'X-Microsoft-OutputFormat': 'audio-24khz-160kbitrate-mono-mp3',
-  //   };
-
-  //   try {
-  //     CustomResponse response = await NetworkHelper.instance.post(
-  //       url: APIConstants.ttsEndPoint,
-  //       headersForRequest: requestBodyHeaders,
-  //       body: requestBody,
-  //       returnBytesResponse: true,
-  //     );
-  //     if (response.statusCode == 200) {
-  //       final bytes = response.data;
-  //       await player.setAudioSource(DictationQuestionAudioSource(bytes));
-  //       player.play();
-  //     } else {
-  //       throw Exception(
-  //           "Error while generating audio: ${response.statusCode}, ${response.errorMessage}");
-  //     }
-  //   } catch (e) {
-  //     print("Error while playing audio: $e");
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -82,6 +50,8 @@ class _DictationQuestionState extends State<DictationQuestion> {
             ),
             SizedBox(height: Constants.padding20),
             CustomTextField(
+              // TODO: test onChanged function
+              onChanged: widget.onAnswerChanged,
               controller: widget.controller,
               maxLines: 10,
               hintText: "Type your answer here",
