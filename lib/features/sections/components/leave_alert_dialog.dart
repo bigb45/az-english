@@ -36,7 +36,6 @@ Widget leavePracticeAlertDialog(
 void showLeaveAlertDialog(BuildContext context,
     {Future<void> Function()? onConfirm,
     Function? onCancel,
-    VoidCallback? onPressed,
     String? title,
     String? body}) {
   showDialog(

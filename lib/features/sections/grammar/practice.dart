@@ -54,7 +54,6 @@ class _GrammarPracticeState extends State<GrammarPractice> {
               onPressed: () {
                 showLeaveAlertDialog(
                   context,
-                  onPressed: () {},
                 );
               },
             ),
