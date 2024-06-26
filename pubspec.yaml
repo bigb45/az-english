@@ -37,6 +37,8 @@ dependencies:
   cloud_firestore: ^4.17.3
   excel: ^4.0.3
   youtube_player_flutter: ^9.0.1
+  firebase_storage: ^11.7.7
+  path: ^1.9.0
 
 dev_dependencies:
   flutter_test:
@@ -50,6 +52,7 @@ flutter:
     - assets/translations/
     - assets/images/
     - assets/questions.xlsx
+    - assets/questions/images/
     - .env
 
   fonts:
