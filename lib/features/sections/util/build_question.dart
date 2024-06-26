@@ -55,10 +55,12 @@ Widget buildQuestion(
 
     case QuestionType.youtubeLesson:
       return YouTubeVideoPlayer(
-        videoId: (question as YoutubeLessonModel).youtubeUrl!,
+        videoId: (question as YoutubeLessonModel).youtubeUrl ??
+            "https://www.youtube.com/watch?v=ml5uvpfXcLU",
       );
 
     default:
+      print("Unsupported Question Type: ${question.questionType}, ${question}");
       return const Text("Unsupported Question Type");
   }
 }
