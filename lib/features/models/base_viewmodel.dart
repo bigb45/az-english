@@ -74,6 +74,11 @@ abstract class BaseViewModel extends ChangeNotifier {
     });
   }
 
+  void resetError() {
+    _error = null;
+    notifyListeners();
+  }
+
   @protected
   set answerState(EvaluationState value) {
     _answerState = value;

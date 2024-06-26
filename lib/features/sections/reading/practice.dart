@@ -60,11 +60,17 @@ class _ReadingPracticeState extends State<ReadingPractice> {
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (readingSectionViewmodel.error != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text(readingSectionViewmodel.error?.message ??
-                      "An error occurred")),
-            );
+            ScaffoldMessenger.of(context)
+                .showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      readingSectionViewmodel.error?.message ??
+                          "An error occurred",
+                    ),
+                  ),
+                )
+                .closed
+                .then((reason) => readingSectionViewmodel.resetError());
           }
         });
 
@@ -109,7 +115,6 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                // TODO change subtitle to dymaic string from the API
                 subtitle: Text(
                   passageQuestion?.titleInEnglish ?? "Passage",
                   style: TextStyle(
@@ -132,7 +137,8 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                         children: [
                           Padding(
                             padding: EdgeInsets.symmetric(
-                                vertical: Constants.padding8),
+                              vertical: Constants.padding8,
+                            ),
                             child: ProgressBar(
                               value: readingSectionViewmodel.currentIndex + 1,
                               minValue: 0,
@@ -146,18 +152,14 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                                   readMoreText:
                                       AppStrings.mcQuestionReadMoreText)
                               : const SizedBox(),
-                          questions.isNotEmpty
-                              ? buildQuestion(
-                                  question: currentQuestion!,
-                                  onChanged: (value) {
-                                    // handle the case for different question types
-                                    readingSectionViewmodel.updateAnswer(value);
-                                  },
-                                  answerState:
-                                      readingSectionViewmodel.answerState,
-                                )
-                              // TODO: Verify if the 'questions' array can ever be empty and handle this case appropriately.
-                              : const Text("No questions provided"),
+                          buildQuestion(
+                            question: currentQuestion!,
+                            onChanged: (value) {
+                              // handle the case for different question types
+                              readingSectionViewmodel.updateAnswer(value);
+                            },
+                            answerState: readingSectionViewmodel.answerState,
+                          )
                         ],
                       ),
                     ),

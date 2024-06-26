@@ -98,6 +98,8 @@ class ReadingSectionViewmodel extends BaseViewModel {
     _userData = await _firestoreService.getUser(userId);
   }
 
+  @Deprecated(
+      "Assign error value to error property instead of calling this method")
   void _handleError(String e) {
     Utils.showSnackBar(e);
   }
