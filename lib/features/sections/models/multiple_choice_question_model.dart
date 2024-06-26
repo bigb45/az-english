@@ -4,7 +4,7 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 
-class MultipleChoiceQuestionModel<T> extends BaseQuestion<RadioItemData> {
+class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
   final List<RadioItemData> options;
   final String? paragraph;
   final String? questionSentence;
@@ -45,9 +45,9 @@ class MultipleChoiceQuestionModel<T> extends BaseQuestion<RadioItemData> {
       questionSentence: map['questionSentence'],
     );
   }
-  bool validateQuestion(
-      {required RadioItemData correctAnswer,
-      required RadioItemData? userAnswer}) {
-    return userAnswer?.value == correctAnswer.value;
+
+  @override
+  bool evaluateAnswer() {
+    return answer?.validate(userAnswer) ?? false;
   }
 }

@@ -31,24 +31,14 @@ class DictationQuestionModel extends BaseQuestion<String> {
       answer: json['answer'],
       questionTextInEnglish: json['questionTextInEnglish'],
       questionTextInArabic: json['questionTextInArabic'],
-      // imageUrl: json['imageUrl'],
       speakableText: json['answer'],
       voiceUrl: json['voiceUrl'],
     );
   }
 
-  // bool validateQuestion({String? correctAnswer, required String userAnswer}) {
-  //   correctAnswer = correctAnswer ?? answer;
-
-  //   correctAnswer = correctAnswer.normalize();
-  //   userAnswer = userAnswer.normalize();
-
-  //   if (userAnswer == correctAnswer) {
-  //     print("correct");
-  //   } else {
-  //     print(
-  //         "incorrect, user answered: $userAnswer, correct answer: $correctAnswer");
-  //   }
-  //   return userAnswer == correctAnswer;
-  // }
+// TODO: test this implementation
+  @override
+  bool evaluateAnswer() {
+    return answer?.validate(userAnswer) ?? false;
+  }
 }
