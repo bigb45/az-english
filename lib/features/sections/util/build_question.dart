@@ -56,6 +56,7 @@ Widget buildQuestion(
     case QuestionType.youtubeLesson:
       return YouTubeVideoPlayer(
         videoId: (question as YoutubeLessonModel).youtubeUrl ??
+            // TODO: handle missing youtube url in a better way
             "https://www.youtube.com/watch?v=ml5uvpfXcLU",
       );
 
