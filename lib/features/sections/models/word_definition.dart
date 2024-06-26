@@ -60,6 +60,11 @@ class WordDefinition extends BaseQuestion {
     return WordDefinition.fromMap(json.decode(data) as Map<String, dynamic>);
   }
   String toJson() => json.encode(toMap());
+
+  @override
+  bool evaluateAnswer() {
+    return true;
+  }
 }
 
 enum WordType {
