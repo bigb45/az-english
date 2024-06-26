@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
-import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
-import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 
 class WritingSectionViewmodel extends BaseViewModel {
@@ -17,31 +15,28 @@ class WritingSectionViewmodel extends BaseViewModel {
   String? levelId;
   List<BaseQuestion> _questions = [];
 
-  // dynamic _userAnswer;
-
   get questions => _questions;
   // get userAnswer => _userAnswer;
   final FirestoreService _firestoreService = FirestoreService();
-  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+  // final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   @override
   FutureOr<void> init() {}
 
   Future<void> myInit() async {
     _levelName = RouteConstants.getLevelName(levelId!);
-    final user =
-        await _firestoreService.getUser(_firebaseAuthService.getUser()!.uid);
-    fetchQuestions(user!);
+    fetchQuestions();
   }
 
-  Future<void> fetchQuestions(UserModel userData) async {
+  Future<void> fetchQuestions() async {
     isLoading = true;
-
+    // UserModel userData = (await _firestoreService.getUser(_firebaseAuthService.getUser()!.uid))!;
     // int lastQuestionIndex = userData.levelsProgress![_levelName]!
     //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
       var fetchedQuestions = await _firestoreService.fetchQuestions(
         RouteConstants.writingSectionName,
         _levelName!,
+        // TODO: change unit name to be a variable
         unitName: "Unit2",
         0,
       );
