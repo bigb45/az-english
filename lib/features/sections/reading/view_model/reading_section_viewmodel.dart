@@ -106,6 +106,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
   void incrementIndex() {
     if (currentIndex < questions.length - 1) {
       currentIndex = currentIndex + 1;
+      answerState = EvaluationState.empty;
     }
   }
 
