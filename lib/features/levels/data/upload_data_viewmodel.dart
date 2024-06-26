@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:excel/excel.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/levels/data/models/reading_question.dart';
@@ -12,8 +14,11 @@ import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 import 'package:ez_english/widgets/radio_button.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../sections/models/dictation_question_model.dart';
 import '../../sections/models/multiple_choice_question_model.dart';
@@ -72,9 +77,14 @@ class UploadDataViewmodel extends ChangeNotifier {
               convertToNull(csvParts[13]!.value.toString().trim());
           String? passageInArabic =
               convertToNull(csvParts[14]!.value.toString().trim());
-          String? youtubeUrl =
+          String? imageName =
               convertToNull(csvParts[15]!.value.toString().trim());
+          // String? imageName =
+          //     convertToNull(csvParts[16]!.value.toString().trim());
 
+          String? imageUrl = imageName != null && imageName.isNotEmpty
+              ? await uploadImageAndGetUrl(imageName)
+              : '';
           // Check if the level already exists in the levels map
           var existingLevel = levels.firstWhere(
             (level) => level.name == levelName,
@@ -143,7 +153,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   questionTextInEnglish: questionEnglish ?? "",
                   questionTextInArabic: questionArabic ?? "",
                   questionSentence: questionText,
-                  imageUrl: '',
+                  imageUrl: imageUrl,
                   // voiceUrl: '',
                   options:
                       questionAnswerOrOptionsInMCQ.asMap().entries.map((entry) {
@@ -200,7 +210,7 @@ class UploadDataViewmodel extends ChangeNotifier {
             case QuestionType.youtubeLesson:
               questions = [
                 YoutubeLessonModel(
-                  youtubeUrl: youtubeUrl,
+                  youtubeUrl: imageName,
                   questionTextInEnglish: questionEnglish ?? "",
                   questionTextInArabic: questionArabic ?? "",
                   imageUrl: '',
@@ -334,6 +344,27 @@ class UploadDataViewmodel extends ChangeNotifier {
     }
 
     return levels;
+  }
+
+  Future<String> uploadImageAndGetUrl(String imageName) async {
+    try {
+      final byteData =
+          await rootBundle.load('assets/questions/images/$imageName.png');
+      final tempDir = await getTemporaryDirectory();
+      final file = File('${tempDir.path}/$imageName');
+      await file.writeAsBytes(byteData.buffer.asUint8List());
+
+      String fileName = basename(file.path);
+
+      UploadTask uploadTask =
+          FirebaseStorage.instance.ref('questions/$fileName').putFile(file);
+      TaskSnapshot snapshot = await uploadTask;
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print("Error uploading image: $e");
+      return '';
+    }
   }
 
   Future<void> saveLevelToFirestore(Level levelData) async {
