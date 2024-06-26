@@ -2,12 +2,56 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ProgressBar extends StatelessWidget {
+class ProgressBar extends StatefulWidget {
   final double minValue;
   final double maxValue;
   final double value;
-  const ProgressBar(
-      {super.key, required this.value, this.minValue = 0, this.maxValue = 100});
+  final Duration duration;
+
+  const ProgressBar({
+    super.key,
+    required this.value,
+    this.minValue = 0,
+    this.maxValue = 100,
+    this.duration = const Duration(milliseconds: 300),
+  });
+
+  @override
+  _ProgressBarState createState() => _ProgressBarState();
+}
+
+class _ProgressBarState extends State<ProgressBar>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: widget.duration);
+    _animation = Tween<double>(begin: widget.minValue, end: widget.value)
+        .animate(_controller)
+      ..addListener(() {
+        setState(() {});
+      });
+    _controller.forward();
+  }
+
+  @override
+  void didUpdateWidget(ProgressBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      _animation = Tween<double>(begin: oldWidget.value, end: widget.value)
+          .animate(_controller);
+      _controller.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +76,8 @@ class ProgressBar extends StatelessWidget {
           ),
           LayoutBuilder(
             builder: (context, constraints) {
-              double percentage = (value - minValue) / (maxValue - minValue);
+              double percentage = (_animation.value - widget.minValue) /
+                  (widget.maxValue - widget.minValue);
               double progressBarWidth = constraints.maxWidth * percentage;
               return Container(
                 decoration: BoxDecoration(
@@ -47,18 +92,20 @@ class ProgressBar extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100),
                 ),
                 width: progressBarWidth,
-                child: Stack(children: [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10.w, 5.h, 10.w, 12.h),
-                    child: Container(
-                      height: 6.h,
-                      decoration: BoxDecoration(
-                        color: Palette.onTertiary,
-                        borderRadius: BorderRadius.circular(100),
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(10.w, 5.h, 10.w, 12.h),
+                      child: Container(
+                        height: 6.h,
+                        decoration: BoxDecoration(
+                          color: Palette.onTertiary,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
                       ),
                     ),
-                  ),
-                ]),
+                  ],
+                ),
               );
             },
           ),

@@ -35,7 +35,9 @@ class _ReadingPracticeState extends State<ReadingPractice> {
         Provider.of<ReadingSectionViewmodel>(context, listen: false);
     questions = readingSectionViewmodel.questions;
     passageQuestion = readingSectionViewmodel.passageQuestion;
-    currentQuestion = questions[readingSectionViewmodel.currentIndex];
+    currentQuestion = questions.isEmpty
+        ? null
+        : questions[readingSectionViewmodel.currentIndex];
     super.initState();
   }
 
@@ -55,6 +57,17 @@ class _ReadingPracticeState extends State<ReadingPractice> {
     return Consumer<ReadingSectionViewmodel>(
       builder: (context, readingSectionViewmodel, child) {
         currentQuestion = questions[readingSectionViewmodel.currentIndex];
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (readingSectionViewmodel.error != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text(readingSectionViewmodel.error?.message ??
+                      "An error occurred")),
+            );
+          }
+        });
+
         return PopScope(
           canPop: false,
           onPopInvoked: (canPop) {
@@ -121,8 +134,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                             padding: EdgeInsets.symmetric(
                                 vertical: Constants.padding8),
                             child: ProgressBar(
-                              value: readingSectionViewmodel.currentIndex /
-                                  questions.length,
+                              value: readingSectionViewmodel.currentIndex + 1,
                               minValue: 0,
                               maxValue: questions.length.toDouble(),
                             ),
