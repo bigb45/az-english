@@ -32,15 +32,29 @@ class WordListTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   word.isNew
-                      ? Text("New", style: TextStyles.indicator)
+                      ? Column(
+                          children: [
+                            Text(
+                              "New",
+                              style: TextStyles.indicator,
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                          ],
+                        )
                       : const SizedBox(),
-                  word.isNew ? SizedBox(height: 10.h) : const SizedBox(),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        word.word,
-                        style: TextStyles.practiceCardSecondaryText,
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                            maxWidth: ScreenUtil().screenWidth * 0.5),
+                        child: Text(
+                          word.word,
+                          style: TextStyles.practiceCardSecondaryText,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       SizedBox(
                         width: 10.w,
@@ -53,14 +67,15 @@ class WordListTile extends StatelessWidget {
                       SizedBox(
                         width: 10.w,
                       ),
-                      // TODO: change this to a switch case
-                      Text(word.type.toShortString(),
-                          style: TextStyles.wordType),
+                      Text(
+                        word.type.toShortString(),
+                        style: TextStyles.wordType,
+                      ),
                     ],
                   ),
                 ],
               ),
-              const Expanded(child: SizedBox()),
+              Expanded(child: SizedBox()),
               const Icon(Icons.arrow_forward)
             ],
           ),
