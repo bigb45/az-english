@@ -12,7 +12,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class GrammarSection extends StatefulWidget {
-  const GrammarSection({super.key});
+  final String levelId;
+  const GrammarSection({super.key, required this.levelId});
 
   @override
   State<GrammarSection> createState() => _GrammarSectionState();
@@ -24,7 +25,11 @@ class _GrammarSectionState extends State<GrammarSection> {
   void initState() {
     super.initState();
     viewmodel = Provider.of<GrammarSectionViewmodel>(context, listen: false);
-    Future.microtask(() => viewmodel.myInit());
+    // Future.microtask(() => viewmodel.setValuesAndInit());
+    viewmodel.levelId = widget.levelId;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      viewmodel.setValuesAndInit();
+    });
   }
 
   @override
