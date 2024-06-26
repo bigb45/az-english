@@ -58,13 +58,12 @@ class ReadingSectionViewmodel extends BaseViewModel {
 
       error = null;
     } on CustomException catch (e) {
-      // error = e as CustomException;
-      _handleError(e.message);
+      error = e;
+      // _handleError(e.message);
       notifyListeners();
     } catch (e) {
-      // TODO: assign error to 'error' variable here and handle state in UI
-      // error = CustomException(e.toString());
-      _handleError("An undefined error occurred ${e.toString()}");
+      error = CustomException("An undefined error occurred $e");
+      // _handleError("An undefined error occurred ${e.toString()}");
     } finally {
       isLoading = false;
       notifyListeners();
@@ -83,11 +82,12 @@ class ReadingSectionViewmodel extends BaseViewModel {
           newQuestionIndex: newQuestionIndex);
       error = null;
     } on CustomException catch (e) {
-      // error = e as CustomException;
-      _handleError(e.message);
+      error = e;
+      // _handleError(e.message);
       notifyListeners();
     } catch (e) {
-      _handleError("An undefined error occurred ${e.toString()}");
+      error = CustomException("An undefined error occurred ${e.toString()}");
+      // _handleError("An undefined error occurred ${e.toString()}");
     } finally {
       isLoading = false;
       notifyListeners();
@@ -99,7 +99,6 @@ class ReadingSectionViewmodel extends BaseViewModel {
   }
 
   void _handleError(String e) {
-    // TODO: separate UI logic from business logic
     Utils.showSnackBar(e);
   }
 
