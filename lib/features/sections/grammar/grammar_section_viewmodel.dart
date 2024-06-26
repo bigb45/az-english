@@ -1,60 +1,52 @@
+import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
-import 'package:ez_english/features/sections/models/sentence_forming_question_model.dart';
-import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 
 class GrammarSectionViewmodel extends BaseViewModel {
   final FirestoreService _firestoreService = FirestoreService();
 
+  String? levelId;
+  String? _levelName;
   List<BaseQuestion> _questions = [];
-  bool _isLoading = false;
 
   List<BaseQuestion> get questions => _questions;
-  bool get isLoding => _isLoading;
 
+  String? get levelName => _levelName;
   @override
   void init() {}
 
-  @override
-  void dispose() {
-    answerState = EvaluationState.empty;
-    currentIndex = 0;
-    super.dispose();
-  }
-
-  void myInit() async {
+  void setValuesAndInit() async {
     // reset answerState
+    currentIndex = 0;
     answerState = EvaluationState.empty;
+    _levelName = RouteConstants.getLevelName(levelId!);
+
     fetchQuestions();
   }
 
   Future<void> fetchQuestions() async {
-    _isLoading = true;
+    isLoading = true;
     try {
-      // TODO: replace with actual data
-      // _questions = await _firestoreService.fetchQuestions("grammar", "1", 0);
+      var fetchedQuestions = await _firestoreService.fetchQuestions(
+        RouteConstants.grammarSectionName,
+        _levelName!,
+        0,
+      );
 
-      _questions = [
-        SentenceFormingQuestionModel(
-          question: "Form a sentence from the words below:",
-          words: "cat is sleeping are am the a",
-          correctAnswer: "A cat is sleeping",
-        ),
-        YoutubeLessonModel(youtubeUrl: "JGwWNGJdvx8"),
-        // MultipleChoiceQuestionModel(
-        //     options: options,
-        //     answer: answer,
-        //     questionTextInArabic: questionTextInArabic,
-        //     questionTextInEnglish: questionTextInEnglish,
-        //     imageUrl: imageUrl)
-      ];
-      notifyListeners();
+      _questions = fetchedQuestions.cast<BaseQuestion>();
+
+      error = null;
+    } on CustomException catch (e) {
+      error = e;
     } catch (e) {
-      print("error while fetching questions: $e");
-      // TODO: show error in ui
+      error = CustomException("An undefined error occurred $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
 
