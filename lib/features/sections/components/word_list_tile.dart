@@ -75,7 +75,9 @@ class WordListTile extends StatelessWidget {
                   ),
                 ],
               ),
-              Expanded(child: SizedBox()),
+              const Expanded(
+                child: SizedBox(),
+              ),
               const Icon(Icons.arrow_forward)
             ],
           ),
