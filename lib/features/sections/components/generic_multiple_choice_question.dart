@@ -49,10 +49,10 @@ class _GenericMultipleChoiceQuestionState
                     readMoreText: AppStrings.mcQuestionReadMoreText)
                 : const SizedBox(),
             Constants.gapH24,
-            if (widget.image == null)
+            if (widget.question.imageUrl == null)
               const SizedBox() // placeholder
             else
-              Image.network(widget.image!),
+              Image.network(widget.question.imageUrl!),
             SizedBox(height: Constants.padding20),
             Text(
               widget.question.questionTextInEnglish ??
