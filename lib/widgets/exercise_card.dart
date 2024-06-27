@@ -14,6 +14,8 @@ class ExerciseCard extends StatefulWidget {
   final Color? cardShadowColor;
   final Color? textColor;
   final bool attempted;
+  final int totalNumberOfQuestions;
+  final int numberOfSolvedQuestions;
 
   const ExerciseCard(
       {super.key,
@@ -24,6 +26,8 @@ class ExerciseCard extends StatefulWidget {
       this.cardShadowColor,
       this.textColor,
       required this.attempted,
+      required this.totalNumberOfQuestions,
+      required this.numberOfSolvedQuestions,
       this.description});
 
   @override
@@ -162,31 +166,44 @@ class ExerciseCardState extends State<ExerciseCard> {
                             : MainAxisAlignment.start,
                         children: [
                           widget.attempted
-                              ? Container(
-                                  width: 20.w,
-                                  height: 20.w,
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        offset: const Offset(0, 2),
-                                      )
-                                    ],
-                                    color: Palette.primary,
-                                    borderRadius: BorderRadius.circular(100.r),
-                                  ),
-                                  child: Icon(
-                                    Icons.check,
-                                    color: Palette.secondary,
-                                    size: 18.sp,
-                                    shadows: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        offset: const Offset(0, 2),
-                                      )
-                                    ],
-                                  ),
-                                )
+                              ? widget.totalNumberOfQuestions !=
+                                      widget.numberOfSolvedQuestions
+                                  ? Text(
+                                      "${widget.numberOfSolvedQuestions}/${widget.totalNumberOfQuestions}",
+                                      style: TextStyle(
+                                          color: widget.textColor ??
+                                              Palette.secondary,
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  : Container(
+                                      width: 20.w,
+                                      height: 20.w,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            offset: const Offset(0, 2),
+                                          )
+                                        ],
+                                        color: Palette.primary,
+                                        borderRadius:
+                                            BorderRadius.circular(100.r),
+                                      ),
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Palette.secondary,
+                                        size: 18.sp,
+                                        shadows: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            offset: const Offset(0, 2),
+                                          )
+                                        ],
+                                      ),
+                                    )
                               : Text(
                                   "Not Attempted",
                                   style: TextStyle(

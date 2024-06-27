@@ -113,24 +113,26 @@ class _PracticeSectionsState extends State<PracticeSections> {
 
                           String hintText = entry.value;
                           return _buildCard(
-                            attempted: section.attempted,
-                            headerText: hintText,
-                            cardText:
-                                "Learn common everyday expressions and simple phrases",
-                            // TODO: change this to section completionState from viewmodel
-                            onTap: sectionIds[index] == sectionIds.last
-                                ? null
-                                : () {
-                                    navigateToSection(
-                                      sectionId: sectionIds[index],
-                                    );
-                                    levelSelectionVm.updateSectionStatus(
-                                        section, widget.levelName);
-                                  },
-                            imagePath: imageAssets[index],
-                            backgroundColor: backgroundColors[index],
-                            sectionId: sectionIds[index],
-                          );
+                              attempted: section.attempted,
+                              headerText: hintText,
+                              cardText:
+                                  "Learn common everyday expressions and simple phrases",
+                              // TODO: change this to section completionState from viewmodel
+                              onTap: sectionIds[index] == sectionIds.last
+                                  ? null
+                                  : () {
+                                      navigateToSection(
+                                        sectionId: sectionIds[index],
+                                      );
+                                      levelSelectionVm.updateSectionStatus(
+                                          section, widget.levelName);
+                                    },
+                              imagePath: imageAssets[index],
+                              backgroundColor: backgroundColors[index],
+                              sectionId: sectionIds[index],
+                              totalNumberOfQuestions: section.numberOfQuestions,
+                              // TODO change this to the current question index from the userProgress document
+                              numberOfSolvedQuestions: 0);
                         }).toList(),
                       ],
                     ),
@@ -151,10 +153,14 @@ class _PracticeSectionsState extends State<PracticeSections> {
     required String sectionId,
     required VoidCallback? onTap,
     required bool attempted,
+    required int totalNumberOfQuestions,
+    required int numberOfSolvedQuestions,
     String? imagePath,
     Color? cardShadowColor,
   }) {
     return ExerciseCard(
+      totalNumberOfQuestions: totalNumberOfQuestions,
+      numberOfSolvedQuestions: numberOfSolvedQuestions,
       attempted: attempted,
       onPressed: onTap != null
           ? () {

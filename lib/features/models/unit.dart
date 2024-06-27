@@ -6,13 +6,14 @@ class Unit {
   String name;
   String? descriptionInEnglish;
   String? descriptionInArabic;
-
+  int numberOfQuestions;
   Map<int, BaseQuestion?> questions;
 
   Unit(
       {required this.name,
       this.descriptionInEnglish,
       this.descriptionInArabic,
+      this.numberOfQuestions = 0,
       required this.questions});
   factory Unit.fromMap(Map<String, dynamic> map) {
     return Unit(
@@ -21,6 +22,7 @@ class Unit {
           map['descriptionInEnglish'] ?? 'No English description',
       descriptionInArabic:
           map['descriptionInArabic'] ?? "No Arabic Description",
+      numberOfQuestions: map['numberOfQuestions'],
       questions: (map['questions'] as Map<String, dynamic>).map(
         (key, value) => MapEntry(int.parse(key), BaseQuestion.fromMap(value)),
       ),
@@ -32,6 +34,7 @@ class Unit {
       'name': name,
       'descriptionInEnglish': descriptionInEnglish,
       'descriptionInArabic': descriptionInArabic,
+      "numberOfQuestions": numberOfQuestions,
       'questions': questions
           .map((key, value) => MapEntry(key.toString(), value?.toMap())),
     };

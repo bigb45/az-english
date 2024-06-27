@@ -91,7 +91,7 @@ class UploadDataViewmodel extends ChangeNotifier {
             (level) => level.name == levelName,
             orElse: () => Level(
               // TODO: map the level id to the given level name
-              id: RouteConstants.getSectionIds(levelName),
+              id: RouteConstants.getLevelIds(levelName),
               name: levelName,
               description: '',
               sections: [], // Initialize an empty list of sections
@@ -146,6 +146,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 } else {
                   existingUnit.questions[nextIndex++] = question;
                 }
+                existingUnit.numberOfQuestions++;
               });
 
               break;
@@ -176,6 +177,7 @@ class UploadDataViewmodel extends ChangeNotifier {
               } else {
                 existingUnit.questions[nextIndex++] = question;
               }
+              existingUnit!.numberOfQuestions++;
               break;
 
             case QuestionType.speaking:
@@ -198,6 +200,8 @@ class UploadDataViewmodel extends ChangeNotifier {
               } else {
                 existingUnit.questions[nextIndex++] = question;
               }
+              existingUnit!.numberOfQuestions++;
+
               break;
             case QuestionType
                   .vocabularyWithListening: // TODO: Should we add the listening ability to all vocabularies
@@ -250,6 +254,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 } else {
                   existingUnit.questions[nextIndex++] = question;
                 }
+                existingUnit!.numberOfQuestions++;
               });
               break;
 
@@ -294,6 +299,7 @@ class UploadDataViewmodel extends ChangeNotifier {
               } else {
                 existingUnit.questions[nextIndex++] = question;
               }
+              existingUnit!.numberOfQuestions++;
               break;
             case QuestionType.passage:
               currentPassage = PassageQuestionModel(
@@ -307,6 +313,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 imageUrl: '',
                 voiceUrl: '',
               );
+              existingUnit!.numberOfQuestions++;
               break;
             default:
               break;

@@ -14,6 +14,8 @@ class FirestoreService {
   int filteredQuestionsLength = 0;
   Future<List<Level>> fetchLevels() async {
     try {
+      dynamic questionsNumber;
+
       QuerySnapshot levelSnapshot =
           await _db.collection(FirestoreConstants.levelsCollection).get();
       if (levelSnapshot.docs.isEmpty) {
@@ -39,6 +41,19 @@ class FirestoreService {
                 Section.fromMap(sectionDoc.data() as Map<String, dynamic>);
 
             // Fetch units for each section
+            DocumentReference unitReference = _db
+                .collection(FirestoreConstants.levelsCollection)
+                .doc(level.name)
+                .collection(FirestoreConstants.sectionsCollection)
+                .doc(RouteConstants.getSectionIds("reading"))
+                .collection(FirestoreConstants.unitsCollection)
+                // TODO: unit logic
+                .doc("Unit1");
+            await unitReference.get().then((snapshot) {
+              questionsNumber = (snapshot.data()
+                  as Map<String, dynamic>)['numberOfQuestions']!;
+            });
+            section.numberOfQuestions = questionsNumber;
             sections.add(section);
           }
           level.sections = sections;
