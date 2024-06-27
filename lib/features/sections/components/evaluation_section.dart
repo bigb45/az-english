@@ -53,6 +53,7 @@ class _EvaluationSectionState extends State<EvaluationSection> {
               onPressed: switch (widget.state) {
                 EvaluationState.correct => widget.onContinue,
                 EvaluationState.incorrect => widget.onPressed,
+                EvaluationState.noState => widget.onContinue,
                 _ => widget.onPressed,
               },
               type: switch (widget.state) {
@@ -64,6 +65,7 @@ class _EvaluationSectionState extends State<EvaluationSection> {
                 EvaluationState.empty => "check",
                 EvaluationState.incorrect => "check",
                 EvaluationState.correct => "continue",
+                EvaluationState.noState => "next",
               },
             ),
           ],
@@ -76,5 +78,6 @@ class _EvaluationSectionState extends State<EvaluationSection> {
 enum EvaluationState {
   correct,
   incorrect,
+  noState,
   empty,
 }

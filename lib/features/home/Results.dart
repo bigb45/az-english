@@ -4,6 +4,7 @@ import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class Results extends StatefulWidget {
@@ -42,6 +43,12 @@ class _ResultsState extends State<Results> {
               }
             },
             child: const Text("Add data"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              context.push("/settings");
+            },
+            child: const Text("Test screen"),
           ),
           Center(
             child: Text(

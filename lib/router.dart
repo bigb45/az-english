@@ -4,24 +4,20 @@ import 'package:ez_english/components.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/auth/screens/sign_in.dart';
 import 'package:ez_english/features/auth/screens/sign_up.dart';
-import 'package:ez_english/features/sections/components/checkbox_question.dart';
-import 'package:ez_english/features/sections/components/generic_multiple_choice_question.dart';
+import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/youtube_lesson.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
 import 'package:ez_english/features/sections/grammar/practice.dart';
-import 'package:ez_english/features/sections/models/checkbox_answer.dart';
-import 'package:ez_english/features/sections/models/checkbox_question_model.dart';
-import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
-import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
+import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
+import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/features/sections/reading/landing_page.dart';
 import 'package:ez_english/features/sections/reading/practice.dart';
 import 'package:ez_english/features/sections/sections_screen.dart';
+import 'package:ez_english/features/sections/util/build_question.dart';
 import 'package:ez_english/features/sections/vocabulary/landing_page.dart';
 import 'package:ez_english/features/sections/vocabulary/words_list.dart';
 import 'package:ez_english/features/sections/writing/landing_page.dart';
 import 'package:ez_english/features/sections/writing/practice.dart';
-import 'package:ez_english/widgets/checkbox.dart';
-import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -115,68 +111,82 @@ final loggedInRouter = GoRouter(
     GoRoute(
       path: '/settings',
       builder: (context, state) => Scaffold(
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: [
-                // MultipleChoiceQuestion(),
-                GenericMultipleChoiceQuestion(
-                  onChanged: (value) =>
-                      {print("new value: ${value.answer?.title}")},
-                  question: MultipleChoiceQuestionModel(
-                      paragraph: "This is a paragraph",
-                      options: [
-                        RadioItemData(
-                          title: "option1",
-                          value: "option1",
-                        ),
-                        RadioItemData(
-                          title: "option2",
-                          value: "option2",
-                        ),
-                        RadioItemData(
-                          title: "option3",
-                          value: "option3",
-                        ),
-                      ],
-                      answer: MultipleChoiceAnswer(
-                          answer: RadioItemData(title: "test", value: "test")),
-                      questionTextInArabic: "Select the correct answer",
-                      questionTextInEnglish: "Select the correct answer",
-                      imageUrl: ""),
-                ),
-                CheckboxQuestion(
-                  question: CheckboxQuestionModel(
-                    onChanged: (value) =>
-                        // ignore: avoid_print
-                        {print("new value: ${value.map((e) => e.title)}")},
-                    answer: CheckboxAnswer(
-                      answer: [
-                        CheckboxData(
-                          title: "Option 1",
-                        ),
-                      ],
-                    ),
-                    questionText: "Select the correct sentences",
-                    paragraph: "This is a paragraph",
-                    options: [
-                      CheckboxData(
-                        title: "Option 1",
-                      ),
-                      CheckboxData(
-                        title: "Option 2",
-                      ),
-                      CheckboxData(
-                        title: "Option 3",
-                      ),
-                      CheckboxData(
-                        title: "Option 4",
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+        body: Center(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 300,
+              ),
+              buildQuestion(
+                question: FillTheBlanksQuestionModel(
+                    answer: StringAnswer(answer: "good"),
+                    questionTextInEnglish: "Complete the following sentence",
+                    incompleteSentenceInEnglish: "Ahmad is a ______ boy",
+                    incompleteSentenceInArabic: "أحمد ولد ______",
+                    questionTextInArabic: null,
+                    imageUrl: "imageUrl",
+                    voiceUrl: "voiceUrl"),
+                onChanged: (value) {
+                  print(value.answer);
+                },
+                answerState: EvaluationState.correct,
+              ),
+              // GenericMultipleChoiceQuestion(
+              //   onChanged: (value) =>
+              //       {print("new value: ${value.answer?.title}")},
+              //   question: MultipleChoiceQuestionModel(
+              //       paragraph: "This is a paragraph",
+              //       options: [
+              //         RadioItemData(
+              //           title: "option1",
+              //           value: "option1",
+              //         ),
+              //         RadioItemData(
+              //           title: "option2",
+              //           value: "option2",
+              //         ),
+              //         RadioItemData(
+              //           title: "option3",
+              //           value: "option3",
+              //         ),
+              //       ],
+              //       answer: MultipleChoiceAnswer(
+              //           answer: RadioItemData(title: "test", value: "test")),
+              //       questionTextInArabic: "Select the correct answer",
+              //       questionTextInEnglish: "Select the correct answer",
+              //       imageUrl: ""),
+              // ),
+              // CheckboxQuestion(
+              //   question: CheckboxQuestionModel(
+              //     onChanged: (value) =>
+              //         // ignore: avoid_print
+              //         {print("new value: ${value.map((e) => e.title)}")},
+              //     answer: CheckboxAnswer(
+              //       answer: [
+              //         CheckboxData(
+              //           title: "Option 1",
+              //         ),
+              //       ],
+              //     ),
+              //     questionText: "Select the correct sentences",
+              //     paragraph: "This is a paragraph",
+              //     options: [
+              //       CheckboxData(
+              //         title: "Option 1",
+              //       ),
+              //       CheckboxData(
+              //         title: "Option 2",
+              //       ),
+              //       CheckboxData(
+              //         title: "Option 3",
+              //       ),
+              //       CheckboxData(
+              //         title: "Option 4",
+              //       ),
+              //     ],
+              //   ),
+              // ),
+            ],
           ),
         ),
       ),

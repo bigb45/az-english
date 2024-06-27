@@ -138,11 +138,6 @@ class _SentenceFormingQuestionState extends State<SentenceFormingQuestion> {
                 ),
               );
             });
-            // print(
-            //   orderedWords.map((e) => e.text).join(
-            //         " ",
-            //       ),
-            // );
           },
           selectedWords: orderedWords,
           words: words,
