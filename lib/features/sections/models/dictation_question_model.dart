@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/sections/models/string_answer.dart';
 
 class DictationQuestionModel extends BaseQuestion<String> {
   // final String answer;
@@ -11,9 +12,9 @@ class DictationQuestionModel extends BaseQuestion<String> {
     required super.answer,
     required super.voiceUrl,
     required this.speakableText,
-    super.questionTextInArabic,
-    super.questionTextInEnglish,
-    super.imageUrl,
+    required super.questionTextInArabic,
+    required super.questionTextInEnglish,
+    required super.imageUrl,
     super.questionType = QuestionType.dictation,
   });
 
@@ -28,11 +29,11 @@ class DictationQuestionModel extends BaseQuestion<String> {
 
   factory DictationQuestionModel.fromMap(Map<String, dynamic> json) {
     return DictationQuestionModel(
-      answer: json['answer'],
+      speakableText: json['speakableText'],
+      answer: StringAnswer(answer: json['answer']['answer']),
       questionTextInEnglish: json['questionTextInEnglish'],
       questionTextInArabic: json['questionTextInArabic'],
-      // imageUrl: json['imageUrl'],
-      speakableText: json['answer'],
+      imageUrl: json['imageUrl'],
       voiceUrl: json['voiceUrl'],
     );
   }
