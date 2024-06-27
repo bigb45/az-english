@@ -69,38 +69,41 @@ class _VocabularySectionState extends State<VocabularySection> {
           child: Column(
             children: [
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/images/vocabulary_section.svg',
-                      width: 200,
-                      colorFilter: const ColorFilter.mode(
-                          Palette.primaryText, BlendMode.srcIn),
-                    ),
-                    Text(
-                      AppStrings.vocabularySectionOnboardingTitle,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 32.sp,
-                        color: Palette.primaryText,
-                        fontFamily: 'Inter',
-                        height: 2,
-                        fontWeight: FontWeight.w700,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/images/vocabulary_section.svg',
+                        width: 200,
+                        colorFilter: const ColorFilter.mode(
+                            Palette.primaryText, BlendMode.srcIn),
                       ),
-                    ),
-                    // TODO add the same gab to all onboarding screens
-                    Constants.gapH12,
-                    Text(
-                      AppStrings.vocabularySectionOnboardingDescription,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        height: 2,
-                        fontSize: 16.sp,
-                        color: Palette.primaryText,
+                      Text(
+                        AppStrings.vocabularySectionOnboardingTitle,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 32.sp,
+                          color: Palette.primaryText,
+                          fontFamily: 'Inter',
+                          height: 2,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                  ],
+                      // TODO add the same gab to all onboarding screens
+                      Constants.gapH12,
+                      Text(
+                        vocabularySectionVm.unit.descriptionInArabic ??
+                            AppStrings.vocabularySectionOnboardingDescription,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          height: 1.5,
+                          fontSize: 16.sp,
+                          color: Palette.primaryText,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Button(
