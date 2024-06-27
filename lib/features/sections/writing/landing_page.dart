@@ -25,7 +25,9 @@ class _WritingSectionState extends State<WritingSection> {
   void initState() {
     viewmodel = Provider.of<WritingSectionViewmodel>(context, listen: false);
     viewmodel.levelId = widget.levelId;
-    viewmodel.myInit();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      viewmodel.myInit();
+    });
     super.initState();
   }
 
