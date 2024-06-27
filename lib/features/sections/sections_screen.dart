@@ -1,10 +1,13 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
+import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class PracticeSections extends StatefulWidget {
   // TODO: use levelId to fetch title and exercises for the level via viewmodel
@@ -62,6 +65,8 @@ class _PracticeSectionsState extends State<PracticeSections> {
 
   @override
   Widget build(BuildContext context) {
+    LevelSelectionViewmodel levelSelectionVm =
+        Provider.of<LevelSelectionViewmodel>(context);
     return Scaffold(
       appBar: AppBar(
         title: ListTile(
@@ -102,8 +107,13 @@ class _PracticeSectionsState extends State<PracticeSections> {
                       children: [
                         ...hintTexts.asMap().entries.map((entry) {
                           int index = entry.key;
+                          Section section = levelSelectionVm
+                              .levels[int.tryParse(widget.levelId)!]
+                              .sections![index];
+
                           String hintText = entry.value;
                           return _buildCard(
+                            attempted: section.attempted,
                             headerText: hintText,
                             cardText:
                                 "Learn common everyday expressions and simple phrases",
@@ -114,6 +124,8 @@ class _PracticeSectionsState extends State<PracticeSections> {
                                     navigateToSection(
                                       sectionId: sectionIds[index],
                                     );
+                                    levelSelectionVm.updateSectionStatus(
+                                        section, widget.levelName);
                                   },
                             imagePath: imageAssets[index],
                             backgroundColor: backgroundColors[index],
@@ -138,11 +150,12 @@ class _PracticeSectionsState extends State<PracticeSections> {
     required Color backgroundColor,
     required String sectionId,
     required VoidCallback? onTap,
+    required bool attempted,
     String? imagePath,
     Color? cardShadowColor,
   }) {
     return ExerciseCard(
-      attempted: false,
+      attempted: attempted,
       onPressed: onTap != null
           ? () {
               onTap();

@@ -33,9 +33,14 @@ class FirestoreService {
             .get();
 
         if (sectionSnapshot.docs.isNotEmpty) {
-          List<Section> sections = sectionSnapshot.docs
-              .map((doc) => Section.fromMap(doc.data() as Map<String, dynamic>))
-              .toList();
+          List<Section> sections = [];
+          for (var sectionDoc in sectionSnapshot.docs) {
+            Section section =
+                Section.fromMap(sectionDoc.data() as Map<String, dynamic>);
+
+            // Fetch units for each section
+            sections.add(section);
+          }
           level.sections = sections;
         }
 
@@ -122,6 +127,17 @@ class FirestoreService {
     }
   }
 
+  Future<void> updateDocuments({
+    required DocumentReference docPath,
+    required Map<String, dynamic> newValues,
+  }) async {
+    try {
+      await docPath.update(newValues);
+    } catch (e) {
+      print("Error updating progress: $e");
+    }
+  }
+
   Future<void> addUser(UserModel user) async {
     try {
       await _db
@@ -168,6 +184,7 @@ class FirestoreService {
         Map<String, dynamic> sectionMetadata = {
           'name': section.name,
           'description': section.description,
+          'attempted': section.attempted,
         };
         CollectionReference sectionsCollection = levelsCollection
             .doc(level.name)

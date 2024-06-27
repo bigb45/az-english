@@ -101,13 +101,13 @@ class Components extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 20.h),
-                    ExerciseCard(
-                      attempted: false,
-                      onPressed: () {},
-                      image: null,
-                      cardBackgroundColor: const Color(0xFF34495E),
-                      text: "Exercise Card",
-                    ),
+                    // ExerciseCard(
+                    //   attempted: false,
+                    //   onPressed: () {},
+                    //   image: null,
+                    //   cardBackgroundColor: const Color(0xFF34495E),
+                    //   text: "Exercise Card",
+                    // ),
                     SizedBox(height: 20.h),
                     RadioGroup(
                       onChanged: (value) {
