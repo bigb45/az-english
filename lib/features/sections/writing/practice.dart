@@ -32,80 +32,97 @@ class _WritingPracticeState extends State<WritingPractice> {
   RadioItemData? selectedOption;
   @override
   Widget build(BuildContext context) {
-    viewmodel = Provider.of<WritingSectionViewmodel>(context);
-    currentQuestion = viewmodel.questions[viewmodel.currentIndex];
+    return Consumer<WritingSectionViewmodel>(builder: (context, viewmodel, _) {
+      currentQuestion = viewmodel.questions[viewmodel.currentIndex];
 
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (canPop) {
-        showLeaveAlertDialog(context);
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.close,
-                color: Palette.primaryText,
-              ),
-              onPressed: () {
-                showLeaveAlertDialog(context, onPressed: () {});
-              },
-            ),
-          ],
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
-          backgroundColor: Colors.white,
-          title: ListTile(
-            contentPadding: const EdgeInsets.only(left: 0, right: 0),
-            title: Text(
-              'Writing & Listening Practice',
-              style: TextStyles.titleTextStyle.copyWith(
-                color: Palette.primaryText,
-              ),
-            ),
-            subtitle: Text(
-              "Daily Conversations",
-              style: TextStyles.subtitleTextStyle.copyWith(
-                color: Palette.primaryText,
-              ),
-            ),
-          ),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8.0),
-                        child: ProgressBar(value: 20),
-                      ),
-                      buildQuestion(
-                        answerState: viewmodel.answerState,
-                        onChanged: viewmodel.updateAnswer,
-                        question: currentQuestion,
-                      )
-                    ],
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (viewmodel.error != null) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(
+                SnackBar(
+                  content: Text(
+                    viewmodel.error?.message ?? "An error occurred",
                   ),
+                ),
+              )
+              .closed
+              .then((reason) => viewmodel.resetError());
+        }
+      });
+
+      return PopScope(
+        canPop: false,
+        onPopInvoked: (canPop) {
+          showLeaveAlertDialog(context);
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  Icons.close,
+                  color: Palette.primaryText,
+                ),
+                onPressed: () {
+                  showLeaveAlertDialog(context);
+                },
+              ),
+            ],
+            systemOverlayStyle: SystemUiOverlayStyle.dark,
+            backgroundColor: Colors.white,
+            title: ListTile(
+              contentPadding: const EdgeInsets.only(left: 0, right: 0),
+              title: Text(
+                'Writing & Listening Practice',
+                style: TextStyles.titleTextStyle.copyWith(
+                  color: Palette.primaryText,
+                ),
+              ),
+              subtitle: Text(
+                "Daily Conversations",
+                style: TextStyles.subtitleTextStyle.copyWith(
+                  color: Palette.primaryText,
                 ),
               ),
             ),
-            EvaluationSection(
-              state: viewmodel.answerState,
-              onContinue: () {
-                // TODO: update this to new standard
-                viewmodel.incrementIndex();
-              },
-              onPressed: viewmodel.evaluateAnswer,
-            )
-          ],
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ProgressBar(
+                            value: viewmodel.currentIndex + 1,
+                            minValue: 0,
+                            maxValue: viewmodel.questions.length.toDouble(),
+                          ),
+                        ),
+                        buildQuestion(
+                          answerState: viewmodel.answerState,
+                          onChanged: viewmodel.updateAnswer,
+                          question: currentQuestion,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              EvaluationSection(
+                state: viewmodel.answerState,
+                onContinue: viewmodel.incrementIndex,
+                onPressed: viewmodel.evaluateAnswer,
+              )
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   // Widget buildQuestionWidget<T extends BaseQuestion>(question) {

@@ -30,4 +30,9 @@ class YoutubeLessonModel extends BaseQuestion {
       questionType: QuestionType.youtubeLesson,
     );
   }
+
+  @override
+  bool evaluateAnswer() {
+    return true;
+  }
 }

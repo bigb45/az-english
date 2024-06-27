@@ -61,11 +61,3 @@ class ReadingQuestionModel extends BaseQuestion {
   }
   String toJson() => json.encode(toMap());
 }
-
-extension StringExtension on String {
-  String normalize() {
-    return replaceAll(RegExp(r'[^\w\s]'), '')
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .toLowerCase();
-  }
-}

@@ -5,10 +5,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class AudioControlButton extends StatefulWidget {
   final VoidCallback? onPressed;
   final AudioControlType type;
+  final double? size;
   const AudioControlButton({
     super.key,
     required this.onPressed,
     required this.type,
+    this.size,
   });
 
   @override
@@ -59,19 +61,19 @@ class AudioControlButtonState extends State<AudioControlButton> {
                     ),
                   ],
           ),
-          width: 150.w,
-          height: 150.w,
+          width: widget.size ?? 150.w,
+          height: widget.size ?? 150.w,
           child: Center(
               child: switch (widget.type) {
             AudioControlType.microphone => Icon(
                 Icons.mic,
                 color: Palette.secondary,
-                size: 80.r,
+                size: widget.size == null ? 80.r : widget.size! / 2,
               ),
             AudioControlType.speaker => Icon(
                 Icons.volume_up,
                 color: Palette.secondary,
-                size: 80.r,
+                size: widget.size == null ? 80.r : widget.size! / 2,
               ),
           }),
         ),

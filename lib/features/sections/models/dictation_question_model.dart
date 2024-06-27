@@ -38,18 +38,9 @@ class DictationQuestionModel extends BaseQuestion<String> {
     );
   }
 
-  // bool validateQuestion({String? correctAnswer, required String userAnswer}) {
-  //   correctAnswer = correctAnswer ?? answer;
-
-  //   correctAnswer = correctAnswer.normalize();
-  //   userAnswer = userAnswer.normalize();
-
-  //   if (userAnswer == correctAnswer) {
-  //     print("correct");
-  //   } else {
-  //     print(
-  //         "incorrect, user answered: $userAnswer, correct answer: $correctAnswer");
-  //   }
-  //   return userAnswer == correctAnswer;
-  // }
+// TODO: test this implementation
+  @override
+  bool evaluateAnswer() {
+    return answer?.validate(userAnswer) ?? false;
+  }
 }

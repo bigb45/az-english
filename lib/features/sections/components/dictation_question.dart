@@ -3,9 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/constants.dart';
-import 'package:ez_english/core/network/apis_constants.dart';
-import 'package:ez_english/core/network/custom_response.dart';
-import 'package:ez_english/core/network/network_helper.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/features/sections/components/view_model/dictation_question_view.model.dart';
 import 'package:ez_english/features/sections/writing/viewmodel/writing_section_viewmodel.dart';
 import 'package:ez_english/widgets/audio_control_button.dart';
@@ -59,6 +57,7 @@ class _DictationQuestionState extends State<DictationQuestion> {
             SizedBox(height: Constants.padding20),
             AudioControlButton(
               onPressed: () async {
+                // Utils.speakText(widget.question.answer?.answer ?? "");
                 String audioUrl =
                     await viewmodel.getAudioBytes(widget.question);
                 await player.setUrl(audioUrl);
@@ -74,6 +73,8 @@ class _DictationQuestionState extends State<DictationQuestion> {
             ),
             SizedBox(height: Constants.padding20),
             CustomTextField(
+              // TODO: test onChanged function
+              onChanged: widget.onAnswerChanged,
               controller: widget.controller,
               maxLines: 10,
               hintText: "Type your answer here",
@@ -82,31 +83,5 @@ class _DictationQuestionState extends State<DictationQuestion> {
         ),
       ],
     );
-  }
-}
-
-class DictationQuestionAudioSource extends StreamAudioSource {
-  final List<int> bytes;
-  DictationQuestionAudioSource(this.bytes);
-
-  @override
-  Future<StreamAudioResponse> request([int? start, int? end]) async {
-    start ??= 0;
-    end ??= bytes.length;
-    return StreamAudioResponse(
-      sourceLength: bytes.length,
-      contentLength: end - start,
-      offset: start,
-      stream: Stream.value(bytes.sublist(start, end)),
-      contentType: 'audio/mpeg',
-    );
-  }
-}
-
-extension StringExtension on String {
-  String normalize() {
-    return replaceAll(RegExp(r'[^\w\s]'), '')
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .toLowerCase();
   }
 }

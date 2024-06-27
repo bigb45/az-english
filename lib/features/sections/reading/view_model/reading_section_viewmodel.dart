@@ -18,9 +18,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class ReadingSectionViewmodel extends BaseViewModel {
   String? levelId;
-  // String? _sectionName = "reading";
   String? _levelName;
-  // UserModel? _userData;
   String? get levelName => _levelName;
   PassageQuestionModel? _passageQuestion;
   final FirestoreService _firestoreService = FirestoreService();
@@ -37,7 +35,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
   void setValuesAndInit() async {
     currentIndex = 0;
     _levelName = RouteConstants.getLevelName(levelId!);
-    // await getUserData(_firebaseAuthService.getUser()!.uid);
+
     fetchQuestions();
   }
 
@@ -62,11 +60,8 @@ class ReadingSectionViewmodel extends BaseViewModel {
       error = null;
     } on CustomException catch (e) {
       error = e;
-      // _handleError(e.message);
-      notifyListeners();
     } catch (e) {
       error = CustomException("An undefined error occurred $e");
-      // _handleError("An undefined error occurred ${e.toString()}");
     } finally {
       isLoading = false;
       notifyListeners();
@@ -154,6 +149,5 @@ class ReadingSectionViewmodel extends BaseViewModel {
     } else {
       answerState = EvaluationState.incorrect;
     }
-    notifyListeners();
   }
 }

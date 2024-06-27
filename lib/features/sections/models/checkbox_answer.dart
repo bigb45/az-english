@@ -11,9 +11,14 @@ class CheckboxAnswer extends BaseAnswer<List<CheckboxData>> {
     throw UnimplementedError();
   }
 
+// TODO: implement this such that it returns a list of checkbox data marking the incorrect answers if they exist
+// TODO: change parameter type to List<BaseAnswer>
   @override
   bool validate(BaseAnswer? userAnswer) {
-    // TODO: implement validate
-    throw UnimplementedError();
+    print("validating checkbox answer: $userAnswer, $answer");
+    return userAnswer?.answer != null &&
+        userAnswer is CheckboxAnswer &&
+        userAnswer.answer?.length == answer?.length &&
+        userAnswer.answer!.every((element) => answer!.contains(element));
   }
 }

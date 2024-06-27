@@ -1,5 +1,5 @@
 import 'package:ez_english/features/models/base_answer.dart';
-import 'package:ez_english/features/sections/components/dictation_question.dart';
+import 'package:ez_english/utils/utils.dart';
 
 class StringAnswer extends BaseAnswer<String> {
   StringAnswer({
@@ -12,9 +12,9 @@ class StringAnswer extends BaseAnswer<String> {
   bool validate(BaseAnswer? userAnswer) {
     // TODO: compare answers here and return true or false
     // might change return type to AnswerValidationResult
-    print("validating String answer, ${userAnswer?.answer}, $answer");
+    // print("validating String answer, ${userAnswer?.answer}, $answer");
     return answer != null &&
-        userAnswer?.answer.normalize() == answer?.normalize();
+        (userAnswer as StringAnswer).answer?.normalize() == answer?.normalize();
   }
 
   @override
