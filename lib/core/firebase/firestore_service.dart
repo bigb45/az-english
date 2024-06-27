@@ -59,9 +59,14 @@ class FirestoreService {
             filteredQuestionsLength = filteredQuestionsData.length;
           }
 
-          for (var mapData in filteredQuestionsData) {
-            BaseQuestion question =
-                BaseQuestion.fromMap(mapData as Map<String, dynamic>);
+          for (var i = 0; i < filteredQuestionsData.length; i++) {
+            var mapData = filteredQuestionsData[i] as Map<String, dynamic>;
+            BaseQuestion question = BaseQuestion.fromMap(mapData);
+            question.path = "${FirestoreConstants.levelsCollection}/$level/"
+                "${FirestoreConstants.sectionsCollection}/$sectionName/"
+                "${FirestoreConstants.unitsCollection}/$unitName/"
+                "${FirestoreConstants.questionsField}/$i"; // Set path
+
             questions.add(question);
           }
         }

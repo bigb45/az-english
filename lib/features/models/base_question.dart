@@ -11,6 +11,8 @@ abstract class BaseQuestion<T> {
   String? questionTextInArabic;
   String? imageUrl;
   String? voiceUrl;
+  String? path; // Firestore document path
+
   // correct answer
   BaseAnswer<T>? answer;
   BaseAnswer<T>? userAnswer;
@@ -21,6 +23,7 @@ abstract class BaseQuestion<T> {
     required this.imageUrl,
     required this.voiceUrl,
     this.answer,
+    this.path,
     required this.questionType,
   });
 
@@ -34,6 +37,7 @@ abstract class BaseQuestion<T> {
       'questionTextInArabic': questionTextInArabic,
       'imageUrl': imageUrl,
       'voiceUrl': voiceUrl,
+      // TODO: Description???
       'description': voiceUrl,
       'answer': answer?.toMap(),
       "questionType": questionType.toShortString(),
