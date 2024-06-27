@@ -13,14 +13,35 @@ class FirestoreService {
   int filteredQuestionsLength = 0;
   Future<List<Level>> fetchLevels() async {
     try {
-      QuerySnapshot snapshot =
+      QuerySnapshot levelSnapshot =
           await _db.collection(FirestoreConstants.levelsCollection).get();
-      if (snapshot.docs.isEmpty) {
+      if (levelSnapshot.docs.isEmpty) {
         throw "No levels found";
       }
-      return snapshot.docs
-          .map((doc) => Level.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
+
+      List<Level> levels = [];
+
+      for (var levelDoc in levelSnapshot.docs) {
+        Level level = Level.fromMap(levelDoc.data() as Map<String, dynamic>);
+
+        // Fetch sections for each level
+        QuerySnapshot sectionSnapshot = await _db
+            .collection(FirestoreConstants.levelsCollection)
+            .doc(level.name)
+            .collection(FirestoreConstants.sectionsCollection)
+            .get();
+
+        if (sectionSnapshot.docs.isNotEmpty) {
+          List<Section> sections = sectionSnapshot.docs
+              .map((doc) => Section.fromMap(doc.data() as Map<String, dynamic>))
+              .toList();
+          level.sections = sections;
+        }
+
+        levels.add(level);
+      }
+
+      return levels;
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
     } catch (e) {
@@ -132,10 +153,13 @@ class FirestoreService {
     try {
       CollectionReference levelsCollection = FirebaseFirestore.instance
           .collection(FirestoreConstants.levelsCollection);
-
+// TODO: Important: When adding new attributes to the Level class,
+// make sure to include all attributes here in the levelMetadata map.
+// Exclude attributes that will be stored as sub-collections, such as 'sections' in this case.
       Map<String, dynamic> levelMetadata = {
         'name': level.name,
         'description': level.description,
+        'id': level.id
       };
       await levelsCollection.doc(level.name).set(levelMetadata);
 
@@ -149,7 +173,7 @@ class FirestoreService {
             .collection(FirestoreConstants.sectionsCollection);
         await sectionsCollection.doc(section.name).set(sectionMetadata);
 
-        for (Unit unit in section.units) {
+        for (Unit unit in section.units!) {
           CollectionReference unitsCollection = sectionsCollection
               .doc(section.name)
               .collection(FirestoreConstants.unitsCollection);

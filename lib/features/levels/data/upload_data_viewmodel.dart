@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:excel/excel.dart';
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/levels/data/models/reading_question.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -90,7 +91,7 @@ class UploadDataViewmodel extends ChangeNotifier {
             (level) => level.name == levelName,
             orElse: () => Level(
               // TODO: map the level id to the given level name
-              id: levels.length + 1,
+              id: RouteConstants.getSectionIds(levelName),
               name: levelName,
               description: '',
               sections: [], // Initialize an empty list of sections
@@ -108,7 +109,7 @@ class UploadDataViewmodel extends ChangeNotifier {
           );
 
           // Check if the unit already exists in the existing section
-          var existingUnit = existingSection?.units.firstWhere(
+          var existingUnit = existingSection?.units?.firstWhere(
             (unit) => unit.name == unitName,
             orElse: () => Unit(
               name: unitName,
@@ -316,8 +317,8 @@ class UploadDataViewmodel extends ChangeNotifier {
           }
 
           // Add the unit to the section if it's not already added
-          if (!existingSection!.units.contains(existingUnit)) {
-            existingSection.units.add(existingUnit!);
+          if (!existingSection!.units!.contains(existingUnit)) {
+            existingSection.units!.add(existingUnit!);
           }
 
           // Add the section to the level if it's not already added

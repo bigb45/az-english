@@ -22,7 +22,7 @@ class Level {
       name: map['name'],
       description: map['description'],
       sections: (map['sections'] as List?)
-          ?.map((section) => Section.fromJson(section))
+          ?.map((section) => Section.fromMap(section))
           .toList(),
     );
   }
@@ -31,7 +31,7 @@ class Level {
       'id': id,
       'name': name,
       'description': description,
-      'sections': sections?.map((s) => s.toJson()).toList(),
+      'sections': sections?.map((s) => s.toMap()).toList(),
     };
   }
 

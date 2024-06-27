@@ -37,23 +37,14 @@ class WritingSectionViewmodel extends BaseViewModel {
     // int lastQuestionIndex = userData.levelsProgress![_levelName]!
     //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
-      Unit writingUnit = await _firestoreService.fetchUnit(
-        RouteConstants.writingSectionName,
+      Unit unit = await _firestoreService.fetchUnit(
+        RouteConstants.listeningWritingSectionName,
         _levelName!,
         // TODO: change unit name to be a variable
         unitName: "Unit2",
         0,
       );
-      Unit listeningUnit = await _firestoreService.fetchUnit(
-        RouteConstants.listeningSectionName,
-        _levelName!,
-        unitName: "Unit2",
-        0,
-      );
-      _questions = [
-        ...listeningUnit.questions.values.cast<BaseQuestion>().toList(),
-        ...writingUnit.questions.values.cast<BaseQuestion>().toList(),
-      ];
+      _questions = unit.questions.values.cast<BaseQuestion>().toList();
 
       error = null;
     } on CustomException catch (e) {
