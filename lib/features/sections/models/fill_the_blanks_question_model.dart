@@ -3,11 +3,11 @@
 import 'package:ez_english/features/models/base_question.dart';
 
 class FillTheBlanksQuestionModel extends BaseQuestion<String> {
-  final String? questionInEnglish;
-  final String? questionInArabic;
+  final String? incompleteSentenceInEnglish;
+  final String? incompleteSentenceInArabic;
   FillTheBlanksQuestionModel({
-    this.questionInEnglish,
-    this.questionInArabic,
+    this.incompleteSentenceInEnglish,
+    this.incompleteSentenceInArabic,
     required super.answer,
     required super.questionTextInEnglish,
     required super.questionTextInArabic,
@@ -22,8 +22,8 @@ class FillTheBlanksQuestionModel extends BaseQuestion<String> {
 
     return {
       ...baseMap,
-      "questionInEnglish": questionInEnglish,
-      "questionInArabic": questionInArabic
+      "questionInEnglish": incompleteSentenceInEnglish,
+      "questionInArabic": incompleteSentenceInArabic
     };
   }
 
@@ -34,8 +34,8 @@ class FillTheBlanksQuestionModel extends BaseQuestion<String> {
       questionTextInArabic: json['questionTextInArabic'],
       imageUrl: json['imageUrl'],
       voiceUrl: json['voiceUrl'],
-      questionInEnglish: json['questionInEnglish'],
-      questionInArabic: json['questionInArabic'],
+      incompleteSentenceInEnglish: json['questionInEnglish'],
+      incompleteSentenceInArabic: json['questionInArabic'],
       questionType: QuestionType.fillTheBlanks,
     );
   }
