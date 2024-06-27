@@ -3,18 +3,23 @@ import 'dart:convert';
 import 'package:ez_english/features/models/base_question.dart';
 
 class WordDefinition extends BaseQuestion {
-  final String word;
+  final String englishWord;
+  final String? arabicWord;
   final WordType type;
   final String? definition;
-  final List<String>? exampleUsage;
+  final List<String>? exampleUsageInEnglish;
+  final List<String>? exampleUsageInArabic;
+
   final String? tenses;
   final bool isNew;
   WordDefinition(
-      {required this.word,
+      {required this.englishWord,
+      required this.arabicWord,
       required this.type,
-      this.isNew = false,
+      this.isNew = true,
       this.definition,
-      this.exampleUsage,
+      this.exampleUsageInEnglish,
+      this.exampleUsageInArabic,
       this.tenses,
       required super.questionTextInEnglish,
       required super.questionTextInArabic,
@@ -26,10 +31,13 @@ class WordDefinition extends BaseQuestion {
     Map<String, dynamic> baseMap = super.toMap();
     return {
       ...baseMap,
-      'word': word,
+      'englishWord': englishWord,
+      'arabicWord': arabicWord,
       'type': type.toShortString(),
       'definition': definition,
-      'exampleUsage': exampleUsage,
+      'exampleUsageInEnglish': exampleUsageInEnglish,
+      'exampleUsageInArabic': exampleUsageInArabic,
+
       // TODO implement exampleUsage and tenses attributes if needed
     };
   }
@@ -37,7 +45,8 @@ class WordDefinition extends BaseQuestion {
   @override
   factory WordDefinition.fromMap(Map<String, dynamic> map) {
     return WordDefinition(
-        word: map['word'],
+        englishWord: map['englishWord'],
+        arabicWord: map['arabicWord'],
         type: switch (map['type']) {
           'verb' => WordType.verb,
           'word' => WordType.word,
@@ -50,8 +59,11 @@ class WordDefinition extends BaseQuestion {
         questionTextInArabic: map['questionTextInArabic'],
         imageUrl: map['imageUrl'],
         voiceUrl: map['voiceUrl'],
-        exampleUsage: map['exampleUsage'] != null
-            ? List<String>.from(map['exampleUsage'])
+        exampleUsageInEnglish: map['exampleUsageInEnglish'] != null
+            ? List<String>.from(map['exampleUsageInEnglish'])
+            : null,
+        exampleUsageInArabic: map['exampleUsageInArabic'] != null
+            ? List<String>.from(map['exampleUsageInArabic'])
             : null,
         questionType: QuestionTypeExtension.fromString(map['questionType']));
   }
@@ -83,5 +95,14 @@ extension WordTypeExtension on WordType {
       (e) => e.toString().split('.').last == str,
       orElse: () => WordType.word, // Default to dictation if not found
     );
+  }
+}
+
+extension StringExtension on String {
+  String capitalizeFirst() {
+    if (isEmpty) {
+      return this;
+    }
+    return this[0].toUpperCase() + substring(1);
   }
 }

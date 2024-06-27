@@ -20,7 +20,6 @@ class WordView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final type = wordData.type;
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Palette.primaryText),
@@ -51,7 +50,8 @@ class WordView extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(vertical: Constants.padding30),
-                child: Text("Word of the Day",
+                child: Text(
+                    "${wordData.type.toShortString().capitalizeFirst()} of the Day",
                     style: TextStyles.practiceCardSecondaryText.copyWith(
                       color: Palette.primaryText,
                       fontSize: 24.sp,
@@ -75,12 +75,19 @@ class WordView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              wordData.word,
+                              wordData.englishWord,
                               style: TextStyles.vocabularyTerm.copyWith(
                                 color: Colors.white,
                               ),
                             ),
-                            SizedBox(height: 20.h),
+                            wordData.arabicWord != null
+                                ? Text(
+                                    wordData.arabicWord!,
+                                    style: TextStyles.vocabularyTerm.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : const SizedBox(),
                             Text(
                               wordData.type.toShortString(),
                               style: TextStyles.wordType.copyWith(
@@ -96,21 +103,27 @@ class WordView extends StatelessWidget {
                                 color: Colors.white70,
                               ),
                             ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                AudioControlButton(
+                                    size: 50.w,
+                                    onPressed: () {
+                                      Utils.speakText(wordData.englishWord);
+                                    },
+                                    type: AudioControlType.speaker),
+                              ],
+                            )
                           ],
                         ),
                       ),
-                      AudioControlButton(
-                          size: 50.w,
-                          onPressed: () {
-                            Utils.speakText(wordData.word);
-                          },
-                          type: AudioControlType.speaker)
                     ],
                   ),
                 ),
               ),
               SizedBox(height: 30.h),
-              wordData.exampleUsage == null || wordData.exampleUsage!.isEmpty
+              wordData.exampleUsageInEnglish == null ||
+                      wordData.exampleUsageInEnglish!.isEmpty
                   ? const SizedBox()
                   : Card(
                       color: Colors.white,
@@ -135,12 +148,17 @@ class WordView extends StatelessWidget {
                             ),
                             SizedBox(height: 10.h),
                             ...List.generate(
-                              wordData.exampleUsage?.length ?? 0,
+                              wordData.exampleUsageInEnglish?.length ?? 0,
                               (index) {
+                                bool printArabicExample =
+                                    wordData.exampleUsageInArabic != null &&
+                                        wordData
+                                            .exampleUsageInArabic!.isNotEmpty;
                                 return Padding(
                                   padding: EdgeInsets.symmetric(vertical: 5.h),
                                   child: Text(
-                                    "\"${wordData.exampleUsage![index]}\"",
+                                    "\"${wordData.exampleUsageInEnglish![index]}\""
+                                    "${printArabicExample ? "\n\"${wordData.exampleUsageInArabic![index]}\"" : ""}",
                                     textAlign: TextAlign.left,
                                     style:
                                         TextStyles.vocabularyExample.copyWith(

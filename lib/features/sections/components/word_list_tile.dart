@@ -51,7 +51,7 @@ class WordListTile extends StatelessWidget {
                         constraints: BoxConstraints(
                             maxWidth: ScreenUtil().screenWidth * 0.5),
                         child: Text(
-                          word.word,
+                          word.englishWord,
                           style: TextStyles.practiceCardSecondaryText,
                           overflow: TextOverflow.ellipsis,
                         ),

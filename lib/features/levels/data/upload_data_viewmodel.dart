@@ -204,34 +204,58 @@ class UploadDataViewmodel extends ChangeNotifier {
             case QuestionType
                   .vocabularyWithListening: // TODO: Should we add the listening ability to all vocabularies
             case QuestionType.vocabulary:
-              questions = questionText?.split(';').map((word) {
-                    List<String> questionParts = word.split(":");
+              questions =
+                  questionText?.split(';').map((wordInEnglishAndArabic) {
+                        List<String> wordsAndExamples =
+                            wordInEnglishAndArabic.split(":");
+                        List<String> englishAndArabicWordAsList =
+                            wordsAndExamples[0].split("0");
+                        List<String>? englishAndArabicExamplesAsList =
+                            wordsAndExamples.length > 1
+                                ? wordsAndExamples[1].split("0")
+                                : null;
 
-                    return WordDefinition(
-                      word: word.split(":")[0].toString(),
-                      type: WordTypeExtension.fromString(questionEnglish!),
-                      exampleUsage: switch (
-                          WordTypeExtension.fromString(questionEnglish)) {
-                        WordType.sentence => null,
-                        WordType.verb =>
-                          questionParts.length > 1 ? [questionParts[1]] : null,
-                        WordType.word =>
-                          questionParts.length > 1 ? [questionParts[1]] : null,
-                      },
-                      questionTextInEnglish: questionEnglish,
-                      questionTextInArabic: questionArabic,
-                      questionType:
-                          QuestionTypeExtension.fromString(questionType),
-                      imageUrl: imageUrl,
-                      voiceUrl: '',
-                    );
-                  }).toList() ??
-                  [];
+                        return WordDefinition(
+                          englishWord: englishAndArabicWordAsList[0],
+                          arabicWord: englishAndArabicWordAsList.length > 1
+                              ? englishAndArabicWordAsList[1]
+                              : null,
+                          type: WordTypeExtension.fromString(questionEnglish!),
+                          exampleUsageInEnglish: switch (
+                              WordTypeExtension.fromString(questionEnglish)) {
+                            WordType.sentence => null,
+                            WordType.verb => wordsAndExamples.length > 1
+                                ? [englishAndArabicExamplesAsList![0]]
+                                : null,
+                            WordType.word => wordsAndExamples.length > 1
+                                ? [englishAndArabicExamplesAsList![0]]
+                                : null,
+                          },
+                          exampleUsageInArabic: switch (
+                              WordTypeExtension.fromString(questionEnglish)) {
+                            WordType.sentence => null,
+                            WordType.verb => wordsAndExamples.length > 1
+                                ? [englishAndArabicExamplesAsList![1]]
+                                : null,
+                            WordType.word => wordsAndExamples.length > 1
+                                ? [englishAndArabicExamplesAsList![1]]
+                                : null,
+                          },
+                          questionTextInEnglish: questionEnglish,
+                          questionTextInArabic: questionArabic,
+                          questionType:
+                              QuestionTypeExtension.fromString(questionType),
+                          imageUrl: imageUrl,
+                          voiceUrl: '',
+                        );
+                      }).toList() ??
+                      [];
               if (currentPassage != null) {
                 currentPassage.questions.addAll(questions);
                 questions = [];
               }
               break;
+
             case QuestionType.fillTheBlanks:
               //TODO: Uncomment this after implementing fill in the blanks question
               // questions =
