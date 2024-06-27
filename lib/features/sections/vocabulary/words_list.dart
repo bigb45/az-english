@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class WordsListView extends StatelessWidget {
+class WordsListView extends StatefulWidget {
   final String pageTitle;
   final String pageSubtitle;
   const WordsListView(
@@ -17,6 +17,11 @@ class WordsListView extends StatelessWidget {
       this.pageTitle = "Vocabulary",
       this.pageSubtitle = "Daily Conversations"});
 
+  @override
+  State<WordsListView> createState() => _WordsListViewState();
+}
+
+class _WordsListViewState extends State<WordsListView> {
   @override
   Widget build(BuildContext context) {
     return Consumer<VocabularySectionViewmodel>(
@@ -43,13 +48,13 @@ class WordsListView extends StatelessWidget {
             title: ListTile(
               contentPadding: const EdgeInsets.only(left: 0, right: 0),
               title: Text(
-                pageTitle,
+                widget.pageTitle,
                 style: TextStyles.titleTextStyle.copyWith(
                   color: Palette.primaryText,
                 ),
               ),
               subtitle: Text(
-                pageSubtitle,
+                widget.pageSubtitle,
                 style: TextStyles.subtitleTextStyle.copyWith(
                   color: Palette.primaryText,
                 ),
@@ -73,11 +78,12 @@ class WordsListView extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => WordView(
-                                        pageTitle: pageTitle,
-                                        pageSubtitle: pageSubtitle,
+                                        pageTitle: widget.pageTitle,
+                                        pageSubtitle: widget.pageSubtitle,
                                         wordData: word),
                                   ),
                                 );
+                                viewmodel.updateWordStatus(word);
                               },
                               word: word as WordDefinition,
                             );

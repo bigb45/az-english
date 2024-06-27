@@ -7,7 +7,7 @@ class Unit {
   String? descriptionInEnglish;
   String? descriptionInArabic;
 
-  List<BaseQuestion?> questions;
+  Map<int, BaseQuestion?> questions;
 
   Unit(
       {required this.name,
@@ -21,9 +21,9 @@ class Unit {
           map['descriptionInEnglish'] ?? 'No English description',
       descriptionInArabic:
           map['descriptionInArabic'] ?? "No Arabic Description",
-      questions: (map['questions'] as List)
-          .map((item) => BaseQuestion.fromMap(item))
-          .toList(),
+      questions: (map['questions'] as Map<String, dynamic>).map(
+        (key, value) => MapEntry(int.parse(key), BaseQuestion.fromMap(value)),
+      ),
     );
   }
 
@@ -32,7 +32,8 @@ class Unit {
       'name': name,
       'descriptionInEnglish': descriptionInEnglish,
       'descriptionInArabic': descriptionInArabic,
-      'questions': questions.map((q) => q?.toMap()).toList(),
+      'questions': questions
+          .map((key, value) => MapEntry(key.toString(), value?.toMap())),
     };
   }
 

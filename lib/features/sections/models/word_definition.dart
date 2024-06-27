@@ -11,7 +11,7 @@ class WordDefinition extends BaseQuestion {
   final List<String>? exampleUsageInArabic;
 
   final String? tenses;
-  final bool isNew;
+  bool isNew;
   WordDefinition(
       {required this.englishWord,
       required this.arabicWord,
@@ -37,7 +37,7 @@ class WordDefinition extends BaseQuestion {
       'definition': definition,
       'exampleUsageInEnglish': exampleUsageInEnglish,
       'exampleUsageInArabic': exampleUsageInArabic,
-
+      'isNew': isNew,
       // TODO implement exampleUsage and tenses attributes if needed
     };
   }
@@ -47,6 +47,7 @@ class WordDefinition extends BaseQuestion {
     return WordDefinition(
         englishWord: map['englishWord'],
         arabicWord: map['arabicWord'],
+        isNew: map['isNew'],
         type: switch (map['type']) {
           'verb' => WordType.verb,
           'word' => WordType.word,
