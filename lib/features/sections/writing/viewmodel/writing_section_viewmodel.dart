@@ -38,7 +38,8 @@ class WritingSectionViewmodel extends BaseViewModel {
     //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
       Unit unit = await _firestoreService.fetchUnit(
-        RouteConstants.listeningWritingSectionName,
+        RouteConstants
+            .sectionNameId[RouteConstants.listeningWritingSectionName]!,
         _levelName!,
         // TODO: change unit name to be a variable
         unitName: "Unit2",

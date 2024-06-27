@@ -42,7 +42,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
     isLoading = true;
     try {
       Unit unit = await _firestoreService.fetchUnit(
-        RouteConstants.readingSectionName,
+        RouteConstants.sectionNameId[RouteConstants.readingSectionName]!,
         _levelName!,
         0,
       );
@@ -79,7 +79,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
         'levelsProgress',
         levelName!,
         'sectionProgress',
-        RouteConstants.readingSectionName,
+        RouteConstants.sectionNameId[RouteConstants.readingSectionName]!,
         "lastStoppedQuestionIndex"
       ]);
       FieldPath sectionProgressIndex = FieldPath([
@@ -96,11 +96,11 @@ class ReadingSectionViewmodel extends BaseViewModel {
                   _firestoreService.allQuestionsLength) *
               100)
           .toString();
-      await _firestoreService.updateQuestion<int>(
+      await _firestoreService.updateQuestionUsingFieldPath<int>(
           docPath: userDocRef,
           fieldPath: lastStoppedQuestionIndexPath,
           newValue: lastStoppedQuestionIndex);
-      await _firestoreService.updateQuestion<String>(
+      await _firestoreService.updateQuestionUsingFieldPath<String>(
           docPath: userDocRef,
           fieldPath: sectionProgressIndex,
           newValue: sectionProgress);

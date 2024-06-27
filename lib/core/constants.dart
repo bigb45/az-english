@@ -44,7 +44,13 @@ class RouteConstants {
     "2": "vocabulary",
     "3": "grammar",
   };
-
+  static final Map<String, String> sectionNameId = {
+    "reading": "0",
+    "listeningWriting": "1",
+    "vocabulary": "2",
+    "grammar": "3",
+    'test': "4"
+  };
   static final Map<String, int> levelNameId = {
     "A1": 0,
     "A2": 1,
@@ -58,15 +64,15 @@ class RouteConstants {
   static const String vocabularySectionName = "vocabulary";
   static const String grammarSectionName = "grammar";
 
-  static String getSectionName(String sectionId) {
-    return sectionIdName[sectionId]!;
+  static String getSectionIds(String sectionName) {
+    return sectionNameId[sectionName]!;
   }
 
   static String getLevelName(String levelId) {
     return levelIdName[levelId]!;
   }
 
-  static int getSectionIds(String levelName) {
+  static int getLevelIds(String levelName) {
     return levelNameId[levelName]!;
   }
 }

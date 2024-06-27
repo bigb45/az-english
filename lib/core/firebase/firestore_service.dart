@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -108,7 +109,7 @@ class FirestoreService {
     }
   }
 
-  Future<void> updateQuestion<T>(
+  Future<void> updateQuestionUsingFieldPath<T>(
       {required DocumentReference docPath,
       required FieldPath fieldPath,
       required T newValue}) async {
@@ -171,11 +172,13 @@ class FirestoreService {
         CollectionReference sectionsCollection = levelsCollection
             .doc(level.name)
             .collection(FirestoreConstants.sectionsCollection);
-        await sectionsCollection.doc(section.name).set(sectionMetadata);
+        await sectionsCollection
+            .doc(RouteConstants.getSectionIds(section.name))
+            .set(sectionMetadata);
 
         for (Unit unit in section.units!) {
           CollectionReference unitsCollection = sectionsCollection
-              .doc(section.name)
+              .doc(RouteConstants.getSectionIds(section.name))
               .collection(FirestoreConstants.unitsCollection);
           Map<String, dynamic> unitData = unit.toMap();
           await unitsCollection.doc(unit.name).set(unitData);
