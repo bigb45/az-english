@@ -84,7 +84,7 @@ class UploadDataViewmodel extends ChangeNotifier {
 
           String? imageUrl = imageName != null && imageName.isNotEmpty
               ? await uploadImageAndGetUrl(imageName)
-              : '';
+              : null;
           // Check if the level already exists in the levels map
           var existingLevel = levels.firstWhere(
             (level) => level.name == levelName,
@@ -132,10 +132,10 @@ class UploadDataViewmodel extends ChangeNotifier {
             case QuestionType.dictation:
               questions = questionText?.split(';').map((word) {
                     return DictationQuestionModel(
-                      questionTextInEnglish: questionEnglish ?? "",
-                      questionTextInArabic: questionArabic ?? "",
-                      imageUrl: '',
-                      voiceUrl: '',
+                      questionTextInEnglish: questionEnglish,
+                      questionTextInArabic: questionArabic,
+                      imageUrl: imageUrl,
+                      voiceUrl: "",
                       speakableText: word,
                       answer: StringAnswer(answer: word),
                     );
@@ -150,8 +150,8 @@ class UploadDataViewmodel extends ChangeNotifier {
             case QuestionType.multipleChoice:
               questions = [
                 MultipleChoiceQuestionModel(
-                  questionTextInEnglish: questionEnglish ?? "",
-                  questionTextInArabic: questionArabic ?? "",
+                  questionTextInEnglish: questionEnglish,
+                  questionTextInArabic: questionArabic,
                   questionSentence: questionText,
                   imageUrl: imageUrl,
                   // voiceUrl: '',
@@ -177,29 +177,6 @@ class UploadDataViewmodel extends ChangeNotifier {
                 questions = [];
               }
               break;
-            case QuestionType.findWordsFromPassage:
-              // case QuestionType.answerQuestionsFromPassage:
-              questions = [
-                ReadingQuestion(
-                  questionTextInEnglish: questionEnglish ?? "",
-                  questionTextInArabic: questionArabic ?? "",
-                  imageUrl: '',
-                  voiceUrl: '',
-                  questionType: QuestionTypeExtension.fromString(questionType),
-                  titleInEnglish: titleInEnglish,
-                  titleInArabic: titleInArabic,
-                  passageInEnglish: passageInEnglish,
-                  passageInArabic: passageInArabic,
-                  words: questionText?.split(';'),
-                  answers: questionAnswerOrOptionsInMCQ,
-                )
-              ];
-              if (currentPassage != null) {
-                currentPassage.questions.addAll(questions);
-                questions = [];
-              }
-
-              break;
 
             case QuestionType.speaking:
               // TODO: Handle this case.
@@ -211,9 +188,9 @@ class UploadDataViewmodel extends ChangeNotifier {
               questions = [
                 YoutubeLessonModel(
                   youtubeUrl: imageName,
-                  questionTextInEnglish: questionEnglish ?? "",
-                  questionTextInArabic: questionArabic ?? "",
-                  imageUrl: '',
+                  questionTextInEnglish: questionEnglish,
+                  questionTextInArabic: questionArabic,
+                  imageUrl: imageUrl,
                   voiceUrl: '',
                   questionType: QuestionTypeExtension.fromString(questionType),
                 )
@@ -245,7 +222,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                       questionTextInArabic: questionArabic,
                       questionType:
                           QuestionTypeExtension.fromString(questionType),
-                      imageUrl: '',
+                      imageUrl: imageUrl,
                       voiceUrl: '',
                     );
                   }).toList() ??
