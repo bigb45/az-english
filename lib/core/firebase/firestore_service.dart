@@ -77,37 +77,13 @@ class FirestoreService {
     }
   }
 
-  Future<void> updateQuestionProgress(
-      {required String userId,
-      required String levelName,
-      required String sectionName,
-      required int newQuestionIndex}) async {
+  Future<void> updateQuestion<T>(
+      {required DocumentReference docPath,
+      required FieldPath fieldPath,
+      required T newValue}) async {
     try {
-      DocumentReference userDocRef = FirebaseFirestore.instance
-          .collection(FirestoreConstants.usersCollections)
-          .doc(userId);
-
-      FieldPath lastStoppedQuestionIndexPath = FieldPath([
-        'levelsProgress',
-        levelName,
-        'sectionProgress',
-        sectionName,
-        "lastStoppedQuestionIndex"
-      ]);
-      FieldPath sectionProgressIndex = FieldPath([
-        'levelsProgress',
-        levelName,
-        'sectionProgress',
-        "reading",
-        "progress"
-      ]);
-      int lastStoppedQuestionIndex =
-          (allQuestionsLength - filteredQuestionsLength) + newQuestionIndex;
-      await userDocRef.update({
-        lastStoppedQuestionIndexPath: lastStoppedQuestionIndex,
-        sectionProgressIndex:
-            (((lastStoppedQuestionIndex + 1) / allQuestionsLength) * 100)
-                .toString()
+      await docPath.update({
+        fieldPath: newValue,
       });
     } catch (e) {
       print("Error updating progress: $e");

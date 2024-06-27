@@ -1,13 +1,17 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
+import 'package:ez_english/features/sections/components/dictation_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
+import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -74,11 +78,39 @@ class ReadingSectionViewmodel extends BaseViewModel {
     isLoading = true;
     notifyListeners();
     try {
-      await _firestoreService.updateQuestionProgress(
-          userId: currentUser!.uid,
-          levelName: levelName!,
-          sectionName: RouteConstants.readingSectionName,
-          newQuestionIndex: newQuestionIndex);
+      DocumentReference userDocRef = FirebaseFirestore.instance
+          .collection(FirestoreConstants.usersCollections)
+          .doc(currentUser!.uid);
+
+      FieldPath lastStoppedQuestionIndexPath = FieldPath([
+        'levelsProgress',
+        levelName!,
+        'sectionProgress',
+        RouteConstants.readingSectionName,
+        "lastStoppedQuestionIndex"
+      ]);
+      FieldPath sectionProgressIndex = FieldPath([
+        'levelsProgress',
+        levelName!,
+        'sectionProgress',
+        "reading",
+        "progress"
+      ]);
+      int lastStoppedQuestionIndex = (_firestoreService.allQuestionsLength -
+              _firestoreService.filteredQuestionsLength) +
+          newQuestionIndex;
+      String sectionProgress = (((lastStoppedQuestionIndex + 1) /
+                  _firestoreService.allQuestionsLength) *
+              100)
+          .toString();
+      await _firestoreService.updateQuestion<int>(
+          docPath: userDocRef,
+          fieldPath: lastStoppedQuestionIndexPath,
+          newValue: lastStoppedQuestionIndex);
+      await _firestoreService.updateQuestion<String>(
+          docPath: userDocRef,
+          fieldPath: sectionProgressIndex,
+          newValue: sectionProgress);
       error = null;
     } on CustomException catch (e) {
       error = e;
