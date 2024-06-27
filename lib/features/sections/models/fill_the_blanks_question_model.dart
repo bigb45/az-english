@@ -39,4 +39,9 @@ class FillTheBlanksQuestionModel extends BaseQuestion<String> {
       questionType: QuestionType.fillTheBlanks,
     );
   }
+
+  @override
+  bool evaluateAnswer() {
+    return answer?.validate(userAnswer) ?? false;
+  }
 }
