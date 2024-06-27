@@ -72,6 +72,40 @@ class VocabularySectionViewmodel extends BaseViewModel {
     }
   }
 
+  Future<void> updateWordStatus(WordDefinition question) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      question.isNew = false;
+      List<String> pathSegments = question.path!.split('/');
+      // Get the document path and the field path
+      String docPath =
+          pathSegments.sublist(0, pathSegments.length - 2).join('/');
+      String questionIndex = pathSegments.last;
+      FieldPath questionFieldPath =
+          FieldPath([FirestoreConstants.questionsField, questionIndex]);
+      DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
+
+      // Update the specific field
+      await _firestoreService.updateQuestion<Map<String, dynamic>>(
+          docPath: docRef,
+          fieldPath: questionFieldPath,
+          newValue: question.toMap());
+
+      error = null;
+    } on CustomException catch (e) {
+      error = e;
+      // _handleError(e.message);
+      notifyListeners();
+    } catch (e) {
+      error = CustomException("An undefined error occurred ${e.toString()}");
+      // _handleError("An undefined error occurred ${e.toString()}");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
   void _handleError(String e) {
     // TODO: separate UI logic from business logic
     Utils.showSnackBar(e);
