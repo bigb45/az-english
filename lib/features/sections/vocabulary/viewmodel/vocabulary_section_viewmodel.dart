@@ -7,6 +7,7 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
+import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
@@ -21,7 +22,7 @@ class VocabularySectionViewmodel extends BaseViewModel {
   UserModel? _userData;
   String? get levelName => _levelName;
   List<BaseQuestion?> _questions = [];
-
+  Unit unit = Unit(name: "vocabulary_unit", questions: []);
   List<BaseQuestion?> get questions => _questions;
   get words => _words;
   final FirestoreService _firestoreService = FirestoreService();
@@ -48,23 +49,19 @@ class VocabularySectionViewmodel extends BaseViewModel {
 
   Future<void> fetchQuestions() async {
     isLoading = true;
-    // int lastQuestionIndex = _userData!.levelsProgress![levelName]!
-    //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
-      _questions = await firestoreService.fetchQuestions(
+      unit = await firestoreService.fetchUnit(
         RouteConstants.vocabularySectionName,
         _levelName!,
         0,
       );
 
+      _questions = unit.questions;
       error = null;
     } on CustomException catch (e) {
-      // error = e as CustomException;
       _handleError(e.message);
       notifyListeners();
     } catch (e) {
-      // TODO: assign error to 'error' variable here and handle state in UI
-      // error = CustomException(e.toString());
       _handleError("An undefined error occurred ${e.toString()}");
     } finally {
       isLoading = false;

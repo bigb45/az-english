@@ -9,6 +9,7 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
+import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/components/dictation_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
@@ -41,20 +42,19 @@ class ReadingSectionViewmodel extends BaseViewModel {
 
   Future<void> fetchQuestions() async {
     isLoading = true;
-    // int lastQuestionIndex = _userData!.levelsProgress![levelName]!
-    //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
-      var fetchedQuestions = await _firestoreService.fetchQuestions(
+      Unit unit = await _firestoreService.fetchUnit(
         RouteConstants.readingSectionName,
         _levelName!,
         0,
       );
-      if (fetchedQuestions.isNotEmpty &&
-          fetchedQuestions.first is PassageQuestionModel) {
-        _passageQuestion = fetchedQuestions.first as PassageQuestionModel;
+
+      if (unit.questions.isNotEmpty &&
+          unit.questions.first is PassageQuestionModel) {
+        _passageQuestion = unit.questions.first as PassageQuestionModel;
         _questions = _passageQuestion!.questions;
       } else {
-        _questions = fetchedQuestions.cast<BaseQuestion>();
+        _questions = unit.questions.cast<BaseQuestion>();
       }
 
       error = null;

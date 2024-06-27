@@ -7,6 +7,7 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
+import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 
@@ -36,22 +37,22 @@ class WritingSectionViewmodel extends BaseViewModel {
     // int lastQuestionIndex = userData.levelsProgress![_levelName]!
     //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
-      var fetchedWritingQuestions = await _firestoreService.fetchQuestions(
+      Unit writingUnit = await _firestoreService.fetchUnit(
         RouteConstants.writingSectionName,
         _levelName!,
         // TODO: change unit name to be a variable
         unitName: "Unit2",
         0,
       );
-      var fetchedListeningQuestions = await _firestoreService.fetchQuestions(
+      Unit listeningUnit = await _firestoreService.fetchUnit(
         RouteConstants.listeningSectionName,
         _levelName!,
         unitName: "Unit2",
         0,
       );
       _questions = [
-        ...fetchedListeningQuestions.cast<BaseQuestion>(),
-        ...fetchedWritingQuestions.cast<BaseQuestion>(),
+        ...listeningUnit.questions.cast<BaseQuestion>(),
+        ...writingUnit.questions.cast<BaseQuestion>(),
       ];
 
       error = null;

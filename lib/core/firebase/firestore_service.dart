@@ -29,7 +29,7 @@ class FirestoreService {
   }
 
 // TODO generic function
-  Future<List<BaseQuestion>> fetchQuestions(
+  Future<Unit> fetchUnit(
     String sectionName,
     String level,
     int startIndex, {
@@ -66,12 +66,19 @@ class FirestoreService {
                 "${FirestoreConstants.sectionsCollection}/$sectionName/"
                 "${FirestoreConstants.unitsCollection}/$unitName/"
                 "${FirestoreConstants.questionsField}/$i"; // Set path
-
             questions.add(question);
           }
         }
+
+        return Unit(
+          name: unitName,
+          descriptionInEnglish: data['descriptionInEnglish'],
+          descriptionInArabic: data['descriptionInArabic'],
+          questions: questions,
+        );
+      } else {
+        throw Exception('Level document does not exist');
       }
-      return questions;
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
     }
