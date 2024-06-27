@@ -35,8 +35,7 @@ class FirestoreService {
     int startIndex, {
     String unitName = "Unit1",
   }) async {
-    List<BaseQuestion> questions = [];
-    List<dynamic> filteredQuestionsData = [];
+    Map<int, BaseQuestion> questions = {};
     try {
       DocumentSnapshot levelDoc = await _db
           .collection(FirestoreConstants.levelsCollection)
@@ -44,29 +43,33 @@ class FirestoreService {
           .collection(FirestoreConstants.sectionsCollection)
           .doc(sectionName)
           .collection(FirestoreConstants.unitsCollection)
-          //TODO: Unit's name needs to be dynamic, based on the order of sections for each day
           .doc(unitName)
           .get();
       if (levelDoc.exists) {
         Map<String, dynamic> data = levelDoc.data() as Map<String, dynamic>;
 
         if (data.containsKey(FirestoreConstants.questionsField)) {
-          List<dynamic> questionsData = data[FirestoreConstants.questionsField];
+          // Convert keys from String to int
+          Map<int, dynamic> questionsData =
+              (data[FirestoreConstants.questionsField] as Map<String, dynamic>)
+                  .map((key, value) => MapEntry(int.parse(key), value));
           allQuestionsLength = questionsData.length;
 
-          if (startIndex < questionsData.length) {
-            filteredQuestionsData = questionsData.sublist(startIndex);
-            filteredQuestionsLength = filteredQuestionsData.length;
-          }
+          var sortedEntries = questionsData.entries.toList()
+            ..sort((a, b) => a.key.compareTo(b.key));
 
-          for (var i = 0; i < filteredQuestionsData.length; i++) {
-            var mapData = filteredQuestionsData[i] as Map<String, dynamic>;
+          // Filter questions based on startIndex
+          var filteredQuestionsData = sortedEntries.skip(startIndex).toList();
+          filteredQuestionsLength = filteredQuestionsData.length;
+
+          for (var entry in filteredQuestionsData) {
+            var mapData = entry.value as Map<String, dynamic>;
             BaseQuestion question = BaseQuestion.fromMap(mapData);
             question.path = "${FirestoreConstants.levelsCollection}/$level/"
                 "${FirestoreConstants.sectionsCollection}/$sectionName/"
                 "${FirestoreConstants.unitsCollection}/$unitName/"
-                "${FirestoreConstants.questionsField}/$i"; // Set path
-            questions.add(question);
+                "${FirestoreConstants.questionsField}/${entry.key}"; // Set path
+            questions[entry.key] = question; // Use key as map key
           }
         }
 

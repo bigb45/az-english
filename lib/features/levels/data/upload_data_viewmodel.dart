@@ -116,7 +116,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   descriptionEnglish != '-' ? descriptionEnglish : null,
               descriptionInArabic:
                   descriptionArabic != '-' ? descriptionArabic : null,
-              questions: [], // Initialize an empty list of questions
+              questions: {}, // Initialize an empty map of questions
             ),
           );
 
@@ -127,54 +127,53 @@ class UploadDataViewmodel extends ChangeNotifier {
           previousSectionName = sectionName;
 
           // Add questions dynamically based on the row data
-          List<BaseQuestion?> questions = [];
+          Map<int, BaseQuestion?> questions = {};
+          int nextIndex = existingUnit!.questions.length;
           switch (QuestionTypeExtension.fromString(questionType)) {
             case QuestionType.dictation:
-              questions = questionText?.split(';').map((word) {
-                    return DictationQuestionModel(
-                      questionTextInEnglish: questionEnglish,
-                      questionTextInArabic: questionArabic,
-                      imageUrl: imageUrl,
-                      voiceUrl: "",
-                      speakableText: word,
-                      answer: StringAnswer(answer: word),
-                    );
-                  }).toList() ??
-                  [];
-              if (currentPassage != null) {
-                currentPassage.questions.addAll(questions);
-                questions = [];
-              }
+              questionText?.split(';').forEach((word) {
+                var question = DictationQuestionModel(
+                  questionTextInEnglish: questionEnglish,
+                  questionTextInArabic: questionArabic,
+                  imageUrl: imageUrl,
+                  voiceUrl: "",
+                  speakableText: word,
+                  answer: StringAnswer(answer: word),
+                );
+                if (currentPassage != null) {
+                  currentPassage.questions.add(question);
+                } else {
+                  existingUnit.questions[nextIndex++] = question;
+                }
+              });
 
               break;
             case QuestionType.multipleChoice:
-              questions = [
-                MultipleChoiceQuestionModel(
-                  questionTextInEnglish: questionEnglish,
-                  questionTextInArabic: questionArabic,
-                  questionSentence: questionText,
-                  imageUrl: imageUrl,
-                  // voiceUrl: '',
-                  options:
-                      questionAnswerOrOptionsInMCQ.asMap().entries.map((entry) {
-                    int index = entry.key;
-                    String option = entry.value!;
-                    return RadioItemData(
-                        value: index.toString(), title: option);
-                  }).toList(), // Assign index as the value
-                  answer: MultipleChoiceAnswer(
-                    answer: RadioItemData(
-                      title: questionAnswerOrOptionsInMCQ[
-                              int.tryParse(mcqAnswer!)!] ??
-                          "",
-                      value: mcqAnswer,
-                    ),
+              var question = MultipleChoiceQuestionModel(
+                questionTextInEnglish: questionEnglish,
+                questionTextInArabic: questionArabic,
+                questionSentence: questionText,
+                imageUrl: imageUrl,
+                // voiceUrl: '',
+                options:
+                    questionAnswerOrOptionsInMCQ.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  String option = entry.value!;
+                  return RadioItemData(value: index.toString(), title: option);
+                }).toList(), // Assign index as the value
+                answer: MultipleChoiceAnswer(
+                  answer: RadioItemData(
+                    title: questionAnswerOrOptionsInMCQ[
+                            int.tryParse(mcqAnswer!)!] ??
+                        "",
+                    value: mcqAnswer,
                   ),
                 ),
-              ];
+              );
               if (currentPassage != null) {
-                currentPassage.questions.addAll(questions);
-                questions = [];
+                currentPassage.questions.add(question);
+              } else {
+                existingUnit.questions[nextIndex++] = question;
               }
               break;
 
@@ -185,75 +184,72 @@ class UploadDataViewmodel extends ChangeNotifier {
               // TODO: Handle this case.
               throw Exception(UnimplementedError());
             case QuestionType.youtubeLesson:
-              questions = [
-                YoutubeLessonModel(
-                  youtubeUrl: imageName,
-                  questionTextInEnglish: questionEnglish,
-                  questionTextInArabic: questionArabic,
-                  imageUrl: imageUrl,
-                  voiceUrl: '',
-                  questionType: QuestionTypeExtension.fromString(questionType),
-                )
-              ];
+              var question = YoutubeLessonModel(
+                youtubeUrl: imageName,
+                questionTextInEnglish: questionEnglish,
+                questionTextInArabic: questionArabic,
+                imageUrl: imageUrl,
+                voiceUrl: '',
+                questionType: QuestionTypeExtension.fromString(questionType),
+              );
               if (currentPassage != null) {
-                currentPassage.questions.addAll(questions);
-                questions = [];
+                currentPassage.questions.add(question);
+              } else {
+                existingUnit.questions[nextIndex++] = question;
               }
-
               break;
             case QuestionType
                   .vocabularyWithListening: // TODO: Should we add the listening ability to all vocabularies
             case QuestionType.vocabulary:
-              questions =
-                  questionText?.split(';').map((wordInEnglishAndArabic) {
-                        List<String> wordsAndExamples =
-                            wordInEnglishAndArabic.split(":");
-                        List<String> englishAndArabicWordAsList =
-                            wordsAndExamples[0].split("0");
-                        List<String>? englishAndArabicExamplesAsList =
-                            wordsAndExamples.length > 1
-                                ? wordsAndExamples[1].split("0")
-                                : null;
+              questionText?.split(';').forEach((wordInEnglishAndArabic) {
+                List<String> wordsAndExamples =
+                    wordInEnglishAndArabic.split(":");
+                List<String> englishAndArabicWordAsList =
+                    wordsAndExamples[0].split("0");
+                List<String>? englishAndArabicExamplesAsList =
+                    wordsAndExamples.length > 1
+                        ? wordsAndExamples[1].split("0")
+                        : null;
 
-                        return WordDefinition(
-                          englishWord: englishAndArabicWordAsList[0],
-                          arabicWord: englishAndArabicWordAsList.length > 1
-                              ? englishAndArabicWordAsList[1]
-                              : null,
-                          type: WordTypeExtension.fromString(questionEnglish!),
-                          exampleUsageInEnglish: switch (
-                              WordTypeExtension.fromString(questionEnglish)) {
-                            WordType.sentence => null,
-                            WordType.verb => wordsAndExamples.length > 1
-                                ? [englishAndArabicExamplesAsList![0]]
-                                : null,
-                            WordType.word => wordsAndExamples.length > 1
-                                ? [englishAndArabicExamplesAsList![0]]
-                                : null,
-                          },
-                          exampleUsageInArabic: switch (
-                              WordTypeExtension.fromString(questionEnglish)) {
-                            WordType.sentence => null,
-                            WordType.verb => wordsAndExamples.length > 1
-                                ? [englishAndArabicExamplesAsList![1]]
-                                : null,
-                            WordType.word => wordsAndExamples.length > 1
-                                ? [englishAndArabicExamplesAsList![1]]
-                                : null,
-                          },
-                          questionTextInEnglish: questionEnglish,
-                          questionTextInArabic: questionArabic,
-                          questionType:
-                              QuestionTypeExtension.fromString(questionType),
-                          imageUrl: imageUrl,
-                          voiceUrl: '',
-                        );
-                      }).toList() ??
-                      [];
-              if (currentPassage != null) {
-                currentPassage.questions.addAll(questions);
-                questions = [];
-              }
+                var question = WordDefinition(
+                  englishWord: englishAndArabicWordAsList[0],
+                  arabicWord: englishAndArabicWordAsList.length > 1
+                      ? englishAndArabicWordAsList[1]
+                      : null,
+                  type: WordTypeExtension.fromString(questionEnglish!),
+                  exampleUsageInEnglish: switch (
+                      WordTypeExtension.fromString(questionEnglish)) {
+                    WordType.sentence => null,
+                    WordType.verb => wordsAndExamples.length > 1
+                        ? [englishAndArabicExamplesAsList![0]]
+                        : null,
+                    WordType.word => wordsAndExamples.length > 1
+                        ? [englishAndArabicExamplesAsList![0]]
+                        : null,
+                  },
+                  exampleUsageInArabic: switch (
+                      WordTypeExtension.fromString(questionEnglish)) {
+                    WordType.sentence => null,
+                    WordType.verb => wordsAndExamples.length > 1
+                        ? [englishAndArabicExamplesAsList![1]]
+                        : null,
+                    WordType.word => wordsAndExamples.length > 1
+                        ? [englishAndArabicExamplesAsList![1]]
+                        : null,
+                  },
+                  questionTextInEnglish: questionEnglish,
+                  questionTextInArabic: questionArabic,
+                  questionType: QuestionTypeExtension.fromString(questionType),
+                  imageUrl: imageUrl,
+                  voiceUrl: '',
+                );
+
+                if (currentPassage != null) {
+                  currentPassage.questions.add(question);
+                } else {
+                  existingUnit.questions[nextIndex++] = question;
+                }
+              });
               break;
 
             case QuestionType.fillTheBlanks:
@@ -285,18 +281,17 @@ class UploadDataViewmodel extends ChangeNotifier {
               // }
               break;
             case QuestionType.listening:
-              questions = [
-                ListeningQuestionModel(
-                  words: questionText!.split(";"),
-                  questionTextInEnglish: questionEnglish,
-                  questionTextInArabic: questionArabic,
-                  imageUrl: '',
-                  voiceUrl: '',
-                )
-              ];
+              var question = ListeningQuestionModel(
+                words: questionText!.split(";"),
+                questionTextInEnglish: questionEnglish,
+                questionTextInArabic: questionArabic,
+                imageUrl: '',
+                voiceUrl: '',
+              );
               if (currentPassage != null) {
-                currentPassage.questions.addAll(questions);
-                questions = [];
+                currentPassage.questions.add(question);
+              } else {
+                existingUnit.questions[nextIndex++] = question;
               }
               break;
             case QuestionType.passage:
@@ -313,14 +308,11 @@ class UploadDataViewmodel extends ChangeNotifier {
               );
               break;
             default:
-              questions = [];
+              break;
           }
 
           if (currentPassage != null && currentPassage.questions.isEmpty) {
-            existingUnit?.questions.add(currentPassage);
-          } else {
-            // Add the questions to the existing unit
-            existingUnit?.questions.addAll(questions);
+            existingUnit.questions[nextIndex++] = currentPassage;
           }
 
           // Add the unit to the section if it's not already added

@@ -50,11 +50,11 @@ class ReadingSectionViewmodel extends BaseViewModel {
       );
 
       if (unit.questions.isNotEmpty &&
-          unit.questions.first is PassageQuestionModel) {
-        _passageQuestion = unit.questions.first as PassageQuestionModel;
+          unit.questions.values.first is PassageQuestionModel) {
+        _passageQuestion = unit.questions.values.first as PassageQuestionModel;
         _questions = _passageQuestion!.questions;
       } else {
-        _questions = unit.questions.cast<BaseQuestion>();
+        _questions = unit.questions.values.cast<BaseQuestion>().toList();
       }
 
       error = null;

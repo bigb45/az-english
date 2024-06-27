@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
@@ -12,6 +14,7 @@ import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/utils/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../models/word_model.dart';
 
@@ -22,7 +25,7 @@ class VocabularySectionViewmodel extends BaseViewModel {
   UserModel? _userData;
   String? get levelName => _levelName;
   List<BaseQuestion?> _questions = [];
-  Unit unit = Unit(name: "vocabulary_unit", questions: []);
+  Unit unit = Unit(name: "vocabulary_unit", questions: {});
   List<BaseQuestion?> get questions => _questions;
   get words => _words;
   final FirestoreService _firestoreService = FirestoreService();
@@ -56,7 +59,7 @@ class VocabularySectionViewmodel extends BaseViewModel {
         0,
       );
 
-      _questions = unit.questions;
+      _questions = unit.questions.values.toList();
       error = null;
     } on CustomException catch (e) {
       _handleError(e.message);

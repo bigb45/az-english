@@ -51,8 +51,8 @@ class WritingSectionViewmodel extends BaseViewModel {
         0,
       );
       _questions = [
-        ...listeningUnit.questions.cast<BaseQuestion>(),
-        ...writingUnit.questions.cast<BaseQuestion>(),
+        ...listeningUnit.questions.values.cast<BaseQuestion>().toList(),
+        ...writingUnit.questions.values.cast<BaseQuestion>().toList(),
       ];
 
       error = null;

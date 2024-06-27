@@ -38,7 +38,7 @@ class GrammarSectionViewmodel extends BaseViewModel {
         0,
       );
 
-      _questions = unit.questions.cast<BaseQuestion>();
+      _questions = unit.questions.values.cast<BaseQuestion>().toList();
 
       error = null;
     } on CustomException catch (e) {
