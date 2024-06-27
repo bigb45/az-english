@@ -4,6 +4,7 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
+import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 
 class GrammarSectionViewmodel extends BaseViewModel {
@@ -31,13 +32,13 @@ class GrammarSectionViewmodel extends BaseViewModel {
   Future<void> fetchQuestions() async {
     isLoading = true;
     try {
-      var fetchedQuestions = await _firestoreService.fetchQuestions(
+      Unit unit = await _firestoreService.fetchUnit(
         RouteConstants.grammarSectionName,
         _levelName!,
         0,
       );
 
-      _questions = fetchedQuestions.cast<BaseQuestion>();
+      _questions = unit.questions.cast<BaseQuestion>();
 
       error = null;
     } on CustomException catch (e) {

@@ -39,20 +39,19 @@ class ReadingSectionViewmodel extends BaseViewModel {
 
   Future<void> fetchQuestions() async {
     isLoading = true;
-    // int lastQuestionIndex = _userData!.levelsProgress![levelName]!
-    //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
-      var fetchedQuestions = await _firestoreService.fetchQuestions(
+      Unit unit = await _firestoreService.fetchUnit(
         RouteConstants.readingSectionName,
         _levelName!,
         0,
       );
-      if (fetchedQuestions.isNotEmpty &&
-          fetchedQuestions.first is PassageQuestionModel) {
-        _passageQuestion = fetchedQuestions.first as PassageQuestionModel;
+
+      if (unit.questions.isNotEmpty &&
+          unit.questions.first is PassageQuestionModel) {
+        _passageQuestion = unit.questions.first as PassageQuestionModel;
         _questions = _passageQuestion!.questions;
       } else {
-        _questions = fetchedQuestions.cast<BaseQuestion>();
+        _questions = unit.questions.cast<BaseQuestion>();
       }
 
       error = null;

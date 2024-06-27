@@ -13,7 +13,7 @@ class VocabularySectionViewmodel extends BaseViewModel {
   String? _levelName;
   String? get levelName => _levelName;
   List<BaseQuestion?> _questions = [];
-
+  Unit unit = Unit(name: "vocabulary_unit", questions: []);
   List<BaseQuestion?> get questions => _questions;
   get words => _words;
 
@@ -30,15 +30,14 @@ class VocabularySectionViewmodel extends BaseViewModel {
 
   Future<void> fetchQuestions() async {
     isLoading = true;
-    // int lastQuestionIndex = _userData!.levelsProgress![levelName]!
-    //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
-      _questions = await firestoreService.fetchQuestions(
+      unit = await firestoreService.fetchUnit(
         RouteConstants.vocabularySectionName,
         _levelName!,
         0,
       );
 
+      _questions = unit.questions;
       error = null;
     } on CustomException catch (e) {
       error = e;
