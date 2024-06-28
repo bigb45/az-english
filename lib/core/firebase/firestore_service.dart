@@ -10,6 +10,15 @@ import 'package:ez_english/features/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirestoreService {
+  FirestoreService._privateConstructor();
+
+  static final FirestoreService _instance =
+      FirestoreService._privateConstructor();
+
+  factory FirestoreService() {
+    return _instance;
+  }
+
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   int allQuestionsLength = 0;
   int filteredQuestionsLength = 0;
