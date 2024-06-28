@@ -55,10 +55,13 @@ Widget buildQuestion({
       return const Text("Answer Questions From Passage Question");
 
     case QuestionType.youtubeLesson:
-      return YouTubeVideoPlayer(
-        videoId: (question as YoutubeLessonModel).youtubeUrl ??
-            // TODO: handle missing youtube url in a better way
-            "https://www.youtube.com/watch?v=ml5uvpfXcLU",
+      return RepaintBoundary(
+        child: YouTubeVideoPlayer(
+          key: UniqueKey(),
+          videoId: (question as YoutubeLessonModel).youtubeUrl ??
+              // TODO: handle missing youtube url in a better way
+              "https://www.youtube.com/watch?v=ml5uvpfXcLU",
+        ),
       );
 
     case QuestionType.fillTheBlanks:
