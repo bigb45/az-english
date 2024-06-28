@@ -15,67 +15,59 @@ class FirestoreService {
   int filteredQuestionsLength = 0;
   Future<List<Level>> fetchLevels(User user) async {
     try {
-      dynamic questionsNumber;
-      // Get current day from user data
-
       QuerySnapshot levelSnapshot =
           await _db.collection(FirestoreConstants.levelsCollection).get();
       if (levelSnapshot.docs.isEmpty) {
         throw "No levels found";
       }
 
-      List<Level> levels = [];
-
-      for (var levelDoc in levelSnapshot.docs) {
+      List<Future<Level>> levelFutures =
+          levelSnapshot.docs.map((levelDoc) async {
         Level level = Level.fromMap(levelDoc.data() as Map<String, dynamic>);
         int currentDay = await getCurrentDay(user, level.name);
-
         bool isFirstWeek = ((currentDay - 1) ~/ 5) % 2 == 0;
 
-        // Fetch sections for each level
         QuerySnapshot sectionSnapshot = await _db
             .collection(FirestoreConstants.levelsCollection)
             .doc(level.name)
             .collection(FirestoreConstants.sectionsCollection)
             .get();
 
-        if (sectionSnapshot.docs.isNotEmpty) {
-          List<Section> sections = [];
-          List<String> daySections = getSectionsForDay(currentDay, isFirstWeek);
+        List<Future<Section>> sectionFutures =
+            sectionSnapshot.docs.map((sectionDoc) async {
+          Section section =
+              Section.fromMap(sectionDoc.data() as Map<String, dynamic>);
 
-          for (var sectionDoc in sectionSnapshot.docs) {
-            Section section =
-                Section.fromMap(sectionDoc.data() as Map<String, dynamic>);
+          DocumentReference unitReference = _db
+              .collection(FirestoreConstants.levelsCollection)
+              .doc(level.name)
+              .collection(FirestoreConstants.sectionsCollection)
+              .doc(RouteConstants.getSectionIds("reading"))
+              .collection(FirestoreConstants.unitsCollection)
+              .doc("Unit1");
 
-            // Fetch units for each section
-            DocumentReference unitReference = _db
-                .collection(FirestoreConstants.levelsCollection)
-                .doc(level.name)
-                .collection(FirestoreConstants.sectionsCollection)
-                .doc(RouteConstants.getSectionIds("reading"))
-                .collection(FirestoreConstants.unitsCollection)
-                // TODO: unit logic
-                .doc("Unit1");
-            await unitReference.get().then((snapshot) {
-              questionsNumber = (snapshot.data()
-                  as Map<String, dynamic>)['numberOfQuestions']!;
-            });
-            section.numberOfQuestions = questionsNumber;
-            sections.add(section);
+          dynamic questionsNumber = await unitReference.get().then((snapshot) {
+            return (snapshot.data()
+                as Map<String, dynamic>)['numberOfQuestions']!;
+          });
+
+          section.numberOfQuestions = questionsNumber;
+          return section;
+        }).toList();
+
+        List<Section> sections = await Future.wait(sectionFutures);
+        List<String> daySections = getSectionsForDay(currentDay, isFirstWeek);
+        sections.forEach((section) {
+          if (daySections.contains(section.name)) {
+            section.isAssigned = true;
           }
-          for (Section section in sections) {
-            if (daySections.contains(section.name)) {
-              section.isAssigned = true;
-            }
-          }
+        });
 
-          level.sections = sections;
-        }
+        level.sections = sections;
+        return level;
+      }).toList();
 
-        levels.add(level);
-      }
-
-      return levels;
+      return await Future.wait(levelFutures);
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
     } catch (e) {
