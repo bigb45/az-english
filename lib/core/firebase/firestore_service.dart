@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -6,12 +7,23 @@ import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FirestoreService {
+  FirestoreService._privateConstructor();
+
+  static final FirestoreService _instance =
+      FirestoreService._privateConstructor();
+
+  factory FirestoreService() {
+    return _instance;
+  }
+
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   int allQuestionsLength = 0;
   int filteredQuestionsLength = 0;
-  Future<List<Level>> fetchLevels() async {
+  String? unitNumber;
+  Future<List<Level>> fetchLevels(User user) async {
     try {
       QuerySnapshot levelSnapshot =
           await _db.collection(FirestoreConstants.levelsCollection).get();
@@ -19,29 +31,51 @@ class FirestoreService {
         throw "No levels found";
       }
 
-      List<Level> levels = [];
-
-      for (var levelDoc in levelSnapshot.docs) {
+      List<Future<Level>> levelFutures =
+          levelSnapshot.docs.map((levelDoc) async {
         Level level = Level.fromMap(levelDoc.data() as Map<String, dynamic>);
+        int currentDay = await getCurrentDay(user, level.name);
+        unitNumber = "unit$currentDay";
+        bool isFirstWeek = ((currentDay - 1) ~/ 5) % 2 == 0;
+        List<String> daySections = getSectionsForDay(currentDay, isFirstWeek);
 
-        // Fetch sections for each level
         QuerySnapshot sectionSnapshot = await _db
             .collection(FirestoreConstants.levelsCollection)
             .doc(level.name)
             .collection(FirestoreConstants.sectionsCollection)
             .get();
 
-        if (sectionSnapshot.docs.isNotEmpty) {
-          List<Section> sections = sectionSnapshot.docs
-              .map((doc) => Section.fromMap(doc.data() as Map<String, dynamic>))
-              .toList();
-          level.sections = sections;
-        }
+        List<Future<Section>> sectionFutures =
+            sectionSnapshot.docs.map((sectionDoc) async {
+          Section section =
+              Section.fromMap(sectionDoc.data() as Map<String, dynamic>);
+          if (daySections.contains(section.name)) {
+            DocumentReference unitReference = _db
+                .collection(FirestoreConstants.levelsCollection)
+                .doc(level.name)
+                .collection(FirestoreConstants.sectionsCollection)
+                .doc(RouteConstants.getSectionIds(section.name))
+                .collection(FirestoreConstants.unitsCollection)
+                .doc(unitNumber);
 
-        levels.add(level);
-      }
+            dynamic questionsNumber =
+                await unitReference.get().then((snapshot) {
+              return (snapshot.data()
+                  as Map<String, dynamic>)['numberOfQuestions']!;
+            });
 
-      return levels;
+            section.numberOfQuestions = questionsNumber;
+            section.isAssigned = true;
+          }
+          return section;
+        }).toList();
+
+        List<Section> sections = await Future.wait(sectionFutures);
+        level.sections = sections;
+        return level;
+      }).toList();
+
+      return await Future.wait(levelFutures);
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
     } catch (e) {
@@ -49,13 +83,64 @@ class FirestoreService {
     }
   }
 
+  List<String> getSectionsForDay(int day, bool isFirstWeek) {
+    // Define the basic two-day repeating section pattern
+    List<List<String>> sectionsPattern = [
+      [
+        RouteConstants.readingSectionName,
+        RouteConstants.grammarSectionName,
+        RouteConstants.vocabularySectionName,
+      ],
+      [
+        RouteConstants.listeningWritingSectionName,
+        RouteConstants.vocabularySectionName,
+      ],
+    ];
+
+    // Calculate which pattern to use based on the week and day
+    // (day - 1) % 2 determines the pattern within the week,
+    // day index is adjusted by adding (week number * 2) % 2 to alternate every week.
+    int weekNumber = ((day - 1) ~/ 5) %
+        2; // Calculate the week number (0 for first week, 1 for second within the cycle)
+    int dayIndex =
+        (day - 1) % 2; // Calculate the day index within the week (0 or 1)
+
+    if (!isFirstWeek) {
+      weekNumber = 1 -
+          weekNumber; // Invert week number for the second overall week to start with the opposite pattern
+    }
+    // Adjust day index based on the calculated week number
+    dayIndex = (dayIndex + weekNumber) % 2;
+
+    return sectionsPattern[dayIndex];
+  }
+
+  Future<int> getCurrentDay(User currentUser, String level) async {
+    DocumentReference userDocRef = FirebaseFirestore.instance
+        .collection(FirestoreConstants.usersCollections)
+        .doc(currentUser.uid);
+
+    DocumentSnapshot userDoc = await userDocRef.get();
+    if (userDoc.exists) {
+      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+      if (userData.containsKey('levelsProgress') &&
+          userData['levelsProgress'].containsKey(level)) {
+        Map<String, dynamic> levelProgress = userData['levelsProgress'][level];
+        return levelProgress['currentDay'] ?? 1; // Default to 1 if not set
+      } else {
+        return 1; // Default to 1 if level progress not found
+      }
+    } else {
+      throw Exception('User document does not exist');
+    }
+  }
+
 // TODO generic function
   Future<Unit> fetchUnit(
     String sectionName,
     String level,
-    int startIndex, {
-    String unitName = "Unit1",
-  }) async {
+    int startIndex,
+  ) async {
     Map<int, BaseQuestion> questions = {};
     try {
       DocumentSnapshot levelDoc = await _db
@@ -64,7 +149,7 @@ class FirestoreService {
           .collection(FirestoreConstants.sectionsCollection)
           .doc(sectionName)
           .collection(FirestoreConstants.unitsCollection)
-          .doc(unitName)
+          .doc(unitNumber)
           .get();
       if (levelDoc.exists) {
         Map<String, dynamic> data = levelDoc.data() as Map<String, dynamic>;
@@ -88,14 +173,14 @@ class FirestoreService {
             BaseQuestion question = BaseQuestion.fromMap(mapData);
             question.path = "${FirestoreConstants.levelsCollection}/$level/"
                 "${FirestoreConstants.sectionsCollection}/$sectionName/"
-                "${FirestoreConstants.unitsCollection}/$unitName/"
+                "${FirestoreConstants.unitsCollection}/$unitNumber/"
                 "${FirestoreConstants.questionsField}/${entry.key}"; // Set path
             questions[entry.key] = question; // Use key as map key
           }
         }
 
         return Unit(
-          name: unitName,
+          name: unitNumber!,
           descriptionInEnglish: data['descriptionInEnglish'],
           descriptionInArabic: data['descriptionInArabic'],
           questions: questions,
@@ -108,7 +193,7 @@ class FirestoreService {
     }
   }
 
-  Future<void> updateQuestion<T>(
+  Future<void> updateQuestionUsingFieldPath<T>(
       {required DocumentReference docPath,
       required FieldPath fieldPath,
       required T newValue}) async {
@@ -116,6 +201,17 @@ class FirestoreService {
       await docPath.update({
         fieldPath: newValue,
       });
+    } catch (e) {
+      print("Error updating progress: $e");
+    }
+  }
+
+  Future<void> updateDocuments({
+    required DocumentReference docPath,
+    required Map<String, dynamic> newValues,
+  }) async {
+    try {
+      await docPath.update(newValues);
     } catch (e) {
       print("Error updating progress: $e");
     }
@@ -153,9 +249,9 @@ class FirestoreService {
     try {
       CollectionReference levelsCollection = FirebaseFirestore.instance
           .collection(FirestoreConstants.levelsCollection);
-// TODO: Important: When adding new attributes to the Level class,
-// make sure to include all attributes here in the levelMetadata map.
-// Exclude attributes that will be stored as sub-collections, such as 'sections' in this case.
+      // TODO: Important: When adding new attributes to the Level class,
+      // make sure to include all attributes here in the levelMetadata map.
+      // Exclude attributes that will be stored as sub-collections, such as 'sections' in this case.
       Map<String, dynamic> levelMetadata = {
         'name': level.name,
         'description': level.description,
@@ -163,25 +259,33 @@ class FirestoreService {
       };
       await levelsCollection.doc(level.name).set(levelMetadata);
 
+      List<Future<void>> uploadFutures = [];
+
       for (Section section in level.sections!) {
         Map<String, dynamic> sectionMetadata = {
           'name': section.name,
           'description': section.description,
+          'attempted': section.attempted,
         };
         CollectionReference sectionsCollection = levelsCollection
             .doc(level.name)
             .collection(FirestoreConstants.sectionsCollection);
-        await sectionsCollection.doc(section.name).set(sectionMetadata);
+
+        uploadFutures.add(sectionsCollection
+            .doc(RouteConstants.getSectionIds(section.name))
+            .set(sectionMetadata));
 
         for (Unit unit in section.units!) {
           CollectionReference unitsCollection = sectionsCollection
-              .doc(section.name)
+              .doc(RouteConstants.getSectionIds(section.name))
               .collection(FirestoreConstants.unitsCollection);
           Map<String, dynamic> unitData = unit.toMap();
-          await unitsCollection.doc(unit.name).set(unitData);
+
+          uploadFutures.add(unitsCollection.doc(unit.name).set(unitData));
         }
       }
 
+      await Future.wait(uploadFutures);
       print('Level data uploaded successfully to Firestore.');
     } catch (e) {
       print('Error uploading level data to Firestore: $e');

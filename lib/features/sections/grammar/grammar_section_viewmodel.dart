@@ -35,7 +35,7 @@ class GrammarSectionViewmodel extends BaseViewModel {
     isLoading = true;
     try {
       Unit unit = await _firestoreService.fetchUnit(
-        RouteConstants.grammarSectionName,
+        RouteConstants.sectionNameId[RouteConstants.grammarSectionName]!,
         _levelName!,
         0,
       );

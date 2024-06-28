@@ -39,7 +39,7 @@ class VocabularySectionViewmodel extends BaseViewModel {
     isLoading = true;
     try {
       unit = await firestoreService.fetchUnit(
-        RouteConstants.vocabularySectionName,
+        RouteConstants.sectionNameId[RouteConstants.vocabularySectionName]!,
         _levelName!,
         0,
       );
@@ -72,10 +72,11 @@ class VocabularySectionViewmodel extends BaseViewModel {
       DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
 
       // Update the specific field
-      await _firestoreService.updateQuestion<Map<String, dynamic>>(
-          docPath: docRef,
-          fieldPath: questionFieldPath,
-          newValue: question.toMap());
+      await _firestoreService
+          .updateQuestionUsingFieldPath<Map<String, dynamic>>(
+              docPath: docRef,
+              fieldPath: questionFieldPath,
+              newValue: question.toMap());
 
       error = null;
     } on CustomException catch (e) {

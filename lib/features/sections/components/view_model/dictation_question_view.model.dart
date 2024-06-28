@@ -67,10 +67,11 @@ class DictationQuestionViewModel extends ChangeNotifier {
           DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
           question.voiceUrl = audioUrl;
           // Update the specific field
-          await _firestoreService.updateQuestion<Map<String, dynamic>>(
-              docPath: docRef,
-              fieldPath: questionFiel,
-              newValue: question.toMap());
+          await _firestoreService
+              .updateQuestionUsingFieldPath<Map<String, dynamic>>(
+                  docPath: docRef,
+                  fieldPath: questionFiel,
+                  newValue: question.toMap());
           return audioUrl;
         } else {
           throw Exception(

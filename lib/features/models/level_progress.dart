@@ -6,12 +6,14 @@ class LevelProgress {
   String description;
   List<String> completedSections;
   Map<String, SectionProgress>? sectionProgress; // Change to map
+  int currentDay; // Add currentDay field
 
   LevelProgress({
     required this.name,
     required this.description,
     required this.completedSections,
     this.sectionProgress, // Make sectionProgress nullable
+    this.currentDay = 1, // Default to day 1
   });
 
   factory LevelProgress.fromMap(Map<String, dynamic> map) {
@@ -25,6 +27,7 @@ class LevelProgress {
           SectionProgress.fromMap(value),
         ),
       ),
+      currentDay: map['currentDay'] ?? 1,
     );
   }
 
@@ -35,6 +38,7 @@ class LevelProgress {
       'completedSections': completedSections,
       'sectionProgress':
           sectionProgress?.map((key, value) => MapEntry(key, value.toMap())),
+      'currentDay': currentDay,
     };
   }
 
