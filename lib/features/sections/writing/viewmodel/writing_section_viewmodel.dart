@@ -27,8 +27,12 @@ class WritingSectionViewmodel extends BaseViewModel {
 
   Future<void> myInit() async {
     currentIndex = 0;
+
     _levelName = RouteConstants.getLevelName(levelId!);
     fetchQuestions();
+    if (_questions[currentIndex].questionType == QuestionType.youtubeLesson) {
+      answerState = EvaluationState.noState;
+    }
   }
 
   Future<void> fetchQuestions() async {
@@ -74,7 +78,11 @@ class WritingSectionViewmodel extends BaseViewModel {
   void incrementIndex() {
     if (currentIndex < _questions.length - 1) {
       currentIndex = currentIndex + 1;
-      answerState = EvaluationState.empty;
+      if (_questions[currentIndex].questionType == QuestionType.youtubeLesson) {
+        answerState = EvaluationState.noState;
+      } else {
+        answerState = EvaluationState.empty;
+      }
     }
   }
 }
