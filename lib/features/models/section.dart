@@ -5,11 +5,13 @@ class Section {
   String? description;
   List<Unit>? units;
   bool attempted;
+  bool isAssigned;
   int numberOfQuestions;
   Section(
       {required this.name,
       required this.description,
       required this.units,
+      this.isAssigned = false,
       this.numberOfQuestions = 0,
       this.attempted = false});
 

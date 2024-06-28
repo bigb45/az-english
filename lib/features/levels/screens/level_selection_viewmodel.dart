@@ -4,17 +4,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
+import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/utils/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LevelSelectionViewmodel extends BaseViewModel {
   int _selectedLevelId = 0;
   late AuthViewModel _authProvider;
   final FirestoreService _firestoreService = FirestoreService();
+  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   List<Level> _levels = [];
 
   int get selectedLevel => _selectedLevelId;
@@ -31,10 +34,12 @@ class LevelSelectionViewmodel extends BaseViewModel {
     isLoading = true;
     notifyListeners();
     try {
+      User? user = _firebaseAuthService.getUser();
+
       if (_authProvider.userData == null) return;
       List<String>? assignedLevels = _authProvider.userData!.assignedLevels;
       error = null;
-      _levels = await firestoreService.fetchLevels();
+      _levels = await firestoreService.fetchLevels(user!);
       for (var level in _levels) {
         level.isAssigned = assignedLevels!.contains(level.name);
       }

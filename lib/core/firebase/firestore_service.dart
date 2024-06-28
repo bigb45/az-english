@@ -7,14 +7,16 @@ import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   int allQuestionsLength = 0;
   int filteredQuestionsLength = 0;
-  Future<List<Level>> fetchLevels() async {
+  Future<List<Level>> fetchLevels(User user) async {
     try {
       dynamic questionsNumber;
+      // Get current day from user data
 
       QuerySnapshot levelSnapshot =
           await _db.collection(FirestoreConstants.levelsCollection).get();
@@ -26,6 +28,9 @@ class FirestoreService {
 
       for (var levelDoc in levelSnapshot.docs) {
         Level level = Level.fromMap(levelDoc.data() as Map<String, dynamic>);
+        int currentDay = await getCurrentDay(user, level.name);
+
+        bool isFirstWeek = ((currentDay - 1) ~/ 5) % 2 == 0;
 
         // Fetch sections for each level
         QuerySnapshot sectionSnapshot = await _db
@@ -36,6 +41,8 @@ class FirestoreService {
 
         if (sectionSnapshot.docs.isNotEmpty) {
           List<Section> sections = [];
+          List<String> daySections = getSectionsForDay(currentDay, isFirstWeek);
+
           for (var sectionDoc in sectionSnapshot.docs) {
             Section section =
                 Section.fromMap(sectionDoc.data() as Map<String, dynamic>);
@@ -56,6 +63,12 @@ class FirestoreService {
             section.numberOfQuestions = questionsNumber;
             sections.add(section);
           }
+          for (Section section in sections) {
+            if (daySections.contains(section.name)) {
+              section.isAssigned = true;
+            }
+          }
+
           level.sections = sections;
         }
 
@@ -67,6 +80,58 @@ class FirestoreService {
       throw CustomException.fromFirebaseFirestoreException(e);
     } catch (e) {
       rethrow;
+    }
+  }
+
+  List<String> getSectionsForDay(int day, bool isFirstWeek) {
+    List<List<String>> week1Sections = [
+      [
+        RouteConstants.readingSectionName,
+        RouteConstants.grammarSectionName,
+        RouteConstants.vocabularySectionName,
+      ],
+      [
+        RouteConstants.listeningWritingSectionName,
+        RouteConstants.vocabularySectionName,
+      ],
+    ];
+
+    List<List<String>> week2Sections = [
+      [
+        RouteConstants.listeningWritingSectionName,
+        RouteConstants.vocabularySectionName,
+      ],
+      [
+        RouteConstants.readingSectionName,
+        RouteConstants.grammarSectionName,
+        RouteConstants.vocabularySectionName,
+      ],
+    ];
+
+    int dayIndex = (day - 1) % 5;
+    if (dayIndex < week1Sections.length) {
+      return isFirstWeek ? week1Sections[dayIndex] : week2Sections[dayIndex];
+    }
+    return [];
+  }
+
+  Future<int> getCurrentDay(User currentUser, String level) async {
+    DocumentReference userDocRef = FirebaseFirestore.instance
+        .collection(FirestoreConstants.usersCollections)
+        .doc(currentUser.uid);
+
+    DocumentSnapshot userDoc = await userDocRef.get();
+    if (userDoc.exists) {
+      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+      if (userData.containsKey('levelsProgress') &&
+          userData['levelsProgress'].containsKey(level)) {
+        Map<String, dynamic> levelProgress = userData['levelsProgress'][level];
+        return levelProgress['currentDay'] ?? 1; // Default to 1 if not set
+      } else {
+        return 1; // Default to 1 if level progress not found
+      }
+    } else {
+      throw Exception('User document does not exist');
     }
   }
 

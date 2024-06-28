@@ -97,6 +97,8 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                       onConfirm: () async {
                         await readingSectionViewmodel.updateSectionProgress(
                             readingSectionViewmodel.currentIndex, "Unit1");
+                        await readingSectionViewmodel.updateUserProgress(
+                            "A1", "grammar", "unit1");
                       },
                     );
                   },

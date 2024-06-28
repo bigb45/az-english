@@ -118,7 +118,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
                               cardText:
                                   "Learn common everyday expressions and simple phrases",
                               // TODO: change this to section completionState from viewmodel
-                              onTap: sectionIds[index] == sectionIds.last
+                              onTap: !section.isAssigned
                                   ? null
                                   : () {
                                       navigateToSection(
@@ -132,7 +132,8 @@ class _PracticeSectionsState extends State<PracticeSections> {
                               sectionId: sectionIds[index],
                               totalNumberOfQuestions: section.numberOfQuestions,
                               // TODO change this to the current question index from the userProgress document
-                              numberOfSolvedQuestions: 0);
+                              numberOfSolvedQuestions: 0,
+                              isAssigned: section.isAssigned);
                         }).toList(),
                       ],
                     ),
@@ -155,10 +156,12 @@ class _PracticeSectionsState extends State<PracticeSections> {
     required bool attempted,
     required int totalNumberOfQuestions,
     required int numberOfSolvedQuestions,
+    required bool isAssigned,
     String? imagePath,
     Color? cardShadowColor,
   }) {
     return ExerciseCard(
+      isAssigned: isAssigned,
       totalNumberOfQuestions: totalNumberOfQuestions,
       numberOfSolvedQuestions: numberOfSolvedQuestions,
       attempted: attempted,

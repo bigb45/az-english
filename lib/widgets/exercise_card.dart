@@ -16,6 +16,7 @@ class ExerciseCard extends StatefulWidget {
   final bool attempted;
   final int totalNumberOfQuestions;
   final int numberOfSolvedQuestions;
+  final bool isAssigned;
 
   const ExerciseCard(
       {super.key,
@@ -23,6 +24,7 @@ class ExerciseCard extends StatefulWidget {
       required this.text,
       required this.image,
       required this.cardBackgroundColor,
+      required this.isAssigned,
       this.cardShadowColor,
       this.textColor,
       required this.attempted,
@@ -60,7 +62,7 @@ class ExerciseCardState extends State<ExerciseCard> {
       onTap: () {
         widget.onPressed != null ? widget.onPressed!() : null;
       },
-      child: widget.onPressed == null
+      child: !widget.isAssigned
           ? ColorFiltered(
               colorFilter: ColorFilter.mode(
                   Palette.secondaryStroke.withOpacity(0.5), BlendMode.srcATop),
