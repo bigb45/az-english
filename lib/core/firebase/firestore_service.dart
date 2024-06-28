@@ -45,7 +45,7 @@ class FirestoreService {
                 .collection(FirestoreConstants.levelsCollection)
                 .doc(level.name)
                 .collection(FirestoreConstants.sectionsCollection)
-                .doc(RouteConstants.getSectionIds("reading"))
+                .doc(RouteConstants.getSectionIds(section.name))
                 .collection(FirestoreConstants.unitsCollection)
                 .doc(unitNumber);
 
