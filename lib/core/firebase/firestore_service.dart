@@ -13,6 +13,7 @@ class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   int allQuestionsLength = 0;
   int filteredQuestionsLength = 0;
+  String? unitNumber;
   Future<List<Level>> fetchLevels(User user) async {
     try {
       QuerySnapshot levelSnapshot =
@@ -25,7 +26,9 @@ class FirestoreService {
           levelSnapshot.docs.map((levelDoc) async {
         Level level = Level.fromMap(levelDoc.data() as Map<String, dynamic>);
         int currentDay = await getCurrentDay(user, level.name);
+        unitNumber = "unit$currentDay";
         bool isFirstWeek = ((currentDay - 1) ~/ 5) % 2 == 0;
+        List<String> daySections = getSectionsForDay(currentDay, isFirstWeek);
 
         QuerySnapshot sectionSnapshot = await _db
             .collection(FirestoreConstants.levelsCollection)
@@ -37,32 +40,28 @@ class FirestoreService {
             sectionSnapshot.docs.map((sectionDoc) async {
           Section section =
               Section.fromMap(sectionDoc.data() as Map<String, dynamic>);
+          if (daySections.contains(section.name)) {
+            DocumentReference unitReference = _db
+                .collection(FirestoreConstants.levelsCollection)
+                .doc(level.name)
+                .collection(FirestoreConstants.sectionsCollection)
+                .doc(RouteConstants.getSectionIds("reading"))
+                .collection(FirestoreConstants.unitsCollection)
+                .doc(unitNumber);
 
-          DocumentReference unitReference = _db
-              .collection(FirestoreConstants.levelsCollection)
-              .doc(level.name)
-              .collection(FirestoreConstants.sectionsCollection)
-              .doc(RouteConstants.getSectionIds("reading"))
-              .collection(FirestoreConstants.unitsCollection)
-              .doc("Unit1");
+            dynamic questionsNumber =
+                await unitReference.get().then((snapshot) {
+              return (snapshot.data()
+                  as Map<String, dynamic>)['numberOfQuestions']!;
+            });
 
-          dynamic questionsNumber = await unitReference.get().then((snapshot) {
-            return (snapshot.data()
-                as Map<String, dynamic>)['numberOfQuestions']!;
-          });
-
-          section.numberOfQuestions = questionsNumber;
+            section.numberOfQuestions = questionsNumber;
+            section.isAssigned = true;
+          }
           return section;
         }).toList();
 
         List<Section> sections = await Future.wait(sectionFutures);
-        List<String> daySections = getSectionsForDay(currentDay, isFirstWeek);
-        sections.forEach((section) {
-          if (daySections.contains(section.name)) {
-            section.isAssigned = true;
-          }
-        });
-
         level.sections = sections;
         return level;
       }).toList();
@@ -131,9 +130,8 @@ class FirestoreService {
   Future<Unit> fetchUnit(
     String sectionName,
     String level,
-    int startIndex, {
-    String unitName = "Unit1",
-  }) async {
+    int startIndex,
+  ) async {
     Map<int, BaseQuestion> questions = {};
     try {
       DocumentSnapshot levelDoc = await _db
@@ -142,7 +140,7 @@ class FirestoreService {
           .collection(FirestoreConstants.sectionsCollection)
           .doc(sectionName)
           .collection(FirestoreConstants.unitsCollection)
-          .doc(unitName)
+          .doc(unitNumber)
           .get();
       if (levelDoc.exists) {
         Map<String, dynamic> data = levelDoc.data() as Map<String, dynamic>;
@@ -166,14 +164,14 @@ class FirestoreService {
             BaseQuestion question = BaseQuestion.fromMap(mapData);
             question.path = "${FirestoreConstants.levelsCollection}/$level/"
                 "${FirestoreConstants.sectionsCollection}/$sectionName/"
-                "${FirestoreConstants.unitsCollection}/$unitName/"
+                "${FirestoreConstants.unitsCollection}/$unitNumber/"
                 "${FirestoreConstants.questionsField}/${entry.key}"; // Set path
             questions[entry.key] = question; // Use key as map key
           }
         }
 
         return Unit(
-          name: unitName,
+          name: unitNumber!,
           descriptionInEnglish: data['descriptionInEnglish'],
           descriptionInArabic: data['descriptionInArabic'],
           questions: questions,
