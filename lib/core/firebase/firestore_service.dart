@@ -242,15 +242,17 @@ class FirestoreService {
     try {
       CollectionReference levelsCollection = FirebaseFirestore.instance
           .collection(FirestoreConstants.levelsCollection);
-// TODO: Important: When adding new attributes to the Level class,
-// make sure to include all attributes here in the levelMetadata map.
-// Exclude attributes that will be stored as sub-collections, such as 'sections' in this case.
+      // TODO: Important: When adding new attributes to the Level class,
+      // make sure to include all attributes here in the levelMetadata map.
+      // Exclude attributes that will be stored as sub-collections, such as 'sections' in this case.
       Map<String, dynamic> levelMetadata = {
         'name': level.name,
         'description': level.description,
         'id': level.id
       };
       await levelsCollection.doc(level.name).set(levelMetadata);
+
+      List<Future<void>> uploadFutures = [];
 
       for (Section section in level.sections!) {
         Map<String, dynamic> sectionMetadata = {
@@ -261,19 +263,22 @@ class FirestoreService {
         CollectionReference sectionsCollection = levelsCollection
             .doc(level.name)
             .collection(FirestoreConstants.sectionsCollection);
-        await sectionsCollection
+
+        uploadFutures.add(sectionsCollection
             .doc(RouteConstants.getSectionIds(section.name))
-            .set(sectionMetadata);
+            .set(sectionMetadata));
 
         for (Unit unit in section.units!) {
           CollectionReference unitsCollection = sectionsCollection
               .doc(RouteConstants.getSectionIds(section.name))
               .collection(FirestoreConstants.unitsCollection);
           Map<String, dynamic> unitData = unit.toMap();
-          await unitsCollection.doc(unit.name).set(unitData);
+
+          uploadFutures.add(unitsCollection.doc(unit.name).set(unitData));
         }
       }
 
+      await Future.wait(uploadFutures);
       print('Level data uploaded successfully to Firestore.');
     } catch (e) {
       print('Error uploading level data to Firestore: $e');
