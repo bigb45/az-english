@@ -76,7 +76,8 @@ class FirestoreService {
   }
 
   List<String> getSectionsForDay(int day, bool isFirstWeek) {
-    List<List<String>> week1Sections = [
+    // Define the basic two-day repeating section pattern
+    List<List<String>> sectionsPattern = [
       [
         RouteConstants.readingSectionName,
         RouteConstants.grammarSectionName,
@@ -88,23 +89,22 @@ class FirestoreService {
       ],
     ];
 
-    List<List<String>> week2Sections = [
-      [
-        RouteConstants.listeningWritingSectionName,
-        RouteConstants.vocabularySectionName,
-      ],
-      [
-        RouteConstants.readingSectionName,
-        RouteConstants.grammarSectionName,
-        RouteConstants.vocabularySectionName,
-      ],
-    ];
+    // Calculate which pattern to use based on the week and day
+    // (day - 1) % 2 determines the pattern within the week,
+    // day index is adjusted by adding (week number * 2) % 2 to alternate every week.
+    int weekNumber = ((day - 1) ~/ 5) %
+        2; // Calculate the week number (0 for first week, 1 for second within the cycle)
+    int dayIndex =
+        (day - 1) % 2; // Calculate the day index within the week (0 or 1)
 
-    int dayIndex = (day - 1) % 5;
-    if (dayIndex < week1Sections.length) {
-      return isFirstWeek ? week1Sections[dayIndex] : week2Sections[dayIndex];
+    if (!isFirstWeek) {
+      weekNumber = 1 -
+          weekNumber; // Invert week number for the second overall week to start with the opposite pattern
     }
-    return [];
+    // Adjust day index based on the calculated week number
+    dayIndex = (dayIndex + weekNumber) % 2;
+
+    return sectionsPattern[dayIndex];
   }
 
   Future<int> getCurrentDay(User currentUser, String level) async {
