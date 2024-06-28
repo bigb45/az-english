@@ -53,6 +53,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
               .then((reason) => grammarSectionViewmodel.resetError());
         }
       });
+
       return PopScope(
         canPop: false,
         onPopInvoked: (canPop) {
