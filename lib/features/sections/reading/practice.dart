@@ -78,8 +78,8 @@ class _ReadingPracticeState extends State<ReadingPractice> {
           canPop: false,
           onPopInvoked: (canPop) {
             showLeaveAlertDialog(context, onConfirm: () async {
-              await readingSectionViewmodel
-                  .updateSectionProgress(readingSectionViewmodel.currentIndex);
+              await readingSectionViewmodel.updateSectionProgress(
+                  readingSectionViewmodel.currentIndex, "Unit1");
             });
           },
           child: Scaffold(
@@ -96,7 +96,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                       context,
                       onConfirm: () async {
                         await readingSectionViewmodel.updateSectionProgress(
-                            readingSectionViewmodel.currentIndex);
+                            readingSectionViewmodel.currentIndex, "Unit1");
                       },
                     );
                   },

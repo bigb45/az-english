@@ -66,7 +66,8 @@ class ReadingSectionViewmodel extends BaseViewModel {
     }
   }
 
-  Future<void> updateSectionProgress(int newQuestionIndex) async {
+  Future<void> updateSectionProgress(
+      int newQuestionIndex, String unitName) async {
     User? currentUser = _firebaseAuthService.getUser();
     isLoading = true;
     notifyListeners();
@@ -80,13 +81,15 @@ class ReadingSectionViewmodel extends BaseViewModel {
         levelName!,
         'sectionProgress',
         RouteConstants.sectionNameId[RouteConstants.readingSectionName]!,
+        unitName,
         "lastStoppedQuestionIndex"
       ]);
       FieldPath sectionProgressIndex = FieldPath([
         'levelsProgress',
         levelName!,
         'sectionProgress',
-        "reading",
+        RouteConstants.sectionNameId[RouteConstants.readingSectionName]!,
+        unitName,
         "progress"
       ]);
       int lastStoppedQuestionIndex = (_firestoreService.allQuestionsLength -
