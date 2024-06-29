@@ -85,7 +85,8 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
             CheckboxState.checked => Palette.primary,
             CheckboxState.unchecked => Palette.secondaryStroke,
             CheckboxState.incorrect => Palette.error,
-            _ => null
+            CheckboxState.neutral => Palette.tertiary,
+            _ => null,
           },
         ),
         child: switch (state) {
@@ -98,6 +99,10 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
               Icons.close,
               color: Palette.secondary,
             ),
+          CheckboxState.neutral => const Icon(
+              Icons.minimize_outlined,
+              color: Palette.secondary,
+            ),
           _ => null,
         },
       ),
@@ -105,10 +110,23 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
   }
 }
 
-enum CheckboxState { checked, unchecked, incorrect }
+enum CheckboxState { checked, unchecked, incorrect, neutral }
 
 class CheckboxData {
   final String title;
   bool? value;
   CheckboxData({required this.title, this.value = false});
+  Map<String, dynamic> toMap() {
+    return {
+      'value': value,
+      'title': title,
+    };
+  }
+
+  factory CheckboxData.fromMap(Map<String, dynamic> map) {
+    return CheckboxData(
+      title: map['title'],
+      value: map['value'],
+    );
+  }
 }
