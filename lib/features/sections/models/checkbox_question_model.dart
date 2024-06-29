@@ -1,13 +1,12 @@
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/widgets/checkbox.dart';
 
+// TODO: implement toMap
 class CheckboxQuestionModel extends BaseQuestion<List<CheckboxData>> {
   final List<CheckboxData> options;
   final String? paragraph;
   final String questionText;
-  final Function(List<CheckboxData>) onChanged;
   CheckboxQuestionModel({
-    required this.onChanged,
     required this.questionText,
     required this.options,
     this.paragraph,
@@ -17,7 +16,20 @@ class CheckboxQuestionModel extends BaseQuestion<List<CheckboxData>> {
             questionTextInArabic: questionText,
             imageUrl: "",
             voiceUrl: "",
-            questionType:
-                QuestionType.multipleChoice //TODO add checkbox question type
-            );
+            questionType: QuestionType.checkbox);
+
+  // TODO: make sure toMap implementation is correct
+  @override
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> baseMap = super.toMap();
+    return {
+      ...baseMap,
+      'options': options.map((option) => option.toMap()).toList(),
+    };
+  }
+
+  @override
+  bool evaluateAnswer() {
+    return answer?.validate(userAnswer) ?? false;
+  }
 }
