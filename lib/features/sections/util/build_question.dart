@@ -1,5 +1,6 @@
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/sections/components/checkbox_question.dart';
 import 'package:ez_english/features/sections/components/dictation_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/fill_the_blanks_question.dart';
@@ -7,6 +8,7 @@ import 'package:ez_english/features/sections/components/generic_multiple_choice_
 import 'package:ez_english/features/sections/components/sentence_forming_question.dart';
 import 'package:ez_english/features/sections/components/speaking_question.dart';
 import 'package:ez_english/features/sections/components/youtube_lesson.dart';
+import 'package:ez_english/features/sections/models/checkbox_question_model.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
@@ -38,6 +40,16 @@ Widget buildQuestion({
       return GenericMultipleChoiceQuestion(
         question: question as MultipleChoiceQuestionModel,
         onChanged: (value) {
+          onChanged(value);
+        },
+      );
+
+    case QuestionType.checkbox:
+      return CheckboxQuestion(
+        question: question as CheckboxQuestionModel,
+        onChanged: (value) {
+          // print(
+          //     "Checkbox Question Value: ${value.answer?.map((e) => e.title)}");
           onChanged(value);
         },
       );

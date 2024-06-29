@@ -97,6 +97,7 @@ enum QuestionType {
   //listening
   listening,
 
+  checkbox,
   //other
   other,
 }
