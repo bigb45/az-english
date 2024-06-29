@@ -7,10 +7,12 @@ class ProgressBar extends StatefulWidget {
   final double maxValue;
   final double value;
   final Duration duration;
+  final double? width;
 
   const ProgressBar({
     super.key,
     required this.value,
+    this.width,
     this.minValue = 0,
     this.maxValue = 100,
     this.duration = const Duration(milliseconds: 300),
@@ -57,6 +59,7 @@ class _ProgressBarState extends State<ProgressBar>
   Widget build(BuildContext context) {
     return SizedBox(
       height: 23.h,
+      width: widget.width?.w ?? null,
       child: Stack(
         alignment: Alignment.centerLeft,
         children: [
