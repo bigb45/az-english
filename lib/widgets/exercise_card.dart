@@ -81,7 +81,8 @@ class ExerciseCardState extends State<ExerciseCard> {
                     children: [
                       Row(
                         children: [
-                          widget.attempted
+                          //TODO: check all conditions
+                          widget.attempted && widget.totalNumberOfQuestions != 0
                               ? widget.totalNumberOfQuestions !=
                                       widget.numberOfSolvedQuestions
                                   ? Expanded(
