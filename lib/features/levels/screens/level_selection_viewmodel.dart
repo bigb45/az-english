@@ -64,28 +64,26 @@ class LevelSelectionViewmodel extends BaseViewModel {
     isLoading = true;
     notifyListeners();
     try {
-      section.attempted = true;
-      DocumentReference sectionDocRef = FirebaseFirestore.instance
-          .collection(FirestoreConstants.levelsCollection)
-          .doc(levelName)
-          .collection(FirestoreConstants.sectionsCollection)
-          .doc(RouteConstants.getSectionIds(section.name));
-      await _firestoreService.updateDocuments(
-          docPath: sectionDocRef, newValues: {"attempted": section.attempted});
+      section.isAttempted = true;
+      User? user = _firebaseAuthService.getUser();
+      DocumentReference userDocRef = FirebaseFirestore.instance
+          .collection(FirestoreConstants.usersCollections)
+          .doc(user?.uid);
 
-      // Update the specific field
+      // Update the section status in the user's document
+      String sectionId = RouteConstants.getSectionIds(section.name);
+      // TODO: using constant routes
+      await userDocRef.update({
+        'levelsProgress.$levelName.sectionProgress.$sectionId.isAttempted':
+            true,
+      });
 
-      error = null;
-    } on CustomException catch (e) {
-      error = e;
-      // _handleError(e.message);
-      notifyListeners();
-    } catch (e) {
-      error = CustomException("An undefined error occurred ${e.toString()}");
-      // _handleError("An undefined error occurred ${e.toString()}");
-    } finally {
       isLoading = false;
       notifyListeners();
+    } catch (e) {
+      isLoading = false;
+      notifyListeners();
+      throw e;
     }
   }
 
