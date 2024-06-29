@@ -6,9 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CheckboxGroup extends StatefulWidget {
   final Function(List<CheckboxData>) onChanged;
   final List<CheckboxData> options;
-
+  final List<CheckboxState>? states;
   const CheckboxGroup(
-      {super.key, required this.onChanged, required this.options});
+      {super.key, required this.onChanged, required this.options, this.states});
 
   @override
   State<CheckboxGroup> createState() => _CheckboxGroupState();
@@ -26,7 +26,7 @@ class _CheckboxGroupState extends State<CheckboxGroup> {
               style: TextStyles.optionTextStyle,
             ),
             leading: CustomCheckbox(
-              state: CheckboxState.unchecked,
+              state: widget.states?[index] ?? CheckboxState.unchecked,
               onChanged: (state) {
                 setState(() {
                   option.value = state == CheckboxState.checked;
@@ -67,7 +67,9 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (widget.enabled && state != CheckboxState.incorrect) {
+        if (widget.enabled &&
+            (state != CheckboxState.incorrect &&
+                state != CheckboxState.neutral)) {
           setState(() {
             state = state == CheckboxState.checked
                 ? CheckboxState.unchecked
@@ -100,7 +102,7 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
               color: Palette.secondary,
             ),
           CheckboxState.neutral => const Icon(
-              Icons.minimize_outlined,
+              Icons.remove,
               color: Palette.secondary,
             ),
           _ => null,

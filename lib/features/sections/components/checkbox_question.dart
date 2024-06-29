@@ -45,6 +45,12 @@ class _CheckboxQuestionState extends State<CheckboxQuestion> {
           onChanged: (selections) {
             widget.onChanged(CheckboxAnswer(answer: selections));
           },
+          // states: [
+          //   CheckboxState.neutral,
+          //   CheckboxState.checked,
+          //   CheckboxState.incorrect,
+          //   CheckboxState.unchecked,
+          // ],
           options: optionList,
         ),
       ],
