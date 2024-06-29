@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -81,6 +83,7 @@ class _ProgressBarState extends State<ProgressBar>
             builder: (context, constraints) {
               double percentage = (_animation.value - widget.minValue) /
                   (widget.maxValue - widget.minValue);
+              percentage = max(0.1, percentage);
               double progressBarWidth = constraints.maxWidth * percentage;
               return Container(
                 decoration: BoxDecoration(
