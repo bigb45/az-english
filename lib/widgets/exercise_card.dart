@@ -1,6 +1,7 @@
 import 'package:ez_english/core/Constants.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -85,31 +86,44 @@ class ExerciseCardState extends State<ExerciseCard> {
                             : MainAxisAlignment.start,
                         children: [
                           widget.attempted
-                              ? Container(
-                                  width: 20.w,
-                                  height: 20.w,
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        offset: const Offset(0, 2),
-                                      )
-                                    ],
-                                    color: Palette.primary,
-                                    borderRadius: BorderRadius.circular(100.r),
-                                  ),
-                                  child: Icon(
-                                    Icons.check,
-                                    color: Palette.secondary,
-                                    size: 18.sp,
-                                    shadows: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        offset: const Offset(0, 2),
-                                      )
-                                    ],
-                                  ),
-                                )
+                              ? widget.totalNumberOfQuestions !=
+                                      widget.numberOfSolvedQuestions
+                                  ? ProgressBar(
+                                      width: 140.w,
+                                      value: widget.numberOfSolvedQuestions
+                                          .toDouble(),
+                                      minValue: 0,
+                                      maxValue: widget.totalNumberOfQuestions
+                                          .toDouble(),
+                                    )
+                                  : Container(
+                                      width: 20.w,
+                                      height: 20.w,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                        color: Palette.primary,
+                                        borderRadius:
+                                            BorderRadius.circular(100.r),
+                                      ),
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Palette.secondary,
+                                        size: 18.sp,
+                                        shadows: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            offset: const Offset(0, 2),
+                                          )
+                                        ],
+                                      ),
+                                    )
                               : Text(
                                   "Not Attempted",
                                   style: TextStyle(
@@ -164,19 +178,19 @@ class ExerciseCardState extends State<ExerciseCard> {
                     children: [
                       Row(
                         mainAxisAlignment: widget.attempted
-                            ? MainAxisAlignment.end
+                            ? MainAxisAlignment.center
                             : MainAxisAlignment.start,
                         children: [
                           widget.attempted
                               ? widget.totalNumberOfQuestions !=
                                       widget.numberOfSolvedQuestions
-                                  ? Text(
-                                      "${widget.numberOfSolvedQuestions}/${widget.totalNumberOfQuestions}",
-                                      style: TextStyle(
-                                          color: widget.textColor ??
-                                              Palette.secondary,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.bold),
+                                  ? ProgressBar(
+                                      width: 140.w,
+                                      value: widget.numberOfSolvedQuestions
+                                          .toDouble(),
+                                      minValue: 0,
+                                      maxValue: widget.totalNumberOfQuestions
+                                          .toDouble(),
                                     )
                                   : Container(
                                       width: 20.w,
