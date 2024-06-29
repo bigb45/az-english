@@ -7,6 +7,7 @@ import 'package:ez_english/features/sections/reading/view_model/reading_section_
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/expandable_text.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
@@ -55,31 +56,68 @@ class _ReadingPracticeState extends State<ReadingPractice> {
     }
 
     return Consumer<ReadingSectionViewmodel>(
-      builder: (context, readingSectionViewmodel, child) {
-        currentQuestion = questions[readingSectionViewmodel.currentIndex];
+      builder: (context, viewmodel, child) {
+        currentQuestion = questions[viewmodel.currentIndex];
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (readingSectionViewmodel.error != null) {
+          if (viewmodel.error != null) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(
                   SnackBar(
                     content: Text(
-                      readingSectionViewmodel.error?.message ??
-                          "An error occurred",
+                      viewmodel.error?.message ?? "An error occurred",
                     ),
                   ),
                 )
                 .closed
-                .then((reason) => readingSectionViewmodel.resetError());
+                .then((reason) => viewmodel.resetError());
           }
         });
 
+        if (viewmodel.currentIndex == questions.length - 1) {
+          return Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.close,
+                    color: Palette.primaryText,
+                  ),
+                  onPressed: () {
+                    showLeaveAlertDialog(
+                      context,
+                    );
+                  },
+                ),
+              ],
+              systemOverlayStyle: SystemUiOverlayStyle.dark,
+              backgroundColor: Colors.white,
+              title: const ListTile(
+                contentPadding: EdgeInsets.only(left: 0, right: 0),
+              ),
+            ),
+            body: Column(
+              children: [
+                const Center(
+                  child: Text("Finished all questions"),
+                ),
+                Button(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    text: "finish"),
+              ],
+            ),
+          );
+        }
         return PopScope(
           canPop: false,
           onPopInvoked: (canPop) {
             showLeaveAlertDialog(context, onConfirm: () async {
-              await readingSectionViewmodel.updateSectionProgress(
-                  readingSectionViewmodel.currentIndex, "Unit1");
+              await viewmodel.updateSectionProgress(
+                  viewmodel.currentIndex, "Unit1");
             });
           },
           child: Scaffold(
@@ -95,9 +133,9 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                     showLeaveAlertDialog(
                       context,
                       onConfirm: () async {
-                        await readingSectionViewmodel.updateSectionProgress(
-                            readingSectionViewmodel.currentIndex, "Unit1");
-                        await readingSectionViewmodel.updateUserProgress(
+                        await viewmodel.updateSectionProgress(
+                            viewmodel.currentIndex, "Unit1");
+                        await viewmodel.updateUserProgress(
                             "A1", "grammar", "unit1");
                       },
                     );
@@ -142,7 +180,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                               vertical: Constants.padding8,
                             ),
                             child: ProgressBar(
-                              value: readingSectionViewmodel.currentIndex + 1,
+                              value: viewmodel.currentIndex + 1,
                               minValue: 0,
                               maxValue: questions.length.toDouble(),
                             ),
@@ -158,9 +196,9 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                             question: currentQuestion!,
                             onChanged: (value) {
                               // handle the case for different question types
-                              readingSectionViewmodel.updateAnswer(value);
+                              viewmodel.updateAnswer(value);
                             },
-                            answerState: readingSectionViewmodel.answerState,
+                            answerState: viewmodel.answerState,
                           )
                         ],
                       ),
@@ -168,9 +206,9 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                   ),
                 ),
                 EvaluationSection(
-                  state: readingSectionViewmodel.answerState,
-                  onContinue: readingSectionViewmodel.incrementIndex,
-                  onPressed: readingSectionViewmodel.evaluateAnswer,
+                  state: viewmodel.answerState,
+                  onContinue: viewmodel.incrementIndex,
+                  onPressed: viewmodel.evaluateAnswer,
                 )
               ],
             ),
