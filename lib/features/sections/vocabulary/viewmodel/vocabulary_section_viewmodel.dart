@@ -41,7 +41,6 @@ class VocabularySectionViewmodel extends BaseViewModel {
       unit = await firestoreService.fetchUnit(
         RouteConstants.sectionNameId[RouteConstants.vocabularySectionName]!,
         _levelName!,
-        0,
       );
 
       _questions = unit.questions.values.toList();

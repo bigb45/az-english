@@ -47,7 +47,6 @@ class ReadingSectionViewmodel extends BaseViewModel {
       Unit unit = await _firestoreService.fetchUnit(
         RouteConstants.sectionNameId[RouteConstants.readingSectionName]!,
         _levelName!,
-        0,
       );
 
       if (unit.questions.isNotEmpty &&
@@ -69,144 +68,24 @@ class ReadingSectionViewmodel extends BaseViewModel {
     }
   }
 
-  Future<void> updateSectionProgress(
-      int newQuestionIndex, String unitName) async {
-    User? currentUser = _firebaseAuthService.getUser();
+  Future<void> updateUserProgress() async {
     isLoading = true;
     notifyListeners();
     try {
-      DocumentReference userDocRef = FirebaseFirestore.instance
-          .collection(FirestoreConstants.usersCollections)
-          .doc(currentUser!.uid);
-
-      FieldPath lastStoppedQuestionIndexPath = FieldPath([
-        'levelsProgress',
-        levelName!,
-        'sectionProgress',
-        RouteConstants.sectionNameId[RouteConstants.readingSectionName]!,
-        unitName,
-        "lastStoppedQuestionIndex"
-      ]);
-      FieldPath sectionProgressIndex = FieldPath([
-        'levelsProgress',
-        levelName!,
-        'sectionProgress',
-        RouteConstants.sectionNameId[RouteConstants.readingSectionName]!,
-        unitName,
-        "progress"
-      ]);
-      int lastStoppedQuestionIndex = (_firestoreService.allQuestionsLength -
-              _firestoreService.filteredQuestionsLength) +
-          newQuestionIndex;
-      String sectionProgress = (((lastStoppedQuestionIndex + 1) /
-                  _firestoreService.allQuestionsLength) *
-              100)
-          .toString();
-      await _firestoreService.updateQuestionUsingFieldPath<int>(
-          docPath: userDocRef,
-          fieldPath: lastStoppedQuestionIndexPath,
-          newValue: lastStoppedQuestionIndex);
-      await _firestoreService.updateQuestionUsingFieldPath<String>(
-          docPath: userDocRef,
-          fieldPath: sectionProgressIndex,
-          newValue: sectionProgress);
-      error = null;
-    } on CustomException catch (e) {
-      error = e;
-      // _handleError(e.message);
-      notifyListeners();
+      await _firestoreService.updateUserProgress(
+          levelName!, RouteConstants.readingSectionName);
     } catch (e) {
-      error = CustomException("An undefined error occurred ${e.toString()}");
-      // _handleError("An undefined error occurred ${e.toString()}");
+      print("Error in ViewModel: $e");
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<void> updateUserProgress(
-      String level, String section, String completedUnit) async {
-    User? user = _firebaseAuthService.getUser();
-    DocumentReference userDocRef = FirebaseFirestore.instance
-        .collection(FirestoreConstants.usersCollections)
-        .doc(user?.uid);
-
-    // Fetch the user's progress data
-    DocumentSnapshot userDoc = await userDocRef.get();
-    Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
-
-    // Initialize levelsProgress if not present
-    if (!userData.containsKey('levelsProgress')) {
-      userData['levelsProgress'] = {};
-    }
-
-    // Initialize levelProgress if not present
-    if (!userData['levelsProgress'].containsKey(level)) {
-      userData['levelsProgress'][level] = LevelProgress(
-        name: level,
-        description: '',
-        completedSections: [],
-        sectionProgress: {},
-        currentDay: 1,
-      ).toMap();
-    }
-
-    Map<String, dynamic> levelProgressData = userData['levelsProgress'][level];
-    LevelProgress levelProgress = LevelProgress.fromMap(levelProgressData);
-
-    // Initialize sectionProgress if not present
-    if (!levelProgress.sectionProgress!.containsKey(section)) {
-      levelProgress.sectionProgress![section] = SectionProgress(
-        sectionName: section,
-        progress: '',
-        lastStoppedQuestionIndex: 0,
-        unitsCompleted: [],
-        isAttempted: false,
-      );
-    }
-
-    SectionProgress sectionProgress = levelProgress.sectionProgress![section]!;
-
-    // Update the completed units
-    if (!sectionProgress.unitsCompleted.contains(completedUnit)) {
-      sectionProgress.unitsCompleted.add(completedUnit);
-    }
-
-    // Check if the current day sections are completed
-    bool allSectionsCompleted = true;
-    List<String> daySections = getSectionsForDay(levelProgress.currentDay);
-    for (String daySection in daySections) {
-      if (!levelProgress.sectionProgress!.containsKey(daySection) ||
-          !levelProgress.sectionProgress![daySection]!.isCompleted()) {
-        allSectionsCompleted = false;
-        break;
-      }
-    }
-
-    // Increment the current day if all sections are completed
-    if (allSectionsCompleted) {
-      levelProgress.currentDay++;
-    }
-
-    // Save the updated progress data back to Firestore
-    await userDocRef.update({
-      'levelsProgress.$level': levelProgress.toMap(),
-    });
+  Future<void> updateSectionProgress() async {
+    _firestoreService.updateCurrentSectionQuestionIndex(
+        currentIndex, levelName!);
   }
-
-  List<String> getSectionsForDay(int day) {
-    if (day % 2 == 1) {
-      return [
-        RouteConstants.readingSectionName,
-        RouteConstants.grammarSectionName
-      ];
-    } else {
-      return [RouteConstants.listeningWritingSectionName];
-    }
-  }
-  // Future<void> getUserData(String userId) async {
-  //   _userData = await _firestoreService.getUser(userId);
-  // }
 
   @Deprecated(
       "Assign error value to error property instead of calling this method")

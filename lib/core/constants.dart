@@ -63,9 +63,13 @@ class RouteConstants {
   static const String listeningWritingSectionName = "listeningWriting";
   static const String vocabularySectionName = "vocabulary";
   static const String grammarSectionName = "grammar";
-
+  static const String testSectionName = "test";
   static String getSectionIds(String sectionName) {
     return sectionNameId[sectionName]!;
+  }
+
+  static String getSectionName(String sectionId) {
+    return sectionIdName[sectionId]!;
   }
 
   static String getLevelName(String levelId) {

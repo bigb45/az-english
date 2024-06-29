@@ -5,24 +5,29 @@ class SectionProgress {
   String progress;
   int lastStoppedQuestionIndex;
   List<String> unitsCompleted; // List to track completed units
-  bool isAttempted; // Flag to track if the section has been attempted
+  bool isAttempted;
+  bool isAssigned;
+  bool isCompleted;
 
   SectionProgress({
     required this.sectionName,
+    this.isAttempted = false,
+    this.isAssigned = false,
+    this.isCompleted = false,
     required this.progress,
     required this.lastStoppedQuestionIndex,
     this.unitsCompleted = const [],
-    this.isAttempted = false,
   });
 
   factory SectionProgress.fromMap(Map<String, dynamic> map) {
     return SectionProgress(
-      sectionName: map['sectionName'] ?? '',
-      progress: map['progress'] ?? '',
-      lastStoppedQuestionIndex: map['lastStoppedQuestionIndex'] ?? 0,
-      unitsCompleted: List<String>.from(map['unitsCompleted'] ?? []),
-      isAttempted: map['isAttempted'] ?? false,
-    );
+        sectionName: map['sectionName'] ?? '',
+        progress: map['progress'] ?? '',
+        lastStoppedQuestionIndex: map['lastStoppedQuestionIndex'] ?? 0,
+        unitsCompleted: List<String>.from(map['unitsCompleted'] ?? []),
+        isAssigned: map['isAssigned'],
+        isCompleted: map['isCompleted'],
+        isAttempted: map['isAttempted']);
   }
 
   Map<String, dynamic> toMap() {
@@ -31,6 +36,8 @@ class SectionProgress {
       'progress': progress,
       'lastStoppedQuestionIndex': lastStoppedQuestionIndex,
       'unitsCompleted': unitsCompleted,
+      'isAssigned': isAssigned,
+      'isCompleted': isCompleted,
       'isAttempted': isAttempted,
     };
   }
@@ -41,9 +48,10 @@ class SectionProgress {
 
   String toJson() => json.encode(toMap());
 
-  bool isCompleted() {
-    // Add logic to check if the section is completed
-    // For example, you can check if all units are completed
-    return unitsCompleted.isNotEmpty; // Adjust based on your criteria
+  bool isSectionCompleted(String requiredUnit) {
+    if (!unitsCompleted.contains(requiredUnit)) {
+      return false;
+    }
+    return true;
   }
 }

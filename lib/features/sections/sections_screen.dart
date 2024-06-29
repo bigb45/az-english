@@ -113,7 +113,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
 
                           String hintText = entry.value;
                           return _buildCard(
-                              attempted: section.attempted,
+                              attempted: section.isAttempted,
                               headerText: hintText,
                               cardText:
                                   "Learn common everyday expressions and simple phrases",

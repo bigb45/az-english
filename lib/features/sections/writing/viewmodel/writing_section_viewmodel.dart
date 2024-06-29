@@ -41,7 +41,6 @@ class WritingSectionViewmodel extends BaseViewModel {
         RouteConstants
             .sectionNameId[RouteConstants.listeningWritingSectionName]!,
         _levelName!,
-        0,
       );
       _questions = unit.questions.values.cast<BaseQuestion>().toList();
 
