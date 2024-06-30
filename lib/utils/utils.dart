@@ -56,7 +56,7 @@ class Utils {
 
 extension StringExtension on String {
   String normalize() {
-    return replaceAll(RegExp(r'[^\w\s]'), '')
+    return replaceAll(RegExp(r'[^\w\s\u0600-\u06FF]'), '')
         .replaceAll(RegExp(r'\s+'), ' ')
         .toLowerCase()
         .trim()

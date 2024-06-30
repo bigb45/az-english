@@ -69,7 +69,8 @@ Widget buildQuestion({
     case QuestionType.youtubeLesson:
       return RepaintBoundary(
         child: YouTubeVideoPlayer(
-          key: UniqueKey(),
+          key: ValueKey((question as YoutubeLessonModel).youtubeUrl ??
+              "https://www.youtube.com/watch?v=ml5uvpfXcLU"),
           videoId: (question as YoutubeLessonModel).youtubeUrl ??
               // TODO: handle missing youtube url in a better way
               "https://www.youtube.com/watch?v=ml5uvpfXcLU",
@@ -78,9 +79,11 @@ Widget buildQuestion({
 
     case QuestionType.fillTheBlanks:
       return FillTheBlanksQuestion(
+        key: ValueKey(question.answer),
         question: question as FillTheBlanksQuestionModel,
         onChanged: (value) => onChanged(value),
         answerState: answerState,
+        // controller: TextEditingController(),
       );
 
     default:

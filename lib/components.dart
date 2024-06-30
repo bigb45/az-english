@@ -1,17 +1,15 @@
-import 'package:ez_english/features/sections/models/word_definition.dart';
+import 'package:ez_english/features/models/exam_result.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
-import 'package:ez_english/widgets/button.dart';
-import 'package:ez_english/widgets/selectable_card.dart';
-import 'package:ez_english/widgets/checkbox.dart';
-import 'package:ez_english/widgets/exercise_card.dart';
-import 'package:ez_english/widgets/menu.dart';
 import 'package:ez_english/widgets/audio_control_button.dart';
+import 'package:ez_english/widgets/button.dart';
+import 'package:ez_english/widgets/checkbox.dart';
+import 'package:ez_english/widgets/menu.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:ez_english/widgets/result_card.dart';
+import 'package:ez_english/widgets/selectable_card.dart';
 import 'package:ez_english/widgets/text_field.dart';
-import 'package:ez_english/features/sections/components/word_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -70,7 +68,14 @@ class Components extends StatelessWidget {
                     //   text: "word",
                     // ),
                     SizedBox(height: 20.h),
-                    const ResultCard(
+                    ResultCard(
+                      result: ExamResult(
+                        examId: "1",
+                        examName: "",
+                        examDate: "14/2/2024",
+                        examScore: "80%",
+                        examStatus: ExamStatus.passed,
+                      ),
                       topText: "BAD",
                       score: Score.bad,
                       mainText: "2/10 ANSWERED CORRECTLY",

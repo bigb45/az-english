@@ -10,7 +10,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class PracticeSections extends StatefulWidget {
-  // TODO: use levelId to fetch title and exercises for the level via viewmodel
   final String levelId;
   final String levelName;
   const PracticeSections({

@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WordChipTextField extends StatelessWidget {
-  final TextEditingController controller;
+  // final TextEditingController controller;
   final ValueChanged<String>? onChanged;
 
   const WordChipTextField({
     super.key,
-    required this.controller,
+    // required this.controller,
     this.onChanged,
   });
 
@@ -34,7 +34,7 @@ class WordChipTextField extends StatelessWidget {
         padding: EdgeInsets.all(Constants.padding8),
         child: Center(
           child: TextField(
-            controller: controller,
+            // controller: controller,
             onChanged: onChanged,
             style: TextStyles.wordChipTextStyle,
             decoration: const InputDecoration(
