@@ -34,7 +34,7 @@ class _LevelSelectionState extends State<LevelSelection> {
 
   @override
   Widget build(BuildContext context) {
-    LevelSelectionViewmodel levelSelectionVm =
+    LevelSelectionViewmodel viewmodel =
         Provider.of<LevelSelectionViewmodel>(context);
 
     return Scaffold(
@@ -47,11 +47,11 @@ class _LevelSelectionState extends State<LevelSelection> {
         ),
         centerTitle: true,
       ),
-      body: levelSelectionVm.isLoading
+      body: viewmodel.isLoading
           ? const Center(child: CircularProgressIndicator())
-          : levelSelectionVm.error != null
+          : viewmodel.error != null
               ? ErrorWidget(
-                  error: levelSelectionVm.error ??
+                  error: viewmodel.error ??
                       CustomException(
                         "",
                       ))
@@ -65,7 +65,7 @@ class _LevelSelectionState extends State<LevelSelection> {
                           runSpacing: 10,
                           spacing: 10,
                           children: [
-                            ...levelSelectionVm.levels.map(
+                            ...viewmodel.levels.map(
                               (level) {
                                 return _buildCard(
                                   headerText: level.name,
@@ -73,6 +73,7 @@ class _LevelSelectionState extends State<LevelSelection> {
                                   cardText: level.description,
                                   onTap: () {
                                     navigateToLevel(levelId: level.id);
+                                    viewmodel.fetchSections(level);
                                   },
                                 );
                               },

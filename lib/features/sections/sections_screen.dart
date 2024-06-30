@@ -62,7 +62,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
 
   @override
   Widget build(BuildContext context) {
-    LevelSelectionViewmodel levelSelectionVm =
+    LevelSelectionViewmodel viewmodel =
         Provider.of<LevelSelectionViewmodel>(context);
     return Scaffold(
       appBar: AppBar(
@@ -78,7 +78,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
             ),
           ),
           subtitle: Text(
-            AppStrings.practiceScreenText,
+            widget.levelName,
             style: TextStyle(
               fontSize: 17.sp,
               color: Palette.secondary,
@@ -88,58 +88,61 @@ class _PracticeSectionsState extends State<PracticeSections> {
           ),
         ),
       ),
-      body: SizedBox(
-        child: SingleChildScrollView(
-          child: SizedBox(
-            child: Padding(
-              padding: EdgeInsets.all(Constants.padding20),
-              child: Center(
-                child: Column(
-                  children: [
-                    Constants.gapH20,
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      runSpacing: 15,
-                      spacing: 10,
-                      children: [
-                        ...hintTexts.asMap().entries.map((entry) {
-                          int index = entry.key;
-                          Section section = levelSelectionVm
-                              .levels[int.tryParse(widget.levelId)!]
-                              .sections![index];
+      body: viewmodel.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SizedBox(
+              child: SingleChildScrollView(
+                child: SizedBox(
+                  child: Padding(
+                    padding: EdgeInsets.all(Constants.padding20),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Constants.gapH20,
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            runSpacing: 15,
+                            spacing: 10,
+                            children: [
+                              ...hintTexts.asMap().entries.map((entry) {
+                                int index = entry.key;
+                                Section section = viewmodel
+                                    .levels[int.tryParse(widget.levelId)!]
+                                    .sections![index];
 
-                          String hintText = entry.value;
-                          return _buildCard(
-                            headerText: hintText,
-                            cardText:
-                                "Learn common everyday expressions and simple phrases",
-                            // TODO: change this to section completionState from viewmodel
-                            onTap: !section.isAssigned
-                                ? null
-                                : () {
-                                    navigateToSection(
-                                      sectionId: RouteConstants.getSectionIds(
-                                          section.name),
-                                    );
-                                    levelSelectionVm.updateSectionStatus(
-                                        section, widget.levelName);
-                                  },
-                            imagePath: imageAssets[index],
-                            backgroundColor: backgroundColors[index],
-                            section: section,
+                                String hintText = entry.value;
+                                return _buildCard(
+                                  headerText: hintText,
+                                  cardText:
+                                      "Learn common everyday expressions and simple phrases",
+                                  // TODO: change this to section completionState from viewmodel
+                                  onTap: !section.isAssigned
+                                      ? null
+                                      : () {
+                                          navigateToSection(
+                                            sectionId:
+                                                RouteConstants.getSectionIds(
+                                                    section.name),
+                                          );
+                                          viewmodel.updateSectionStatus(
+                                              section, widget.levelName);
+                                        },
+                                  imagePath: imageAssets[index],
+                                  backgroundColor: backgroundColors[index],
+                                  section: section,
 
-                            // TODO change this to the current question index from the userProgress document
-                          );
-                        }).toList(),
-                      ],
+                                  // TODO change this to the current question index from the userProgress document
+                                );
+                              }).toList(),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
