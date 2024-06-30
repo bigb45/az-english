@@ -100,7 +100,7 @@ abstract class BaseViewModel extends ChangeNotifier {
 
   Future<void> updateSectionProgress() async {
     _firestoreService.updateCurrentSectionQuestionIndex(
-        currentIndex, levelName!);
+        currentIndex, levelName!, sectionName!);
   }
 
   @protected

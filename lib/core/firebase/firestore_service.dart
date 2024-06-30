@@ -383,7 +383,7 @@ class FirestoreService {
   }
 
   Future<void> updateCurrentSectionQuestionIndex(
-      int newQuestionIndex, String levelName) async {
+      int newQuestionIndex, String levelName, String sectionName) async {
     try {
       DocumentReference userDocRef = FirebaseFirestore.instance
           .collection(FirestoreConstants.usersCollections)
@@ -393,14 +393,14 @@ class FirestoreService {
         'levelsProgress',
         levelName,
         'sectionProgress',
-        RouteConstants.sectionNameId[RouteConstants.readingSectionName]!,
+        RouteConstants.sectionNameId[sectionName]!,
         "lastStoppedQuestionIndex"
       ]);
       FieldPath sectionProgressIndex = FieldPath([
         'levelsProgress',
         levelName,
         'sectionProgress',
-        RouteConstants.sectionNameId[RouteConstants.readingSectionName]!,
+        RouteConstants.sectionNameId[sectionName]!,
         "progress"
       ]);
       int lastStoppedQuestionIndex =
