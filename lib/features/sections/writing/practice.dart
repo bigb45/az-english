@@ -65,7 +65,12 @@ class _WritingPracticeState extends State<WritingPractice> {
                   color: Palette.primaryText,
                 ),
                 onPressed: () {
-                  showLeaveAlertDialog(context);
+                  showLeaveAlertDialog(
+                    context,
+                    onConfirm: () async {
+                      await viewmodel.updateSectionProgress();
+                    },
+                  );
                 },
               ),
             ],

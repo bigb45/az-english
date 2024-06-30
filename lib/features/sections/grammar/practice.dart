@@ -64,6 +64,9 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                 onPressed: () {
                   showLeaveAlertDialog(
                     context,
+                    onConfirm: () async {
+                      await viewmodel.updateSectionProgress();
+                    },
                   );
                 },
               ),
