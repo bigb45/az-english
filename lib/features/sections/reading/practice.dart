@@ -164,51 +164,54 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                 ),
               ),
             ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: Constants.padding8),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: Constants.padding8,
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: Constants.padding8),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: Constants.padding8,
+                              ),
+                              child: ProgressBar(
+                                value: viewmodel.currentIndex + 1,
+                                minValue: 0,
+                                maxValue: questions.length.toDouble(),
+                              ),
                             ),
-                            child: ProgressBar(
-                              value: viewmodel.currentIndex + 1,
-                              minValue: 0,
-                              maxValue: questions.length.toDouble(),
-                            ),
-                          ),
-                          passageQuestion != null
-                              ? ExpandableTextBox(
-                                  paragraph: passageQuestion!.passageInEnglish!,
-                                  isFocused: _isFocused,
-                                  readMoreText:
-                                      AppStrings.mcQuestionReadMoreText)
-                              : const SizedBox(),
-                          buildQuestion(
-                            question: currentQuestion!,
-                            onChanged: (value) {
-                              // handle the case for different question types
-                              viewmodel.updateAnswer(value);
-                            },
-                            answerState: viewmodel.answerState,
-                          )
-                        ],
+                            passageQuestion != null
+                                ? ExpandableTextBox(
+                                    paragraph:
+                                        passageQuestion!.passageInEnglish!,
+                                    isFocused: _isFocused,
+                                    readMoreText:
+                                        AppStrings.mcQuestionReadMoreText)
+                                : const SizedBox(),
+                            buildQuestion(
+                              question: currentQuestion!,
+                              onChanged: (value) {
+                                // handle the case for different question types
+                                viewmodel.updateAnswer(value);
+                              },
+                              answerState: viewmodel.answerState,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                EvaluationSection(
-                  state: viewmodel.answerState,
-                  onContinue: viewmodel.incrementIndex,
-                  onPressed: viewmodel.evaluateAnswer,
-                )
-              ],
+                  EvaluationSection(
+                    state: viewmodel.answerState,
+                    onContinue: viewmodel.incrementIndex,
+                    onPressed: viewmodel.evaluateAnswer,
+                  )
+                ],
+              ),
             ),
           ),
         );

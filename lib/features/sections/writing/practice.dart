@@ -87,38 +87,40 @@ class _WritingPracticeState extends State<WritingPractice> {
               ),
             ),
           ),
-          body: Column(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: ProgressBar(
-                            value: viewmodel.currentIndex + 1,
-                            minValue: 0,
-                            maxValue: viewmodel.questions.length.toDouble(),
+          body: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: ProgressBar(
+                              value: viewmodel.currentIndex + 1,
+                              minValue: 0,
+                              maxValue: viewmodel.questions.length.toDouble(),
+                            ),
                           ),
-                        ),
-                        buildQuestion(
-                          answerState: viewmodel.answerState,
-                          onChanged: viewmodel.updateAnswer,
-                          question: currentQuestion,
-                        )
-                      ],
+                          buildQuestion(
+                            answerState: viewmodel.answerState,
+                            onChanged: viewmodel.updateAnswer,
+                            question: currentQuestion,
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              EvaluationSection(
-                state: viewmodel.answerState,
-                onContinue: viewmodel.incrementIndex,
-                onPressed: viewmodel.evaluateAnswer,
-              )
-            ],
+                EvaluationSection(
+                  state: viewmodel.answerState,
+                  onContinue: viewmodel.incrementIndex,
+                  onPressed: viewmodel.evaluateAnswer,
+                )
+              ],
+            ),
           ),
         ),
       );

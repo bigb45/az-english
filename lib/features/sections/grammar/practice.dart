@@ -74,45 +74,47 @@ class _GrammarPracticeState extends State<GrammarPractice> {
               contentPadding: const EdgeInsets.only(left: 0, right: 0),
             ),
           ),
-          body: Column(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: Constants.padding8,
+          body: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: Constants.padding8,
+                            ),
+                            child: ProgressBar(
+                              value: viewmodel.currentIndex + 1,
+                              minValue: 0,
+                              maxValue: questions.length.toDouble(),
+                            ),
                           ),
-                          child: ProgressBar(
-                            value: viewmodel.currentIndex + 1,
-                            minValue: 0,
-                            maxValue: questions.length.toDouble(),
+                          Center(
+                            child: buildQuestion(
+                                question: currentQuestion,
+                                onChanged: (value) {
+                                  viewmodel.updateAnswer(value);
+                                },
+                                answerState: viewmodel.answerState),
                           ),
-                        ),
-                        Center(
-                          child: buildQuestion(
-                              question: currentQuestion,
-                              onChanged: (value) {
-                                viewmodel.updateAnswer(value);
-                              },
-                              answerState: viewmodel.answerState),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              EvaluationSection(
-                onContinue: () {
-                  viewmodel.incrementIndex();
-                },
-                onPressed: viewmodel.evaluateAnswer,
-                state: viewmodel.answerState,
-              ),
-            ],
+                EvaluationSection(
+                  onContinue: () {
+                    viewmodel.incrementIndex();
+                  },
+                  onPressed: viewmodel.evaluateAnswer,
+                  state: viewmodel.answerState,
+                ),
+              ],
+            ),
           ),
         );
       }
