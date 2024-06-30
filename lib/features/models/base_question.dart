@@ -1,4 +1,5 @@
 import 'package:ez_english/features/models/base_answer.dart';
+import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
@@ -64,7 +65,8 @@ abstract class BaseQuestion<T> {
 
       case QuestionType.youtubeLesson:
         return YoutubeLessonModel.fromMap(json);
-
+      case QuestionType.fillTheBlanks:
+        return FillTheBlanksQuestionModel.fromMap(json);
       // Add cases for other question types
 
       default:

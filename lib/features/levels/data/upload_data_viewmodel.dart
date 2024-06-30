@@ -8,6 +8,7 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/unit.dart';
+import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/listening_question_model.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
@@ -259,32 +260,29 @@ class UploadDataViewmodel extends ChangeNotifier {
               break;
 
             case QuestionType.fillTheBlanks:
-              //TODO: Uncomment this after implementing fill in the blanks question
-              // questions =
-              //     questionText?.split(';').asMap().entries.map((question) {
-              //           int index = question.key;
-              //           String questionText = question.value;
-              //           List<String> questionParts = questionText.split(":");
-              //           return FillTheBlanksQuestionModel(
-              //             questionInEnglish: questionParts.isNotEmpty
-              //                 ? questionParts[0]
-              //                 : null,
-              //             questionInArabic: questionParts.length > 1
-              //                 ? questionParts[1]
-              //                 : null,
-              //             answer: StringAnswer(
-              //                 answer: questionAnswerOrOptionsInMCQ[index]),
-              //             questionTextInEnglish: questionEnglish,
-              //             questionTextInArabic: questionArabic,
-              //             imageUrl: '',
-              //             voiceUrl: '',
-              //           );
-              //         }).toList() ??
-              //         [];
-              // if (currentPassage != null) {
-              //   currentPassage.questions.addAll(questions);
-              //   questions = [];
-              // }
+              questionText?.split(';').asMap().forEach((index, questionText) {
+                List<String> questionParts = questionText.split("0");
+                var question = FillTheBlanksQuestionModel(
+                  incompleteSentenceInEnglish:
+                      questionParts.isNotEmpty ? questionParts[0] : null,
+                  incompleteSentenceInArabic:
+                      questionParts.length > 1 ? questionParts[1] : null,
+                  answer:
+                      StringAnswer(answer: questionAnswerOrOptionsInMCQ[index]),
+                  questionTextInEnglish: questionEnglish,
+                  questionTextInArabic: questionArabic,
+                  imageUrl: '',
+                  voiceUrl: '',
+                );
+
+                if (currentPassage != null) {
+                  currentPassage.questions.add(question);
+                } else {
+                  existingUnit.questions[nextIndex++] = question;
+                }
+                existingUnit.numberOfQuestions++;
+              });
+
               break;
             case QuestionType.listening:
               var question = ListeningQuestionModel(

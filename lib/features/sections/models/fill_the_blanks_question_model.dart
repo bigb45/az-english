@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/sections/models/string_answer.dart';
 
 class FillTheBlanksQuestionModel extends BaseQuestion<String> {
   final String? incompleteSentenceInEnglish;
@@ -22,20 +23,20 @@ class FillTheBlanksQuestionModel extends BaseQuestion<String> {
 
     return {
       ...baseMap,
-      "questionInEnglish": incompleteSentenceInEnglish,
-      "questionInArabic": incompleteSentenceInArabic
+      "incompleteSentenceInEnglish": incompleteSentenceInEnglish,
+      "incompleteSentenceInArabic": incompleteSentenceInArabic
     };
   }
 
   factory FillTheBlanksQuestionModel.fromMap(Map<String, dynamic> json) {
     return FillTheBlanksQuestionModel(
-      answer: json['answer'],
+      answer: StringAnswer(answer: json['answer']['answer']),
       questionTextInEnglish: json['questionTextInEnglish'],
       questionTextInArabic: json['questionTextInArabic'],
       imageUrl: json['imageUrl'],
       voiceUrl: json['voiceUrl'],
-      incompleteSentenceInEnglish: json['questionInEnglish'],
-      incompleteSentenceInArabic: json['questionInArabic'],
+      incompleteSentenceInEnglish: json['incompleteSentenceInEnglish'],
+      incompleteSentenceInArabic: json['incompleteSentenceInArabic'],
       questionType: QuestionType.fillTheBlanks,
     );
   }
