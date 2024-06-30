@@ -12,11 +12,11 @@ class FillTheBlanksQuestion extends StatefulWidget {
   final Function(StringAnswer) onChanged;
   final FillTheBlanksQuestionModel question;
   final EvaluationState answerState;
-  final TextEditingController controller;
+  // final TextEditingController controller;
 
   const FillTheBlanksQuestion({
     super.key,
-    required this.controller,
+    // required this.controller,
     required this.answerState,
     required this.question,
     required this.onChanged,
@@ -28,11 +28,11 @@ class FillTheBlanksQuestion extends StatefulWidget {
 
 class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
   late String incompleteSentence, firstPart, secondPart;
-
+  // late TextEditingController controller;
   @override
   void initState() {
     super.initState();
-
+    // controller = TextEditingController();
     String incompleteSentence =
         (widget.question.incompleteSentenceInEnglish ?? "")
             .replaceAll(RegExp(r'_+'), '_');
@@ -103,7 +103,7 @@ class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
                       style: TextStyles.bodyLarge,
                     ),
                     WordChipTextField(
-                      controller: widget.controller,
+                      // controller: controller,
                       onChanged: (value) {
                         widget.onChanged(StringAnswer(answer: value));
                       },
