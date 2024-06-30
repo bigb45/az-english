@@ -4,6 +4,8 @@ import 'package:ez_english/components.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/auth/screens/sign_in.dart';
 import 'package:ez_english/features/auth/screens/sign_up.dart';
+import 'package:ez_english/features/home/exam_overview.dart';
+import 'package:ez_english/features/models/exam_result.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/youtube_lesson.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
@@ -106,6 +108,21 @@ final loggedInRouter = GoRouter(
           "vocabulary" => WordsListView(),
           String() || null => const Placeholder(),
         };
+      }),
+    ),
+    GoRoute(
+      path: '/result_overview/:examId',
+      builder: ((context, state) {
+        String examId = state.pathParameters['examId'] ?? "-1";
+        return ExamOverview(
+          result: ExamResult(
+            examId: examId,
+            examName: "First exam",
+            examDate: "24/3/2023",
+            examScore: "10",
+            examStatus: ExamStatus.failed,
+          ),
+        );
       }),
     ),
     GoRoute(
