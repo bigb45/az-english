@@ -103,11 +103,7 @@ class _WritingPracticeState extends State<WritingPractice> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: ProgressBar(
-                              value: viewmodel.currentIndex + 1,
-                              minValue: 0,
-                              maxValue: viewmodel.questions.length.toDouble(),
-                            ),
+                            child: ProgressBar(value: viewmodel.progress!),
                           ),
                           buildQuestion(
                             answerState: viewmodel.answerState,

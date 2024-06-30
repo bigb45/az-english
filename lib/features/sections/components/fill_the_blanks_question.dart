@@ -53,8 +53,16 @@ class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
           children: [
             Text(widget.question.questionTextInEnglish ?? "",
                 style: TextStyles.bodyLarge),
-            Text(widget.question.questionTextInArabic ?? "",
-                style: TextStyles.bodyLarge),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  widget.question.questionTextInArabic ?? "",
+                  style: TextStyles.bodyLarge,
+                  textDirection: TextDirection.rtl,
+                ),
+              ],
+            ),
             Stack(
               children: [
                 Positioned(

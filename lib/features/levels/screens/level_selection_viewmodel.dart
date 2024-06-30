@@ -55,6 +55,25 @@ class LevelSelectionViewmodel extends BaseViewModel {
     }
   }
 
+  Future<void> fetchSections(Level level) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      error = null;
+      _levels[level.id].sections =
+          await firestoreService.fetchSection(level.name);
+    } on CustomException catch (e) {
+      // error = e as CustomException;
+      _handleError(e.message);
+      notifyListeners();
+    } catch (e) {
+      _handleError("An undefined error occurred ${e.toString()}");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
   void setSelectedLevel(int level) {
     _selectedLevelId = level;
     notifyListeners();

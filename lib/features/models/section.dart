@@ -9,6 +9,7 @@ class Section {
   bool isCompleted;
   int numberOfQuestions;
   int numberOfSolvedQuestions;
+  double progress;
   Section(
       {required this.name,
       required this.description,
@@ -17,6 +18,7 @@ class Section {
       this.isCompleted = false,
       this.numberOfQuestions = 0,
       this.numberOfSolvedQuestions = 0,
+      this.progress = 0,
       this.isAttempted = false});
 
   factory Section.fromMap(Map<String, dynamic> json) {

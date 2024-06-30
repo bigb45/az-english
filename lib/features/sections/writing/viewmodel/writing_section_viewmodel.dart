@@ -46,6 +46,7 @@ class WritingSectionViewmodel extends BaseViewModel {
         levelName!,
       );
       _questions = unit.questions.values.cast<BaseQuestion>().toList();
+      progress = unit.progress;
 
       error = null;
     } on CustomException catch (e) {
@@ -75,6 +76,7 @@ class WritingSectionViewmodel extends BaseViewModel {
   void incrementIndex() {
     if (currentIndex < _questions.length - 1) {
       currentIndex = currentIndex + 1;
+      progress = _firestoreService.calculateNewProgress(currentIndex);
       if (_questions[currentIndex].questionType == QuestionType.youtubeLesson) {
         answerState = EvaluationState.noState;
       } else {

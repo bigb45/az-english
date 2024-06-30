@@ -39,6 +39,7 @@ class GrammarSectionViewmodel extends BaseViewModel {
       );
 
       _questions = unit.questions.values.cast<BaseQuestion>().toList();
+      progress = unit.progress;
 
       error = null;
     } on CustomException catch (e) {
@@ -67,6 +68,7 @@ class GrammarSectionViewmodel extends BaseViewModel {
   void incrementIndex() {
     if (questions.length - 1 > currentIndex) {
       currentIndex++;
+      progress = _firestoreService.calculateNewProgress(currentIndex);
     }
     if (_questions[currentIndex].questionType == QuestionType.youtubeLesson) {
       answerState = EvaluationState.noState;
