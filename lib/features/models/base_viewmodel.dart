@@ -9,6 +9,25 @@ abstract class BaseViewModel extends ChangeNotifier {
   bool _isLoading = false;
   CustomException? _error;
   bool _isDisposed = false;
+  String? _levelName;
+  String? _sectionName;
+
+  final FirestoreService _firestoreService = FirestoreService();
+
+  String? get sectionName => _sectionName;
+
+  set sectionName(String? value) {
+    _sectionName = value;
+    notifyListeners();
+  }
+
+  String? get levelName => _levelName;
+
+  set levelName(String? value) {
+    _levelName = value;
+    notifyListeners();
+  }
+
   bool _isInitializeDone = false;
   int _currentIndex = 0;
   EvaluationState _answerState = EvaluationState.empty;
@@ -64,6 +83,24 @@ abstract class BaseViewModel extends ChangeNotifier {
     scheduleMicrotask(() {
       if (!_isDisposed) notifyListeners();
     });
+  }
+
+  Future<void> updateUserProgress() async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      await _firestoreService.updateUserProgress(levelName!, sectionName!);
+    } catch (e) {
+      print("Error in ViewModel: $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateSectionProgress() async {
+    _firestoreService.updateCurrentSectionQuestionIndex(
+        currentIndex, levelName!);
   }
 
   @protected

@@ -20,8 +20,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class ReadingSectionViewmodel extends BaseViewModel {
   String? levelId;
-  String? _levelName;
-  String? get levelName => _levelName;
   PassageQuestionModel? _passageQuestion;
   final FirestoreService _firestoreService = FirestoreService();
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
@@ -36,8 +34,8 @@ class ReadingSectionViewmodel extends BaseViewModel {
 
   void setValuesAndInit() async {
     currentIndex = 0;
-    _levelName = RouteConstants.getLevelName(levelId!);
-
+    levelName = RouteConstants.getLevelName(levelId!);
+    sectionName = RouteConstants.readingSectionName;
     fetchQuestions();
   }
 
@@ -46,7 +44,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
     try {
       Unit unit = await _firestoreService.fetchUnit(
         RouteConstants.sectionNameId[RouteConstants.readingSectionName]!,
-        _levelName!,
+        levelName!,
       );
 
       if (unit.questions.isNotEmpty &&
@@ -66,25 +64,6 @@ class ReadingSectionViewmodel extends BaseViewModel {
       isLoading = false;
       notifyListeners();
     }
-  }
-
-  Future<void> updateUserProgress() async {
-    isLoading = true;
-    notifyListeners();
-    try {
-      await _firestoreService.updateUserProgress(
-          levelName!, RouteConstants.readingSectionName);
-    } catch (e) {
-      print("Error in ViewModel: $e");
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
-  }
-
-  Future<void> updateSectionProgress() async {
-    _firestoreService.updateCurrentSectionQuestionIndex(
-        currentIndex, levelName!);
   }
 
   @Deprecated(
