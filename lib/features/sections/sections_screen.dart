@@ -28,7 +28,6 @@ class _PracticeSectionsState extends State<PracticeSections> {
   late List<String?> imageAssets = [];
   late List<Color> backgroundColors = [];
   late List<String> sectionNames = [];
-  late List<String> sectionIds = [];
 
   @override
   void initState() {
@@ -53,8 +52,6 @@ class _PracticeSectionsState extends State<PracticeSections> {
       const Color(0xFF663399),
       const Color(0xFF34495E)
     ];
-
-    sectionIds = ["0", "1", "2", "3", "4"];
 
     super.initState();
   }
@@ -113,27 +110,26 @@ class _PracticeSectionsState extends State<PracticeSections> {
 
                           String hintText = entry.value;
                           return _buildCard(
-                              attempted: section.isAttempted,
-                              headerText: hintText,
-                              cardText:
-                                  "Learn common everyday expressions and simple phrases",
-                              // TODO: change this to section completionState from viewmodel
-                              onTap: !section.isAssigned
-                                  ? null
-                                  : () {
-                                      navigateToSection(
-                                        sectionId: sectionIds[index],
-                                      );
-                                      levelSelectionVm.updateSectionStatus(
-                                          section, widget.levelName);
-                                    },
-                              imagePath: imageAssets[index],
-                              backgroundColor: backgroundColors[index],
-                              sectionId: sectionIds[index],
-                              totalNumberOfQuestions: section.numberOfQuestions,
-                              // TODO change this to the current question index from the userProgress document
-                              numberOfSolvedQuestions: 0,
-                              isAssigned: section.isAssigned);
+                            headerText: hintText,
+                            cardText:
+                                "Learn common everyday expressions and simple phrases",
+                            // TODO: change this to section completionState from viewmodel
+                            onTap: !section.isAssigned
+                                ? null
+                                : () {
+                                    navigateToSection(
+                                      sectionId: RouteConstants.getSectionIds(
+                                          section.name),
+                                    );
+                                    levelSelectionVm.updateSectionStatus(
+                                        section, widget.levelName);
+                                  },
+                            imagePath: imageAssets[index],
+                            backgroundColor: backgroundColors[index],
+                            section: section,
+
+                            // TODO change this to the current question index from the userProgress document
+                          );
                         }).toList(),
                       ],
                     ),
@@ -151,20 +147,12 @@ class _PracticeSectionsState extends State<PracticeSections> {
     required String headerText,
     required String cardText,
     required Color backgroundColor,
-    required String sectionId,
+    required Section section,
     required VoidCallback? onTap,
-    required bool attempted,
-    required int totalNumberOfQuestions,
-    required int numberOfSolvedQuestions,
-    required bool isAssigned,
     String? imagePath,
     Color? cardShadowColor,
   }) {
     return ExerciseCard(
-      isAssigned: isAssigned,
-      totalNumberOfQuestions: totalNumberOfQuestions,
-      numberOfSolvedQuestions: numberOfSolvedQuestions,
-      attempted: attempted,
       onPressed: onTap != null
           ? () {
               onTap();
@@ -174,6 +162,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
       image: imagePath,
       cardShadowColor: cardShadowColor,
       text: headerText,
+      section: section,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:ez_english/core/Constants.dart';
+import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -13,23 +14,17 @@ class ExerciseCard extends StatefulWidget {
   final Color cardBackgroundColor;
   final Color? cardShadowColor;
   final Color? textColor;
-  final bool attempted;
-  final int totalNumberOfQuestions;
-  final int numberOfSolvedQuestions;
-  final bool isAssigned;
+  final Section section;
 
   const ExerciseCard(
       {super.key,
+      required this.section,
       required this.onPressed,
       required this.text,
       required this.image,
       required this.cardBackgroundColor,
-      required this.isAssigned,
       this.cardShadowColor,
       this.textColor,
-      required this.attempted,
-      required this.totalNumberOfQuestions,
-      required this.numberOfSolvedQuestions,
       this.description});
 
   @override
@@ -40,6 +35,13 @@ class ExerciseCard extends StatefulWidget {
 // TODO: change padding values to accomadate for different screen sizes
 class ExerciseCardState extends State<ExerciseCard> {
   var isPressed = false;
+  late Section section;
+
+  @override
+  void initState() {
+    section = widget.section;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,7 @@ class ExerciseCardState extends State<ExerciseCard> {
       onTap: () {
         widget.onPressed != null ? widget.onPressed!() : null;
       },
-      child: !widget.isAssigned
+      child: !section.isAssigned
           ? ColorFiltered(
               colorFilter: ColorFilter.mode(
                   Palette.secondaryStroke.withOpacity(0.5), BlendMode.srcATop),
@@ -80,11 +82,11 @@ class ExerciseCardState extends State<ExerciseCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
-                        mainAxisAlignment: widget.attempted
+                        mainAxisAlignment: section.isAttempted
                             ? MainAxisAlignment.end
                             : MainAxisAlignment.start,
                         children: [
-                          widget.attempted
+                          section.isAttempted
                               ? Container(
                                   width: 20.w,
                                   height: 20.w,
@@ -163,15 +165,14 @@ class ExerciseCardState extends State<ExerciseCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
-                        mainAxisAlignment: widget.attempted
+                        mainAxisAlignment: section.isAttempted
                             ? MainAxisAlignment.end
                             : MainAxisAlignment.start,
                         children: [
-                          widget.attempted
-                              ? widget.totalNumberOfQuestions !=
-                                      widget.numberOfSolvedQuestions
+                          section.isAttempted
+                              ? !section.isCompleted
                                   ? Text(
-                                      "${widget.numberOfSolvedQuestions}/${widget.totalNumberOfQuestions}",
+                                      "${section.numberOfSolvedQuestions}/${section.numberOfQuestions}",
                                       style: TextStyle(
                                           color: widget.textColor ??
                                               Palette.secondary,

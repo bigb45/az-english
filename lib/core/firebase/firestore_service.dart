@@ -99,7 +99,8 @@ class FirestoreService {
           section.isAssigned = sectionProgress['isAssigned'];
           section.isCompleted = sectionProgress['isCompleted'];
           section.isAttempted = sectionProgress['isAttempted'];
-
+          section.numberOfSolvedQuestions =
+              sectionProgress['lastStoppedQuestionIndex'];
           if (daySections.contains(section.name)) {
             DocumentReference unitReference = _db
                 .collection(FirestoreConstants.levelsCollection)
