@@ -1,22 +1,15 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
-import 'package:ez_english/features/models/level_progress.dart';
-import 'package:ez_english/features/models/section_progress.dart';
 import 'package:ez_english/features/models/unit.dart';
-import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
-import 'package:ez_english/utils/utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class ReadingSectionViewmodel extends BaseViewModel {
   String? levelId;
@@ -36,6 +29,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
     currentIndex = 0;
     levelName = RouteConstants.getLevelName(levelId!);
     sectionName = RouteConstants.readingSectionName;
+    answerState = EvaluationState.empty;
     fetchQuestions();
   }
 
@@ -64,12 +58,6 @@ class ReadingSectionViewmodel extends BaseViewModel {
       isLoading = false;
       notifyListeners();
     }
-  }
-
-  @Deprecated(
-      "Assign error value to error property instead of calling this method")
-  void _handleError(String e) {
-    Utils.showSnackBar(e);
   }
 
   void incrementIndex() {
