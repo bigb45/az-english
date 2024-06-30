@@ -7,12 +7,13 @@ import 'package:ez_english/widgets/radio_button.dart';
 class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
   final List<RadioItemData> options;
   final String? paragraph;
-  final String? questionSentence;
-
+  final String? questionSentenceInEnglish;
+  final String? questionSentenceInArabic;
   @override
   MultipleChoiceQuestionModel(
       {required this.options,
-      this.questionSentence,
+      this.questionSentenceInEnglish,
+      required this.questionSentenceInArabic,
       this.paragraph,
       required super.answer,
       required super.questionTextInArabic,
@@ -27,7 +28,8 @@ class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
     return {
       ...baseMap,
       'options': options.map((option) => option.toMap()).toList(),
-      'questionSentence': questionSentence
+      'questionSentenceInEnglish': questionSentenceInEnglish,
+      'questionSentenceInArabic': questionSentenceInArabic
     };
   }
 
@@ -42,7 +44,8 @@ class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
       questionTextInArabic: map['questionTextInArabic'],
       voiceUrl: map['voiceUrl'],
       imageUrl: map['imageUrl'],
-      questionSentence: map['questionSentence'],
+      questionSentenceInEnglish: map['questionSentenceInEnglish'],
+      questionSentenceInArabic: map['questionSentenceInArabic'],
     );
   }
 

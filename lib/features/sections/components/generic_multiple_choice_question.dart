@@ -60,6 +60,25 @@ class _GenericMultipleChoiceQuestionState
               style: TextStyles.questionTextStyle.copyWith(height: 2),
               maxLines: 5,
             ),
+            if (widget.question.questionSentenceInEnglish != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  widget.question.questionSentenceInEnglish!,
+                  style: TextStyles.questionTextStyle.copyWith(height: 1.5),
+                  maxLines: 5,
+                ),
+              ),
+            if (widget.question.questionSentenceInArabic != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  widget.question.questionSentenceInArabic!,
+                  style: TextStyles.questionTextStyle.copyWith(height: 1.5),
+                  textDirection: TextDirection.rtl,
+                  maxLines: 5,
+                ),
+              ),
             Constants.gapH24,
             RadioGroup(
               onChanged: (newSelection) {

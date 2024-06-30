@@ -152,10 +152,17 @@ class UploadDataViewmodel extends ChangeNotifier {
 
               break;
             case QuestionType.multipleChoice:
+              List<String>? questionParts = questionText?.split("0");
+              String? questionSentenceInEnglish =
+                  getQuestionPart(questionParts, 0);
+              String? questionSentenceInArabic =
+                  getQuestionPart(questionParts, 1);
+
               var question = MultipleChoiceQuestionModel(
                 questionTextInEnglish: questionEnglish,
                 questionTextInArabic: questionArabic,
-                questionSentence: questionText,
+                questionSentenceInEnglish: questionSentenceInEnglish,
+                questionSentenceInArabic: questionSentenceInArabic,
                 imageUrl: imageUrl,
                 // voiceUrl: '',
                 options:
@@ -179,6 +186,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 existingUnit.questions[nextIndex++] = question;
               }
               existingUnit!.numberOfQuestions++;
+
               break;
 
             case QuestionType.speaking:
@@ -343,6 +351,13 @@ class UploadDataViewmodel extends ChangeNotifier {
     }
 
     return levels;
+  }
+
+  String? getQuestionPart(List<String>? parts, int index) {
+    if (parts != null && parts.length > index) {
+      return parts[index];
+    }
+    return null;
   }
 
   Future<String> uploadImageAndGetUrl(String imageName) async {
