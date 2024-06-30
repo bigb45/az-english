@@ -102,7 +102,7 @@ class FirestoreService {
             'isCompleted': false,
             'isAttempted': false,
             'lastStoppedQuestionIndex': 0,
-            'progress': '',
+            'progress': 0,
             'unitsCompleted': [],
             'sectionName': ""
           };
@@ -117,6 +117,9 @@ class FirestoreService {
         section.isAttempted = sectionProgress['isAttempted'];
         section.numberOfSolvedQuestions =
             sectionProgress['lastStoppedQuestionIndex'];
+        section.progress = (sectionProgress['progress'] is int)
+            ? (sectionProgress['progress'] as int).toDouble()
+            : (sectionProgress['progress'] ?? 0.0) as double;
         if (daySections.contains(section.name)) {
           DocumentReference unitReference = _db
               .collection(FirestoreConstants.levelsCollection)
@@ -232,7 +235,7 @@ class FirestoreService {
               sectionProgress.isAssigned = false;
               sectionProgress.isCompleted = false;
               sectionProgress.lastStoppedQuestionIndex = 0;
-              sectionProgress.progress = "";
+              sectionProgress.progress = 0.0;
 
               // Add the reset section progress update to the batch
               batch.update(userDocRef, {
@@ -414,14 +417,14 @@ class FirestoreService {
       ]);
       int lastStoppedQuestionIndex =
           (allQuestionsLength - filteredQuestionsLength) + newQuestionIndex;
-      String sectionProgress =
-          (((lastStoppedQuestionIndex + 1) / allQuestionsLength) * 100)
-              .toString();
+      double sectionProgress =
+          (((lastStoppedQuestionIndex + 1) / allQuestionsLength) * 100);
+
       await updateQuestionUsingFieldPath<int>(
           docPath: userDocRef,
           fieldPath: lastStoppedQuestionIndexPath,
           newValue: lastStoppedQuestionIndex);
-      await updateQuestionUsingFieldPath<String>(
+      await updateQuestionUsingFieldPath<double>(
           docPath: userDocRef,
           fieldPath: sectionProgressIndex,
           newValue: sectionProgress);

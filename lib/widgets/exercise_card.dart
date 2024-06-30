@@ -102,12 +102,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                                           ),
                                           ProgressBar(
                                             width: 100.w,
-                                            value: section
-                                                .numberOfSolvedQuestions
-                                                .toDouble(),
-                                            minValue: 0,
-                                            maxValue: section.numberOfQuestions
-                                                .toDouble(),
+                                            value: section.progress,
                                           ),
                                         ],
                                       ),
@@ -148,12 +143,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                                           // SizedBox(width: Constants.padding4),
                                           ProgressBar(
                                             width: 100.w,
-                                            value: section
-                                                .numberOfSolvedQuestions
-                                                .toDouble(),
-                                            minValue: 0,
-                                            maxValue: section.numberOfQuestions
-                                                .toDouble(),
+                                            value: section.progress,
                                           ),
                                         ],
                                       ),
@@ -231,13 +221,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                                             ),
                                             ProgressBar(
                                               width: 100.w,
-                                              value: section
-                                                  .numberOfSolvedQuestions
-                                                  .toDouble(),
-                                              minValue: 0,
-                                              maxValue: section
-                                                  .numberOfQuestions
-                                                  .toDouble(),
+                                              value: section.progress,
                                             ),
                                           ],
                                         ),
@@ -279,13 +263,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                                             // SizedBox(width: Constants.padding4),
                                             ProgressBar(
                                               width: 100.w,
-                                              value: section
-                                                  .numberOfSolvedQuestions
-                                                  .toDouble(),
-                                              minValue: 0,
-                                              maxValue: section
-                                                  .numberOfQuestions
-                                                  .toDouble(),
+                                              value: section.progress,
                                             ),
                                           ],
                                         ),

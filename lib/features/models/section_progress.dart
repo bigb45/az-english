@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class SectionProgress {
   String sectionName;
-  String progress;
+  double progress;
   int lastStoppedQuestionIndex;
   List<String> unitsCompleted; // List to track completed units
   bool isAttempted;
@@ -22,7 +22,9 @@ class SectionProgress {
   factory SectionProgress.fromMap(Map<String, dynamic> map) {
     return SectionProgress(
         sectionName: map['sectionName'] ?? '',
-        progress: map['progress'] ?? '',
+        progress: (map['progress'] is int)
+            ? (map['progress'] as int).toDouble()
+            : (map['progress'] ?? 0.0) as double,
         lastStoppedQuestionIndex: map['lastStoppedQuestionIndex'] ?? 0,
         unitsCompleted: List<String>.from(map['unitsCompleted'] ?? []),
         isAssigned: map['isAssigned'],
