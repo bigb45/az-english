@@ -1,5 +1,6 @@
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/sections/components/checkbox_question.dart';
 import 'package:ez_english/features/sections/components/dictation_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/fill_the_blanks_question.dart';
@@ -7,6 +8,7 @@ import 'package:ez_english/features/sections/components/generic_multiple_choice_
 import 'package:ez_english/features/sections/components/sentence_forming_question.dart';
 import 'package:ez_english/features/sections/components/speaking_question.dart';
 import 'package:ez_english/features/sections/components/youtube_lesson.dart';
+import 'package:ez_english/features/sections/models/checkbox_question_model.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
@@ -42,6 +44,16 @@ Widget buildQuestion({
         },
       );
 
+    case QuestionType.checkbox:
+      return CheckboxQuestion(
+        question: question as CheckboxQuestionModel,
+        onChanged: (value) {
+          // print(
+          //     "Checkbox Question Value: ${value.answer?.map((e) => e.title)}");
+          onChanged(value);
+        },
+      );
+
     case QuestionType.dictation:
       return DictationQuestion(
         onAnswerChanged: (value) => onChanged(value as StringAnswer),
@@ -55,10 +67,13 @@ Widget buildQuestion({
       return const Text("Answer Questions From Passage Question");
 
     case QuestionType.youtubeLesson:
-      return YouTubeVideoPlayer(
-        videoId: (question as YoutubeLessonModel).youtubeUrl ??
-            // TODO: handle missing youtube url in a better way
-            "https://www.youtube.com/watch?v=ml5uvpfXcLU",
+      return RepaintBoundary(
+        child: YouTubeVideoPlayer(
+          key: UniqueKey(),
+          videoId: (question as YoutubeLessonModel).youtubeUrl ??
+              // TODO: handle missing youtube url in a better way
+              "https://www.youtube.com/watch?v=ml5uvpfXcLU",
+        ),
       );
 
     case QuestionType.fillTheBlanks:

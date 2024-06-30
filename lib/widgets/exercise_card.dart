@@ -2,6 +2,7 @@ import 'package:ez_english/core/Constants.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -32,7 +33,6 @@ class ExerciseCard extends StatefulWidget {
 }
 
 // TODO: pass progress within section
-// TODO: change padding values to accomadate for different screen sizes
 class ExerciseCardState extends State<ExerciseCard> {
   var isPressed = false;
   late Section section;
@@ -82,36 +82,82 @@ class ExerciseCardState extends State<ExerciseCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
-                        mainAxisAlignment: section.isAttempted
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
                         children: [
-                          section.isAttempted
-                              ? Container(
-                                  width: 20.w,
-                                  height: 20.w,
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        offset: const Offset(0, 2),
-                                      )
-                                    ],
-                                    color: Palette.primary,
-                                    borderRadius: BorderRadius.circular(100.r),
-                                  ),
-                                  child: Icon(
-                                    Icons.check,
-                                    color: Palette.secondary,
-                                    size: 18.sp,
-                                    shadows: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        offset: const Offset(0, 2),
-                                      )
-                                    ],
-                                  ),
-                                )
+                          //TODO: check all conditions
+                          section.isAttempted && section.numberOfQuestions != 0
+                              ? !section.isCompleted
+                                  ? Expanded(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "${section.numberOfSolvedQuestions.toString()} / ${section.numberOfQuestions.toString()} ",
+                                            style: TextStyle(
+                                              color: widget.textColor ??
+                                                  Palette.secondary,
+                                              fontSize: 15.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          ProgressBar(
+                                            width: 100.w,
+                                            value: section
+                                                .numberOfSolvedQuestions
+                                                .toDouble(),
+                                            minValue: 0,
+                                            maxValue: section.numberOfQuestions
+                                                .toDouble(),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : Expanded(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Container(
+                                            width: 20.w,
+                                            height: 20.w,
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.2),
+                                                  offset: const Offset(0, 2),
+                                                )
+                                              ],
+                                              color: Palette.primary,
+                                              borderRadius:
+                                                  BorderRadius.circular(100.r),
+                                            ),
+                                            child: Icon(
+                                              Icons.check,
+                                              color: Palette.secondary,
+                                              size: 18.sp,
+                                              shadows: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.2),
+                                                  offset: const Offset(0, 2),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          // SizedBox(width: Constants.padding4),
+                                          ProgressBar(
+                                            width: 100.w,
+                                            value: section
+                                                .numberOfSolvedQuestions
+                                                .toDouble(),
+                                            minValue: 0,
+                                            maxValue: section.numberOfQuestions
+                                                .toDouble(),
+                                          ),
+                                        ],
+                                      ),
+                                    )
                               : Text(
                                   "Not Attempted",
                                   style: TextStyle(
@@ -160,75 +206,112 @@ class ExerciseCardState extends State<ExerciseCard> {
                 width: 170.w,
                 height: 180.w,
                 child: Padding(
-                  padding: EdgeInsets.all(Constants.padding6),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: section.isAttempted
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
-                        children: [
-                          section.isAttempted
-                              ? !section.isCompleted
-                                  ? Text(
-                                      "${section.numberOfSolvedQuestions}/${section.numberOfQuestions}",
-                                      style: TextStyle(
-                                          color: widget.textColor ??
-                                              Palette.secondary,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  : Container(
-                                      width: 20.w,
-                                      height: 20.w,
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.2),
-                                            offset: const Offset(0, 2),
-                                          )
-                                        ],
-                                        color: Palette.primary,
-                                        borderRadius:
-                                            BorderRadius.circular(100.r),
-                                      ),
-                                      child: Icon(
-                                        Icons.check,
-                                        color: Palette.secondary,
-                                        size: 18.sp,
-                                        shadows: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.2),
-                                            offset: const Offset(0, 2),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                              : Text(
-                                  "Not Attempted",
-                                  style: TextStyle(
-                                      color:
-                                          widget.textColor ?? Palette.secondary,
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                        ],
-                      ),
-                      SvgPicture.asset(
-                        widget.image ?? 'assets/images/notepad.svg',
-                      ),
-                      Center(
+                    padding: EdgeInsets.all(Constants.padding6),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            section.isAttempted
+                                ? !section.isCompleted
+                                    ? Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "${section.numberOfSolvedQuestions.toString()} / ${section.numberOfQuestions.toString()} ",
+                                              style: TextStyle(
+                                                color: widget.textColor ??
+                                                    Palette.secondary,
+                                                fontSize: 15.sp,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            ProgressBar(
+                                              width: 100.w,
+                                              value: section
+                                                  .numberOfSolvedQuestions
+                                                  .toDouble(),
+                                              minValue: 0,
+                                              maxValue: section
+                                                  .numberOfQuestions
+                                                  .toDouble(),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Container(
+                                              width: 20.w,
+                                              height: 20.w,
+                                              decoration: BoxDecoration(
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.2),
+                                                    offset: const Offset(0, 2),
+                                                  )
+                                                ],
+                                                color: Palette.primary,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        100.r),
+                                              ),
+                                              child: Icon(
+                                                Icons.check,
+                                                color: Palette.secondary,
+                                                size: 18.sp,
+                                                shadows: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.2),
+                                                    offset: const Offset(0, 2),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            // SizedBox(width: Constants.padding4),
+                                            ProgressBar(
+                                              width: 100.w,
+                                              value: section
+                                                  .numberOfSolvedQuestions
+                                                  .toDouble(),
+                                              minValue: 0,
+                                              maxValue: section
+                                                  .numberOfQuestions
+                                                  .toDouble(),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                : Text(
+                                    "Not Attempted",
+                                    style: TextStyle(
+                                        color: widget.textColor ??
+                                            Palette.secondary,
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                          ],
+                        ),
+                        SvgPicture.asset(
+                          widget.image ?? 'assets/images/notepad.svg',
+                        ),
+                        Center(
                           child: Text(
-                        widget.text,
-                        style: TextStyles.practiceCardMainText,
-                        textAlign: TextAlign.center,
-                      )),
-                    ],
-                  ),
-                ),
+                            widget.text,
+                            style: TextStyles.practiceCardMainText,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    )),
               ),
             ),
     );

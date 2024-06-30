@@ -25,8 +25,10 @@ class GrammarSectionViewmodel extends BaseViewModel {
     currentIndex = 0;
     answerState = EvaluationState.empty;
     _levelName = RouteConstants.getLevelName(levelId!);
-
-    fetchQuestions();
+    await fetchQuestions();
+    if (_questions[currentIndex].questionType == QuestionType.youtubeLesson) {
+      answerState = EvaluationState.noState;
+    }
   }
 
   Future<void> fetchQuestions() async {
@@ -67,6 +69,10 @@ class GrammarSectionViewmodel extends BaseViewModel {
     if (questions.length - 1 > currentIndex) {
       currentIndex++;
     }
-    answerState = EvaluationState.empty;
+    if (_questions[currentIndex].questionType == QuestionType.youtubeLesson) {
+      answerState = EvaluationState.noState;
+    } else {
+      answerState = EvaluationState.empty;
+    }
   }
 }

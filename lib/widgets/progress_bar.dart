@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,10 +9,12 @@ class ProgressBar extends StatefulWidget {
   final double maxValue;
   final double value;
   final Duration duration;
+  final double? width;
 
   const ProgressBar({
     super.key,
     required this.value,
+    this.width,
     this.minValue = 0,
     this.maxValue = 100,
     this.duration = const Duration(milliseconds: 300),
@@ -57,6 +61,7 @@ class _ProgressBarState extends State<ProgressBar>
   Widget build(BuildContext context) {
     return SizedBox(
       height: 23.h,
+      width: widget.width?.w ?? null,
       child: Stack(
         alignment: Alignment.centerLeft,
         children: [
@@ -78,6 +83,7 @@ class _ProgressBarState extends State<ProgressBar>
             builder: (context, constraints) {
               double percentage = (_animation.value - widget.minValue) /
                   (widget.maxValue - widget.minValue);
+              percentage = max(0.1, percentage);
               double progressBarWidth = constraints.maxWidth * percentage;
               return Container(
                 decoration: BoxDecoration(

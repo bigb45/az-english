@@ -54,7 +54,8 @@ class _EvaluationSectionState extends State<EvaluationSection> {
                 EvaluationState.correct => widget.onContinue,
                 EvaluationState.incorrect => widget.onPressed,
                 EvaluationState.noState => widget.onContinue,
-                _ => widget.onPressed,
+                EvaluationState.empty => widget.onPressed,
+                // _ => widget.onPressed,
               },
               type: switch (widget.state) {
                 EvaluationState.correct => ButtonType.primary,
