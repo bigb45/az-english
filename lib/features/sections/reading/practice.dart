@@ -25,20 +25,18 @@ class ReadingPractice extends StatefulWidget {
 }
 
 class _ReadingPracticeState extends State<ReadingPractice> {
-  late ReadingSectionViewmodel readingSectionViewmodel;
+  late ReadingSectionViewmodel viewmodel;
   late List<BaseQuestion?> questions = [];
   late BaseQuestion? currentQuestion;
   bool _isFocused = false;
   PassageQuestionModel? passageQuestion;
   @override
   void initState() {
-    readingSectionViewmodel =
-        Provider.of<ReadingSectionViewmodel>(context, listen: false);
-    questions = readingSectionViewmodel.questions;
-    passageQuestion = readingSectionViewmodel.passageQuestion;
-    currentQuestion = questions.isEmpty
-        ? null
-        : questions[readingSectionViewmodel.currentIndex];
+    viewmodel = Provider.of<ReadingSectionViewmodel>(context, listen: false);
+    questions = viewmodel.questions;
+    passageQuestion = viewmodel.passageQuestion;
+    currentQuestion =
+        questions.isEmpty ? null : questions[viewmodel.currentIndex];
     super.initState();
   }
 
@@ -133,7 +131,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                     showLeaveAlertDialog(
                       context,
                       onConfirm: () async {
-                        await readingSectionViewmodel.updateSectionProgress();
+                        await viewmodel.updateSectionProgress();
                         // await readingSectionViewmodel.updateUserProgress();
                       },
                     );
