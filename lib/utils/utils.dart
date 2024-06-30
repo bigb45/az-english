@@ -58,6 +58,8 @@ extension StringExtension on String {
   String normalize() {
     return replaceAll(RegExp(r'[^\w\s]'), '')
         .replaceAll(RegExp(r'\s+'), ' ')
-        .toLowerCase();
+        .toLowerCase()
+        .trim()
+        .trimLeft();
   }
 }
