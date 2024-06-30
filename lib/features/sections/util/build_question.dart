@@ -78,9 +78,11 @@ Widget buildQuestion({
 
     case QuestionType.fillTheBlanks:
       return FillTheBlanksQuestion(
+        // key: UniqueKey(),
         question: question as FillTheBlanksQuestionModel,
         onChanged: (value) => onChanged(value),
         answerState: answerState,
+        controller: TextEditingController(),
       );
 
     default:

@@ -4,7 +4,6 @@ import 'package:ez_english/features/sections/models/fill_the_blanks_question_mod
 import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
-import 'package:ez_english/utils/AzureAudioSource.dart';
 import 'package:ez_english/widgets/word_chip_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,8 +12,11 @@ class FillTheBlanksQuestion extends StatefulWidget {
   final Function(StringAnswer) onChanged;
   final FillTheBlanksQuestionModel question;
   final EvaluationState answerState;
+  final TextEditingController controller;
+
   const FillTheBlanksQuestion({
     super.key,
+    required this.controller,
     required this.answerState,
     required this.question,
     required this.onChanged,
@@ -27,11 +29,9 @@ class FillTheBlanksQuestion extends StatefulWidget {
 class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
   late String incompleteSentence, firstPart, secondPart;
 
-  final _controller = TextEditingController();
   @override
   void initState() {
     super.initState();
-    // widget.onChanged(StringAnswer(answer: ""));
 
     String incompleteSentence =
         (widget.question.incompleteSentenceInEnglish ?? "")
@@ -95,7 +95,7 @@ class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
                       style: TextStyles.bodyLarge,
                     ),
                     WordChipTextField(
-                      controller: _controller,
+                      controller: widget.controller,
                       onChanged: (value) {
                         widget.onChanged(StringAnswer(answer: value));
                       },
