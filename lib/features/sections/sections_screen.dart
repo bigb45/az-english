@@ -10,7 +10,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class PracticeSections extends StatefulWidget {
-  // TODO: use levelId to fetch title and exercises for the level via viewmodel
   final String levelId;
   final String levelName;
   const PracticeSections({
@@ -113,7 +112,6 @@ class _PracticeSectionsState extends State<PracticeSections> {
                             headerText: hintText,
                             cardText:
                                 "Learn common everyday expressions and simple phrases",
-                            // TODO: change this to section completionState from viewmodel
                             onTap: !section.isAssigned
                                 ? null
                                 : () {
@@ -127,8 +125,6 @@ class _PracticeSectionsState extends State<PracticeSections> {
                             imagePath: imageAssets[index],
                             backgroundColor: backgroundColors[index],
                             section: section,
-
-                            // TODO change this to the current question index from the userProgress document
                           );
                         }).toList(),
                       ],
