@@ -17,8 +17,6 @@ class VocabularySectionViewmodel extends BaseViewModel {
 
   late List<WordModel> _words;
   String? levelId;
-  String? _levelName;
-  String? get levelName => _levelName;
   List<BaseQuestion?> _questions = [];
   Unit unit = Unit(name: "vocabulary_unit", questions: {});
   List<BaseQuestion?> get questions => _questions;
@@ -31,7 +29,8 @@ class VocabularySectionViewmodel extends BaseViewModel {
 
   void setValuesAndInit() async {
     currentIndex = 0;
-    _levelName = RouteConstants.getLevelName(levelId!);
+    levelName = RouteConstants.getLevelName(levelId!);
+    sectionName = RouteConstants.vocabularySectionName;
     fetchQuestions();
   }
 
@@ -40,7 +39,7 @@ class VocabularySectionViewmodel extends BaseViewModel {
     try {
       unit = await firestoreService.fetchUnit(
         RouteConstants.sectionNameId[RouteConstants.vocabularySectionName]!,
-        _levelName!,
+        levelName!,
       );
 
       _questions = unit.questions.values.toList();

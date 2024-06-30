@@ -14,7 +14,6 @@ import 'package:ez_english/features/sections/models/dictation_question_model.dar
 class WritingSectionViewmodel extends BaseViewModel {
   final sectionId = "2";
 
-  String? _levelName;
   String? levelId;
   List<BaseQuestion> _questions = [];
 
@@ -27,8 +26,8 @@ class WritingSectionViewmodel extends BaseViewModel {
 
   Future<void> myInit() async {
     currentIndex = 0;
-
-    _levelName = RouteConstants.getLevelName(levelId!);
+    levelName = RouteConstants.getLevelName(levelId!);
+    sectionName = RouteConstants.listeningWritingSectionName;
     fetchQuestions();
     if (_questions[currentIndex].questionType == QuestionType.youtubeLesson) {
       answerState = EvaluationState.noState;
@@ -44,7 +43,7 @@ class WritingSectionViewmodel extends BaseViewModel {
       Unit unit = await _firestoreService.fetchUnit(
         RouteConstants
             .sectionNameId[RouteConstants.listeningWritingSectionName]!,
-        _levelName!,
+        levelName!,
       );
       _questions = unit.questions.values.cast<BaseQuestion>().toList();
 

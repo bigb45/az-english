@@ -11,12 +11,10 @@ class GrammarSectionViewmodel extends BaseViewModel {
   final FirestoreService _firestoreService = FirestoreService();
 
   String? levelId;
-  String? _levelName;
   List<BaseQuestion> _questions = [];
 
   List<BaseQuestion> get questions => _questions;
 
-  String? get levelName => _levelName;
   @override
   void init() {}
 
@@ -24,7 +22,8 @@ class GrammarSectionViewmodel extends BaseViewModel {
     // reset answerState
     currentIndex = 0;
     answerState = EvaluationState.empty;
-    _levelName = RouteConstants.getLevelName(levelId!);
+    levelName = RouteConstants.getLevelName(levelId!);
+    sectionName = RouteConstants.grammarSectionName;
     await fetchQuestions();
     if (_questions[currentIndex].questionType == QuestionType.youtubeLesson) {
       answerState = EvaluationState.noState;
@@ -36,7 +35,7 @@ class GrammarSectionViewmodel extends BaseViewModel {
     try {
       Unit unit = await _firestoreService.fetchUnit(
         RouteConstants.sectionNameId[RouteConstants.grammarSectionName]!,
-        _levelName!,
+        levelName!,
       );
 
       _questions = unit.questions.values.cast<BaseQuestion>().toList();
