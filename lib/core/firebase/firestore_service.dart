@@ -104,7 +104,7 @@ class FirestoreService {
             'lastStoppedQuestionIndex': 0,
             'progress': 0,
             'unitsCompleted': [],
-            'sectionName': ""
+            'sectionName': section.name
           };
         }
 
@@ -363,12 +363,24 @@ class FirestoreService {
                 .asMap()
                 .entries
                 .map((e) => MapEntry(e.key + 1, e.value)));
+            filteredQuestionsLength = filteredQuestionsData.length;
+          } else if (RouteConstants.getSectionName(sectionName) ==
+              RouteConstants.vocabularySectionName) {
+            // Reorder questions for vocabulary section
+            filteredQuestionsData = [];
+            var questionsAfterIndex =
+                sortedEntries.skip(lastQuestionIndex).toList();
+            filteredQuestionsLength = questionsAfterIndex.length;
+            var questionsBeforeIndex =
+                sortedEntries.take(lastQuestionIndex).toList();
+
+            filteredQuestionsData.addAll(questionsAfterIndex);
+            filteredQuestionsData.addAll(questionsBeforeIndex);
           } else {
-            // Filter questions based on lastQuestionIndex for non-reading sections
             filteredQuestionsData =
                 sortedEntries.skip(lastQuestionIndex).toList();
+            filteredQuestionsLength = filteredQuestionsData.length;
           }
-          filteredQuestionsLength = filteredQuestionsData.length;
 
           for (var entry in filteredQuestionsData) {
             var mapData = entry.value as Map<String, dynamic>;

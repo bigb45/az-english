@@ -58,37 +58,47 @@ class VocabularySectionViewmodel extends BaseViewModel {
   }
 
   Future<void> updateWordStatus(WordDefinition question) async {
-    isLoading = true;
-    notifyListeners();
-    try {
-      question.isNew = false;
-      List<String> pathSegments = question.path!.split('/');
-      // Get the document path and the field path
-      String docPath =
-          pathSegments.sublist(0, pathSegments.length - 2).join('/');
-      String questionIndex = pathSegments.last;
-      FieldPath questionFieldPath =
-          FieldPath([FirestoreConstants.questionsField, questionIndex]);
-      DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
-
-      // Update the specific field
-      await _firestoreService
-          .updateQuestionUsingFieldPath<Map<String, dynamic>>(
-              docPath: docRef,
-              fieldPath: questionFieldPath,
-              newValue: question.toMap());
-
-      error = null;
-    } on CustomException catch (e) {
-      error = e;
-      // _handleError(e.message);
+    if (question.isNew) {
+      isLoading = true;
       notifyListeners();
-    } catch (e) {
-      error = CustomException("An undefined error occurred ${e.toString()}");
-      // _handleError("An undefined error occurred ${e.toString()}");
-    } finally {
-      isLoading = false;
-      notifyListeners();
+      try {
+        question.isNew = false;
+        incrementIndex();
+        List<String> pathSegments = question.path!.split('/');
+        // Get the document path and the field path
+        String docPath =
+            pathSegments.sublist(0, pathSegments.length - 2).join('/');
+        String questionIndex = pathSegments.last;
+        FieldPath questionFieldPath =
+            FieldPath([FirestoreConstants.questionsField, questionIndex]);
+        DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
+
+        // Update the specific field
+        await _firestoreService
+            .updateQuestionUsingFieldPath<Map<String, dynamic>>(
+                docPath: docRef,
+                fieldPath: questionFieldPath,
+                newValue: question.toMap());
+
+        error = null;
+      } on CustomException catch (e) {
+        error = e;
+        // _handleError(e.message);
+        notifyListeners();
+      } catch (e) {
+        error = CustomException("An undefined error occurred ${e.toString()}");
+        // _handleError("An undefined error occurred ${e.toString()}");
+      } finally {
+        isLoading = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  void incrementIndex() {
+    if (currentIndex < _questions.length - 1) {
+      currentIndex = currentIndex + 1;
+      progress = _firestoreService.calculateNewProgress(currentIndex);
     }
   }
 }
