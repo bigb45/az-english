@@ -8,13 +8,16 @@ class Unit {
   String? descriptionInArabic;
   int numberOfQuestions;
   Map<int, BaseQuestion?> questions;
+  double progress;
 
-  Unit(
-      {required this.name,
-      this.descriptionInEnglish,
-      this.descriptionInArabic,
-      this.numberOfQuestions = 0,
-      required this.questions});
+  Unit({
+    required this.name,
+    this.descriptionInEnglish,
+    this.descriptionInArabic,
+    this.numberOfQuestions = 0,
+    required this.questions,
+    this.progress = 0,
+  });
   factory Unit.fromMap(Map<String, dynamic> map) {
     return Unit(
       name: map['name'] ?? '',

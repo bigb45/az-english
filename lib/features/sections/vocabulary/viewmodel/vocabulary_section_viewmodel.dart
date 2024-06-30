@@ -43,6 +43,8 @@ class VocabularySectionViewmodel extends BaseViewModel {
       );
 
       _questions = unit.questions.values.toList();
+      progress = unit.progress;
+
       error = null;
     } on CustomException catch (e) {
       error = e;

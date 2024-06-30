@@ -11,7 +11,7 @@ abstract class BaseViewModel extends ChangeNotifier {
   bool _isDisposed = false;
   String? _levelName;
   String? _sectionName;
-
+  double? _progress;
   final FirestoreService _firestoreService = FirestoreService();
 
   String? get sectionName => _sectionName;
@@ -25,6 +25,13 @@ abstract class BaseViewModel extends ChangeNotifier {
 
   set levelName(String? value) {
     _levelName = value;
+    notifyListeners();
+  }
+
+  double? get progress => _progress;
+
+  set progress(double? value) {
+    _progress = value;
     notifyListeners();
   }
 

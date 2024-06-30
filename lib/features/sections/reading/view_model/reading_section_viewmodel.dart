@@ -27,6 +27,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
 
   void setValuesAndInit() async {
     currentIndex = 0;
+    progress = progress;
     levelName = RouteConstants.getLevelName(levelId!);
     sectionName = RouteConstants.readingSectionName;
     answerState = EvaluationState.empty;
@@ -48,7 +49,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
       } else {
         _questions = unit.questions.values.cast<BaseQuestion>().toList();
       }
-
+      progress = unit.progress;
       error = null;
     } on CustomException catch (e) {
       error = e;
@@ -63,6 +64,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
   void incrementIndex() {
     if (currentIndex < questions.length - 1) {
       currentIndex = currentIndex + 1;
+      progress = _firestoreService.calculateNewProgress(currentIndex);
       answerState = EvaluationState.empty;
     }
   }

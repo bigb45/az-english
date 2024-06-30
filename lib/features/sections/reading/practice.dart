@@ -177,9 +177,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                                 vertical: Constants.padding8,
                               ),
                               child: ProgressBar(
-                                value: viewmodel.currentIndex + 1,
-                                minValue: 0,
-                                maxValue: questions.length.toDouble(),
+                                value: viewmodel.progress!,
                               ),
                             ),
                             passageQuestion != null

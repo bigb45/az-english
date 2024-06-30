@@ -88,9 +88,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                               vertical: Constants.padding8,
                             ),
                             child: ProgressBar(
-                              value: viewmodel.currentIndex + 1,
-                              minValue: 0,
-                              maxValue: questions.length.toDouble(),
+                              value: viewmodel.progress!,
                             ),
                           ),
                           Center(
@@ -172,9 +170,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                             vertical: Constants.padding8,
                           ),
                           child: ProgressBar(
-                            value: viewmodel.currentIndex + 1,
-                            minValue: 0,
-                            maxValue: questions.length.toDouble(),
+                            value: viewmodel.progress!,
                           ),
                         ),
                         Center(

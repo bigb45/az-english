@@ -325,7 +325,8 @@ class FirestoreService {
       _userModel = await getUser(_user!.uid);
       int lastQuestionIndex = _userModel!.levelsProgress![level]!
           .sectionProgress![sectionName]!.lastStoppedQuestionIndex;
-
+      double progress = _userModel!
+          .levelsProgress![level]!.sectionProgress![sectionName]!.progress;
       DocumentSnapshot levelDoc = await _db
           .collection(FirestoreConstants.levelsCollection)
           .doc(level)
@@ -381,17 +382,25 @@ class FirestoreService {
         }
 
         return Unit(
-          name: unitNumber!,
-          descriptionInEnglish: data['descriptionInEnglish'],
-          descriptionInArabic: data['descriptionInArabic'],
-          questions: questions,
-        );
+            name: unitNumber!,
+            descriptionInEnglish: data['descriptionInEnglish'],
+            descriptionInArabic: data['descriptionInArabic'],
+            questions: questions,
+            progress: progress);
       } else {
         throw Exception('Level document does not exist');
       }
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
     }
+  }
+
+  double calculateNewProgress(int newQuestionIndex) {
+    int lastStoppedQuestionIndex =
+        (allQuestionsLength - filteredQuestionsLength) + newQuestionIndex;
+    double sectionProgress =
+        (((lastStoppedQuestionIndex + 1) / allQuestionsLength) * 100);
+    return sectionProgress;
   }
 
   Future<void> updateCurrentSectionQuestionIndex(
