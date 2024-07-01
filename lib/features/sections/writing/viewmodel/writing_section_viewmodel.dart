@@ -67,6 +67,7 @@ class WritingSectionViewmodel extends BaseViewModel {
       // TODO: perform scoring logic here
       answerState = EvaluationState.correct;
     } else {
+      wrongAnswerCount += 1;
       answerState = EvaluationState.incorrect;
     }
   }

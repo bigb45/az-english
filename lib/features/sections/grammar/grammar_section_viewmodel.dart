@@ -57,6 +57,7 @@ class GrammarSectionViewmodel extends BaseViewModel {
       answerState = EvaluationState.correct;
     } else {
       answerState = EvaluationState.incorrect;
+      wrongAnswerCount += 1;
     }
   }
 

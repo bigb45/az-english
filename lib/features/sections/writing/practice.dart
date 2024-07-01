@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/finished_questions_screen.dart';
@@ -10,6 +11,7 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/radio_button.dart';
+import 'package:ez_english/widgets/skip_question_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -127,6 +129,25 @@ class _WritingPracticeState extends State<WritingPractice> {
                             onChanged: viewmodel.updateAnswer,
                             question: currentQuestion,
                           )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                AnimatedOpacity(
+                  opacity: viewmodel.isSkipVisible ? 1 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Visibility(
+                    visible: viewmodel.isSkipVisible,
+                    child: Padding(
+                      padding: EdgeInsets.all(Constants.padding8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          SkipQuestionButton(
+                            onPressed: viewmodel.incrementIndex,
+                            // size: ,
+                          ),
                         ],
                       ),
                     ),
