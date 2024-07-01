@@ -161,23 +161,37 @@ class _TestSectionState extends State<TestSection> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Button(
-                        onPressed: viewmodel.isReadyToSubmit
-                            ? () {
-                                viewmodel.submitExam();
-                                viewmodel.addOrUpdateTestResult();
-                                // showAlertDialog(
-                                //   context,
-                                //   title: "Submit Exam",
-                                //   body: "Are you sure you want to submit the exam?",
-                                //   onConfirm: () async {
-                                //     viewmodel.submitExam();
-                                //   },
-                                // );
-                              }
-                            : null,
-                        text: "Submit Exam",
-                      ),
+                      child: viewmodel.isSubmitted
+                          ? Button(
+                              onPressed: viewmodel.isReadyToSubmit
+                                  ? () async {
+                                      await viewmodel
+                                          .updateUserProgress()
+                                          .then((value) {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      });
+                                    }
+                                  : null,
+                              text: "finish & return",
+                            )
+                          : Button(
+                              onPressed: viewmodel.isReadyToSubmit
+                                  ? () {
+                                      showAlertDialog(
+                                        context,
+                                        title: "Submit Exam",
+                                        body:
+                                            "Are you sure you want to submit the exam?",
+                                        onConfirm: () async {
+                                          viewmodel.submitExam();
+                                          viewmodel.addOrUpdateTestResult();
+                                        },
+                                      );
+                                    }
+                                  : null,
+                              text: "Submit Exam",
+                            ),
                     ),
                   ],
                 )),
