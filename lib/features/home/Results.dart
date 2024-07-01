@@ -129,7 +129,7 @@ class ExamResultCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: Constants.padding8),
       child: GestureDetector(
         onTap: () {
-          onTap();
+          // onTap();
         },
         child: Container(
           decoration: BoxDecoration(
@@ -226,7 +226,7 @@ class ExamResultCard extends StatelessWidget {
                 //         Icons.cancel,
                 //         color: Colors.red,
                 //       ),
-                const Icon(Icons.arrow_forward)
+                // const Icon(Icons.arrow_forward)
               ],
             ),
           ),

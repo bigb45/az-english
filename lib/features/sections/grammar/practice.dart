@@ -164,7 +164,6 @@ class _GrammarPracticeState extends State<GrammarPractice> {
             backgroundColor: Colors.white,
             title: ListTile(
               contentPadding: const EdgeInsets.only(left: 0, right: 0),
-              // TODO: get title and subtitle from viewmodel
               title: Text(
                 "Grammar Practice",
                 style: TextStyles.titleTextStyle

@@ -38,7 +38,6 @@ abstract class BaseQuestion<T> {
       'questionTextInArabic': questionTextInArabic,
       'imageUrl': imageUrl,
       'voiceUrl': voiceUrl,
-      // TODO: Description???
       'description': voiceUrl,
       'answer': answer?.toMap(),
       "questionType": questionType.toShortString(),

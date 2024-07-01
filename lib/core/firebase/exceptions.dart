@@ -50,5 +50,4 @@ class CustomException implements Exception {
   }
 }
 
-// TODO Do i need to use this enum ?
 enum FirebaseExceptionType { networkError, serverError, unknownError }

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
@@ -9,7 +8,6 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
-import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 
 class WritingSectionViewmodel extends BaseViewModel {
   final sectionId = "2";
@@ -74,10 +72,12 @@ class WritingSectionViewmodel extends BaseViewModel {
   }
 
   void incrementIndex() {
-    if (currentIndex < _questions.length - 1) {
+    if (currentIndex < _questions.length) {
       currentIndex = currentIndex + 1;
       progress = _firestoreService.calculateNewProgress(currentIndex);
-      if (_questions[currentIndex].questionType == QuestionType.youtubeLesson) {
+      if (_questions[currentIndex].questionType == QuestionType.youtubeLesson ||
+          _questions[currentIndex].questionType ==
+              QuestionType.vocabularyWithListening) {
         answerState = EvaluationState.noState;
       } else {
         answerState = EvaluationState.empty;

@@ -1,6 +1,6 @@
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
-import 'package:ez_english/features/sections/exam/viewmodel/viewmodel.dart';
+import 'package:ez_english/features/sections/exam/viewmodel/test_section_viewmodel.dart';
 import 'package:ez_english/features/sections/util/build_question.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';

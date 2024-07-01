@@ -91,7 +91,6 @@ class LevelSelectionViewmodel extends BaseViewModel {
 
       // Update the section status in the user's document
       String sectionId = RouteConstants.getSectionIds(section.name);
-      // TODO: using constant routes
       await userDocRef.update({
         'levelsProgress.$levelName.sectionProgress.$sectionId.isAttempted':
             true,

@@ -2,6 +2,7 @@
 
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
+import 'package:ez_english/features/sections/components/finished_questions_screen.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
 import 'package:ez_english/features/sections/util/build_question.dart';
 import 'package:ez_english/features/sections/writing/viewmodel/writing_section_viewmodel.dart';
@@ -11,6 +12,7 @@ import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class WritingPractice extends StatefulWidget {
@@ -33,8 +35,6 @@ class _WritingPracticeState extends State<WritingPractice> {
   @override
   Widget build(BuildContext context) {
     return Consumer<WritingSectionViewmodel>(builder: (context, viewmodel, _) {
-      currentQuestion = viewmodel.questions[viewmodel.currentIndex];
-
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (viewmodel.error != null) {
           ScaffoldMessenger.of(context)
@@ -49,6 +49,18 @@ class _WritingPracticeState extends State<WritingPractice> {
               .then((reason) => viewmodel.resetError());
         }
       });
+      if (viewmodel.currentIndex == viewmodel.questions.length) {
+        return FinishedQuestionsScreen(
+          onFinished: () async {
+            await viewmodel.updateSectionProgress().then((value) {
+              context.pop();
+              context.pop();
+            });
+          },
+        );
+      }
+
+      currentQuestion = viewmodel.questions[viewmodel.currentIndex];
 
       return PopScope(
         canPop: false,

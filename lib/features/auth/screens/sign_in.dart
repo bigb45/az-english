@@ -41,7 +41,7 @@ class _SignInScreenState extends State<SignInScreen> {
     textFieldTypes = [TextFieldType.text, TextFieldType.password];
 
     authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-    //TODO delete this if you want to stop auto log in for test purposes
+    //TODO delete this if you want to stop auto login for test purposes
     authViewModel.signInDev();
 
     super.initState();

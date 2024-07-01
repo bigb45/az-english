@@ -73,10 +73,9 @@ Widget buildQuestion({
       return RepaintBoundary(
         child: YouTubeVideoPlayer(
           key: ValueKey((question as YoutubeLessonModel).youtubeUrl ??
-              "https://www.youtube.com/watch?v=ml5uvpfXcLU"),
+              "https://www.youtube.com/watch?v=aDm5WZ3QiIE"),
           videoId: (question as YoutubeLessonModel).youtubeUrl ??
-              // TODO: handle missing youtube url in a better way
-              "https://www.youtube.com/watch?v=ml5uvpfXcLU",
+              "https://www.youtube.com/watch?v=aDm5WZ3QiIE",
         ),
       );
     case QuestionType.vocabularyWithListening:

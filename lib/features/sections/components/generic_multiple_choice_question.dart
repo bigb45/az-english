@@ -56,7 +56,7 @@ class _GenericMultipleChoiceQuestionState
             SizedBox(height: Constants.padding20),
             Text(
               widget.question.questionTextInEnglish ??
-                  "Please Choose one of the choices", // TODO: Add a default question text if the text is null
+                  "Please Choose one of the choices",
               style: TextStyles.questionTextStyle.copyWith(height: 2),
               maxLines: 5,
             ),

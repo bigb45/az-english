@@ -38,7 +38,6 @@ class DictationQuestionModel extends BaseQuestion<String> {
     );
   }
 
-// TODO: test this implementation
   @override
   bool evaluateAnswer() {
     return answer?.validate(userAnswer) ?? false;
