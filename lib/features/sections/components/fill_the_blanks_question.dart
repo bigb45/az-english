@@ -12,11 +12,9 @@ class FillTheBlanksQuestion extends StatefulWidget {
   final Function(StringAnswer) onChanged;
   final FillTheBlanksQuestionModel question;
   final EvaluationState answerState;
-  // final TextEditingController controller;
 
   const FillTheBlanksQuestion({
     super.key,
-    // required this.controller,
     required this.answerState,
     required this.question,
     required this.onChanged,
@@ -28,11 +26,9 @@ class FillTheBlanksQuestion extends StatefulWidget {
 
 class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
   late String incompleteSentence, firstPart, secondPart;
-  // late TextEditingController controller;
   @override
   void initState() {
     super.initState();
-    // controller = TextEditingController();
     String incompleteSentence =
         (widget.question.incompleteSentenceInEnglish ?? "")
             .replaceAll(RegExp(r'_+'), '_');
@@ -49,7 +45,6 @@ class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
         constraints: BoxConstraints(minHeight: 40.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(widget.question.questionTextInEnglish ?? "",
                 style: TextStyles.bodyLarge),
@@ -92,25 +87,29 @@ class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
                     color: Palette.secondaryStroke,
                   ),
                 ),
-                SizedBox(
-                  height: 200.w,
-                  width: double.infinity,
-                ),
-                Row(
+                Column(
                   children: [
-                    Text(
-                      firstPart,
-                      style: TextStyles.bodyLarge,
-                    ),
-                    WordChipTextField(
-                      // controller: controller,
-                      onChanged: (value) {
-                        widget.onChanged(StringAnswer(answer: value));
-                      },
-                    ),
-                    Text(
-                      secondPart,
-                      style: TextStyles.bodyLarge,
+                    SizedBox(
+                      height: 200.w,
+                      width: double.infinity,
+                      child: Wrap(
+                        runSpacing: 30.h,
+                        children: [
+                          Text(
+                            firstPart,
+                            style: TextStyles.bodyLarge,
+                          ),
+                          WordChipTextField(
+                            onChanged: (value) {
+                              widget.onChanged(StringAnswer(answer: value));
+                            },
+                          ),
+                          Text(
+                            secondPart,
+                            style: TextStyles.bodyLarge,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -124,7 +123,7 @@ class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
