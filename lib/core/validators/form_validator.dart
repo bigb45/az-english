@@ -36,7 +36,7 @@ class Validators {
       return AppStrings.phoneRequired;
     }
 
-    if (phoneNumber.length != 10) {
+    if (phoneNumber.length != 11) {
       return AppStrings.phoneLength;
     }
 
