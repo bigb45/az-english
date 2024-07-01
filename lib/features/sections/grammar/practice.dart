@@ -54,7 +54,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
       if (viewmodel.currentIndex == questions.length) {
         return FinishedQuestionsScreen(
           onFinished: () async {
-            await viewmodel.updateSectionProgress().then((value) {
+            await viewmodel.updateUserProgress().then((value) {
               context.pop();
               context.pop();
             });

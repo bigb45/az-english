@@ -380,6 +380,11 @@ class FirestoreService {
             filteredQuestionsLength = questionsAfterIndex.length;
             var questionsBeforeIndex =
                 sortedEntries.take(lastQuestionIndex).toList();
+            for (var entry in questionsBeforeIndex) {
+              if (entry.value is Map) {
+                entry.value['isNew'] = false;
+              }
+            }
 
             filteredQuestionsData.addAll(questionsAfterIndex);
             filteredQuestionsData.addAll(questionsBeforeIndex);

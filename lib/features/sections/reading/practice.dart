@@ -74,7 +74,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
         if (viewmodel.currentIndex == questions.length) {
           return FinishedQuestionsScreen(
             onFinished: () async {
-              await viewmodel.updateSectionProgress().then((value) {
+              await viewmodel.updateUserProgress().then((value) {
                 context.pop();
                 context.pop();
               });
