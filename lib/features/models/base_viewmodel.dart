@@ -77,6 +77,10 @@ abstract class BaseViewModel extends ChangeNotifier {
   CustomException? get error => _error;
   int get currentIndex => _currentIndex;
   EvaluationState get answerState => _answerState;
+  set isInitialized(bool value) {
+    _isInitializeDone = value;
+    notifyListeners();
+  }
 
   @protected
   set currentIndex(int newValue) {
