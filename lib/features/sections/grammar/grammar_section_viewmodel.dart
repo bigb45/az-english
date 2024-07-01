@@ -66,8 +66,8 @@ class GrammarSectionViewmodel extends BaseViewModel {
   }
 
   void incrementIndex() {
-    if (questions.length - 1 > currentIndex) {
-      currentIndex++;
+    if (currentIndex < questions.length) {
+      currentIndex = currentIndex + 1;
       progress = _firestoreService.calculateNewProgress(currentIndex);
     }
     if (_questions[currentIndex].questionType == QuestionType.youtubeLesson) {
