@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Constants {
+  static const wrongAnswerSkipLimit = 3;
+
   static final gapW10 = SizedBox(width: 10.w);
   static final gapW4 = SizedBox(width: 4.w);
 
