@@ -16,13 +16,16 @@ class TestSectionViewmodel extends BaseViewModel {
 
   String? levelId;
   List<BaseQuestion> _questions = [];
+  List<bool?> _answers = [];
 
+  get answers => _answers;
   get questions => _questions;
   final FirestoreService _firestoreService = FirestoreService();
   @override
   FutureOr<void> init() {}
 
   Future<void> myInit() async {
+    _answers = [];
     currentIndex = 0;
     levelName = RouteConstants.getLevelName(levelId!);
     sectionName = RouteConstants.testSectionName;
@@ -57,6 +60,7 @@ class TestSectionViewmodel extends BaseViewModel {
                   .where((q) => q != null)
                   .cast<BaseQuestion>());
         }
+        _answers = [..._answers, null];
       }
 
       progress = unit.progress;
@@ -72,29 +76,22 @@ class TestSectionViewmodel extends BaseViewModel {
     }
   }
 
-  void updateAnswer(BaseAnswer answer) {
-    _questions[currentIndex].userAnswer = answer;
+  void updateAnswer(int questionIndex, BaseAnswer answer) {
+    questions[questionIndex].userAnswer = answer;
     notifyListeners();
   }
 
-  void evaluateAnswer() {
-    if (_questions[currentIndex].evaluateAnswer()) {
-      // TODO: perform scoring logic here
-      answerState = EvaluationState.correct;
-    } else {
-      answerState = EvaluationState.incorrect;
+  Future<void> submitExam() async {
+    for (int i = 0; i < questions.length; i++) {
+      _answers[i] = questions[i].evaluateAnswer();
     }
-  }
-
-  void incrementIndex() {
-    if (currentIndex < _questions.length - 1) {
-      currentIndex = currentIndex + 1;
-      progress = _firestoreService.calculateNewProgress(currentIndex);
-      if (_questions[currentIndex].questionType == QuestionType.youtubeLesson) {
-        answerState = EvaluationState.noState;
-      } else {
-        answerState = EvaluationState.empty;
-      }
-    }
+    notifyListeners();
+    // print(
+    //   "submiting exam => ${questions.map(
+    //     (q) {
+    //       return q.evaluateAnswer();
+    //     },
+    //   )}",
+    // );
   }
 }
