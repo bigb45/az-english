@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
@@ -9,7 +8,6 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
-import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
 
 class TestSectionViewmodel extends BaseViewModel {
@@ -46,6 +44,7 @@ class TestSectionViewmodel extends BaseViewModel {
         levelName!,
       );
       _questions = unit.questions.values.cast<BaseQuestion>().toList();
+
       for (int i = 0; i < _questions.length; i++) {
         if (_questions[i] is PassageQuestionModel) {
           PassageQuestionModel passageQuestion =
