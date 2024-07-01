@@ -65,7 +65,7 @@ class _WritingPracticeState extends State<WritingPractice> {
       return PopScope(
         canPop: false,
         onPopInvoked: (canPop) {
-          showLeaveAlertDialog(
+          showAlertDialog(
             context,
             onConfirm: () async {
               await viewmodel.updateSectionProgress();
@@ -82,7 +82,7 @@ class _WritingPracticeState extends State<WritingPractice> {
                   color: Palette.primaryText,
                 ),
                 onPressed: () {
-                  showLeaveAlertDialog(
+                  showAlertDialog(
                     context,
                     onConfirm: () async {
                       await viewmodel.updateSectionProgress();

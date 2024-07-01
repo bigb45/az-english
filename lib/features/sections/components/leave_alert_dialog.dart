@@ -33,7 +33,7 @@ Widget leavePracticeAlertDialog(
   );
 }
 
-void showLeaveAlertDialog(BuildContext context,
+void showAlertDialog(BuildContext context,
     {Future<void> Function()? onConfirm,
     Function? onCancel,
     String? title,

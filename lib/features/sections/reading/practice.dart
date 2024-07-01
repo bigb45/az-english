@@ -87,7 +87,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
         return PopScope(
           canPop: false,
           onPopInvoked: (canPop) {
-            showLeaveAlertDialog(context, onConfirm: () async {
+            showAlertDialog(context, onConfirm: () async {
               // await readingSectionViewmodel
               //     .updateSectionProgress(readingSectionViewmodel.currentIndex);
             });
@@ -102,7 +102,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                     color: Palette.primaryText,
                   ),
                   onPressed: () {
-                    showLeaveAlertDialog(
+                    showAlertDialog(
                       context,
                       onConfirm: () async {
                         await viewmodel.updateSectionProgress();

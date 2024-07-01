@@ -41,7 +41,7 @@ class _ExamSectionState extends State<ExamSection> {
       return PopScope(
         canPop: false,
         onPopInvoked: (canPop) {
-          showLeaveAlertDialog(
+          showAlertDialog(
             title: "Leave Exam?",
             body:
                 "Are you sure you want to leave the exam? Your progress will not be saved.",
@@ -62,7 +62,7 @@ class _ExamSectionState extends State<ExamSection> {
                         color: Palette.primaryText,
                       ),
                       onPressed: () {
-                        showLeaveAlertDialog(
+                        showAlertDialog(
                           title: "Leave Exam?",
                           body:
                               "Are you sure you want to leave the exam? Your progress will not be saved.",

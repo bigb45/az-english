@@ -134,7 +134,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
       return PopScope(
         canPop: false,
         onPopInvoked: (canPop) {
-          showLeaveAlertDialog(
+          showAlertDialog(
             context,
             onConfirm: () async {
               await viewmodel.updateSectionProgress();
@@ -151,7 +151,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                   color: Palette.primaryText,
                 ),
                 onPressed: () {
-                  showLeaveAlertDialog(
+                  showAlertDialog(
                     context,
                     onConfirm: () async {
                       await viewmodel.updateSectionProgress();
