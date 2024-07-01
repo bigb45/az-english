@@ -1,11 +1,20 @@
+import 'dart:async';
+
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/features/home/viewmodel/home_viewmodel.dart';
+import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:ez_english/features/sections/grammar/grammar_section_viewmodel.dart';
+import 'package:ez_english/features/sections/reading/view_model/reading_section_viewmodel.dart';
+import 'package:ez_english/features/sections/vocabulary/viewmodel/vocabulary_section_viewmodel.dart';
+import 'package:ez_english/features/sections/writing/viewmodel/writing_section_viewmodel.dart';
 import 'package:ez_english/router.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -19,12 +28,22 @@ class AuthViewModel extends ChangeNotifier {
 
   UserModel? _userData;
   UserModel? get userData => _userData;
+  StreamSubscription<User?>? _authStateSubscription;
 
   bool get isSignedIn => _user != null;
   // bool get isSignedIn => true;
   AuthViewModel() {
-    _firebaseAuth.authStateChanges().listen(_onAuthStateChanged);
+    _subscribeToAuthChanges();
   }
+  void _subscribeToAuthChanges() {
+    _authStateSubscription =
+        _firebaseAuth.authStateChanges().listen(_onAuthStateChanged);
+  }
+
+  void _unsubscribeFromAuthChanges() {
+    _authStateSubscription?.cancel();
+  }
+
   //TODO remove this after testing
   Future<void> signInDev() async {
     errorOccurred = false;
@@ -61,12 +80,14 @@ class AuthViewModel extends ChangeNotifier {
     _showDialog(context);
     errorOccurred = false;
     try {
+      _unsubscribeFromAuthChanges();
       UserCredential? userCredential = await _firebaseAuthService.signUp(user);
       if (userCredential == null) return;
       if (userCredential.user != null) {
         user.id = userCredential.user!.uid;
         user.assignedLevels = [];
         await _firestoreService.addUser(user);
+        _subscribeToAuthChanges();
       }
     } on CustomException catch (e) {
       errorOccurred = true;
@@ -97,6 +118,14 @@ class AuthViewModel extends ChangeNotifier {
     errorOccurred = false;
     try {
       await _firebaseAuthService.signOut();
+      _firestoreService.reset();
+      _resetAuthState();
+      Provider.of<WritingSectionViewmodel>(context, listen: false).reset();
+      Provider.of<ReadingSectionViewmodel>(context, listen: false).reset();
+      Provider.of<VocabularySectionViewmodel>(context, listen: false).reset();
+      Provider.of<GrammarSectionViewmodel>(context, listen: false).reset();
+      Provider.of<LevelSelectionViewmodel>(context, listen: false).reset();
+      Provider.of<HomeViewmodel>(context, listen: false).reset();
     } on CustomException catch (e) {
       errorOccurred = true;
       _handleError(e.message);
@@ -113,6 +142,12 @@ class AuthViewModel extends ChangeNotifier {
       barrierDismissible: false,
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
+  }
+
+  void _resetAuthState() {
+    _user = null;
+    _userData = null;
+    notifyListeners();
   }
 
   void _onAuthStateChanged(User? user) async {

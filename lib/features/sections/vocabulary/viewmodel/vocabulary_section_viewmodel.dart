@@ -80,6 +80,21 @@ class VocabularySectionViewmodel extends BaseViewModel {
     }
   }
 
+  void reset() {
+    _words = [];
+    levelId = null;
+    _questions.clear();
+    unit = Unit(name: "vocabulary_unit", questions: {});
+    currentIndex = 0;
+    levelName = null;
+    sectionName = null;
+    progress = 0.0;
+    isInitialized = false;
+    isLoading = false;
+    error = null;
+    notifyListeners();
+  }
+
   bool areAllWordsNotNew() {
     return questions.every((word) => !(word as WordDefinition).isNew);
   }

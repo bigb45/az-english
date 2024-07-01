@@ -8,6 +8,7 @@ import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -42,7 +43,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
     authViewModel = Provider.of<AuthViewModel>(context, listen: false);
     //TODO delete this if you want to stop auto login for test purposes
-    authViewModel.signInDev();
+    // authViewModel.signInDev();
 
     super.initState();
   }
@@ -73,10 +74,15 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 Constants.gapH36,
                 // TODO change logo
-                Image.asset(
-                  "assets/images/test_icon.png",
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16.0.r),
+                  child: Image.asset(
+                    "assets/images/logo.png",
+                    width: 200.w,
+                    height: 200.w,
+                  ),
                 ),
-                usedGap,
+                Constants.gapH36,
                 ListView.builder(
                   padding: EdgeInsets.zero,
                   physics: const NeverScrollableScrollPhysics(),

@@ -103,6 +103,21 @@ class TestSectionViewmodel extends BaseViewModel {
     // );
   }
 
+  void reset() {
+    passageTexts.clear();
+    levelId = null;
+    _questions.clear();
+    currentIndex = 0;
+    levelName = null;
+    sectionName = null;
+    progress = 0.0;
+    isInitialized = false;
+    isLoading = false;
+    error = null;
+    answerState = EvaluationState.empty;
+    notifyListeners();
+  }
+
   Future<void> addOrUpdateExamResult() async {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy').format(now);

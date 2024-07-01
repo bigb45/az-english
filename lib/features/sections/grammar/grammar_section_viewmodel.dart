@@ -65,6 +65,20 @@ class GrammarSectionViewmodel extends BaseViewModel {
     notifyListeners();
   }
 
+  void reset() {
+    levelId = null;
+    _questions.clear();
+    currentIndex = 0;
+    levelName = null;
+    sectionName = null;
+    progress = 0.0;
+    isInitialized = false;
+    isLoading = false;
+    error = null;
+    answerState = EvaluationState.empty;
+    notifyListeners();
+  }
+
   void incrementIndex() {
     if (currentIndex < questions.length) {
       currentIndex = currentIndex + 1;

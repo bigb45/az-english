@@ -71,6 +71,19 @@ class WritingSectionViewmodel extends BaseViewModel {
     }
   }
 
+  void reset() {
+    levelId = null;
+    _questions.clear();
+    currentIndex = 0;
+    levelName = null;
+    sectionName = null;
+    progress = 0.0;
+    isInitialized = false;
+    isLoading = false;
+    error = null;
+    notifyListeners();
+  }
+
   void incrementIndex() {
     if (currentIndex < _questions.length) {
       currentIndex = currentIndex + 1;
