@@ -45,7 +45,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
       if (unit.questions.isNotEmpty &&
           unit.questions.values.first is PassageQuestionModel) {
         _passageQuestion = unit.questions.values.first as PassageQuestionModel;
-        _questions = _passageQuestion!.questions;
+        _questions = unit.questions.values.skip(1).toList();
       } else {
         _questions = unit.questions.values.cast<BaseQuestion>().toList();
       }

@@ -352,13 +352,21 @@ class FirestoreService {
           if (RouteConstants.getSectionName(sectionName) ==
               RouteConstants.readingSectionName) {
             // Always include the first question for reading section
+
             filteredQuestionsData = [];
             var embeddedQuestions = (sortedEntries.first.value
                     as Map<String, dynamic>)[FirestoreConstants.questionsField]
                 as List<dynamic>;
-            allQuestionsLength = embeddedQuestions.length;
+            var firstQuestion = [sortedEntries.first.value];
+
+            allQuestionsLength = embeddedQuestions.length + 1;
             var skippedEmbeddedQuestions =
                 embeddedQuestions.skip(lastQuestionIndex).toList();
+            filteredQuestionsData.addAll(firstQuestion
+                .asMap()
+                .entries
+                .map((e) => MapEntry(e.key, e.value)));
+
             filteredQuestionsData.addAll(skippedEmbeddedQuestions
                 .asMap()
                 .entries

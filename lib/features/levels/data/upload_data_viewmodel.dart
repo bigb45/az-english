@@ -319,7 +319,6 @@ class UploadDataViewmodel extends ChangeNotifier {
                 imageUrl: '',
                 voiceUrl: '',
               );
-              existingUnit!.numberOfQuestions++;
               break;
             default:
               break;
