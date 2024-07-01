@@ -140,7 +140,7 @@ class _TestSectionState extends State<TestSection> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 10.0),
                                       child: IgnorePointer(
-                                        ignoring: true,
+                                        ignoring: viewmodel.isSubmitted,
                                         child: buildQuestion(
                                           answerState: viewmodel.answerState,
                                           onChanged: (answer) {
@@ -162,22 +162,20 @@ class _TestSectionState extends State<TestSection> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Button(
-                        type: viewmodel.answers.isNotEmpty &&
-                                viewmodel.answers.contains(null)
-                            ? ButtonType.secondary
-                            : ButtonType.primary,
-                        onPressed: () {
-                          viewmodel.submitExam();
-                          // viewmodel.addOrUpdateExamResult();
-                          // showAlertDialog(
-                          //   context,
-                          //   title: "Submit Exam",
-                          //   body: "Are you sure you want to submit the exam?",
-                          //   onConfirm: () async {
-                          //     viewmodel.submitExam();
-                          //   },
-                          // );
-                        },
+                        onPressed: viewmodel.isReadyToSubmit
+                            ? () {
+                                viewmodel.submitExam();
+                                // viewmodel.addOrUpdateExamResult();
+                                // showAlertDialog(
+                                //   context,
+                                //   title: "Submit Exam",
+                                //   body: "Are you sure you want to submit the exam?",
+                                //   onConfirm: () async {
+                                //     viewmodel.submitExam();
+                                //   },
+                                // );
+                              }
+                            : null,
                         text: "Submit Exam",
                       ),
                     ),

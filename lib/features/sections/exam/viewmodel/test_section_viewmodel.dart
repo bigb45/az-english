@@ -19,11 +19,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 class TestSectionViewmodel extends BaseViewModel {
   final sectionId = "4";
   Map<int, String> passageTexts = {};
-
+  bool _isReadyToSubmit = false;
+  bool _isSubmitted = false;
   String? levelId;
   List<BaseQuestion> _questions = [];
   List<bool?> _answers = [];
 
+  bool get isReadyToSubmit => _isReadyToSubmit;
+  bool get isSubmitted => _isSubmitted;
   get answers => _answers;
   get questions => _questions;
   final FirestoreService _firestoreService = FirestoreService();
@@ -86,10 +89,14 @@ class TestSectionViewmodel extends BaseViewModel {
 
   void updateAnswer(int questionIndex, BaseAnswer answer) {
     questions[questionIndex].userAnswer = answer;
+    _isReadyToSubmit = true;
+    // answers[questionIndex] = questions[questionIndex].evaluateAnswer();
     notifyListeners();
   }
 
   Future<void> submitExam() async {
+    _isSubmitted = true;
+    _isReadyToSubmit = false;
     for (int i = 0; i < questions.length; i++) {
       _answers[i] = questions[i].evaluateAnswer();
     }
