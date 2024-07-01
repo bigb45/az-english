@@ -76,7 +76,7 @@ class ButtonState extends State<Button> {
                       Text(
                         widget.text!.toUpperCase(),
                         style: TextStyles.buttonTextStyle.copyWith(
-                          color: textColor,
+                          color: Palette.primaryText,
                         ),
                       ),
                 ),
