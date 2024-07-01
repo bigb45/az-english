@@ -40,11 +40,17 @@ dependencies:
   firebase_storage: ^11.7.7
   path: ^1.9.0
   intl: ^0.19.0
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/images/logo2.png"
 
 flutter:
   uses-material-design: true

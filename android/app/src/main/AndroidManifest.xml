@@ -4,7 +4,7 @@
 
 
     <application
-        android:label="ez_english"
+        android:label="AZ English"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true"
