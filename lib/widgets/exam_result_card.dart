@@ -14,7 +14,7 @@ class ExamResultCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0),
       child: GestureDetector(
-        onTap: onTap,
+        // onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(color: Palette.secondaryStroke),
@@ -48,7 +48,7 @@ class ExamResultCard extends StatelessWidget {
                         ),
                         SizedBox(width: 10.w),
                         Text(
-                          result.examScore,
+                          "${result.examScore}%",
                           style: TextStyles.wordType,
                         ),
                         SizedBox(width: 10.w),
