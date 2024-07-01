@@ -83,6 +83,8 @@ class UploadDataViewmodel extends ChangeNotifier {
               convertToNull(csvParts[15]!.value.toString().trim());
           // String? imageName =
           //     convertToNull(csvParts[16]!.value.toString().trim());
+          String? youtubeUrl =
+              convertToNull(csvParts[16]!.value.toString().trim());
 
           String? imageUrl = imageName != null && imageName.isNotEmpty
               ? await uploadImageAndGetUrl(imageName)
@@ -194,7 +196,7 @@ class UploadDataViewmodel extends ChangeNotifier {
               throw Exception(UnimplementedError());
             case QuestionType.youtubeLesson:
               var question = YoutubeLessonModel(
-                youtubeUrl: imageName,
+                youtubeUrl: youtubeUrl,
                 questionTextInEnglish: questionEnglish,
                 questionTextInArabic: questionArabic,
                 imageUrl: imageUrl,
