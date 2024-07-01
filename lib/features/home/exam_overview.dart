@@ -1,4 +1,3 @@
-import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/models/exam_result.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -36,61 +35,55 @@ class ExamOverview extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: Center(
+        child: Wrap(
+          runSpacing: 10.w,
+          spacing: 10.w,
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 20.0.w, vertical: Constants.padding20),
-              child: Text("Reading:", style: TextStyles.bodyLarge),
+            Column(
+              children: [
+                Text("Reading:", style: TextStyles.bodyLarge),
+                ResultCard(
+                  topText: "GOOD",
+                  score: Score.good,
+                  mainText: "8/10 ANSWERED CORRECTLY",
+                  result: result,
+                ),
+              ],
             ),
-            Center(
-              child: ResultCard(
-                topText: "GOOD",
-                score: Score.good,
-                mainText: "8/10 ANSWERED CORRECTLY",
-                result: result,
-              ),
+            Column(
+              children: [
+                Text("Writing & Listening:", style: TextStyles.bodyLarge),
+                ResultCard(
+                  topText: "BAD",
+                  score: Score.bad,
+                  mainText: "2/10 ANSWERED CORRECTLY",
+                  result: result,
+                ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 20.0.w, vertical: Constants.padding20),
-              child: Text("Writing & Listening:", style: TextStyles.bodyLarge),
+            Column(
+              children: [
+                Text("Grammar:", style: TextStyles.bodyLarge),
+                ResultCard(
+                  topText: "GOOD",
+                  score: Score.good,
+                  mainText: "7/10 ANSWERED CORRECTLY",
+                  result: result,
+                ),
+              ],
             ),
-            Center(
-              child: ResultCard(
-                topText: "BAD",
-                score: Score.bad,
-                mainText: "2/10 ANSWERED CORRECTLY",
-                result: result,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 20.0.w, vertical: Constants.padding20),
-              child: Text("Grammar:", style: TextStyles.bodyLarge),
-            ),
-            Center(
-              child: ResultCard(
-                topText: "GOOD",
-                score: Score.good,
-                mainText: "7/10 ANSWERED CORRECTLY",
-                result: result,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 20.0.w, vertical: Constants.padding20),
-              child: Text("Final grade:", style: TextStyles.bodyLarge),
-            ),
-            Center(
-              child: ResultCard(
-                topText: "AVERAGE",
-                score: Score.average,
-                mainText: "19/30 ANSWERED CORRECTLY",
-                result: result,
-              ),
+            Column(
+              children: [
+                Text("Final grade:", style: TextStyles.bodyLarge),
+                ResultCard(
+                  topText: "AVERAGE",
+                  score: Score.average,
+                  mainText: "19/30 ANSWERED CORRECTLY",
+                  result: result,
+                ),
+              ],
             ),
           ],
         ),
