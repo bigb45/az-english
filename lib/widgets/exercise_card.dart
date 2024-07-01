@@ -142,7 +142,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                                           ),
                                           // SizedBox(width: Constants.padding4),
                                           ProgressBar(
-                                            width: 100.w,
+                                            width: 80.w,
                                             value: section.progress,
                                           ),
                                         ],
@@ -220,7 +220,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                                               ),
                                             ),
                                             ProgressBar(
-                                              width: 100.w,
+                                              width: 80.w,
                                               value: section.progress,
                                             ),
                                           ],
