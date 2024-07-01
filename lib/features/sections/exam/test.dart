@@ -12,16 +12,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class ExamSection extends StatefulWidget {
+class TestSection extends StatefulWidget {
   final String levelId;
 
-  const ExamSection({super.key, required this.levelId});
+  const TestSection({super.key, required this.levelId});
 
   @override
-  State<ExamSection> createState() => _ExamSectionState();
+  State<TestSection> createState() => _TestSectionState();
 }
 
-class _ExamSectionState extends State<ExamSection> {
+class _TestSectionState extends State<TestSection> {
   late TestSectionViewmodel viewmodel;
 
   @override
@@ -164,7 +164,7 @@ class _ExamSectionState extends State<ExamSection> {
                       child: Button(
                         type: viewmodel.answers.isNotEmpty &&
                                 viewmodel.answers.contains(null)
-                            ? ButtonType.disabled
+                            ? ButtonType.secondary
                             : ButtonType.primary,
                         onPressed: () {
                           viewmodel.submitExam();

@@ -8,7 +8,7 @@ import 'package:ez_english/features/home/exam_overview.dart';
 import 'package:ez_english/features/models/exam_result.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/youtube_lesson.dart';
-import 'package:ez_english/features/sections/exam/exam.dart';
+import 'package:ez_english/features/sections/exam/test.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
 import 'package:ez_english/features/sections/grammar/practice.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
@@ -91,7 +91,7 @@ final loggedInRouter = GoRouter(
           "3" => GrammarSection(
               levelId: levelId,
             ),
-          "4" => ExamSection(levelId: levelId),
+          "4" => TestSection(levelId: levelId),
           String() => const Placeholder(),
         };
       }),
