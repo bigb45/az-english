@@ -102,7 +102,7 @@ class _WritingPracticeState extends State<WritingPractice> {
                 ),
               ),
               subtitle: Text(
-                "Daily Conversations",
+                currentQuestion.titleInEnglish ?? "Daily Conversations",
                 style: TextStyles.subtitleTextStyle.copyWith(
                   color: Palette.primaryText,
                 ),

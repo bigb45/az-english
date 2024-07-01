@@ -12,11 +12,13 @@ class CheckboxQuestionModel extends BaseQuestion<List<CheckboxData>> {
     this.paragraph,
     required super.answer,
   }) : super(
-            questionTextInEnglish: questionText,
-            questionTextInArabic: questionText,
-            imageUrl: "",
-            voiceUrl: "",
-            questionType: QuestionType.checkbox);
+          questionTextInEnglish: questionText,
+          questionTextInArabic: questionText,
+          imageUrl: "",
+          voiceUrl: "",
+          questionType: QuestionType.checkbox,
+          titleInEnglish: null,
+        );
 
   // TODO: make sure toMap implementation is correct
   @override

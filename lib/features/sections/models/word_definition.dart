@@ -14,6 +14,7 @@ class WordDefinition extends BaseQuestion {
   bool isNew;
   WordDefinition(
       {required this.englishWord,
+      required super.titleInEnglish,
       required this.arabicWord,
       required this.type,
       this.isNew = true,
@@ -45,6 +46,7 @@ class WordDefinition extends BaseQuestion {
   @override
   factory WordDefinition.fromMap(Map<String, dynamic> map) {
     return WordDefinition(
+        titleInEnglish: map["titleInEnglish"],
         englishWord: map['englishWord'],
         arabicWord: map['arabicWord'],
         isNew: map['isNew'],

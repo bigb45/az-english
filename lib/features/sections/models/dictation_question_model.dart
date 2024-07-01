@@ -15,6 +15,7 @@ class DictationQuestionModel extends BaseQuestion<String> {
     required super.questionTextInArabic,
     required super.questionTextInEnglish,
     required super.imageUrl,
+    required super.titleInEnglish,
     super.questionType = QuestionType.dictation,
   });
 
@@ -35,6 +36,7 @@ class DictationQuestionModel extends BaseQuestion<String> {
       questionTextInArabic: json['questionTextInArabic'],
       imageUrl: json['imageUrl'],
       voiceUrl: json['voiceUrl'],
+      titleInEnglish: json["titleInEnglish"],
     );
   }
 

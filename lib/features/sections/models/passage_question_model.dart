@@ -6,13 +6,12 @@ class PassageQuestionModel extends BaseQuestion {
   String? passageInEnglish;
   String? passageInArabic;
   String? titleInArabic;
-  String? titleInEnglish;
   List<BaseQuestion?> questions;
   PassageQuestionModel(
       {this.passageInArabic,
       this.passageInEnglish,
       this.titleInArabic,
-      this.titleInEnglish,
+      required super.titleInEnglish,
       required this.questions,
       required super.questionTextInEnglish,
       required super.questionTextInArabic,

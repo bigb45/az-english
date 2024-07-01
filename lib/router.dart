@@ -144,6 +144,7 @@ final loggedInRouter = GoRouter(
                     incompleteSentenceInArabic: "أحمد ولد ______",
                     questionTextInArabic: null,
                     imageUrl: "imageUrl",
+                    titleInEnglish: null,
                     voiceUrl: "voiceUrl"),
                 onChanged: (value) {
                   print(value.answer);

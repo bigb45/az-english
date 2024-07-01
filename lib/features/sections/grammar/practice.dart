@@ -170,7 +170,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                     .copyWith(color: Palette.primaryText),
               ),
               subtitle: Text(
-                "Daily Conversations",
+                currentQuestion.titleInEnglish ?? "Daily Conversations",
                 style: TextStyles.subtitleTextStyle
                     .copyWith(color: Palette.primaryText),
               ),

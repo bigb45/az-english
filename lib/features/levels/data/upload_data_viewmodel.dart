@@ -142,6 +142,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   voiceUrl: "",
                   speakableText: word,
                   answer: StringAnswer(answer: word),
+                  titleInEnglish: titleInEnglish,
                 );
                 if (currentPassage != null) {
                   currentPassage.questions.add(question);
@@ -180,6 +181,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                     value: mcqAnswer,
                   ),
                 ),
+                titleInEnglish: titleInEnglish,
               );
               if (currentPassage != null) {
                 currentPassage.questions.add(question);
@@ -202,6 +204,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 imageUrl: imageUrl,
                 voiceUrl: '',
                 questionType: QuestionTypeExtension.fromString(questionType),
+                titleInEnglish: titleInEnglish,
               );
               if (currentPassage != null) {
                 currentPassage.questions.add(question);
@@ -254,6 +257,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   questionType: QuestionTypeExtension.fromString(questionType),
                   imageUrl: imageUrl,
                   voiceUrl: '',
+                  titleInEnglish: titleInEnglish,
                 );
 
                 if (currentPassage != null) {
@@ -279,6 +283,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   questionTextInArabic: questionArabic,
                   imageUrl: '',
                   voiceUrl: '',
+                  titleInEnglish: titleInEnglish,
                 );
 
                 if (currentPassage != null) {
@@ -297,6 +302,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 questionTextInArabic: questionArabic,
                 imageUrl: '',
                 voiceUrl: '',
+                titleInEnglish: titleInEnglish,
               );
               if (currentPassage != null) {
                 currentPassage.questions.add(question);

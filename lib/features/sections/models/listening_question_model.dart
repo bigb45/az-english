@@ -10,7 +10,8 @@ class ListeningQuestionModel extends BaseQuestion {
       required super.questionTextInArabic,
       required super.imageUrl,
       required super.voiceUrl,
-      super.questionType = QuestionType.listening});
+      super.questionType = QuestionType.listening,
+      required super.titleInEnglish});
   @override
   Map<String, dynamic> toMap() {
     Map<String, dynamic> baseMap = super.toMap();
@@ -28,6 +29,7 @@ class ListeningQuestionModel extends BaseQuestion {
       questionTextInArabic: 'questionTextInArabic',
       imageUrl: map['imageUrl'],
       voiceUrl: map['voiceUrl'],
+      titleInEnglish: map["titleInEnglish"],
     );
   }
 
