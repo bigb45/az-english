@@ -89,6 +89,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
           canPop: false,
           onPopInvoked: (canPop) {
             showAlertDialog(context, onConfirm: () async {
+              await viewmodel.updateSectionProgress();
               // await readingSectionViewmodel
               //     .updateSectionProgress(readingSectionViewmodel.currentIndex);
             });
