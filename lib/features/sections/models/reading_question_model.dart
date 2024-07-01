@@ -12,6 +12,7 @@ class ReadingQuestionModel extends BaseQuestion {
           questionTextInArabic: "",
           imageUrl: "",
           voiceUrl: "",
+          titleInEnglish: "",
         );
 
   // bool validateQuestion({String? correctAnswer, required String userAnswer}) {

@@ -8,6 +8,7 @@ class SpeakingQuestionModel extends BaseQuestion<String> {
   SpeakingQuestionModel(
       {required this.question, required this.correctAnswer, this.audioUrl})
       : super(
+            titleInEnglish: null,
             questionTextInEnglish: question,
             questionTextInArabic: question,
             answer: StringAnswer(answer: correctAnswer),

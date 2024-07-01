@@ -83,6 +83,8 @@ class UploadDataViewmodel extends ChangeNotifier {
               convertToNull(csvParts[15]!.value.toString().trim());
           // String? imageName =
           //     convertToNull(csvParts[16]!.value.toString().trim());
+          String? youtubeUrl =
+              convertToNull(csvParts[16]!.value.toString().trim());
 
           String? imageUrl = imageName != null && imageName.isNotEmpty
               ? await uploadImageAndGetUrl(imageName)
@@ -140,6 +142,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   voiceUrl: "",
                   speakableText: word,
                   answer: StringAnswer(answer: word),
+                  titleInEnglish: titleInEnglish,
                 );
                 if (currentPassage != null) {
                   currentPassage.questions.add(question);
@@ -178,6 +181,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                     value: mcqAnswer,
                   ),
                 ),
+                titleInEnglish: titleInEnglish,
               );
               if (currentPassage != null) {
                 currentPassage.questions.add(question);
@@ -194,12 +198,13 @@ class UploadDataViewmodel extends ChangeNotifier {
               throw Exception(UnimplementedError());
             case QuestionType.youtubeLesson:
               var question = YoutubeLessonModel(
-                youtubeUrl: imageName,
+                youtubeUrl: youtubeUrl,
                 questionTextInEnglish: questionEnglish,
                 questionTextInArabic: questionArabic,
                 imageUrl: imageUrl,
                 voiceUrl: '',
                 questionType: QuestionTypeExtension.fromString(questionType),
+                titleInEnglish: titleInEnglish,
               );
               if (currentPassage != null) {
                 currentPassage.questions.add(question);
@@ -252,6 +257,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   questionType: QuestionTypeExtension.fromString(questionType),
                   imageUrl: imageUrl,
                   voiceUrl: '',
+                  titleInEnglish: titleInEnglish,
                 );
 
                 if (currentPassage != null) {
@@ -277,6 +283,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   questionTextInArabic: questionArabic,
                   imageUrl: '',
                   voiceUrl: '',
+                  titleInEnglish: titleInEnglish,
                 );
 
                 if (currentPassage != null) {
@@ -295,6 +302,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 questionTextInArabic: questionArabic,
                 imageUrl: '',
                 voiceUrl: '',
+                titleInEnglish: titleInEnglish,
               );
               if (currentPassage != null) {
                 currentPassage.questions.add(question);

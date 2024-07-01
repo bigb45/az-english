@@ -15,6 +15,7 @@ class FillTheBlanksQuestionModel extends BaseQuestion<String> {
     super.questionType = QuestionType.fillTheBlanks,
     required super.imageUrl,
     required super.voiceUrl,
+    required super.titleInEnglish,
   });
 
   @override
@@ -38,6 +39,7 @@ class FillTheBlanksQuestionModel extends BaseQuestion<String> {
       incompleteSentenceInEnglish: json['incompleteSentenceInEnglish'],
       incompleteSentenceInArabic: json['incompleteSentenceInArabic'],
       questionType: QuestionType.fillTheBlanks,
+      titleInEnglish: json["titleInEnglish"],
     );
   }
 

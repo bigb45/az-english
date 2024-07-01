@@ -54,7 +54,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
       if (viewmodel.currentIndex == questions.length) {
         return FinishedQuestionsScreen(
           onFinished: () async {
-            await viewmodel.updateSectionProgress().then((value) {
+            await viewmodel.updateUserProgress().then((value) {
               context.pop();
               context.pop();
             });
@@ -170,7 +170,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
                     .copyWith(color: Palette.primaryText),
               ),
               subtitle: Text(
-                "Daily Conversations",
+                currentQuestion.titleInEnglish ?? "Daily Conversations",
                 style: TextStyles.subtitleTextStyle
                     .copyWith(color: Palette.primaryText),
               ),

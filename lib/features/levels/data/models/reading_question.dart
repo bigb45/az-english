@@ -5,7 +5,7 @@ import 'package:ez_english/features/models/base_question.dart';
 class ReadingQuestion extends BaseQuestion {
   String? passageInEnglish;
   String? passageInArabic;
-  String? titleInEnglish;
+
   String? titleInArabic;
   List<String>? words;
   List<String?> answers;
@@ -16,7 +16,7 @@ class ReadingQuestion extends BaseQuestion {
     required super.imageUrl,
     required super.voiceUrl,
     required super.questionType,
-    this.titleInEnglish,
+    required super.titleInEnglish,
     this.titleInArabic,
     this.passageInEnglish,
     this.passageInArabic,

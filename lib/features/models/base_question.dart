@@ -13,6 +13,7 @@ abstract class BaseQuestion<T> {
   String? imageUrl;
   String? voiceUrl;
   String? path; // Firestore document path
+  String? titleInEnglish;
 
   // correct answer
   BaseAnswer<T>? answer;
@@ -26,6 +27,7 @@ abstract class BaseQuestion<T> {
     this.answer,
     this.path,
     required this.questionType,
+    required this.titleInEnglish,
   });
 
   bool evaluateAnswer() {
@@ -40,6 +42,7 @@ abstract class BaseQuestion<T> {
       'voiceUrl': voiceUrl,
       'description': voiceUrl,
       'answer': answer?.toMap(),
+      "titleInEnglish": titleInEnglish,
       "questionType": questionType.toShortString(),
     };
   }

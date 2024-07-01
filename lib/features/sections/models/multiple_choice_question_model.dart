@@ -20,7 +20,8 @@ class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
       required super.questionTextInEnglish,
       required super.imageUrl,
       super.voiceUrl,
-      super.questionType = QuestionType.multipleChoice});
+      super.questionType = QuestionType.multipleChoice,
+      required super.titleInEnglish});
 
   @override
   Map<String, dynamic> toMap() {
@@ -46,6 +47,7 @@ class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
       imageUrl: map['imageUrl'],
       questionSentenceInEnglish: map['questionSentenceInEnglish'],
       questionSentenceInArabic: map['questionSentenceInArabic'],
+      titleInEnglish: map["titleInEnglish"],
     );
   }
 

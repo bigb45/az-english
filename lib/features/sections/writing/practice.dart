@@ -52,7 +52,7 @@ class _WritingPracticeState extends State<WritingPractice> {
       if (viewmodel.currentIndex == viewmodel.questions.length) {
         return FinishedQuestionsScreen(
           onFinished: () async {
-            await viewmodel.updateSectionProgress().then((value) {
+            await viewmodel.updateUserProgress().then((value) {
               context.pop();
               context.pop();
             });
@@ -102,7 +102,7 @@ class _WritingPracticeState extends State<WritingPractice> {
                 ),
               ),
               subtitle: Text(
-                "Daily Conversations",
+                currentQuestion.titleInEnglish ?? "Daily Conversations",
                 style: TextStyles.subtitleTextStyle.copyWith(
                   color: Palette.primaryText,
                 ),

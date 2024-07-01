@@ -12,6 +12,7 @@ class SentenceFormingQuestionModel extends BaseQuestion<String> {
     required this.correctAnswer,
   }) : super(
             questionTextInEnglish: question,
+            titleInEnglish: null,
             questionTextInArabic: question,
             imageUrl: '',
             voiceUrl: '',

@@ -53,6 +53,7 @@ class FirestoreService {
             'description': '',
             'completedSections': [],
             'sectionProgress': {},
+            'examResults': {},
             'currentDay': 1,
           };
         }
@@ -380,6 +381,11 @@ class FirestoreService {
             filteredQuestionsLength = questionsAfterIndex.length;
             var questionsBeforeIndex =
                 sortedEntries.take(lastQuestionIndex).toList();
+            for (var entry in questionsBeforeIndex) {
+              if (entry.value is Map) {
+                entry.value['isNew'] = false;
+              }
+            }
 
             filteredQuestionsData.addAll(questionsAfterIndex);
             filteredQuestionsData.addAll(questionsBeforeIndex);
@@ -479,7 +485,7 @@ class FirestoreService {
     required Map<String, dynamic> newValues,
   }) async {
     try {
-      await docPath.update(newValues);
+      await docPath.set(newValues, SetOptions(merge: true));
     } catch (e) {
       print("Error updating progress: $e");
     }
@@ -503,7 +509,8 @@ class FirestoreService {
           .doc(userId)
           .get();
       if (doc.exists) {
-        return UserModel.fromMap(doc.data() as Map<String, dynamic>);
+        _userModel = UserModel.fromMap(doc.data() as Map<String, dynamic>);
+        return _userModel;
       }
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);

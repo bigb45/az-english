@@ -9,7 +9,8 @@ class YoutubeLessonModel extends BaseQuestion {
       super.voiceUrl,
       super.questionTextInEnglish,
       super.questionTextInArabic,
-      super.imageUrl});
+      super.imageUrl,
+      required super.titleInEnglish});
 
   @override
   Map<String, dynamic> toMap() {
@@ -28,6 +29,7 @@ class YoutubeLessonModel extends BaseQuestion {
       voiceUrl: map['voiceUrl'],
       imageUrl: map['imageUrl'],
       questionType: QuestionType.youtubeLesson,
+      titleInEnglish: map["titleInEnglish"],
     );
   }
 

@@ -35,9 +35,10 @@ class Account extends StatelessWidget {
                 size: 200,
                 color: Palette.primaryText,
               ),
-              InfoCard(AppStrings.username, "${vm.user?.displayName}"),
-              InfoCard(AppStrings.emailAddress, "${vm.user?.email}"),
-              InfoCard(AppStrings.phoneNumber, "${vm.user?.phoneNumber}"),
+              InfoCard(AppStrings.username, "${vm.userData?.studentName}"),
+              InfoCard(AppStrings.emailAddress, "${vm.userData?.emailAddress}"),
+              InfoCard(
+                  AppStrings.phoneNumber, "${vm.userData?.parentPhoneNumber}"),
               // Padding(
               //   padding: EdgeInsets.all(Constants.padding12),
               //   child: Card(

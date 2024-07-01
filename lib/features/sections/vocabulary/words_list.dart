@@ -24,6 +24,12 @@ class WordsListView extends StatefulWidget {
 }
 
 class _WordsListViewState extends State<WordsListView> {
+  void _checkAllWordsStatus(VocabularySectionViewmodel viewmodel) {
+    if (viewmodel.areAllWordsNotNew()) {
+      viewmodel.updateUserProgress();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<VocabularySectionViewmodel>(
@@ -116,6 +122,7 @@ class _WordsListViewState extends State<WordsListView> {
                                           ),
                                         );
                                         viewmodel.updateWordStatus(word);
+                                        _checkAllWordsStatus(viewmodel);
                                       },
                                       word: word as WordDefinition,
                                     );

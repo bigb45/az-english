@@ -168,6 +168,7 @@ class _ExamSectionState extends State<ExamSection> {
                             : ButtonType.primary,
                         onPressed: () {
                           viewmodel.submitExam();
+                          // viewmodel.addOrUpdateExamResult();
                           // showAlertDialog(
                           //   context,
                           //   title: "Submit Exam",

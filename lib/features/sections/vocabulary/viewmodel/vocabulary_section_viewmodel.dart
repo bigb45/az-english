@@ -64,21 +64,6 @@ class VocabularySectionViewmodel extends BaseViewModel {
       try {
         question.isNew = false;
         incrementIndex();
-        List<String> pathSegments = question.path!.split('/');
-        // Get the document path and the field path
-        String docPath =
-            pathSegments.sublist(0, pathSegments.length - 2).join('/');
-        String questionIndex = pathSegments.last;
-        FieldPath questionFieldPath =
-            FieldPath([FirestoreConstants.questionsField, questionIndex]);
-        DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
-
-        // Update the specific field
-        await _firestoreService
-            .updateQuestionUsingFieldPath<Map<String, dynamic>>(
-                docPath: docRef,
-                fieldPath: questionFieldPath,
-                newValue: question.toMap());
 
         error = null;
       } on CustomException catch (e) {
@@ -93,6 +78,10 @@ class VocabularySectionViewmodel extends BaseViewModel {
         notifyListeners();
       }
     }
+  }
+
+  bool areAllWordsNotNew() {
+    return questions.every((word) => !(word as WordDefinition).isNew);
   }
 
   void incrementIndex() {
