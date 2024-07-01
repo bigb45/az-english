@@ -66,7 +66,6 @@ class _DictationQuestionState extends State<DictationQuestion> {
             ),
             SizedBox(height: Constants.padding20),
             CustomTextField(
-              // TODO: test onChanged function
               onChanged: widget.onAnswerChanged,
               controller: widget.controller,
               maxLines: 10,
