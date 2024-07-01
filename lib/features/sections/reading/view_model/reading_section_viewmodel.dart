@@ -62,7 +62,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
   }
 
   void incrementIndex() {
-    if (currentIndex < questions.length - 1) {
+    if (currentIndex < questions.length) {
       currentIndex = currentIndex + 1;
       progress = _firestoreService.calculateNewProgress(currentIndex);
       answerState = EvaluationState.empty;
