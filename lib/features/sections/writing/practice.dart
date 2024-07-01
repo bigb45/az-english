@@ -53,7 +53,12 @@ class _WritingPracticeState extends State<WritingPractice> {
       return PopScope(
         canPop: false,
         onPopInvoked: (canPop) {
-          showLeaveAlertDialog(context);
+          showLeaveAlertDialog(
+            context,
+            onConfirm: () async {
+              await viewmodel.updateSectionProgress();
+            },
+          );
         },
         child: Scaffold(
           appBar: AppBar(
