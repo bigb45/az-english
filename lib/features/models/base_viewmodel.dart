@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:flutter/material.dart';
 
 abstract class BaseViewModel extends ChangeNotifier {
+  bool _isSkipVisible = false;
+  int _wrongAnswerCount = 0;
   bool _isLoading = false;
   CustomException? _error;
   bool _isDisposed = false;
@@ -74,6 +77,8 @@ abstract class BaseViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isDisposed => _isDisposed;
   bool get isInitialized => _isInitializeDone;
+  bool get isSkipVisible => _isSkipVisible;
+  int get wrongAnswerCount => _wrongAnswerCount;
   CustomException? get error => _error;
   int get currentIndex => _currentIndex;
   EvaluationState get answerState => _answerState;
@@ -83,8 +88,26 @@ abstract class BaseViewModel extends ChangeNotifier {
   }
 
   @protected
+  set isSkipVisible(bool value) {
+    _isSkipVisible = value;
+    notifyListeners();
+  }
+
+  @protected
+  set wrongAnswerCount(int value) {
+    _wrongAnswerCount = value;
+    if (_wrongAnswerCount >= Constants.wrongAnswerSkipLimit) {
+      isSkipVisible = true;
+    }
+    notifyListeners();
+  }
+
+  @protected
   set currentIndex(int newValue) {
     _currentIndex = newValue;
+    // Reset the wrong answer count and skip button visibility
+    wrongAnswerCount = 0;
+    isSkipVisible = false;
     notifyListeners();
   }
 

@@ -10,6 +10,7 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/expandable_text.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
+import 'package:ez_english/widgets/skip_question_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -170,6 +171,25 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                               },
                               answerState: viewmodel.answerState,
                             )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  AnimatedOpacity(
+                    opacity: viewmodel.isSkipVisible ? 1 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: Visibility(
+                      visible: viewmodel.isSkipVisible,
+                      child: Padding(
+                        padding: EdgeInsets.all(Constants.padding8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            SkipQuestionButton(
+                              onPressed: viewmodel.incrementIndex,
+                              // size: ,
+                            ),
                           ],
                         ),
                       ),
