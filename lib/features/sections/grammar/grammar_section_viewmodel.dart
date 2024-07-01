@@ -70,7 +70,9 @@ class GrammarSectionViewmodel extends BaseViewModel {
       currentIndex = currentIndex + 1;
       progress = _firestoreService.calculateNewProgress(currentIndex);
     }
-    if (_questions[currentIndex].questionType == QuestionType.youtubeLesson) {
+    if (_questions[currentIndex].questionType == QuestionType.youtubeLesson ||
+        _questions[currentIndex].questionType ==
+            QuestionType.vocabularyWithListening) {
       answerState = EvaluationState.noState;
     } else {
       answerState = EvaluationState.empty;
