@@ -33,8 +33,6 @@ class ButtonState extends State<Button> {
       ButtonType.error => Palette.secondary,
       ButtonType.secondary => Palette.primaryVariant,
       ButtonType.secondarySelected => Palette.primaryVariantText,
-      // TODO: Handle this case.
-      ButtonType.disabled => throw UnimplementedError(),
     };
     if (widget.onPressed == null) {
       textColor = Palette.secondaryStroke;
@@ -94,8 +92,6 @@ class ButtonState extends State<Button> {
                     ButtonType.error => Palette.error,
                     ButtonType.secondary => Palette.secondary,
                     ButtonType.secondarySelected => Palette.secondaryVariant,
-                    // TODO: Handle this case.
-                    ButtonType.disabled => throw UnimplementedError(),
                   },
                   border: switch (widget.type) {
                     ButtonType.secondary =>
@@ -117,8 +113,6 @@ class ButtonState extends State<Button> {
                               ButtonType.secondary => Palette.secondaryStroke,
                               ButtonType.secondarySelected =>
                                 Palette.secondaryVariantStroke,
-                              // TODO: Handle this case.
-                              ButtonType.disabled => throw UnimplementedError(),
                             },
                             offset: const Offset(0, 3),
                             blurRadius: 0,
@@ -159,5 +153,4 @@ enum ButtonType {
   secondary,
   secondarySelected,
   error,
-  disabled
 }
