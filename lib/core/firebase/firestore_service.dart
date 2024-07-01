@@ -200,6 +200,7 @@ class FirestoreService {
       // Update isCompleted status if all units are completed
       if (sectionProgress.isSectionCompleted(unitNumber!)) {
         sectionProgress.isCompleted = true;
+        sectionProgress.lastStoppedQuestionIndex = 0;
       }
 
       // Add the section progress update to the batch
