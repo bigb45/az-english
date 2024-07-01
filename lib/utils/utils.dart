@@ -20,10 +20,10 @@ class Utils {
       ..showSnackBar(snackBar);
   }
 
-  static speakText(String text) async {
+  static speakText(String text, AudioPlayer audioPlayer) async {
     final String apiKey = dotenv.env['AZURE_API_KEY_1'] ?? '';
 
-    final AudioPlayer player = AudioPlayer();
+    final AudioPlayer player = audioPlayer;
 
     String requestBody =
         '<speak version="1.0" xml:lang="en-US"><voice xml:lang="en-US" xml:gender="Female" name="en-US-JennyNeural">${text}</voice></speak>';

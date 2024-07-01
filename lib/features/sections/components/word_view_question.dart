@@ -7,13 +7,28 @@ import 'package:ez_english/widgets/audio_control_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:just_audio/just_audio.dart';
 
-class WordViewQuestion extends StatelessWidget {
+class WordViewQuestion extends StatefulWidget {
   final WordDefinition wordData;
-  const WordViewQuestion({
+
+  WordViewQuestion({
     super.key,
     required this.wordData,
   });
+
+  @override
+  State<WordViewQuestion> createState() => _WordViewQuestionState();
+}
+
+class _WordViewQuestionState extends State<WordViewQuestion> {
+  final AudioPlayer player = AudioPlayer();
+  @override
+  void dispose() {
+    player.stop(); // Stop the player if it's currently playing
+    player.dispose(); // Dispose of the player
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +39,7 @@ class WordViewQuestion extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: Constants.padding30),
-            child: Text("${wordData.questionTextInEnglish}",
+            child: Text("${widget.wordData.questionTextInEnglish}",
                 style: TextStyles.practiceCardSecondaryText.copyWith(
                   color: Palette.primaryText,
                   fontSize: 24.sp,
@@ -47,21 +62,21 @@ class WordViewQuestion extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          wordData.englishWord,
+                          widget.wordData.englishWord,
                           style: TextStyles.vocabularyTerm.copyWith(
                             color: Colors.white,
                           ),
                         ),
-                        wordData.arabicWord != null
+                        widget.wordData.arabicWord != null
                             ? Text(
-                                wordData.arabicWord!,
+                                widget.wordData.arabicWord!,
                                 style: TextStyles.vocabularyTerm.copyWith(
                                   color: Colors.white,
                                 ),
                               )
                             : const SizedBox(),
                         Text(
-                          wordData.type.toShortString(),
+                          widget.wordData.type.toShortString(),
                           style: TextStyles.wordType.copyWith(
                             fontSize: 20.sp,
                             color: Colors.white70,
@@ -69,7 +84,7 @@ class WordViewQuestion extends StatelessWidget {
                         ),
                         SizedBox(height: 10.h),
                         Text(
-                          wordData.definition ?? "",
+                          widget.wordData.definition ?? "",
                           style: TextStyles.practiceCardSecondaryText.copyWith(
                             color: Colors.white70,
                           ),
@@ -80,7 +95,8 @@ class WordViewQuestion extends StatelessWidget {
                             AudioControlButton(
                                 size: 50.w,
                                 onPressed: () {
-                                  Utils.speakText(wordData.englishWord);
+                                  Utils.speakText(
+                                      widget.wordData.englishWord, player);
                                 },
                                 type: AudioControlType.speaker),
                           ],
@@ -93,8 +109,8 @@ class WordViewQuestion extends StatelessWidget {
             ),
           ),
           SizedBox(height: 30.h),
-          wordData.exampleUsageInEnglish == null ||
-                  wordData.exampleUsageInEnglish!.isEmpty
+          widget.wordData.exampleUsageInEnglish == null ||
+                  widget.wordData.exampleUsageInEnglish!.isEmpty
               ? const SizedBox()
               : Card(
                   color: Colors.white,
@@ -118,16 +134,17 @@ class WordViewQuestion extends StatelessWidget {
                         ),
                         SizedBox(height: 10.h),
                         ...List.generate(
-                          wordData.exampleUsageInEnglish?.length ?? 0,
+                          widget.wordData.exampleUsageInEnglish?.length ?? 0,
                           (index) {
                             bool printArabicExample =
-                                wordData.exampleUsageInArabic != null &&
-                                    wordData.exampleUsageInArabic!.isNotEmpty;
+                                widget.wordData.exampleUsageInArabic != null &&
+                                    widget.wordData.exampleUsageInArabic!
+                                        .isNotEmpty;
                             return Padding(
                               padding: EdgeInsets.symmetric(vertical: 5.h),
                               child: Text(
-                                "\"${wordData.exampleUsageInEnglish![index]}\""
-                                "${printArabicExample ? "\n\"${wordData.exampleUsageInArabic![index]}\"" : ""}",
+                                "\"${widget.wordData.exampleUsageInEnglish![index]}\""
+                                "${printArabicExample ? "\n\"${widget.wordData.exampleUsageInArabic![index]}\"" : ""}",
                                 textAlign: TextAlign.left,
                                 style: TextStyles.vocabularyExample.copyWith(
                                   color: Palette.primaryText,
@@ -141,7 +158,7 @@ class WordViewQuestion extends StatelessWidget {
                   ),
                 ),
           SizedBox(height: 30.h),
-          wordData.tenses == null || wordData.tenses!.isEmpty
+          widget.wordData.tenses == null || widget.wordData.tenses!.isEmpty
               ? const SizedBox()
               : Card(
                   color: Colors.white,
@@ -154,7 +171,7 @@ class WordViewQuestion extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.all(Constants.padding12),
                     child: Text(
-                      wordData.tenses ?? "",
+                      widget.wordData.tenses ?? "",
                       style: TextStyles.practiceCardSecondaryText.copyWith(
                         color: Palette.primaryText,
                       ),

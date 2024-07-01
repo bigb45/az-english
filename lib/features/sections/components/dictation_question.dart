@@ -31,6 +31,13 @@ class _DictationQuestionState extends State<DictationQuestion> {
     viewmodel = Provider.of<DictationQuestionViewModel>(context, listen: false);
   }
 
+  @override
+  void dispose() {
+    player.stop(); // Stop the player if it's currently playing
+    player.dispose(); // Dispose of the player
+    super.dispose();
+  }
+
   final AudioPlayer player = AudioPlayer();
   @override
   Widget build(BuildContext context) {
