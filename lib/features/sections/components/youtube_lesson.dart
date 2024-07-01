@@ -30,9 +30,7 @@ class _YouTubeVideoPlayerState extends State<YouTubeVideoPlayer> {
         isLive: false,
         forceHD: false,
         enableCaption: true,
-
-        // : false,
-        hideControls: true,
+        // hideControls: true,
       ),
     )..addListener(listener);
     _seekToController = TextEditingController();
@@ -53,23 +51,25 @@ class _YouTubeVideoPlayerState extends State<YouTubeVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return YoutubePlayerBuilder(
-      player: YoutubePlayer(
-        controller: _controller,
-        showVideoProgressIndicator: true,
-        progressIndicatorColor: Colors.blueAccent,
-        onReady: () {
-          _isPlayerReady = true;
-        },
-        onEnded: (data) {},
-      ),
-      builder: (context, player) => Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8.0),
-            child: player,
-          ),
-        ],
+    return Center(
+      child: YoutubePlayerBuilder(
+        player: YoutubePlayer(
+          controller: _controller,
+          showVideoProgressIndicator: true,
+          progressIndicatorColor: Colors.blueAccent,
+          onReady: () {
+            _isPlayerReady = true;
+          },
+          onEnded: (data) {},
+        ),
+        builder: (context, player) => Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              child: player,
+            ),
+          ],
+        ),
       ),
     );
   }
