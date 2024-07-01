@@ -23,7 +23,15 @@ class HomeViewmodel extends BaseViewModel {
   Future<void> myInit() async {
     User user = _firebaseAuthService.getUser()!;
     UserModel? userModel = await firestoreService.getUser(user.uid);
-    _examResults = userModel!.examResults?.values.toList() ?? [];
+    if (userModel != null) {
+      _examResults = userModel.examResults?.values.toList() ?? [];
+    }
+    notifyListeners();
+  }
+
+  void reset() {
+    _selectedLevelId = 0;
+    _examResults = [];
     notifyListeners();
   }
 

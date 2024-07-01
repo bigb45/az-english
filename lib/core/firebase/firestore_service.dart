@@ -26,6 +26,14 @@ class FirestoreService {
   int allQuestionsLength = 0;
   int filteredQuestionsLength = 0;
   String? unitNumber;
+  void reset() {
+    _userModel = null;
+    _user = null;
+    allQuestionsLength = 0;
+    filteredQuestionsLength = 0;
+    unitNumber = null;
+  }
+
   Future<List<Level>> fetchLevels(User user) async {
     _user = user;
     try {
@@ -41,12 +49,18 @@ class FirestoreService {
       DocumentSnapshot userDoc = await userDocRef.get();
       Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
       // Initialize levelsProgress if not present
-      if (!userData.containsKey('levelsProgress')) {
+      if (!userData.containsKey('levelsProgress') ||
+          userData["levelsProgress"] == null) {
         userData['levelsProgress'] = {};
       }
 
       List<Level> levels = levelSnapshot.docs.map((levelDoc) {
         Level level = Level.fromMap(levelDoc.data() as Map<String, dynamic>);
+        if (!userData['levelsProgress'].containsKey(level.name) ||
+            userData["levelsProgress"][level.name] == null) {
+          userData['levelsProgress'][level.name] = {};
+        }
+
         // Initialize levelProgress if not present
         if (!userData['levelsProgress'].containsKey(level.name)) {
           userData['levelsProgress'][level.name] = {

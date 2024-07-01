@@ -5,7 +5,6 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
-import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
@@ -16,7 +15,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 class LevelSelectionViewmodel extends BaseViewModel {
   int _selectedLevelId = 0;
   late AuthViewModel _authProvider;
-  final FirestoreService _firestoreService = FirestoreService();
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   List<Level> _levels = [];
 
@@ -76,6 +74,12 @@ class LevelSelectionViewmodel extends BaseViewModel {
 
   void setSelectedLevel(int level) {
     _selectedLevelId = level;
+    notifyListeners();
+  }
+
+  void reset() {
+    _selectedLevelId = 0;
+    _levels = [];
     notifyListeners();
   }
 
