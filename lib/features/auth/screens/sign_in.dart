@@ -77,7 +77,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16.0.r),
                   child: Image.asset(
-                    "assets/images/logo.png",
+                    "assets/images/logo2.png",
                     width: 200.w,
                     height: 200.w,
                   ),
