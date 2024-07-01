@@ -66,3 +66,28 @@ void showAlertDialog(BuildContext context,
     },
   );
 }
+
+void showTestAlertDialog(BuildContext context,
+    {required Future<void> Function() onConfirm,
+    Function? onCancel,
+    String? title,
+    String? body}) {
+  showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return leavePracticeAlertDialog(
+        onConfirm: () {
+          onConfirm();
+
+          Navigator.pop(dialogContext);
+        },
+        onCancel: () {
+          // only pop the dialog
+          Navigator.pop(dialogContext);
+        },
+        body: body,
+        title: title,
+      );
+    },
+  );
+}

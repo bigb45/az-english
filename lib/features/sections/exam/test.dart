@@ -163,22 +163,20 @@ class _TestSectionState extends State<TestSection> {
                       padding: const EdgeInsets.all(8.0),
                       child: viewmodel.isSubmitted
                           ? Button(
-                              onPressed: viewmodel.isReadyToSubmit
-                                  ? () async {
-                                      await viewmodel
-                                          .updateUserProgress()
-                                          .then((value) {
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                      });
-                                    }
-                                  : null,
+                              onPressed: () async {
+                                await viewmodel
+                                    .updateUserProgress()
+                                    .then((value) {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                });
+                              },
                               text: "finish & return",
                             )
                           : Button(
                               onPressed: viewmodel.isReadyToSubmit
                                   ? () {
-                                      showAlertDialog(
+                                      showTestAlertDialog(
                                         context,
                                         title: "Submit Exam",
                                         body:
