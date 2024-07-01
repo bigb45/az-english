@@ -52,7 +52,7 @@ class _TestSectionState extends State<TestSection> {
             },
           );
         },
-        child: viewmodel.isInitialized
+        child: viewmodel.isLoading || viewmodel.isInitialized
             ? Scaffold(
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
@@ -165,7 +165,7 @@ class _TestSectionState extends State<TestSection> {
                         onPressed: viewmodel.isReadyToSubmit
                             ? () {
                                 viewmodel.submitExam();
-                                // viewmodel.addOrUpdateExamResult();
+                                viewmodel.addOrUpdateExamResult();
                                 // showAlertDialog(
                                 //   context,
                                 //   title: "Submit Exam",
