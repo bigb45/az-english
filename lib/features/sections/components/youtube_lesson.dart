@@ -30,6 +30,9 @@ class _YouTubeVideoPlayerState extends State<YouTubeVideoPlayer> {
         isLive: false,
         forceHD: false,
         enableCaption: true,
+
+        // : false,
+        hideControls: true,
       ),
     )..addListener(listener);
     _seekToController = TextEditingController();
