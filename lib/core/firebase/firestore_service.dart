@@ -58,11 +58,6 @@ class FirestoreService {
         Level level = Level.fromMap(levelDoc.data() as Map<String, dynamic>);
         if (!userData['levelsProgress'].containsKey(level.name) ||
             userData["levelsProgress"][level.name] == null) {
-          userData['levelsProgress'][level.name] = {};
-        }
-
-        // Initialize levelProgress if not present
-        if (!userData['levelsProgress'].containsKey(level.name)) {
           userData['levelsProgress'][level.name] = {
             'description': '',
             'completedSections': [],
