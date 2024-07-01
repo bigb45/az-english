@@ -61,7 +61,7 @@ class DictationQuestionViewModel extends ChangeNotifier {
           String questionField = pathSegments[pathSegments.length - 2];
 
           // Create the FieldPath for the specific field
-          FieldPath questionFiel = FieldPath([questionField]);
+          FieldPath questionFiel = FieldPath([questionField, fieldIndex]);
 
           // Get the document reference
           DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
