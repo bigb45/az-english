@@ -69,22 +69,6 @@ class _TestResultsState extends State<TestResults> {
                                 },
                               ),
                             ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          // Assuming parseData() and saveLevelToFirestore() are methods defined elsewhere
-                          // in your UploadDataViewmodel
-                          List<Level> levels =
-                              await Provider.of<UploadDataViewmodel>(context,
-                                      listen: false)
-                                  .parseData();
-                          for (Level level in levels) {
-                            await Provider.of<UploadDataViewmodel>(context,
-                                    listen: false)
-                                .saveLevelToFirestore(level);
-                          }
-                        },
-                        child: const Text("Add data"),
-                      ),
                     ],
                   ),
                 )

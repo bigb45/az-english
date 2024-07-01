@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           NavigationDestination(
             icon: Icon(Icons.change_circle),
-            label: 'Result',
+            label: 'Results',
           ),
           NavigationDestination(
             icon: Icon(Icons.account_circle),
