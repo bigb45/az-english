@@ -1,5 +1,6 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
+import 'package:ez_english/features/home/viewmodel/home_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -19,13 +20,15 @@ class LevelSelection extends StatefulWidget {
 }
 
 class _LevelSelectionState extends State<LevelSelection> {
-  // late LevelSelectionViewmodel levelSelectionVm;
+  late HomeViewmodel homeViewmodel;
 
   @override
   void initState() {
     super.initState();
-    // levelSelectionVm =
-    //     Provider.of<LevelSelectionViewmodel>(context, listen: false);
+    homeViewmodel = Provider.of<HomeViewmodel>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      homeViewmodel.myInit();
+    });
   }
 
   void navigateToLevel({required int levelId}) {

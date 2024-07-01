@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ez_english/features/models/exam_result.dart';
 import 'package:ez_english/features/models/level_progress.dart';
 
 class UserModel {
@@ -9,6 +10,7 @@ class UserModel {
   String password;
   List<String>? assignedLevels;
   Map<String, LevelProgress>? levelsProgress;
+  final Map<String, ExamResult>? examResults;
 
   UserModel({
     this.id,
@@ -18,6 +20,7 @@ class UserModel {
     required this.password,
     this.assignedLevels,
     this.levelsProgress,
+    this.examResults,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
@@ -35,6 +38,9 @@ class UserModel {
           LevelProgress.fromMap(value),
         ),
       ),
+      examResults: (map['examResults'] as Map<String, dynamic>?)?.map(
+        (key, value) => MapEntry(key, ExamResult.fromMap(value)),
+      ),
     );
   }
 
@@ -48,6 +54,8 @@ class UserModel {
       'assignedLevels': assignedLevels,
       'levelsProgress':
           levelsProgress?.map((key, value) => MapEntry(key, value.toMap())),
+      'examResults':
+          examResults?.map((key, value) => MapEntry(key, value.toMap())),
     };
   }
 

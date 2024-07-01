@@ -53,6 +53,7 @@ class FirestoreService {
             'description': '',
             'completedSections': [],
             'sectionProgress': {},
+            'examResults': {},
             'currentDay': 1,
           };
         }
@@ -484,7 +485,7 @@ class FirestoreService {
     required Map<String, dynamic> newValues,
   }) async {
     try {
-      await docPath.update(newValues);
+      await docPath.set(newValues, SetOptions(merge: true));
     } catch (e) {
       print("Error updating progress: $e");
     }
@@ -508,7 +509,8 @@ class FirestoreService {
           .doc(userId)
           .get();
       if (doc.exists) {
-        return UserModel.fromMap(doc.data() as Map<String, dynamic>);
+        _userModel = UserModel.fromMap(doc.data() as Map<String, dynamic>);
+        return _userModel;
       }
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);

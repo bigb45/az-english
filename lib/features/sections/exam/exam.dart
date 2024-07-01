@@ -133,6 +133,7 @@ class _ExamSectionState extends State<ExamSection> {
                       child: ElevatedButton(
                         onPressed: () {
                           // viewmodel.submitExam();
+                          // viewmodel.addOrUpdateExamResult();
                         },
                         child: Text("Submit Exam"),
                       ),

@@ -1,14 +1,20 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
+import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
+import 'package:ez_english/features/models/exam_result.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class TestSectionViewmodel extends BaseViewModel {
   final sectionId = "4";
@@ -19,6 +25,8 @@ class TestSectionViewmodel extends BaseViewModel {
 
   get questions => _questions;
   final FirestoreService _firestoreService = FirestoreService();
+  final FirebaseAuthService _firebaseAuth = FirebaseAuthService();
+
   @override
   FutureOr<void> init() {}
 
@@ -96,5 +104,30 @@ class TestSectionViewmodel extends BaseViewModel {
         answerState = EvaluationState.empty;
       }
     }
+  }
+
+  Future<void> addOrUpdateExamResult() async {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd/MM/yyyy').format(now);
+
+    ExamResult examResult = ExamResult(
+      examId: "$levelName$sectionName${_firestoreService.unitNumber}",
+      examName: "",
+      examDate: formattedDate,
+      examScore: "",
+      examStatus: ExamStatus.passed,
+    );
+    User user = _firebaseAuth.getUser()!;
+    DocumentReference userDocRef = FirebaseFirestore.instance
+        .collection(FirestoreConstants.usersCollections)
+        .doc(user.uid);
+    _firestoreService.updateDocuments(
+      docPath: userDocRef,
+      newValues: {
+        'examResults': {
+          examResult.examId: examResult.toMap(),
+        }
+      },
+    );
   }
 }
