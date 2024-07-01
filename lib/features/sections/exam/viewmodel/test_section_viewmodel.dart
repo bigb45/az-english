@@ -36,6 +36,8 @@ class TestSectionViewmodel extends BaseViewModel {
   FutureOr<void> init() {}
 
   Future<void> myInit() async {
+    _isSubmitted = false;
+    _isReadyToSubmit = false;
     _answers = [];
     currentIndex = 0;
     levelName = RouteConstants.getLevelName(levelId!);
@@ -101,16 +103,19 @@ class TestSectionViewmodel extends BaseViewModel {
       _answers[i] = questions[i].evaluateAnswer();
     }
     notifyListeners();
-    // print(
-    //   "submiting exam => ${questions.map(
-    //     (q) {
-    //       return q.evaluateAnswer();
-    //     },
-    //   )}",
-    // );
+    print(
+      "submiting exam => ${questions.map(
+        (q) {
+          return q.evaluateAnswer();
+        },
+      )}",
+    );
   }
 
   void reset() {
+    _isReadyToSubmit = false;
+    _isSubmitted = false;
+    _answers = [];
     passageTexts.clear();
     levelId = null;
     _questions.clear();
@@ -128,13 +133,18 @@ class TestSectionViewmodel extends BaseViewModel {
   Future<void> addOrUpdateExamResult() async {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('dd/MM/yyyy').format(now);
-
+    var score =
+        ((_answers.map((e) => e == true ? 1 : 0).reduce((a, b) => a + b)) /
+                _answers.length *
+                100)
+            .toInt();
+    print("Score: $score");
     ExamResult examResult = ExamResult(
       examId: "$levelName$sectionName${_firestoreService.unitNumber}",
       examName: "",
       examDate: formattedDate,
-      examScore: "",
-      examStatus: ExamStatus.passed,
+      examScore: score.toString(),
+      examStatus: score >= 50 ? ExamStatus.passed : ExamStatus.failed,
     );
     User user = _firebaseAuth.getUser()!;
     DocumentReference userDocRef = FirebaseFirestore.instance
