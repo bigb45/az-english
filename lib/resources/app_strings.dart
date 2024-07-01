@@ -56,4 +56,10 @@ abstract class AppStrings {
 
   static final String username = "username".tr();
   static final String phoneNumber = "phoneNumber".tr();
+  static final String fieldRequired = "fieldRequired".tr();
+  static final String enterValidEmail = "enterValidEmail".tr();
+  static final String passwordLength = "passwordLength".tr();
+  static final String nameRequired = "nameRequired".tr();
+  static final String phoneRequired = "phoneRequired".tr();
+  static final String phoneLength = "phoneLength".tr();
 }

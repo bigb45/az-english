@@ -37,5 +37,12 @@
   "resultsScreeenTitle": "Exam Results",
   "resultScreenText": "Your exam results will be displayed here.",
   "username": "User Name",
-  "phoneNumber": "Phone Number"
+  "phoneNumber": "Phone Number",
+
+  "fieldRequired": "Field is required",
+  "enterValidEmail": "Enter a vaild email",
+  "passwordLength": "Password must be at least 6 characters",
+  "nameRequired": "Name is required",
+  "phoneRequired": "Phone number is required",
+  "phoneLength": "Phone number must be 10 digits"
 }
