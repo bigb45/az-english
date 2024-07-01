@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
@@ -21,11 +22,14 @@ class HomeViewmodel extends BaseViewModel {
   List<ExamResult> get examResults => _examResults;
 
   Future<void> myInit() async {
+    isLoading = true;
     User user = _firebaseAuthService.getUser()!;
     UserModel? userModel = await firestoreService.getUser(user.uid);
     if (userModel != null) {
       _examResults = userModel.examResults?.values.toList() ?? [];
     }
+    isInitialized = true;
+    isLoading = false;
     notifyListeners();
   }
 

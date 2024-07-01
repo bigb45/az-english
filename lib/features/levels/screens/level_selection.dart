@@ -20,17 +20,6 @@ class LevelSelection extends StatefulWidget {
 }
 
 class _LevelSelectionState extends State<LevelSelection> {
-  late HomeViewmodel homeViewmodel;
-
-  @override
-  void initState() {
-    super.initState();
-    homeViewmodel = Provider.of<HomeViewmodel>(context, listen: false);
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      homeViewmodel.myInit();
-    });
-  }
-
   void navigateToLevel({required int levelId}) {
     context.push('/level/$levelId');
   }
