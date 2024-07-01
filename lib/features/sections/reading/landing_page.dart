@@ -30,7 +30,6 @@ class _ReadingSectionState extends State<ReadingSection> {
     // no need to pass section Id since each viewmodel is already knows its section
     // readingSectionVm.sectionId = widget.sectionId;
 
-    // TODO: refactor myInit to use the viewmodel's built in init function
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       readingSectionVm.setValuesAndInit();
     });
@@ -92,7 +91,6 @@ class _ReadingSectionState extends State<ReadingSection> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    // TODO add the same gab to all onboarding screens
                     Constants.gapH12,
                     Text(
                       AppStrings.readingSectionOnboardingText,

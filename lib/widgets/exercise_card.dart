@@ -32,7 +32,6 @@ class ExerciseCard extends StatefulWidget {
   State<ExerciseCard> createState() => ExerciseCardState();
 }
 
-// TODO: pass progress within section
 class ExerciseCardState extends State<ExerciseCard> {
   var isPressed = false;
   late Section section;

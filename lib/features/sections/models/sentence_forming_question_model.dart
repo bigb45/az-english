@@ -5,7 +5,6 @@ class SentenceFormingQuestionModel extends BaseQuestion<String> {
   final String words;
   final String correctAnswer;
   final String question;
-  // TODO: figure out how to make the same question incorporate partial sentences
   final String? partialSentence = null;
   SentenceFormingQuestionModel({
     required this.question,

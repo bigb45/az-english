@@ -315,7 +315,6 @@ class FirestoreService {
     }
   }
 
-// TODO generic function
   Future<Unit> fetchUnit(
     String sectionName,
     String level,

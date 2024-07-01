@@ -91,7 +91,6 @@ class UploadDataViewmodel extends ChangeNotifier {
           var existingLevel = levels.firstWhere(
             (level) => level.name == levelName,
             orElse: () => Level(
-              // TODO: map the level id to the given level name
               id: RouteConstants.getLevelIds(levelName),
               name: levelName,
               description: '',
@@ -185,15 +184,13 @@ class UploadDataViewmodel extends ChangeNotifier {
               } else {
                 existingUnit.questions[nextIndex++] = question;
               }
-              existingUnit!.numberOfQuestions++;
+              existingUnit.numberOfQuestions++;
 
               break;
 
             case QuestionType.speaking:
-              // TODO: Handle this case.
               throw Exception(UnimplementedError());
             case QuestionType.sentenceForming:
-              // TODO: Handle this case.
               throw Exception(UnimplementedError());
             case QuestionType.youtubeLesson:
               var question = YoutubeLessonModel(
@@ -212,8 +209,7 @@ class UploadDataViewmodel extends ChangeNotifier {
               existingUnit!.numberOfQuestions++;
 
               break;
-            case QuestionType
-                  .vocabularyWithListening: // TODO: Should we add the listening ability to all vocabularies
+            case QuestionType.vocabularyWithListening:
             case QuestionType.vocabulary:
               questionText?.split(';').forEach((wordInEnglishAndArabic) {
                 List<String> wordsAndExamples =
