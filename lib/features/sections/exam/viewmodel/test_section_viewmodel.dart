@@ -103,13 +103,6 @@ class TestSectionViewmodel extends BaseViewModel {
       _answers[i] = questions[i].evaluateAnswer();
     }
     notifyListeners();
-    print(
-      "submiting exam => ${questions.map(
-        (q) {
-          return q.evaluateAnswer();
-        },
-      )}",
-    );
   }
 
   void reset() {
@@ -138,7 +131,7 @@ class TestSectionViewmodel extends BaseViewModel {
                 _answers.length *
                 100)
             .toInt();
-    print("Score: $score");
+
     ExamResult examResult = ExamResult(
       examId: "$levelName$sectionName${_firestoreService.unitNumber}",
       examName: "",

@@ -51,8 +51,6 @@ Widget buildQuestion({
       return CheckboxQuestion(
         question: question as CheckboxQuestionModel,
         onChanged: (value) {
-          // print(
-          //     "Checkbox Question Value: ${value.answer?.map((e) => e.title)}");
           onChanged(value);
         },
       );

@@ -125,7 +125,7 @@ abstract class BaseViewModel extends ChangeNotifier {
     try {
       await _firestoreService.updateUserProgress(levelName!, sectionName!);
     } catch (e) {
-      print("Error in ViewModel: $e");
+      error = CustomException("An undefined error ocurred ${e.toString()}");
     } finally {
       isLoading = false;
       notifyListeners();

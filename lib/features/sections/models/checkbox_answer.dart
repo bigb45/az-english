@@ -25,12 +25,10 @@ class CheckboxAnswer extends BaseAnswer<List<CheckboxData>> {
 
     List<dynamic> validationResult = userAnswer?.answer!.map((answer) {
       bool isCorrect = correctAnswerTitles.contains(answer.title);
-      print("isCorrect: $isCorrect, ${answer.title}, $correctAnswerTitles");
 
       return isCorrect;
     }).toList();
 
-    print(validationResult);
     return validationResult.every((element) => element == true);
   }
 }

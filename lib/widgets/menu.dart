@@ -131,7 +131,6 @@ class _MenuState extends State<Menu> {
     setState(() {
       selectedIndex = index;
     });
-    print("selected index: $index");
     widget.onItemSelected(index);
   }
 }

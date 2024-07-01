@@ -15,22 +15,6 @@ class ReadingQuestionModel extends BaseQuestion {
           titleInEnglish: "",
         );
 
-  // bool validateQuestion({String? correctAnswer, required String userAnswer}) {
-  //   correctAnswer = correctAnswer ?? answer;
-
-  //   correctAnswer = correctAnswer?.normalize();
-  //   userAnswer = userAnswer.normalize();
-
-  //   if (userAnswer == correctAnswer) {
-  //     print("correct");
-  //   } else {
-  //     print(
-  //         "incorrect, user answered: $userAnswer, correct answer: $correctAnswer");
-  //   }
-
-  //   return userAnswer == correctAnswer;
-  // }
-
   @override
   Map<String, dynamic> toMap() {
     return {

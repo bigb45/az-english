@@ -164,13 +164,7 @@ class Components extends StatelessWidget {
                       value: 20,
                     ),
                     SizedBox(height: 20.h),
-                    // WordListTile(
-                    //     word: "View",
-                    //     type: WordType.word,
-                    //     isNew: false,
-                    //     onTap: () {
-                    //       print("navigate to word details");
-                    //     }),
+
                     SizedBox(height: 20.h),
                   ],
                 ),
