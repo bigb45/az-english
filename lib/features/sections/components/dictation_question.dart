@@ -1,14 +1,7 @@
-import 'dart:typed_data';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/core/firebase/constants.dart';
-import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/features/sections/components/view_model/dictation_question_view.model.dart';
-import 'package:ez_english/features/sections/writing/viewmodel/writing_section_viewmodel.dart';
 import 'package:ez_english/widgets/audio_control_button.dart';
 import 'package:ez_english/widgets/text_field.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:just_audio/just_audio.dart';
