@@ -4,8 +4,8 @@ import 'package:ez_english/components.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/auth/screens/sign_in.dart';
 import 'package:ez_english/features/auth/screens/sign_up.dart';
-import 'package:ez_english/features/home/exam_overview.dart';
-import 'package:ez_english/features/models/exam_result.dart';
+import 'package:ez_english/features/home/test_overview.dart';
+import 'package:ez_english/features/models/test_result.dart';
 import 'package:ez_english/features/sections/components/youtube_lesson.dart';
 import 'package:ez_english/features/sections/exam/test.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
@@ -112,8 +112,8 @@ final loggedInRouter = GoRouter(
       path: '/result_overview/:examId',
       builder: ((context, state) {
         String examId = state.pathParameters['examId'] ?? "-1";
-        return ExamOverview(
-          result: ExamResult(
+        return TestOverview(
+          result: TestResult(
             examId: examId,
             examName: "First exam",
             examDate: "24/3/2023",
@@ -123,6 +123,5 @@ final loggedInRouter = GoRouter(
         );
       }),
     ),
-    
   ],
 );

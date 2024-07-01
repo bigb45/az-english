@@ -1,11 +1,11 @@
-class ExamResult {
+class TestResult {
   final String examId;
   final String examName;
   final String examDate;
   final String examScore;
   final ExamStatus examStatus;
 
-  ExamResult({
+  TestResult({
     required this.examId,
     required this.examName,
     required this.examDate,
@@ -23,8 +23,8 @@ class ExamResult {
     };
   }
 
-  factory ExamResult.fromMap(Map<String, dynamic> map) {
-    return ExamResult(
+  factory TestResult.fromMap(Map<String, dynamic> map) {
+    return TestResult(
       examId: map['examId'],
       examName: map['examName'],
       examDate: map['examDate'],

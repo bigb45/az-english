@@ -165,7 +165,7 @@ class _TestSectionState extends State<TestSection> {
                         onPressed: viewmodel.isReadyToSubmit
                             ? () {
                                 viewmodel.submitExam();
-                                viewmodel.addOrUpdateExamResult();
+                                viewmodel.addOrUpdateTestResult();
                                 // showAlertDialog(
                                 //   context,
                                 //   title: "Submit Exam",

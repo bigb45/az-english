@@ -1,13 +1,13 @@
-import 'package:ez_english/features/models/exam_result.dart';
+import 'package:ez_english/features/models/test_result.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/result_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ExamOverview extends StatelessWidget {
-  final ExamResult result;
-  const ExamOverview({super.key, required this.result});
+class TestOverview extends StatelessWidget {
+  final TestResult result;
+  const TestOverview({super.key, required this.result});
 
   @override
   Widget build(BuildContext context) {

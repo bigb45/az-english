@@ -3,19 +3,19 @@ import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
-import 'package:ez_english/widgets/exam_result_card.dart';
+import 'package:ez_english/widgets/test_result_card.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class Results extends StatefulWidget {
-  const Results({super.key});
+class TestResults extends StatefulWidget {
+  const TestResults({super.key});
 
   @override
-  State<Results> createState() => _ResultsState();
+  State<TestResults> createState() => _TestResultsState();
 }
 
-class _ResultsState extends State<Results> {
+class _TestResultsState extends State<TestResults> {
   late HomeViewmodel homeViewmodel;
 
   @override
@@ -33,8 +33,8 @@ class _ResultsState extends State<Results> {
       builder: (context, viewmodel, child) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(
-              'Exam Results',
+            title: const Text(
+              'Test Results',
               style: TextStyle(color: Palette.primaryText),
             ),
             centerTitle: true,
@@ -58,7 +58,7 @@ class _ResultsState extends State<Results> {
                               child: ListView.builder(
                                 itemCount: viewmodel.examResults.length,
                                 itemBuilder: (context, index) {
-                                  return ExamResultCard(
+                                  return TestResultCard(
                                     onTap: () {
                                       context.push(
                                         "/result_overview/:${viewmodel.examResults[index].examId}",

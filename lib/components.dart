@@ -1,4 +1,4 @@
-import 'package:ez_english/features/models/exam_result.dart';
+import 'package:ez_english/features/models/test_result.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/audio_control_button.dart';
@@ -69,7 +69,7 @@ class Components extends StatelessWidget {
                     // ),
                     SizedBox(height: 20.h),
                     ResultCard(
-                      result: ExamResult(
+                      result: TestResult(
                         examId: "1",
                         examName: "",
                         examDate: "14/2/2024",
