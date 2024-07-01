@@ -1,3 +1,4 @@
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
 import 'package:ez_english/features/sections/exam/viewmodel/test_section_viewmodel.dart';
@@ -105,31 +106,54 @@ class _ExamSectionState extends State<ExamSection> {
                               .map<Widget>((entry) {
                             int index = entry.key;
                             BaseQuestion question = entry.value;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (viewmodel.passageTexts.containsKey(index))
-                                  Padding(
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: Constants.padding8,
+                                  horizontal: Constants.padding4),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: viewmodel.answers.isNotEmpty &&
+                                          viewmodel.answers[index] != null
+                                      ? viewmodel.answers[index]!
+                                          ? Palette.primaryFill
+                                          : Palette.errorFill
+                                      : null,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (viewmodel.passageTexts
+                                        .containsKey(index))
+                                      Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 10.0,
+                                          ),
+                                          child: ExpandableTextBox(
+                                              paragraph: viewmodel
+                                                  .passageTexts[index]!,
+                                              isFocused: false,
+                                              readMoreText: AppStrings
+                                                  .mcQuestionReadMoreText)),
+                                    Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 10.0),
-                                      child: ExpandableTextBox(
-                                          paragraph:
-                                              viewmodel.passageTexts[index]!,
-                                          isFocused: false,
-                                          readMoreText: AppStrings
-                                              .mcQuestionReadMoreText)),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  child: buildQuestion(
-                                    answerState: viewmodel.answerState,
-                                    onChanged: (answer) {
-                                      // viewmodel.updateAnswer(question, answer);
-                                    },
-                                    question: question,
-                                  ),
+                                      child: IgnorePointer(
+                                        ignoring: true,
+                                        child: buildQuestion(
+                                          answerState: viewmodel.answerState,
+                                          onChanged: (answer) {
+                                            viewmodel.updateAnswer(
+                                                index, answer);
+                                          },
+                                          question: question,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             );
                           }).toList(),
                         ),
@@ -138,8 +162,20 @@ class _ExamSectionState extends State<ExamSection> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Button(
+                        type: viewmodel.answers.isNotEmpty &&
+                                viewmodel.answers.contains(null)
+                            ? ButtonType.disabled
+                            : ButtonType.primary,
                         onPressed: () {
-                          // viewmodel.submitExam();
+                          viewmodel.submitExam();
+                          // showAlertDialog(
+                          //   context,
+                          //   title: "Submit Exam",
+                          //   body: "Are you sure you want to submit the exam?",
+                          //   onConfirm: () async {
+                          //     viewmodel.submitExam();
+                          //   },
+                          // );
                         },
                         text: "Submit Exam",
                       ),
