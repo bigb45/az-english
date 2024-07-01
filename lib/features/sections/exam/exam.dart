@@ -5,6 +5,7 @@ import 'package:ez_english/features/sections/util/build_question.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,6 +42,9 @@ class _ExamSectionState extends State<ExamSection> {
         canPop: false,
         onPopInvoked: (canPop) {
           showLeaveAlertDialog(
+            title: "Leave Exam?",
+            body:
+                "Are you sure you want to leave the exam? Your progress will not be saved.",
             context,
             onConfirm: () async {
               await viewmodel.updateSectionProgress();
@@ -59,6 +63,9 @@ class _ExamSectionState extends State<ExamSection> {
                       ),
                       onPressed: () {
                         showLeaveAlertDialog(
+                          title: "Leave Exam?",
+                          body:
+                              "Are you sure you want to leave the exam? Your progress will not be saved.",
                           context,
                           onConfirm: () async {
                             await viewmodel.updateSectionProgress();
@@ -130,17 +137,17 @@ class _ExamSectionState extends State<ExamSection> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
+                      child: Button(
                         onPressed: () {
                           // viewmodel.submitExam();
                         },
-                        child: Text("Submit Exam"),
+                        text: "Submit Exam",
                       ),
                     ),
                   ],
                 )),
               )
-            : Center(
+            : const Center(
                 child: CircularProgressIndicator(),
               ),
       );
