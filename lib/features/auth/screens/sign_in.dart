@@ -43,7 +43,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
     authViewModel = Provider.of<AuthViewModel>(context, listen: false);
     //TODO delete this if you want to stop auto login for test purposes
-    // authViewModel.signInDev();
+    authViewModel.signInDev();
 
     super.initState();
   }
@@ -77,7 +77,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16.0.r),
                   child: Image.asset(
-                    "assets/images/logo.png",
+                    "assets/images/logo2.png",
                     width: 200.w,
                     height: 200.w,
                   ),
