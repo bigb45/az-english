@@ -1,4 +1,7 @@
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Palette {
   static const primary = Color(0xFF58CC02);
@@ -27,4 +30,20 @@ class Palette {
 
   static const textFieldFill = Color(0xFFF7F7F7);
   static const resultCardBadFill = Color(0xFFD63E36);
+
+  static const blackColor = Color(0xFF000000);
+  static var lightModeAppTheme = ThemeData.light().copyWith(
+    primaryColor: Palette.primary,
+    scaffoldBackgroundColor: Palette.secondary,
+    appBarTheme: AppBarTheme(
+      iconTheme: const IconThemeData(color: Palette.secondary),
+      toolbarHeight: 90.h,
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.dark,
+      ),
+      color: Palette.primaryButtonStroke,
+      elevation: 0,
+      titleTextStyle: TextStyles.titleTextStyle,
+    ),
+  );
 }

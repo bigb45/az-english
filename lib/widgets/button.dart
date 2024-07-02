@@ -1,17 +1,22 @@
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Button extends StatefulWidget {
   final ButtonType type;
   final VoidCallback? onPressed;
-  final Widget child;
+  final String? text;
+  final Widget? child;
   const Button({
     super.key,
     this.type = ButtonType.primary,
     required this.onPressed,
-    required this.child,
-  });
+    @Deprecated("use text instead for automatic text color and style")
+    this.child,
+    this.text,
+  }) : assert(child != null || text != null,
+            "Either a child or a text must be provided (provide a text for default button style)");
 
   @override
   State<Button> createState() => ButtonState();
@@ -19,12 +24,33 @@ class Button extends StatefulWidget {
 
 class ButtonState extends State<Button> {
   var isPressed = false;
+  Color textColor = Palette.secondary;
+  @override
+  void initState() {
+    textColor = switch (widget.type) {
+      ButtonType.primary => Palette.secondary,
+      ButtonType.primaryVariant => Palette.secondary,
+      ButtonType.error => Palette.secondary,
+      ButtonType.secondary => Palette.primaryVariant,
+      ButtonType.secondarySelected => Palette.primaryVariantText,
+    };
+    if (widget.onPressed == null) {
+      textColor = Palette.secondaryStroke;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapDown: (details) {
         setState(() {
           isPressed = true;
+        });
+      },
+      onTapCancel: () {
+        setState(() {
+          isPressed = false;
         });
       },
       onTapUp: (details) {
@@ -44,48 +70,67 @@ class ButtonState extends State<Button> {
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 width: 382.w,
-                height: 48.h,
-                child: Center(child: widget.child),
+                height: 48.w,
+                child: Center(
+                  child: widget.child ??
+                      Text(
+                        widget.text!.toUpperCase(),
+                        style: TextStyles.buttonTextStyle.copyWith(
+                          color: Palette.primaryText,
+                        ),
+                      ),
+                ),
               ),
             )
-          : Container(
-              decoration: BoxDecoration(
-                color: switch (widget.type) {
-                  ButtonType.primary => Palette.primary,
-                  ButtonType.primaryVariant => Palette.primaryVariant,
-                  ButtonType.error => Palette.error,
-                  ButtonType.secondary => Palette.secondary,
-                  ButtonType.secondarySelected => Palette.secondaryVariant,
-                },
-                border: switch (widget.type) {
-                  ButtonType.secondary =>
-                    Border.all(color: Palette.secondaryStroke, width: 2),
-                  ButtonType.secondarySelected =>
-                    Border.all(color: Palette.secondaryVariantStroke, width: 2),
-                  _ => null
-                },
-                borderRadius: BorderRadius.circular(16.r),
-                boxShadow: isPressed
-                    ? null
-                    : [
-                        BoxShadow(
-                          color: switch (widget.type) {
-                            ButtonType.primary => Palette.primaryShadow,
-                            ButtonType.primaryVariant =>
-                              Palette.primaryVariantShadow,
-                            ButtonType.error => Palette.errorShadow,
-                            ButtonType.secondary => Palette.secondaryStroke,
-                            ButtonType.secondarySelected =>
-                              Palette.secondaryVariantStroke,
-                          },
-                          offset: const Offset(0, 2),
-                          blurRadius: 0,
+          : Transform.translate(
+              offset: Offset(0, isPressed ? 3 : 0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: switch (widget.type) {
+                    ButtonType.primary => Palette.primary,
+                    ButtonType.primaryVariant => Palette.primaryVariant,
+                    ButtonType.error => Palette.error,
+                    ButtonType.secondary => Palette.secondary,
+                    ButtonType.secondarySelected => Palette.secondaryVariant,
+                  },
+                  border: switch (widget.type) {
+                    ButtonType.secondary =>
+                      Border.all(color: Palette.secondaryStroke, width: 2),
+                    ButtonType.secondarySelected => Border.all(
+                        color: Palette.secondaryVariantStroke, width: 2),
+                    _ => null
+                  },
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: isPressed
+                      ? null
+                      : [
+                          BoxShadow(
+                            color: switch (widget.type) {
+                              ButtonType.primary => Palette.primaryShadow,
+                              ButtonType.primaryVariant =>
+                                Palette.primaryVariantShadow,
+                              ButtonType.error => Palette.errorShadow,
+                              ButtonType.secondary => Palette.secondaryStroke,
+                              ButtonType.secondarySelected =>
+                                Palette.secondaryVariantStroke,
+                            },
+                            offset: const Offset(0, 3),
+                            blurRadius: 0,
+                          ),
+                        ],
+                ),
+                width: 382.w,
+                height: 48.w,
+                child: Center(
+                  child: widget.child ??
+                      Text(
+                        widget.text!.toUpperCase(),
+                        style: TextStyles.buttonTextStyle.copyWith(
+                          color: textColor,
                         ),
-                      ],
+                      ),
+                ),
               ),
-              width: 382.w,
-              height: 48.h,
-              child: Center(child: widget.child),
             ),
     );
   }

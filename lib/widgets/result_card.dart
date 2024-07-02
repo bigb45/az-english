@@ -1,4 +1,5 @@
 import 'package:ez_english/core/Constants.dart';
+import 'package:ez_english/features/models/test_result.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,10 +8,12 @@ class ResultCard extends StatelessWidget {
   final String mainText;
   final String topText;
   final Score score;
+  final TestResult result;
   const ResultCard(
       {super.key,
       required this.mainText,
       required this.topText,
+      required this.result,
       this.score = Score.good});
 
   @override
