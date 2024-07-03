@@ -26,7 +26,7 @@ class Constants {
   static final padding6 = 6.w;
   static final padding4 = 4.w;
   static final padding2 = 2.w;
-  static final iconSize = 16.w;
+  static final iconSizeWidth24 = 24.w;
 }
 
 class RouteConstants {

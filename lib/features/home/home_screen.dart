@@ -1,8 +1,11 @@
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/account.dart';
 import 'package:ez_english/features/home/test_results.dart';
 import 'package:ez_english/features/levels/screens/level_selection.dart';
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,7 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
     const TestResults(),
     Account(),
   ];
-  void _onPageChanged(int index) {
+
+  void _onItemTapped(int index) {
     setState(() {
       _pageIndex = index;
       _pageController.jumpToPage(_pageIndex);
@@ -33,31 +37,53 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: PageView(
         controller: _pageController,
-        onPageChanged: _onPageChanged,
         children: _pages,
       ),
-      bottomNavigationBar: NavigationBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        destinations: const <NavigationDestination>[
-          NavigationDestination(
-            icon: Icon(Icons.home),
-            label: 'Home',
+      bottomNavigationBar: Container(
+        color: Colors.transparent,
+        padding: EdgeInsets.symmetric(vertical: 30.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavItem(Icons.home, 'Home', 0),
+            _buildNavItem(Icons.change_circle, 'Results', 1),
+            _buildNavItem(Icons.account_circle, 'Account', 2),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(IconData iconData, String label, int index) {
+    bool isSelected = _pageIndex == index;
+    return GestureDetector(
+      onTap: () => _onItemTapped(index),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 60.w,
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+            decoration: ShapeDecoration(
+              color: isSelected
+                  ? Palette.secondaryVariantStroke
+                  : Colors.transparent,
+              shape: const StadiumBorder(),
+            ),
+            child: Icon(
+              iconData,
+              size: 24.w,
+              color: Colors.black,
+            ),
           ),
-          NavigationDestination(
-            icon: Icon(Icons.change_circle),
-            label: 'Results',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.account_circle),
-            label: 'Account',
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 14.sp,
+            ),
           ),
         ],
-
-        selectedIndex: _pageIndex,
-        indicatorColor: Palette.secondaryVariantStroke,
-        // selectedItemColor: Palette.primary,
-        onDestinationSelected: _onPageChanged,
       ),
     );
   }
