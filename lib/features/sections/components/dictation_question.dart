@@ -1,9 +1,11 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/sections/components/view_model/dictation_question_view.model.dart';
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/audio_control_button.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +28,9 @@ class DictationQuestion extends StatefulWidget {
 class _DictationQuestionState extends State<DictationQuestion> {
   final String apiKey = dotenv.env['AZURE_API_KEY_1'] ?? '';
   late DictationQuestionViewModel viewmodel;
+  bool _isLoading = false;
+
+  @override
   void initState() {
     super.initState();
     viewmodel = Provider.of<DictationQuestionViewModel>(context, listen: false);
@@ -33,12 +38,13 @@ class _DictationQuestionState extends State<DictationQuestion> {
 
   @override
   void dispose() {
-    player.stop(); // Stop the player if it's currently playing
-    player.dispose(); // Dispose of the player
+    player.stop();
+    player.dispose();
     super.dispose();
   }
 
   final AudioPlayer player = AudioPlayer();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -48,28 +54,37 @@ class _DictationQuestionState extends State<DictationQuestion> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             SizedBox(height: Constants.padding20),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text("Type the sentence you hear"),
+                Text(
+                  "Type the sentence you hear",
+                  style: TextStyles.questionTextStyle.copyWith(height: 2),
+                ),
               ],
             ),
             SizedBox(height: Constants.padding20),
             AudioControlButton(
               onPressed: () async {
-                // Utils.speakText(widget.question.answer?.answer ?? "");
+                setState(() {
+                  _isLoading = true;
+                });
                 String audioUrl =
                     await viewmodel.getAudioBytes(widget.question);
                 await player.setUrl(audioUrl);
-                player.play();
-                viewmodel.setLoading(false);
+                setState(() {
+                  _isLoading = false;
+                });
+                await player.play();
               },
               type: AudioControlType.speaker,
+              isLoading: _isLoading,
             ),
             SizedBox(height: Constants.padding20),
-            const Text(
+            Text(
               "Tap the speaker button and listen to the sentence.\nType the sentence out in the box below.",
               textAlign: TextAlign.center,
+              style: TextStyles.questionTextStyle.copyWith(fontSize: 8.sp),
             ),
             SizedBox(height: Constants.padding20),
             CustomTextField(
