@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ez_english/core/Constants.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -74,7 +75,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 width: 170.w,
-                height: 180.w,
+                height: 185.h,
                 child: Padding(
                   padding: EdgeInsets.all(Constants.padding6),
                   child: Column(
@@ -113,7 +114,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                                         children: [
                                           Container(
                                             width: 20.w,
-                                            height: 20.w,
+                                            height: 20.h,
                                             decoration: BoxDecoration(
                                               boxShadow: [
                                                 BoxShadow(
@@ -158,15 +159,18 @@ class ExerciseCardState extends State<ExerciseCard> {
                         ],
                       ),
                       SvgPicture.asset(
-                          widget.image ?? 'assets/images/notepad.svg',
-                          height: 80),
+                        widget.image ?? 'assets/images/notepad.svg',
+                        height: 80.h,
+                        width: 80.w,
+                      ),
                       Center(
-                        child: Text(
+                        child: AutoSizeText(
                           widget.text,
                           style: TextStyles.practiceCardMainText.copyWith(
                             color: Palette.secondaryText,
                           ),
                           textAlign: TextAlign.center,
+                          maxLines: 1,
                         ),
                       ),
                     ],
@@ -193,7 +197,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                         ],
                 ),
                 width: 170.w,
-                height: 180.w,
+                height: 185.h,
                 child: Padding(
                     padding: EdgeInsets.all(Constants.padding6),
                     child: Column(
@@ -232,7 +236,7 @@ class ExerciseCardState extends State<ExerciseCard> {
                                           children: [
                                             Container(
                                               width: 20.w,
-                                              height: 20.w,
+                                              height: 20.h,
                                               decoration: BoxDecoration(
                                                 boxShadow: [
                                                   BoxShadow(
@@ -279,12 +283,15 @@ class ExerciseCardState extends State<ExerciseCard> {
                         ),
                         SvgPicture.asset(
                           widget.image ?? 'assets/images/notepad.svg',
+                          height: 80.h,
+                          width: 80.w,
                         ),
                         Center(
-                          child: Text(
+                          child: AutoSizeText(
                             widget.text,
                             style: TextStyles.practiceCardMainText,
                             textAlign: TextAlign.center,
+                            maxLines: 1,
                           ),
                         ),
                       ],

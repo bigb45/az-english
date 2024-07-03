@@ -61,7 +61,7 @@ class _ProgressBarState extends State<ProgressBar>
   Widget build(BuildContext context) {
     return SizedBox(
       height: 23.h,
-      width: widget.width?.w ?? null,
+      width: widget.width ?? null,
       child: Stack(
         alignment: Alignment.centerLeft,
         children: [
@@ -75,7 +75,7 @@ class _ProgressBarState extends State<ProgressBar>
                 ),
               ],
               color: Palette.secondaryStroke,
-              borderRadius: BorderRadius.circular(100),
+              borderRadius: BorderRadius.circular(100.r),
             ),
             height: 23.h,
           ),
@@ -95,7 +95,7 @@ class _ProgressBarState extends State<ProgressBar>
                     ),
                   ],
                   color: Palette.tertiary,
-                  borderRadius: BorderRadius.circular(100),
+                  borderRadius: BorderRadius.circular(100.r),
                 ),
                 width: progressBarWidth,
                 child: Stack(
@@ -106,7 +106,7 @@ class _ProgressBarState extends State<ProgressBar>
                         height: 6.h,
                         decoration: BoxDecoration(
                           color: Palette.onTertiary,
-                          borderRadius: BorderRadius.circular(100),
+                          borderRadius: BorderRadius.circular(100.r),
                         ),
                       ),
                     ),

@@ -100,8 +100,8 @@ class _PracticeSectionsState extends State<PracticeSections> {
                           Constants.gapH20,
                           Wrap(
                             alignment: WrapAlignment.center,
-                            runSpacing: 15,
-                            spacing: 10,
+                            runSpacing: 15.h,
+                            spacing: 10.w,
                             children: [
                               ...hintTexts.asMap().entries.map((entry) {
                                 int index = entry.key;
