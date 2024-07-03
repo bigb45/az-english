@@ -1,4 +1,5 @@
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/sections/components/finished_questions_screen.dart';
 import 'package:ez_english/features/sections/components/word_list_tile.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/vocabulary/viewmodel/vocabulary_section_viewmodel.dart';
@@ -24,10 +25,13 @@ class WordsListView extends StatefulWidget {
 }
 
 class _WordsListViewState extends State<WordsListView> {
-  void _checkAllWordsStatus(VocabularySectionViewmodel viewmodel) {
+  bool finishedAllVocab = false;
+  bool _checkAllWordsStatus(VocabularySectionViewmodel viewmodel) {
     if (viewmodel.areAllWordsNotNew()) {
       viewmodel.updateUserProgress();
+      return true;
     }
+    return false;
   }
 
   @override
@@ -48,6 +52,17 @@ class _WordsListViewState extends State<WordsListView> {
                 .then((reason) => viewmodel.resetError());
           }
         });
+        if (finishedAllVocab) {
+          return FinishedQuestionsScreen(
+            onFinished: () async {
+              await viewmodel.updateUserProgress().then((value) {
+                context.pop();
+                context.pop();
+                context.pop();
+              });
+            },
+          );
+        }
         return PopScope(
           canPop: false,
           onPopInvoked: (canPop) {},
@@ -122,7 +137,8 @@ class _WordsListViewState extends State<WordsListView> {
                                           ),
                                         );
                                         viewmodel.updateWordStatus(word);
-                                        _checkAllWordsStatus(viewmodel);
+                                        finishedAllVocab =
+                                            _checkAllWordsStatus(viewmodel);
                                       },
                                       word: word as WordDefinition,
                                     );
