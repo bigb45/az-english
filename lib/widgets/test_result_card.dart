@@ -73,14 +73,14 @@ class TestResultCard extends StatelessWidget {
                                 "Passed",
                                 style: TextStyles.wordType.copyWith(
                                   color: Palette.primary,
-                                  fontSize: 16,
+                                  fontSize: 16.sp,
                                 ),
                               )
                             : Text(
                                 "Failed",
                                 style: TextStyles.wordType.copyWith(
                                   color: Palette.error,
-                                  fontSize: 16,
+                                  fontSize: 16.sp,
                                 ),
                               ),
                       ],
