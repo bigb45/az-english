@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             child: Icon(
               iconData,
-              size: 24.w,
+              size: Constants.iconSizeWidth20,
               color: Colors.black,
             ),
           ),
