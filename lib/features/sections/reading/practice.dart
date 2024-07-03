@@ -78,6 +78,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
               await viewmodel.updateUserProgress().then((value) {
                 context.pop();
                 context.pop();
+                context.pop();
               });
             },
           );

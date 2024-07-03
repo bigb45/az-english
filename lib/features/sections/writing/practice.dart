@@ -57,6 +57,7 @@ class _WritingPracticeState extends State<WritingPractice> {
             await viewmodel.updateUserProgress().then((value) {
               context.pop();
               context.pop();
+              context.pop();
             });
           },
         );
