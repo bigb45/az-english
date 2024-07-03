@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
 import 'package:ez_english/resources/app_strings.dart';
@@ -52,7 +53,11 @@ class _GenericMultipleChoiceQuestionState
             if (widget.question.imageUrl == null)
               const SizedBox() // placeholder
             else
-              Image.network(widget.question.imageUrl!),
+              CachedNetworkImage(
+                imageUrl: widget.question.imageUrl!,
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+              ),
             SizedBox(height: Constants.padding20),
             Text(
               widget.question.questionTextInEnglish ??
