@@ -1,7 +1,7 @@
 name: ez_english
 description: A new Flutter project.
 publish_to: "none"
-version: 0.1.0
+version: 1.0.1+2
 
 environment:
   sdk: ">=3.1.0 <4.0.0"
@@ -41,6 +41,19 @@ dependencies:
   path: ^1.9.0
   intl: ^0.19.0
   flutter_launcher_icons: ^0.13.1
+  auto_size_text: ^3.0.0
+  cached_network_image: ^3.3.1
+  rename: ^3.0.2
+  change_app_package_name: ^1.2.0
+  flutter_native_splash: ^2.4.0
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/logo2.png
+  android_12:
+    image: assets/images/logo2.png
+    android: true
+    ios: false
 
 dev_dependencies:
   flutter_test:

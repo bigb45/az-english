@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/features/home/viewmodel/home_viewmodel.dart';
@@ -54,8 +55,8 @@ class _LevelSelectionState extends State<LevelSelection> {
                       child: Center(
                         child: Wrap(
                           alignment: WrapAlignment.center,
-                          runSpacing: 10,
-                          spacing: 10,
+                          runSpacing: 10.w,
+                          spacing: 10.w,
                           children: [
                             ...viewmodel.levels.map(
                               (level) {
@@ -94,16 +95,18 @@ class _LevelSelectionState extends State<LevelSelection> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
+          AutoSizeText(
             headerText,
             style: TextStyles.cardHeader,
             textAlign: TextAlign.center,
+            maxLines: 3,
           ),
-          Constants.gapH20,
-          Text(
+          Constants.gapH18,
+          AutoSizeText(
             cardText,
             style: TextStyles.cardText,
             textAlign: TextAlign.center,
+            maxLines: 3,
           ),
         ],
       ),

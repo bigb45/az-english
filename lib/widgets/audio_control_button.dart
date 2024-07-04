@@ -6,11 +6,13 @@ class AudioControlButton extends StatefulWidget {
   final VoidCallback? onPressed;
   final AudioControlType type;
   final double? size;
+  final bool isLoading; // New parameter for loading state
   const AudioControlButton({
     super.key,
     required this.onPressed,
     required this.type,
     this.size,
+    this.isLoading = false, // Default value for loading state
   });
 
   @override
@@ -18,7 +20,6 @@ class AudioControlButton extends StatefulWidget {
 }
 
 class AudioControlButtonState extends State<AudioControlButton> {
-  var isSelected = false;
   var isPressed = false;
 
   @override
@@ -39,12 +40,8 @@ class AudioControlButtonState extends State<AudioControlButton> {
           isPressed = false;
         });
       },
-      onTap: () {
-        widget.onPressed!();
-        setState(() {
-          isSelected = !isSelected;
-        });
-      },
+      onTap:
+          widget.isLoading ? null : widget.onPressed, // Disable tap if loading
       child: Transform.translate(
         offset: Offset(0, isPressed ? 5 : 0),
         child: Container(
@@ -64,21 +61,30 @@ class AudioControlButtonState extends State<AudioControlButton> {
           width: widget.size ?? 150.w,
           height: widget.size ?? 150.w,
           child: Center(
-              child: switch (widget.type) {
-            AudioControlType.microphone => Icon(
-                Icons.mic,
-                color: Palette.secondary,
-                size: widget.size == null ? 80.r : widget.size! / 2,
-              ),
-            AudioControlType.speaker => Icon(
-                Icons.volume_up,
-                color: Palette.secondary,
-                size: widget.size == null ? 80.r : widget.size! / 2,
-              ),
-          }),
+            child: widget.isLoading
+                ? const CircularProgressIndicator(
+                    color: Palette.secondary,
+                  )
+                : Icon(
+                    _getIconData(widget.type),
+                    color: Palette.secondary,
+                    size: widget.size == null ? 80.r : widget.size! / 2,
+                  ),
+          ),
         ),
       ),
     );
+  }
+
+  IconData _getIconData(AudioControlType type) {
+    switch (type) {
+      case AudioControlType.microphone:
+        return Icons.mic;
+      case AudioControlType.speaker:
+        return Icons.volume_up;
+      default:
+        return Icons.help; // Fallback icon
+    }
   }
 }
 

@@ -43,7 +43,8 @@ class TestSectionViewmodel extends BaseViewModel {
     levelName = RouteConstants.getLevelName(levelId!);
     sectionName = RouteConstants.testSectionName;
     await fetchQuestions();
-    if (_questions[currentIndex].questionType == QuestionType.youtubeLesson) {
+    if (_questions.isNotEmpty &&
+        _questions[currentIndex].questionType == QuestionType.youtubeLesson) {
       answerState = EvaluationState.noState;
     }
     isInitialized = true;

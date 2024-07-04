@@ -25,7 +25,7 @@ class WordView extends StatefulWidget {
 
 class _WordViewState extends State<WordView> {
   final AudioPlayer player = AudioPlayer();
-
+  bool _isLoading = false;
   @override
   void dispose() {
     player.stop(); // Stop the player if it's currently playing
@@ -118,18 +118,31 @@ class _WordViewState extends State<WordView> {
                                 color: Colors.white70,
                               ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                AudioControlButton(
-                                    size: 50.w,
-                                    onPressed: () {
-                                      // TODO: store and play audio from url
-                                      Utils.speakText(
-                                          widget.wordData.englishWord, player);
-                                    },
-                                    type: AudioControlType.speaker),
-                              ],
+                            SizedBox(
+                              height: 50.h,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  _isLoading
+                                      ? const CircularProgressIndicator(
+                                          color: Palette.secondary,
+                                        )
+                                      : AudioControlButton(
+                                          size: 50.w,
+                                          onPressed: () async {
+                                            setState(() {
+                                              _isLoading = true;
+                                            });
+                                            await Utils.speakText(
+                                                widget.wordData.englishWord,
+                                                player);
+                                            setState(() {
+                                              _isLoading = false;
+                                            });
+                                          },
+                                          type: AudioControlType.speaker),
+                                ],
+                              ),
                             )
                           ],
                         ),

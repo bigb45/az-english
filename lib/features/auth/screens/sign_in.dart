@@ -111,8 +111,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     final isValid = formKey.currentState!.validate();
                     if (!isValid) return;
                     final user = UserModel(
-                        emailAddress: emailAddressTextController.text,
-                        password: passwordTextController.text);
+                        emailAddress: emailAddressTextController.text.trim(),
+                        password: passwordTextController.text.trim());
                     await authViewModel.signIn(user, context);
                   },
                   type: ButtonType.primary,

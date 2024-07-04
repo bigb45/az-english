@@ -10,6 +10,7 @@ import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/skip_question_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -56,6 +57,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
         return FinishedQuestionsScreen(
           onFinished: () async {
             await viewmodel.updateUserProgress().then((value) {
+              context.pop();
               context.pop();
               context.pop();
             });
@@ -114,7 +116,7 @@ class _GrammarPracticeState extends State<GrammarPractice> {
               children: [
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: EdgeInsets.symmetric(horizontal: 8.0.w),
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
