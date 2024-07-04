@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.ezEnglish</string>
+	<string>com.evirgen.azenglish</string>
 	<key>PROJECT_ID</key>
 	<string>azenglish</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:93304141395:ios:6c830976633d81aca138a6</string>
+	<string>1:93304141395:ios:83d8f75b615d853ba138a6</string>
 </dict>
 </plist>

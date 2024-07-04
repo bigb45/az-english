@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:93304141395:android:42c0e4ba0735e354a138a6",
+        "mobilesdk_app_id": "1:93304141395:android:64ea5c36b93cfd1ea138a6",
         "android_client_info": {
-          "package_name": "com.example.ez_english"
+          "package_name": "com.evirgen.azenglish"
         }
       },
       "oauth_client": [],

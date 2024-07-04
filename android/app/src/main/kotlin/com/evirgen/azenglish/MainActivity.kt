@@ -1,4 +1,4 @@
-package com.example.ez_english
+package com.evirgen.azenglish
 
 import io.flutter.embedding.android.FlutterActivity
 
