@@ -4,6 +4,7 @@ import 'package:ez_english/features/sections/models/fill_the_blanks_question_mod
 import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/word_chip_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,7 +43,7 @@ class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
     return Padding(
       padding: EdgeInsets.all(Constants.padding12),
       child: Container(
-        constraints: BoxConstraints(minHeight: 40.w),
+        constraints: BoxConstraints(minHeight: 40.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -61,7 +62,7 @@ class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
             Stack(
               children: [
                 Positioned(
-                  top: 40.w,
+                  top: 40.h,
                   left: 0,
                   right: 0,
                   child: const Divider(
@@ -70,7 +71,7 @@ class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
                   ),
                 ),
                 Positioned(
-                  top: 100.w,
+                  top: 100.h,
                   left: 0,
                   right: 0,
                   child: const Divider(
@@ -79,7 +80,7 @@ class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
                   ),
                 ),
                 Positioned(
-                  top: 160.w,
+                  top: 160.h,
                   left: 0,
                   right: 0,
                   child: const Divider(
@@ -90,7 +91,7 @@ class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
                 Column(
                   children: [
                     SizedBox(
-                      height: 200.w,
+                      height: 200.h,
                       width: double.infinity,
                       child: Wrap(
                         runSpacing: 30.h,
@@ -115,11 +116,15 @@ class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
                 ),
                 Positioned(
                   right: 0,
-                  top: 80.w,
-                  child: Text(
+                  top: 70.h,
+                  child: RichText(
                     textDirection: TextDirection.rtl,
-                    widget.question.incompleteSentenceInArabic ?? "",
-                    style: TextStyles.bodyLarge,
+                    text: TextSpan(
+                      children: stringToRichText(
+                        widget.question.incompleteSentenceInArabic ?? "",
+                      ),
+                    ),
+                    // style: TextStyles.bodyLarge,
                   ),
                 ),
               ],
