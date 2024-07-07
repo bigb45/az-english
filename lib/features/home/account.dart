@@ -4,6 +4,7 @@ import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
+import 'package:ez_english/widgets/info_card.dart';
 import 'package:flutter/material.dart';
 
 class Account extends StatelessWidget {
@@ -35,10 +36,15 @@ class Account extends StatelessWidget {
                 size: 200,
                 color: Palette.primaryText,
               ),
-              InfoCard(AppStrings.username, "${vm.userData?.studentName}"),
-              InfoCard(AppStrings.emailAddress, "${vm.userData?.emailAddress}"),
               InfoCard(
-                  AppStrings.phoneNumber, "${vm.userData?.parentPhoneNumber}"),
+                  title: AppStrings.username,
+                  subtitle: "${vm.userData?.studentName}"),
+              InfoCard(
+                  title: AppStrings.emailAddress,
+                  subtitle: "${vm.userData?.emailAddress}"),
+              InfoCard(
+                  title: AppStrings.phoneNumber,
+                  subtitle: "${vm.userData?.parentPhoneNumber}"),
               // Padding(
               //   padding: EdgeInsets.all(Constants.padding12),
               //   child: Card(
@@ -98,31 +104,31 @@ class Account extends StatelessWidget {
   }
 }
 
-Widget InfoCard(String title, String subtitle) {
-  return Padding(
-    padding: EdgeInsets.all(Constants.padding12),
-    child: Card(
-      elevation: 0,
-      child: Padding(
-        padding: EdgeInsets.all(Constants.padding12),
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                title,
-                style: TextStyles.bodyLarge,
-              ),
-              Text(
-                subtitle,
-                style: TextStyles.bodyMedium,
-              )
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
-}
+// Widget InfoCard(String title, String subtitle) {
+//   return Padding(
+//     padding: EdgeInsets.all(Constants.padding12),
+//     child: Card(
+//       elevation: 0,
+//       child: Padding(
+//         padding: EdgeInsets.all(Constants.padding12),
+//         child: SizedBox(
+//           width: double.infinity,
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.start,
+//             crossAxisAlignment: CrossAxisAlignment.stretch,
+//             children: [
+//               Text(
+//                 title,
+//                 style: TextStyles.bodyLarge,
+//               ),
+//               Text(
+//                 subtitle,
+//                 style: TextStyles.bodyMedium,
+//               )
+//             ],
+//           ),
+//         ),
+//       ),
+//     ),
+//   );
+// }
