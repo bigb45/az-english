@@ -15,8 +15,7 @@ class Button extends StatefulWidget {
     @Deprecated("use text instead for automatic text color and style")
     this.child,
     this.text,
-  }) : assert(child != null || text != null,
-            "Either a child or a text must be provided (provide a text for default button style)");
+  });
 
   @override
   State<Button> createState() => ButtonState();
