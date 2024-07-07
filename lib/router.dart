@@ -5,6 +5,7 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/auth/screens/sign_in.dart';
 import 'package:ez_english/features/auth/screens/sign_up.dart';
 import 'package:ez_english/features/home/test_overview.dart';
+import 'package:ez_english/features/home/user_settings.dart';
 import 'package:ez_english/features/models/test_result.dart';
 import 'package:ez_english/features/sections/components/youtube_lesson.dart';
 import 'package:ez_english/features/sections/exam/test.dart';
@@ -122,6 +123,13 @@ final loggedInRouter = GoRouter(
           ),
         );
       }),
+    ),
+    GoRoute(
+      path: '/user_settings/:userId',
+      builder: (context, state) {
+        final userId = state.pathParameters['userId'] ?? "-1";
+        return UserSettings(userId: userId);
+      },
     ),
   ],
 );
