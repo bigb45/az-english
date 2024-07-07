@@ -1,9 +1,9 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/account.dart';
+import 'package:ez_english/features/home/admin_screen.dart';
 import 'package:ez_english/features/home/test_results.dart';
 import 'package:ez_english/features/levels/screens/level_selection.dart';
 import 'package:ez_english/theme/palette.dart';
-import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -16,12 +16,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _pageIndex = 0;
-
   final PageController _pageController = PageController();
+  static bool isUserAdmin = true;
 
   final List<Widget> _pages = [
     const LevelSelection(),
     const TestResults(),
+    const AdminScreen(),
     Account(),
   ];
 
@@ -46,8 +47,11 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildNavItem(Icons.home, 'Home', 0),
-            _buildNavItem(Icons.change_circle, 'Results', 1),
-            _buildNavItem(Icons.account_circle, 'Account', 2),
+            isUserAdmin
+                ? _buildNavItem(Icons.shield_outlined, 'Admin', 2)
+                : _buildNavItem(
+                    Icons.assignment_turned_in_outlined, 'Results', 1),
+            _buildNavItem(Icons.account_circle, 'Account', 3),
           ],
         ),
       ),
