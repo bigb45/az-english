@@ -2,10 +2,13 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/account.dart';
 import 'package:ez_english/features/home/admin_screen.dart';
 import 'package:ez_english/features/home/test_results.dart';
+import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/level_selection.dart';
+import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _pageIndex = 0;
   final PageController _pageController = PageController();
-  static bool isUserAdmin = true;
+  static bool isUserAdmin = false;
 
   final List<Widget> _pages = [
     const LevelSelection(),
