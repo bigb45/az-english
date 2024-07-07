@@ -103,32 +103,3 @@ class Account extends StatelessWidget {
     );
   }
 }
-
-// Widget InfoCard(String title, String subtitle) {
-//   return Padding(
-//     padding: EdgeInsets.all(Constants.padding12),
-//     child: Card(
-//       elevation: 0,
-//       child: Padding(
-//         padding: EdgeInsets.all(Constants.padding12),
-//         child: SizedBox(
-//           width: double.infinity,
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.start,
-//             crossAxisAlignment: CrossAxisAlignment.stretch,
-//             children: [
-//               Text(
-//                 title,
-//                 style: TextStyles.bodyLarge,
-//               ),
-//               Text(
-//                 subtitle,
-//                 style: TextStyles.bodyMedium,
-//               )
-//             ],
-//           ),
-//         ),
-//       ),
-//     ),
-//   );
-// }

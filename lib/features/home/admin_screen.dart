@@ -47,7 +47,7 @@ class AdminScreen extends StatelessWidget {
                     actionIcon: Icons.arrow_forward_ios,
                     onTap: () {
                       context.push(
-                        "/user_settings/:${index}", // navigate user settings
+                        "/user_settings/$index", // navigate user settings
                       );
                     },
                     // result:
