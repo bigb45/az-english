@@ -1,7 +1,9 @@
 import 'package:ez_english/core/network/apis_constants.dart';
 import 'package:ez_english/core/network/custom_response.dart';
 import 'package:ez_english/core/network/network_helper.dart';
+import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/utils/AzureAudioSource.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:just_audio/just_audio.dart';
@@ -52,6 +54,29 @@ class Utils {
       print("Error while playing audio: $e");
     }
   }
+}
+
+class DynamicRichTextSpan {
+  DynamicRichTextSpan();
+
+  TextSpan clickableTextSpan(String text, TextStyle? style) => TextSpan(
+        text: text,
+        recognizer: TapGestureRecognizer()..onTap = () => print(text),
+        style: style ??
+            const TextStyle(
+                fontSize: 22,
+                decoration: TextDecoration.underline,
+                color: Palette.primary),
+      );
+  TextSpan underlinedTextSpan(String text, TextStyle? style) => TextSpan(
+        text: text,
+        style: style == null
+            ? const TextStyle(
+                fontSize: 22,
+                decoration: TextDecoration.underline,
+                color: Palette.primaryText)
+            : style.copyWith(decoration: TextDecoration.underline),
+      );
 }
 
 extension StringExtension on String {
