@@ -1,7 +1,7 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/account.dart';
 import 'package:ez_english/features/home/admin/admin_screen.dart';
-import 'package:ez_english/features/home/test_results.dart';
+import 'package:ez_english/features/home/test/test_results.dart';
 import 'package:ez_english/features/levels/screens/level_selection.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
