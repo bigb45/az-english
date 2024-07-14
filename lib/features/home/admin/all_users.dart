@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/admin/users_settings_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
@@ -8,14 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class AdminScreen extends StatefulWidget {
-  const AdminScreen({super.key});
+class AllUsers extends StatefulWidget {
+  const AllUsers({super.key});
 
   @override
-  State<AdminScreen> createState() => _AdminScreenState();
+  State<AllUsers> createState() => _AllUsersState();
 }
 
-class _AdminScreenState extends State<AdminScreen> {
+class _AllUsersState extends State<AllUsers> {
   late UsersSettingsViewmodel viewmodel;
 
   @override

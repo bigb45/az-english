@@ -1,14 +1,11 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/account.dart';
-import 'package:ez_english/features/home/admin_screen.dart';
-import 'package:ez_english/features/home/test_results.dart';
-import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
+import 'package:ez_english/features/home/admin/admin_screen.dart';
+import 'package:ez_english/features/home/test/test_results.dart';
 import 'package:ez_english/features/levels/screens/level_selection.dart';
-import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,10 +21,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _pages = [
     const LevelSelection(),
-    const TestResults(),
-    const AdminScreen(),
+    (isUserAdmin ? const AdminScreen() : const TestResults()),
     Account(),
   ];
+  final Map<String, IconData> _labelIcons = {
+    "Home": Icons.home,
+  };
+  @override
+  void initState() {
+    super.initState();
+    if (isUserAdmin) {
+      _labelIcons["Admin"] = Icons.shield_outlined;
+    } else {
+      _labelIcons["Results"] = Icons.assignment_turned_in_outlined;
+    }
+    _labelIcons["Account"] = Icons.person;
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -40,6 +49,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
+        onPageChanged: (index) {
+          setState(() {
+            _pageIndex = index;
+          });
+        },
         controller: _pageController,
         children: _pages,
       ),
@@ -48,14 +62,14 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: EdgeInsets.symmetric(vertical: 30.h),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildNavItem(Icons.home, 'Home', 0),
-            isUserAdmin
-                ? _buildNavItem(Icons.shield_outlined, 'Admin', 2)
-                : _buildNavItem(
-                    Icons.assignment_turned_in_outlined, 'Results', 1),
-            _buildNavItem(Icons.account_circle, 'Account', 3),
-          ],
+          children: List.generate(
+            _pages.length,
+            (index) => _buildNavItem(
+              _labelIcons.values.elementAt(index),
+              _labelIcons.keys.elementAt(index),
+              index,
+            ),
+          ),
         ),
       ),
     );
