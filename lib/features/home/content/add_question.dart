@@ -1,10 +1,9 @@
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/list_item_card.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-class ContentScreen extends StatelessWidget {
-  const ContentScreen({super.key});
+class AddQuestion extends StatelessWidget {
+  const AddQuestion({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,34 +12,34 @@ class ContentScreen extends StatelessWidget {
         title: ListTile(
           contentPadding: const EdgeInsets.only(left: 0, right: 0),
           title: Text(
-            "Questions",
+            "Add Question",
             style: TextStyles.titleTextStyle,
           ),
           subtitle: Text(
-            "AZ English Questions",
+            "Add new questions",
             style: TextStyles.subtitleTextStyle,
           ),
         ),
       ),
-      body: Padding(
+      body: const Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             ListItemCard(
-                mainText: "Edit Qusetions",
-                subText: "Edit existing questions and answers",
-                actionIcon: Icons.arrow_forward_ios,
-                onTap: () {
-                  context.push('/edit_question/2');
-                }),
+              mainText: "Question",
+              subText: "Enter the question",
+            ),
             ListItemCard(
-              onTap: () {
-                print("test");
-                context.push('/add_question');
-              },
-              mainText: "Add Questions",
-              subText: "Add new questions",
-              actionIcon: Icons.arrow_forward_ios,
+              mainText: "Answer",
+              subText: "Enter the answer",
+            ),
+            ListItemCard(
+              mainText: "Options",
+              subText: "Enter the options",
+            ),
+            ListItemCard(
+              mainText: "Add",
+              subText: "Add the question",
             ),
           ],
         ),

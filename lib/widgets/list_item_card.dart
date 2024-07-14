@@ -66,13 +66,13 @@ class ListItemCard extends StatelessWidget {
                               style: TextStyles.wordType,
                             ),
                           ),
-                          SizedBox(width: 10.w),
-                          const Icon(
-                            Icons.circle,
-                            color: Palette.primaryText,
-                            size: 5,
-                          ),
                           if (info != null) ...[
+                            SizedBox(width: 10.w),
+                            const Icon(
+                              Icons.circle,
+                              color: Palette.primaryText,
+                              size: 5,
+                            ),
                             SizedBox(width: 10.w),
                             info!,
                           ],

@@ -5,9 +5,11 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/auth/screens/sign_in.dart';
 import 'package:ez_english/features/auth/screens/sign_up.dart';
 import 'package:ez_english/features/home/admin/all_users.dart';
-import 'package:ez_english/features/home/content/content_screen.dart';
-import 'package:ez_english/features/home/test/test_overview.dart';
 import 'package:ez_english/features/home/admin/user_settings.dart';
+import 'package:ez_english/features/home/content/add_question.dart';
+import 'package:ez_english/features/home/content/content_screen.dart';
+import 'package:ez_english/features/home/content/edit_question.dart';
+import 'package:ez_english/features/home/test/test_overview.dart';
 import 'package:ez_english/features/models/test_result.dart';
 import 'package:ez_english/features/sections/components/youtube_lesson.dart';
 import 'package:ez_english/features/sections/exam/test.dart';
@@ -143,7 +145,16 @@ final loggedInRouter = GoRouter(
     // ADMIN ROUTES
     GoRoute(
       path: '/edit_question/:questionId',
-      builder: (context, state) => const Placeholder(),
+      builder: (context, state) {
+        final String questionId = state.pathParameters['questionId'] ?? "-1";
+        return EditQuestion(
+          questionId: questionId,
+        );
+      },
+    ),
+    GoRoute(
+      path: '/add_question',
+      builder: (context, state) => const AddQuestion(),
     ),
     GoRoute(
       path: '/all_questions',
