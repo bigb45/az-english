@@ -530,6 +530,36 @@ class FirestoreService {
     return null;
   }
 
+  Future<List<UserModel?>> getUsers() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await _db.collection(FirestoreConstants.usersCollections).get();
+      List<UserModel?> users = querySnapshot.docs.map((doc) {
+        return UserModel.fromMap(doc.data() as Map<String, dynamic>);
+      }).toList();
+      return users;
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<Level?>> getLevels() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await _db.collection(FirestoreConstants.levelsCollection).get();
+      List<Level?> levels = querySnapshot.docs.map((doc) {
+        return Level.fromMap(doc.data() as Map<String, dynamic>);
+      }).toList();
+      return levels;
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> uploadLevelToFirestore(Level level) async {
     try {
       CollectionReference levelsCollection = FirebaseFirestore.instance

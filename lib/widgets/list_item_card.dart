@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ListItemCard extends StatelessWidget {
   final String mainText;
-  final String subText;
+  final String? subText;
   final Widget? info;
   final IconData? actionIcon;
   final VoidCallback? onTap;
@@ -14,7 +14,7 @@ class ListItemCard extends StatelessWidget {
   const ListItemCard({
     super.key,
     required this.mainText,
-    required this.subText,
+    this.subText,
     this.info,
     this.onTap,
     this.actionIcon,
@@ -58,20 +58,22 @@ class ListItemCard extends StatelessWidget {
                             size: 5,
                           ),
                           SizedBox(width: 10.w),
-                          Flexible(
-                            fit: FlexFit.loose,
-                            child: Text(
-                              subText,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyles.wordType,
+                          if (subText != null) ...[
+                            Flexible(
+                              fit: FlexFit.loose,
+                              child: Text(
+                                subText!,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyles.wordType,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 10.w),
-                          const Icon(
-                            Icons.circle,
-                            color: Palette.primaryText,
-                            size: 5,
-                          ),
+                            SizedBox(width: 10.w),
+                            const Icon(
+                              Icons.circle,
+                              color: Palette.primaryText,
+                              size: 5,
+                            )
+                          ],
                           if (info != null) ...[
                             SizedBox(width: 10.w),
                             info!,

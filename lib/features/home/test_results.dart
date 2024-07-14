@@ -1,4 +1,4 @@
-import 'package:ez_english/features/home/viewmodel/home_viewmodel.dart';
+import 'package:ez_english/features/home/viewmodel/test_viewmodel.dart';
 import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -16,20 +16,20 @@ class TestResults extends StatefulWidget {
 }
 
 class _TestResultsState extends State<TestResults> {
-  late HomeViewmodel homeViewmodel;
+  late TestViewmodel viewmodel;
 
   @override
   void initState() {
     super.initState();
-    homeViewmodel = Provider.of<HomeViewmodel>(context, listen: false);
+    viewmodel = Provider.of<TestViewmodel>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      homeViewmodel.myInit();
+      viewmodel.myInit();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeViewmodel>(
+    return Consumer<TestViewmodel>(
       builder: (context, viewmodel, child) {
         return Scaffold(
           appBar: AppBar(

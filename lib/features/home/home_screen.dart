@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _pageIndex = 0;
   final PageController _pageController = PageController();
-  static bool isUserAdmin = false;
+  static bool isUserAdmin = true;
 
   final List<Widget> _pages = [
     const LevelSelection(),

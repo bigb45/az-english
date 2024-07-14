@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
-import 'package:ez_english/features/home/viewmodel/home_viewmodel.dart';
+import 'package:ez_english/features/home/viewmodel/test_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/features/sections/grammar/grammar_section_viewmodel.dart';
@@ -125,7 +125,7 @@ class AuthViewModel extends ChangeNotifier {
       Provider.of<VocabularySectionViewmodel>(context, listen: false).reset();
       Provider.of<GrammarSectionViewmodel>(context, listen: false).reset();
       Provider.of<LevelSelectionViewmodel>(context, listen: false).reset();
-      Provider.of<HomeViewmodel>(context, listen: false).reset();
+      Provider.of<TestViewmodel>(context, listen: false).reset();
     } on CustomException catch (e) {
       errorOccurred = true;
       _handleError(e.message);

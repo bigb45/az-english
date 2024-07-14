@@ -12,21 +12,23 @@ class UserModel {
   List<String>? assignedLevels;
   Map<String, LevelProgress>? levelsProgress;
   final Map<String, TestResult>? examResults;
+  UserType userType;
 
-  UserModel({
-    this.id,
-    this.studentName,
-    this.parentPhoneNumber,
-    required this.emailAddress,
-    required this.password,
-    this.assignedLevels,
-    this.levelsProgress,
-    this.examResults,
-  });
+  UserModel(
+      {this.id,
+      this.studentName,
+      this.parentPhoneNumber,
+      required this.emailAddress,
+      required this.password,
+      this.assignedLevels,
+      this.levelsProgress,
+      this.examResults,
+      this.userType = UserType.student});
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       id: map['id'],
+      userType: UserTypeExtension.fromString(map['userType']),
       studentName: map['studentName'],
       parentPhoneNumber: map['parentPhoneNumber'],
       emailAddress:
@@ -48,6 +50,7 @@ class UserModel {
   Map<String, dynamic> toMap() {
     return {
       "id": id,
+      "userType": userType?.toShortString(),
       'studentName': studentName,
       'parentPhoneNumber': parentPhoneNumber,
       'emailAddress': emailAddress,
@@ -65,4 +68,23 @@ class UserModel {
   }
 
   String toJson() => json.encode(toMap());
+}
+
+enum UserType {
+  developer,
+  admin,
+  student,
+}
+
+extension UserTypeExtension on UserType {
+  String toShortString() {
+    return toString().split('.').last;
+  }
+
+  static UserType fromString(String str) {
+    return UserType.values.firstWhere(
+      (e) => e.toString().split('.').last == str,
+      orElse: () => UserType.student,
+    );
+  }
 }
