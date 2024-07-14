@@ -1,5 +1,5 @@
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/home/viewmodel/user_settings_viewmodel.dart';
+import 'package:ez_english/features/home/admin/user_settings_viewmodel.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/checkbox.dart';
