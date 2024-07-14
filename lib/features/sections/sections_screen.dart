@@ -2,7 +2,7 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/resources/app_strings.dart';
-import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -69,21 +69,11 @@ class _PracticeSectionsState extends State<PracticeSections> {
           contentPadding: const EdgeInsets.only(left: 0, right: 0),
           title: Text(
             AppStrings.practiceScreenTitle,
-            style: TextStyle(
-              fontSize: 24.sp,
-              color: Palette.secondary,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyles.titleTextStyle,
           ),
           subtitle: Text(
             widget.levelName,
-            style: TextStyle(
-              fontSize: 17.sp,
-              color: Palette.secondary,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
-            ),
+            style: TextStyles.subtitleTextStyle,
           ),
         ),
       ),
