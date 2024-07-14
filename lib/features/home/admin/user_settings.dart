@@ -18,8 +18,15 @@ class UserSettings extends StatelessWidget {
     return Consumer<UsersSettingsViewmodel>(
       builder: (context, viewmodel, _) {
         int userIdNumber = int.tryParse(userId)!;
-        if (userIdNumber! < 0 || userIdNumber >= viewmodel.users.length)
-          return Scaffold(body: Center(child: Text('User not found')));
+        if (userIdNumber < 0 || userIdNumber >= viewmodel.users.length) {
+          return const Scaffold(
+            body: Center(
+              child: Text(
+                'User not found',
+              ),
+            ),
+          );
+        }
 
         UserModel? user = viewmodel.users[userIdNumber];
         return Scaffold(

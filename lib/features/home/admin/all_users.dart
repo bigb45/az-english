@@ -3,7 +3,6 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/admin/users_settings_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
-import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/list_item_card.dart';
 import 'package:flutter/material.dart';
@@ -35,12 +34,17 @@ class _AllUsersState extends State<AllUsers> {
         UsersSettingsViewmodel viewmodel, Widget? child) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Administrator',
-            style: TextStyle(color: Palette.primaryText),
+          title: ListTile(
+            contentPadding: const EdgeInsets.only(left: 0, right: 0),
+            title: Text(
+              "All Users",
+              style: TextStyles.titleTextStyle,
+            ),
+            subtitle: Text(
+              "All users in the system",
+              style: TextStyles.subtitleTextStyle,
+            ),
           ),
-          centerTitle: true,
-          backgroundColor: Colors.transparent,
         ),
         body: viewmodel.isLoading
             ? const Center(
@@ -51,7 +55,7 @@ class _AllUsersState extends State<AllUsers> {
                 child: Column(
                   children: [
                     Text(
-                      viewmodel.users.length.toString(),
+                      "Total users: ${viewmodel.users.length.toString()}",
                       style: TextStyles.bodyLarge,
                     ),
                     Expanded(
@@ -61,9 +65,8 @@ class _AllUsersState extends State<AllUsers> {
                           return ListItemCard(
                             mainText: "${viewmodel.users[index]?.studentName}",
                             info: Text(
-                              viewmodel.users[index]!.userType!.toShortString(),
-                              style: switch (
-                                  viewmodel.users[index]!.userType!) {
+                              viewmodel.users[index]!.userType.toShortString(),
+                              style: switch (viewmodel.users[index]!.userType) {
                                 UserType.admin =>
                                   const TextStyle(color: Colors.orange),
                                 UserType.developer =>
