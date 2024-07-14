@@ -4,6 +4,8 @@ import 'package:ez_english/components.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/auth/screens/sign_in.dart';
 import 'package:ez_english/features/auth/screens/sign_up.dart';
+import 'package:ez_english/features/home/admin/all_users.dart';
+import 'package:ez_english/features/home/content_screen.dart';
 import 'package:ez_english/features/home/test_overview.dart';
 import 'package:ez_english/features/home/user_settings.dart';
 import 'package:ez_english/features/models/test_result.dart';
@@ -124,12 +126,28 @@ final loggedInRouter = GoRouter(
         );
       }),
     ),
+
+    // USER ROUTES
+    GoRoute(
+      path: '/all_users',
+      builder: (context, state) => AllUsers(),
+    ),
     GoRoute(
       path: '/user_settings/:userId',
       builder: (context, state) {
         final userId = state.pathParameters['userId'] ?? "-1";
         return UserSettings(userId: userId);
       },
+    ),
+
+    // ADMIN ROUTES
+    GoRoute(
+      path: '/edit_question/:questionId',
+      builder: (context, state) => const Placeholder(),
+    ),
+    GoRoute(
+      path: '/all_questions',
+      builder: (context, state) => const ContentScreen(),
     ),
   ],
 );
