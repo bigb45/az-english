@@ -51,14 +51,14 @@ class ListItemCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          SizedBox(width: 10.w),
-                          const Icon(
-                            Icons.circle,
-                            color: Palette.primaryText,
-                            size: 5,
-                          ),
-                          SizedBox(width: 10.w),
                           if (subText != null) ...[
+                            SizedBox(width: 10.w),
+                            const Icon(
+                              Icons.circle,
+                              color: Palette.primaryText,
+                              size: 5,
+                            ),
+                            SizedBox(width: 10.w),
                             Flexible(
                               fit: FlexFit.loose,
                               child: Text(
@@ -67,14 +67,14 @@ class ListItemCard extends StatelessWidget {
                                 style: TextStyles.wordType,
                               ),
                             ),
+                          ],
+                          if (info != null) ...[
                             SizedBox(width: 10.w),
                             const Icon(
                               Icons.circle,
                               color: Palette.primaryText,
                               size: 5,
-                            )
-                          ],
-                          if (info != null) ...[
+                            ),
                             SizedBox(width: 10.w),
                             info!,
                           ],
