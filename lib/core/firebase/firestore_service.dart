@@ -26,6 +26,7 @@ class FirestoreService {
   int allQuestionsLength = 0;
   int filteredQuestionsLength = 0;
   String? unitNumber;
+  String? currentDayString;
   void reset() {
     _userModel = null;
     _user = null;
@@ -89,8 +90,22 @@ class FirestoreService {
       Map<String, dynamic> levelProgressData =
           userData['levelsProgress'][levelName];
       int currentDay = levelProgressData['currentDay'] ?? 1;
-      unitNumber = "unit$currentDay";
+      currentDayString = currentDay.toString();
+
       bool isFirstWeek = ((currentDay - 1) ~/ 5) % 2 == 0;
+      int unitIndex;
+      if (isFirstWeek) {
+        // First week pattern
+        unitIndex = (currentDay - 1) ~/ 2 + 1;
+      } else {
+        // Second week pattern
+        unitIndex = (currentDay - 2) ~/ 2 + 1;
+      }
+      unitNumber = "unit$unitIndex";
+
+      // Ensure unitIndex doesn't go below 1
+      unitIndex = unitIndex.clamp(1, double.infinity).toInt();
+
       List<String> daySections = getSectionsForDay(currentDay, isFirstWeek);
 
       QuerySnapshot sectionSnapshot = await _db
@@ -131,13 +146,18 @@ class FirestoreService {
             ? (sectionProgress['progress'] as int).toDouble()
             : (sectionProgress['progress'] ?? 0.0) as double;
         if (daySections.contains(section.name)) {
+          String tempUnitNumber =
+              (section.name == RouteConstants.testSectionName)
+                  ? "unit${currentDayString!}"
+                  : unitNumber!;
+
           DocumentReference unitReference = _db
               .collection(FirestoreConstants.levelsCollection)
               .doc(levelName)
               .collection(FirestoreConstants.sectionsCollection)
               .doc(sectionId)
               .collection(FirestoreConstants.unitsCollection)
-              .doc(unitNumber);
+              .doc(tempUnitNumber);
 
           dynamic questionsNumber = await unitReference.get().then((snapshot) {
             return (snapshot.data()

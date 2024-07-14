@@ -134,7 +134,7 @@ class TestSectionViewmodel extends BaseViewModel {
             .toInt();
 
     TestResult examResult = TestResult(
-      examId: "$levelName$sectionName${_firestoreService.unitNumber}",
+      examId: "$levelName$sectionName${_firestoreService.currentDayString}",
       examName: "",
       examDate: formattedDate,
       examScore: score.toString(),
