@@ -1,4 +1,5 @@
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
+import 'package:ez_english/features/home/content/data_entry_forms/fill_the_blanks_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/multiple_choice_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
@@ -273,6 +274,11 @@ class _AddQuestionState extends State<AddQuestion> {
             day: _dayController.text);
       case QuestionType.speaking:
       case QuestionType.fillTheBlanks:
+        return FillTheBlanksForm(
+            level: selectedLevel!,
+            section: selectedSection!,
+            day: _dayController.text);
+
       case QuestionType.findWordsFromPassage:
       case QuestionType.sentenceForming:
       case QuestionType.youtubeLesson:

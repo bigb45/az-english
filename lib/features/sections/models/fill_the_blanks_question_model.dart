@@ -10,12 +10,12 @@ class FillTheBlanksQuestionModel extends BaseQuestion<String> {
     this.incompleteSentenceInEnglish,
     this.incompleteSentenceInArabic,
     required super.answer,
-    required super.questionTextInEnglish,
-    required super.questionTextInArabic,
+    super.questionTextInEnglish,
+    super.questionTextInArabic,
     super.questionType = QuestionType.fillTheBlanks,
-    required super.imageUrl,
-    required super.voiceUrl,
-    required super.titleInEnglish,
+    super.imageUrl,
+    super.voiceUrl,
+    super.titleInEnglish,
   });
 
   @override
