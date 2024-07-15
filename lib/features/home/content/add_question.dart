@@ -267,11 +267,21 @@ class _AddQuestionState extends State<AddQuestion> {
           dayNumber: _dayController.text,
         );
       case QuestionType.dictation:
+        return DictationQuestionForm(
+            level: selectedLevel!,
+            section: selectedSection!,
+            day: _dayController.text);
       case QuestionType.speaking:
       case QuestionType.fillTheBlanks:
       case QuestionType.findWordsFromPassage:
       case QuestionType.sentenceForming:
       case QuestionType.youtubeLesson:
+        return YoutubeLessonForm(
+          level: selectedLevel!,
+          section: selectedSection!,
+          day: _dayController.text,
+        );
+
       case QuestionType.passage:
       case QuestionType.vocabulary:
       case QuestionType.vocabularyWithListening:
