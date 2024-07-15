@@ -10,6 +10,7 @@ import 'package:ez_english/features/models/section_progress.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uuid/uuid.dart';
 
 class FirestoreService {
   FirestoreService._privateConstructor();
@@ -27,6 +28,8 @@ class FirestoreService {
   int filteredQuestionsLength = 0;
   String? unitNumber;
   String? currentDayString;
+  final Uuid uuid = const Uuid();
+
   void reset() {
     _userModel = null;
     _user = null;
@@ -577,6 +580,86 @@ class FirestoreService {
       throw CustomException.fromFirebaseFirestoreException(e);
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<bool> _documentExists(DocumentReference docRef) async {
+    try {
+      var docSnapshot = await docRef.get();
+      return docSnapshot.exists;
+    } catch (e) {
+      print('Error checking document existence: $e');
+      return false;
+    }
+  }
+
+  Future<void> uploadQuestionToFirestore({
+    required String level,
+    required String section,
+    required String day,
+    required Map<String, dynamic> questionMap,
+  }) async {
+    try {
+      // Check if the level exists
+      DocumentReference levelRef = _db.collection('levels').doc(level);
+      bool levelExists = await _documentExists(levelRef);
+
+      if (!levelExists) {
+        await levelRef.set({
+          "id": RouteConstants.getLevelIds(level),
+          'name': level,
+          'description': '',
+          'sections': []
+        });
+      }
+
+      // Check if the section exists
+      DocumentReference sectionRef = levelRef
+          .collection('sections')
+          .doc(RouteConstants.getSectionIds(section));
+      bool sectionExists = await _documentExists(sectionRef);
+
+      if (!sectionExists) {
+        await sectionRef.set({'name': section, 'description': '', 'units': []});
+      }
+
+      // Check if the unit exists
+      DocumentReference unitRef =
+          sectionRef.collection('units').doc('unit$day');
+      bool unitExists = await _documentExists(unitRef);
+
+      if (!unitExists) {
+        await unitRef.set({
+          'name': 'unit$day',
+          'descriptionInEnglish': '',
+          'descriptionInArabic': '',
+          'questions': {},
+          "numberOfQuestions": 0
+        });
+      }
+
+      await _db.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(unitRef);
+
+        if (!snapshot.exists) {
+          throw Exception("Unit document does not exist!");
+        }
+
+        // Generate a unique key for the question
+        String questionId = uuid.v4();
+
+        // Add the question to the questions map field inside the unit document
+        transaction.set(
+          unitRef,
+          {
+            'questions': {questionId: questionMap},
+            'numberOfQuestions': FieldValue.increment(1),
+          },
+          SetOptions(merge: true),
+        );
+      });
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
     }
   }
 

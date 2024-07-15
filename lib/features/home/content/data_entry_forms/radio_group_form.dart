@@ -1,3 +1,4 @@
+import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 
 class RadioGroupForm extends StatefulWidget {
@@ -6,6 +7,7 @@ class RadioGroupForm extends StatefulWidget {
   final RadioItemData? selectedOption;
   final Function(RadioItemData) onDeleteItem;
   final Function(String, RadioItemData) onAnswerUpdated;
+
   const RadioGroupForm({
     super.key,
     required this.onAnswerUpdated,
@@ -37,18 +39,28 @@ class _RadioGroupFormState extends State<RadioGroupForm> {
           RadioItemData option = widget.options[index];
           return ListTile(
             onTap: () {
-              setState(() {
-                widget.onChanged(option);
-                selectedOption = option;
-              });
+              if (option.title.isNotEmpty) {
+                setState(() {
+                  widget.onChanged(option);
+                  selectedOption = option;
+                });
+              }
             },
             title: TextFormField(
+              initialValue: option.title,
               onChanged: (newAnswer) {
                 widget.onAnswerUpdated(newAnswer, option);
+                if (newAnswer.isEmpty && selectedOption == option) {
+                  setState(() {
+                    selectedOption = null;
+                  });
+                }
               },
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: option.title,
+                labelText: "Option ${index + 1}",
+                errorText:
+                    option.title.isEmpty ? "Option cannot be empty" : null,
               ),
             ),
             trailing: IconButton(
@@ -61,34 +73,17 @@ class _RadioGroupFormState extends State<RadioGroupForm> {
               value: option,
               groupValue: selectedOption,
               onChanged: (value) {
-                setState(() {
-                  widget.onChanged(value!);
-                  selectedOption = value;
-                });
+                if (option.title.isNotEmpty) {
+                  setState(() {
+                    widget.onChanged(value!);
+                    selectedOption = value;
+                  });
+                }
               },
             ),
           );
         },
       ),
-    );
-  }
-}
-
-class RadioItemData {
-  final String title;
-  final String value;
-  RadioItemData({required this.title, required this.value});
-  Map<String, dynamic> toMap() {
-    return {
-      'value': value,
-      'title': title,
-    };
-  }
-
-  factory RadioItemData.fromMap(Map<String, dynamic> map) {
-    return RadioItemData(
-      title: map['title'],
-      value: map['value'],
     );
   }
 }
