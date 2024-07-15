@@ -26,13 +26,14 @@ class ContentScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // ListItemCard(
-            //     mainText: "Edit Qusetions",
-            //     subText: "Edit existing questions and answers",
-            //     actionIcon: Icons.arrow_forward_ios,
-            //     onTap: () {
-            //       context.push('/edit_question/2');
-            //     },),
+            ListItemCard(
+              mainText: "Edit Qusetions",
+              subText: "Edit existing questions and answers",
+              actionIcon: Icons.arrow_forward_ios,
+              onTap: () {
+                context.push('/edit_question/2');
+              },
+            ),
             ListItemCard(
               onTap: () {
                 print("test");

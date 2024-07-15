@@ -147,9 +147,7 @@ final loggedInRouter = GoRouter(
       path: '/edit_question/:questionId',
       builder: (context, state) {
         final String questionId = state.pathParameters['questionId'] ?? "-1";
-        return EditQuestion(
-          questionId: questionId,
-        );
+        return EditQuestion();
       },
     ),
     GoRoute(
