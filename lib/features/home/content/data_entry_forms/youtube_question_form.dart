@@ -1,4 +1,5 @@
 import 'package:ez_english/features/home/content/viewmodels/youtube_question_viewmodel.dart';
+import 'package:ez_english/features/models/base_question.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,12 +7,14 @@ class YoutubeLessonForm extends StatelessWidget {
   final String level;
   final String section;
   final String day;
+  final Function(BaseQuestion<dynamic>)? onSubmit;
 
   YoutubeLessonForm({
     super.key,
     required this.level,
     required this.section,
     required this.day,
+    this.onSubmit,
   });
 
   final _formKey = GlobalKey<FormState>();
@@ -66,12 +69,16 @@ class YoutubeLessonForm extends StatelessWidget {
                                 : titleInEnglishController.text.trim(),
                       );
                       if (question != null) {
-                        await viewModel.uploadQuestion(
-                          level: level,
-                          section: section,
-                          day: day,
-                          question: question,
-                        );
+                        if (onSubmit != null) {
+                          onSubmit!(question);
+                        } else {
+                          await viewModel.uploadQuestion(
+                            level: level,
+                            section: section,
+                            day: day,
+                            question: question,
+                          );
+                        }
                         print("Question added to Firebase");
                       } else {
                         print("Form validation failed.");

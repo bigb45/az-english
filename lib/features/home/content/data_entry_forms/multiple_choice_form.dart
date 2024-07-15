@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:ez_english/features/models/base_question.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,11 +10,13 @@ class MultipleChoiceForm extends StatelessWidget {
   String levelName;
   String sectionName;
   String dayNumber;
+  final Function(BaseQuestion<dynamic>)? onSubmit;
   MultipleChoiceForm({
     Key? key,
     required this.levelName,
     required this.sectionName,
     required this.dayNumber,
+    this.onSubmit,
   }) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
@@ -120,7 +123,7 @@ class MultipleChoiceForm extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    await viewModel.submitForm(
+                    final question = await viewModel.submitForm(
                       questionTextInEnglish:
                           questionEnglishController.text.trim().isEmpty
                               ? null
@@ -141,10 +144,22 @@ class MultipleChoiceForm extends StatelessWidget {
                           titleInEnglishController.text.trim().isEmpty
                               ? null
                               : titleInEnglishController.text.trim(),
-                      level: levelName,
-                      section: sectionName,
-                      day: dayNumber,
                     );
+                    if (question != null) {
+                      if (onSubmit != null) {
+                        onSubmit!(question);
+                      } else {
+                        await viewModel.uploadQuestion(
+                          level: levelName,
+                          section: sectionName,
+                          day: dayNumber,
+                          question: question,
+                        );
+                      }
+                      print("Question added to Firebase");
+                    } else {
+                      print("Form validation failed.");
+                    }
                   },
                   child: const Text("Submit"),
                 ),

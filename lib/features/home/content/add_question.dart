@@ -1,6 +1,7 @@
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/fill_the_blanks_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/multiple_choice_form.dart';
+import 'package:ez_english/features/home/content/data_entry_forms/passage_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -173,16 +174,8 @@ class _AddQuestionState extends State<AddQuestion> {
                       child: Text("Multiple Choice"),
                     ),
                     DropdownMenuItem(
-                      value: QuestionType.checkbox,
-                      child: Text("Multiple Select"),
-                    ),
-                    DropdownMenuItem(
                       value: QuestionType.dictation,
                       child: Text("Dictation"),
-                    ),
-                    DropdownMenuItem(
-                      value: QuestionType.speaking,
-                      child: Text("Speaking"),
                     ),
                     DropdownMenuItem(
                       value: QuestionType.passage,
@@ -199,18 +192,6 @@ class _AddQuestionState extends State<AddQuestion> {
                     DropdownMenuItem(
                       value: QuestionType.fillTheBlanks,
                       child: Text("Fill in the blank"),
-                    ),
-                    DropdownMenuItem(
-                      value: QuestionType.sentenceForming,
-                      child: Text("Sentence forming"),
-                    ),
-                    DropdownMenuItem(
-                      value: QuestionType.findWordsFromPassage,
-                      child: Text("Find words from passage"),
-                    ),
-                    DropdownMenuItem(
-                      value: QuestionType.answerQuestionsFromPassage,
-                      child: Text("Answer questions from passage"),
                     ),
                   ],
                   onChanged: isQuestionTypeEnabled
@@ -259,8 +240,6 @@ class _AddQuestionState extends State<AddQuestion> {
 
   Widget _buildQuestionForm() {
     switch (selectedQuestionType!) {
-      case QuestionType.answerQuestionsFromPassage:
-        return const Text("Answer questions from passage");
       case QuestionType.multipleChoice:
         return MultipleChoiceForm(
           levelName: selectedLevel!,
@@ -272,15 +251,11 @@ class _AddQuestionState extends State<AddQuestion> {
             level: selectedLevel!,
             section: selectedSection!,
             day: _dayController.text);
-      case QuestionType.speaking:
       case QuestionType.fillTheBlanks:
         return FillTheBlanksForm(
             level: selectedLevel!,
             section: selectedSection!,
             day: _dayController.text);
-
-      case QuestionType.findWordsFromPassage:
-      case QuestionType.sentenceForming:
       case QuestionType.youtubeLesson:
         return YoutubeLessonForm(
           level: selectedLevel!,
@@ -289,6 +264,11 @@ class _AddQuestionState extends State<AddQuestion> {
         );
 
       case QuestionType.passage:
+        return PassageForm(
+          level: selectedLevel!,
+          section: selectedSection!,
+          day: _dayController.text,
+        );
       case QuestionType.vocabulary:
       case QuestionType.vocabularyWithListening:
         return VocabularyForm(
@@ -296,10 +276,6 @@ class _AddQuestionState extends State<AddQuestion> {
           section: selectedSection!,
           day: _dayController.text,
         );
-      case QuestionType.listening:
-      case QuestionType.checkbox:
-      case QuestionType.other:
-        return const Text("This question type is not yet implemented.");
       default:
         return const Text("Select question type to start");
     }

@@ -75,23 +75,20 @@ class MultipleChoiceViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> submitForm({
-    required String? questionTextInEnglish,
-    required String? questionTextInArabic,
-    required String? questionSentenceInEnglish,
-    required String? questionSentenceInArabic,
-    required String? titleInEnglish,
-    required String level,
-    required String section,
-    required String day,
-  }) async {
+  Future<MultipleChoiceQuestionModel?> submitForm(
+      {required String? questionTextInEnglish,
+      required String? questionTextInArabic,
+      required String? questionSentenceInEnglish,
+      required String? questionSentenceInArabic,
+      required String? titleInEnglish,
+      d}) async {
     if (selectedAnswer != null && validateOptions()) {
       String? imageUrl;
       if (_image != null) {
         imageUrl = await uploadImageAndGetUrl(
             _image!, 'question_image_${DateTime.now().millisecondsSinceEpoch}');
       }
-      MultipleChoiceQuestionModel question = MultipleChoiceQuestionModel(
+      return MultipleChoiceQuestionModel(
         questionTextInEnglish: questionTextInEnglish,
         questionTextInArabic: questionTextInArabic,
         questionSentenceInEnglish: questionSentenceInEnglish,
@@ -101,14 +98,26 @@ class MultipleChoiceViewModel extends ChangeNotifier {
         answer: MultipleChoiceAnswer(answer: selectedAnswer!),
         titleInEnglish: titleInEnglish,
       );
-      await _firestoreService.uploadQuestionToFirestore(
-          level: level,
-          section: section,
-          day: day,
-          questionMap: question.toMap());
     } else {
       print("Form is not valid or no answer is selected or options are empty.");
-      return null;
+    }
+    return null;
+  }
+
+  Future<void> uploadQuestion({
+    required String level,
+    required String section,
+    required String day,
+    required MultipleChoiceQuestionModel question,
+  }) async {
+    try {
+      _firestoreService.uploadQuestionToFirestore(
+          day: day,
+          level: level,
+          section: section,
+          questionMap: question.toMap());
+    } catch (e) {
+      print('Error adding question: $e');
     }
   }
 }
