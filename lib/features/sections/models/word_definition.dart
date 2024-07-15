@@ -14,7 +14,7 @@ class WordDefinition extends BaseQuestion {
   bool isNew;
   WordDefinition(
       {required this.englishWord,
-      required super.titleInEnglish,
+      super.titleInEnglish,
       required this.arabicWord,
       required this.type,
       this.isNew = true,
@@ -22,11 +22,11 @@ class WordDefinition extends BaseQuestion {
       this.exampleUsageInEnglish,
       this.exampleUsageInArabic,
       this.tenses,
-      required super.questionTextInEnglish,
-      required super.questionTextInArabic,
+      super.questionTextInEnglish,
+      super.questionTextInArabic,
       required super.questionType,
-      required super.imageUrl,
-      required super.voiceUrl});
+      super.imageUrl,
+      super.voiceUrl});
   @override
   Map<String, dynamic> toMap() {
     Map<String, dynamic> baseMap = super.toMap();

@@ -285,6 +285,11 @@ class _AddQuestionState extends State<AddQuestion> {
       case QuestionType.passage:
       case QuestionType.vocabulary:
       case QuestionType.vocabularyWithListening:
+        return VocabularyForm(
+          level: selectedLevel!,
+          section: selectedSection!,
+          day: _dayController.text,
+        );
       case QuestionType.listening:
       case QuestionType.checkbox:
       case QuestionType.other:
