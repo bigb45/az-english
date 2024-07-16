@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ez_english/core/permissions/permission_handler_service.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
+import 'package:path_provider/path_provider.dart';
 
 class MultipleChoiceViewModel extends ChangeNotifier {
   final PermissionHandlerService _permissionHandlerService =
@@ -48,6 +49,13 @@ class MultipleChoiceViewModel extends ChangeNotifier {
     }
   }
 
+  void updateAnswerInEditMode(
+      List<RadioItemData> options, RadioItemData answer) {
+    answers = options;
+    selectedAnswer = answer;
+    notifyListeners();
+  }
+
   bool validateOptions() {
     for (var option in answers) {
       if (option.title.isEmpty) {
@@ -75,25 +83,30 @@ class MultipleChoiceViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<MultipleChoiceQuestionModel?> submitForm(
-      {required String? questionTextInEnglish,
-      required String? questionTextInArabic,
-      required String? questionSentenceInEnglish,
-      required String? questionSentenceInArabic,
-      required String? titleInEnglish,
-      d}) async {
-    if (selectedAnswer != null && validateOptions()) {
+  Future<MultipleChoiceQuestionModel?> submitForm({
+    required String? questionTextInEnglish,
+    required String? questionTextInArabic,
+    required String? questionSentenceInEnglish,
+    required String? questionSentenceInArabic,
+    required String? titleInEnglish,
+    required String? imageUrlInEditMode,
+  }) async {
+    if (selectedAnswer != null &&
+        validateOptions() &&
+        questionTextInEnglish != null) {
       String? imageUrl;
       if (_image != null) {
         imageUrl = await uploadImageAndGetUrl(
             _image!, 'question_image_${DateTime.now().millisecondsSinceEpoch}');
+      } else {
+        imageUrl = imageUrlInEditMode;
       }
       return MultipleChoiceQuestionModel(
         questionTextInEnglish: questionTextInEnglish,
         questionTextInArabic: questionTextInArabic,
         questionSentenceInEnglish: questionSentenceInEnglish,
         questionSentenceInArabic: questionSentenceInArabic,
-        imageUrl: imageUrl ?? "",
+        imageUrl: imageUrl,
         options: answers,
         answer: MultipleChoiceAnswer(answer: selectedAnswer!),
         titleInEnglish: titleInEnglish,

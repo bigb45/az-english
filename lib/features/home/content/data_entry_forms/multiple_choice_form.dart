@@ -1,22 +1,25 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:ez_english/features/home/content/data_entry_forms/radio_group_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/multiple_choice_viewmodel.dart';
 
 class MultipleChoiceForm extends StatelessWidget {
-  String levelName;
-  String sectionName;
-  String dayNumber;
+  final String levelName;
+  final String sectionName;
+  final String dayNumber;
   final Function(BaseQuestion<dynamic>)? onSubmit;
+  final MultipleChoiceQuestionModel? question;
+
   MultipleChoiceForm({
     Key? key,
     required this.levelName,
     required this.sectionName,
     required this.dayNumber,
     this.onSubmit,
+    this.question,
   }) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
@@ -33,10 +36,27 @@ class MultipleChoiceForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (question != null) {
+      // Pre-fill the form fields with existing question data
+      questionEnglishController.text = question!.questionTextInEnglish ?? '';
+      questionArabicController.text = question!.questionTextInArabic ?? '';
+      questionSentenceEnglishController.text =
+          question!.questionSentenceInEnglish ?? '';
+      questionSentenceArabicController.text =
+          question!.questionSentenceInArabic ?? '';
+      titleInEnglishController.text = question!.titleInEnglish ?? '';
+    }
+
     return ChangeNotifierProvider(
       create: (_) => MultipleChoiceViewModel(),
       child: Consumer<MultipleChoiceViewModel>(
         builder: (context, viewModel, child) {
+          if (question != null && viewModel.answers.isEmpty) {
+            // Pre-fill the answers and selected answer
+            viewModel.updateAnswerInEditMode(
+                question!.options, question!.answer!.answer!);
+          }
+
           return Form(
             key: _formKey,
             child: Column(
@@ -96,9 +116,17 @@ class MultipleChoiceForm extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                viewModel.image == null
-                    ? const Text("No image selected.")
-                    : Image.file(viewModel.image!, height: 100, width: 100),
+                question != null &&
+                        viewModel.image == null &&
+                        question!.imageUrl != null
+                    ? CachedNetworkImage(
+                        imageUrl: question!.imageUrl!,
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                      )
+                    : viewModel.image == null
+                        ? const Text("No image selected.")
+                        : Image.file(viewModel.image!, height: 100, width: 100),
                 ElevatedButton(
                   onPressed: viewModel.pickImage,
                   child: const Text("Upload Image from Gallery"),
@@ -123,45 +151,54 @@ class MultipleChoiceForm extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    final question = await viewModel.submitForm(
-                      questionTextInEnglish:
-                          questionEnglishController.text.trim().isEmpty
-                              ? null
-                              : questionEnglishController.text.trim(),
-                      questionTextInArabic:
-                          questionArabicController.text.trim().isEmpty
-                              ? null
-                              : questionArabicController.text.trim(),
-                      questionSentenceInEnglish:
-                          questionSentenceEnglishController.text.trim().isEmpty
-                              ? null
-                              : questionSentenceEnglishController.text.trim(),
-                      questionSentenceInArabic:
-                          questionSentenceArabicController.text.trim().isEmpty
-                              ? null
-                              : questionSentenceArabicController.text.trim(),
-                      titleInEnglish:
-                          titleInEnglishController.text.trim().isEmpty
-                              ? null
-                              : titleInEnglishController.text.trim(),
-                    );
-                    if (question != null) {
-                      if (onSubmit != null) {
-                        onSubmit!(question);
-                      } else {
-                        await viewModel.uploadQuestion(
-                          level: levelName,
-                          section: sectionName,
-                          day: dayNumber,
-                          question: question,
-                        );
+                    if (_formKey.currentState!.validate()) {
+                      final updatedQuestion = await viewModel.submitForm(
+                          questionTextInEnglish:
+                              questionEnglishController.text.trim().isEmpty
+                                  ? null
+                                  : questionEnglishController.text.trim(),
+                          questionTextInArabic:
+                              questionArabicController.text.trim().isEmpty
+                                  ? null
+                                  : questionArabicController.text.trim(),
+                          questionSentenceInEnglish:
+                              questionSentenceEnglishController.text
+                                      .trim()
+                                      .isEmpty
+                                  ? null
+                                  : questionSentenceEnglishController.text
+                                      .trim(),
+                          questionSentenceInArabic:
+                              questionSentenceArabicController.text
+                                      .trim()
+                                      .isEmpty
+                                  ? null
+                                  : questionSentenceArabicController.text
+                                      .trim(),
+                          titleInEnglish:
+                              titleInEnglishController.text.trim().isEmpty
+                                  ? null
+                                  : titleInEnglishController.text.trim(),
+                          imageUrlInEditMode: question?.imageUrl);
+                      if (updatedQuestion != null) {
+                        if (onSubmit != null) {
+                          updatedQuestion.path = question?.path ?? '';
+                          onSubmit!(updatedQuestion);
+                        } else {
+                          await viewModel.uploadQuestion(
+                            level: levelName,
+                            section: sectionName,
+                            day: dayNumber,
+                            question: updatedQuestion!,
+                          );
+                        }
+                        print("Question added to Firebase");
                       }
-                      print("Question added to Firebase");
                     } else {
                       print("Form validation failed.");
                     }
                   },
-                  child: const Text("Submit"),
+                  child: Text(question == null ? "Submit" : "Update"),
                 ),
               ],
             ),

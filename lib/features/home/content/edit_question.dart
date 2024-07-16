@@ -4,6 +4,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/multiple_choic
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/edit_question_viewmodel.dart';
+import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:provider/provider.dart';
@@ -190,8 +191,8 @@ class _EditQuestionState extends State<EditQuestion> {
                             itemBuilder: (context, index) {
                               final question = viewModel.questions[index];
                               return ListTile(
-                                title: Text(question.questionTextInEnglish ??
-                                    'No question text'),
+                                title:
+                                    Text(question.questionType.toShortString()),
                                 onTap: () {
                                   _showEditQuestionDialog(context, question);
                                 },
@@ -221,6 +222,7 @@ class _EditQuestionState extends State<EditQuestion> {
       builder: (context) {
         return AlertDialog(
           title: const Text("Edit Question"),
+          insetPadding: EdgeInsets.all(8),
           content: SingleChildScrollView(
             child: Container(
               width: MediaQuery.of(context).size.width * 0.75,
@@ -241,60 +243,71 @@ class _EditQuestionState extends State<EditQuestion> {
   }
 
   Widget _buildQuestionForm(BaseQuestion<dynamic> question) {
-    switch (question.questionType) {
-      case QuestionType.multipleChoice:
-        return MultipleChoiceForm(
-          levelName: selectedLevel!,
-          sectionName: selectedSection!,
-          dayNumber: _dayController.text,
-          onSubmit: (updatedQuestion) {
-            // Handle question update logic here
-          },
-          // question: question as MultipleChoiceQuestionModel,
-        );
-      case QuestionType.dictation:
-        return DictationQuestionForm(
-          level: selectedLevel!,
-          section: selectedSection!,
-          day: _dayController.text,
-          onSubmit: (updatedQuestion) {
-            // Handle question update logic here
-          },
-          // question: question as DictationQuestionModel,
-        );
-      case QuestionType.fillTheBlanks:
-        return FillTheBlanksForm(
-          level: selectedLevel!,
-          section: selectedSection!,
-          day: _dayController.text,
-          onSubmit: (updatedQuestion) {
-            // Handle question update logic here
-          },
-          // question: question as FillTheBlanksQuestionModel,
-        );
-      case QuestionType.vocabulary:
-        return VocabularyForm(
-          level: selectedLevel!,
-          section: selectedSection!,
-          day: _dayController.text,
-          onSubmit: (updatedQuestion) {
-            // Handle question update logic here
-          },
-          // question: question as VocabularyQuestionModel,
-        );
-      case QuestionType.youtubeLesson:
-        return YoutubeLessonForm(
-          level: selectedLevel!,
-          section: selectedSection!,
-          day: _dayController.text,
-          onSubmit: (updatedQuestion) {
-            // Handle question update logic here
-          },
-          // question: question as YoutubeLessonModel,
-        );
-      // Add other question types as needed
-      default:
-        return const Text("Question type not supported.");
-    }
+    return ChangeNotifierProvider(
+      create: (_) => EditQuestionViewModel(),
+      child: Consumer<EditQuestionViewModel>(
+        builder: (context, viewModel, child) {
+          switch (question.questionType) {
+            case QuestionType.multipleChoice:
+              return MultipleChoiceForm(
+                levelName: selectedLevel!,
+                sectionName: selectedSection!,
+                dayNumber: _dayController.text,
+                onSubmit: (updatedQuestion) {
+                  viewModel.updateQuestion(updatedQuestion);
+                  Navigator.of(context).pop();
+                },
+                question: question as MultipleChoiceQuestionModel,
+              );
+            case QuestionType.dictation:
+              return DictationQuestionForm(
+                level: selectedLevel!,
+                section: selectedSection!,
+                day: _dayController.text,
+                onSubmit: (updatedQuestion) {
+                  viewModel.updateQuestion(updatedQuestion);
+                  Navigator.of(context).pop();
+                },
+                // question: question as DictationQuestionModel,
+              );
+            case QuestionType.fillTheBlanks:
+              return FillTheBlanksForm(
+                level: selectedLevel!,
+                section: selectedSection!,
+                day: _dayController.text,
+                onSubmit: (updatedQuestion) {
+                  viewModel.updateQuestion(updatedQuestion);
+                  Navigator.of(context).pop();
+                },
+                // question: question as FillTheBlanksQuestionModel,
+              );
+            case QuestionType.vocabulary:
+              return VocabularyForm(
+                level: selectedLevel!,
+                section: selectedSection!,
+                day: _dayController.text,
+                onSubmit: (updatedQuestion) {
+                  viewModel.updateQuestion(updatedQuestion);
+                  Navigator.of(context).pop();
+                },
+                // question: question as VocabularyQuestionModel,
+              );
+            case QuestionType.youtubeLesson:
+              return YoutubeLessonForm(
+                level: selectedLevel!,
+                section: selectedSection!,
+                day: _dayController.text,
+                onSubmit: (updatedQuestion) {
+                  viewModel.updateQuestion(updatedQuestion);
+                  Navigator.of(context).pop();
+                },
+                // question: question as YoutubeLessonModel,
+              );
+            default:
+              return const Text("Question type not supported.");
+          }
+        },
+      ),
+    );
   }
 }

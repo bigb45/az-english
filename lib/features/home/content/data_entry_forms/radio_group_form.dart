@@ -28,6 +28,7 @@ class _RadioGroupFormState extends State<RadioGroupForm> {
   void initState() {
     super.initState();
     selectedOption = widget.selectedOption;
+    print('Initial selected option: ${selectedOption?.title}');
   }
 
   @override
@@ -43,6 +44,7 @@ class _RadioGroupFormState extends State<RadioGroupForm> {
                 setState(() {
                   widget.onChanged(option);
                   selectedOption = option;
+                  print('Option selected: ${selectedOption?.title}');
                 });
               }
             },
