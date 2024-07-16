@@ -149,10 +149,14 @@ class FirestoreService {
             ? (sectionProgress['progress'] as int).toDouble()
             : (sectionProgress['progress'] ?? 0.0) as double;
         if (daySections.contains(section.name)) {
-          String tempUnitNumber =
-              (section.name == RouteConstants.testSectionName)
-                  ? "unit${currentDayString!}"
-                  : unitNumber!;
+          String tempUnitNumber = (sectionId ==
+                      RouteConstants.getSectionIds(
+                          RouteConstants.testSectionName) ||
+                  sectionId ==
+                      RouteConstants.getSectionIds(
+                          RouteConstants.vocabularySectionName))
+              ? "unit${currentDayString!}"
+              : unitNumber!;
 
           DocumentReference unitReference = _db
               .collection(FirestoreConstants.levelsCollection)
@@ -216,7 +220,11 @@ class FirestoreService {
       SectionProgress sectionProgress =
           levelProgress.sectionProgress![sectionId]!;
       String tempUnitNumber = (sectionId ==
-              RouteConstants.getSectionIds(RouteConstants.testSectionName))
+                  RouteConstants.getSectionIds(
+                      RouteConstants.testSectionName) ||
+              sectionId ==
+                  RouteConstants.getSectionIds(
+                      RouteConstants.vocabularySectionName))
           ? "unit${currentDayString!}"
           : unitNumber!;
       if (!sectionProgress.unitsCompleted.contains(tempUnitNumber)) {
@@ -364,7 +372,11 @@ class FirestoreService {
       double progress = _userModel!
           .levelsProgress![level]!.sectionProgress![sectionName]!.progress;
       String tempUnitNumber = (sectionName ==
-              RouteConstants.getSectionIds(RouteConstants.testSectionName))
+                  RouteConstants.getSectionIds(
+                      RouteConstants.testSectionName) ||
+              sectionName ==
+                  RouteConstants.getSectionIds(
+                      RouteConstants.vocabularySectionName))
           ? "unit${currentDayString!}"
           : unitNumber!;
       DocumentSnapshot levelDoc = await _db
