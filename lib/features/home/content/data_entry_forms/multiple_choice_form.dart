@@ -1,10 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ez_english/features/models/base_question.dart';
-import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/radio_group_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/multiple_choice_viewmodel.dart';
+import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
+import 'package:ez_english/resources/app_strings.dart';
+import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/button.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class MultipleChoiceForm extends StatelessWidget {
   final String levelName;
@@ -66,12 +72,12 @@ class MultipleChoiceForm extends StatelessWidget {
                   maxLines: 2,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: "Question in English",
-                    hintText: "Enter the question in English",
+                    labelText: "Question text (Egnlish)",
+                    hintText: "Ex: \"Answer the following sentence\"",
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter the question in English';
+                      return AppStrings.accountSettingsScreenTitle;
                     }
                     return null;
                   },
@@ -82,8 +88,8 @@ class MultipleChoiceForm extends StatelessWidget {
                   maxLines: 2,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: "Question in Arabic",
-                    hintText: "Enter the question in Arabic",
+                    labelText: "Question text (Arabic)",
+                    hintText: "\"أجب على الجملة التالية\"",
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -92,8 +98,8 @@ class MultipleChoiceForm extends StatelessWidget {
                   maxLines: 2,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: "Question Sentence in English",
-                    hintText: "Enter the question sentence in English",
+                    labelText: "Question sentence (English)",
+                    hintText: "\"What did Ali eat for breakfast?\"",
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -102,19 +108,21 @@ class MultipleChoiceForm extends StatelessWidget {
                   maxLines: 2,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: "Question Sentence in Arabic",
-                    hintText: "Enter the question sentence in Arabic",
+                    labelText: "Question Sentence (Arabic)",
+                    hintText: "\"ماذا تناول علي على الإفطار؟\"",
                   ),
                 ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: titleInEnglishController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Title in English",
-                    hintText: "Enter the title in English",
-                  ),
-                ),
+
+                // TODO: remove this field
+                // const SizedBox(height: 10),
+                // TextFormField(
+                //   controller: titleInEnglishController,
+                //   decoration: const InputDecoration(
+                //     border: OutlineInputBorder(),
+                //     labelText: "Question title",
+                //     hintText: "Enter the question title",
+                //   ),
+                // ),
                 const SizedBox(height: 10),
                 question != null &&
                         viewModel.image == null &&
@@ -126,10 +134,38 @@ class MultipleChoiceForm extends StatelessWidget {
                       )
                     : viewModel.image == null
                         ? const Text("No image selected.")
-                        : Image.file(viewModel.image!, height: 100, width: 100),
-                ElevatedButton(
-                  onPressed: viewModel.pickImage,
-                  child: const Text("Upload Image from Gallery"),
+                        : Image.file(viewModel.image!),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: viewModel.pickImage,
+                  child: DottedBorder(
+                    color: Palette.primaryVariant,
+                    strokeWidth: 1,
+                    padding: const EdgeInsets.all(0),
+                    child: Container(
+                      height: 200.h,
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 216, 243, 255),
+                      ),
+                      child: Center(
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.add,
+                            size: 32,
+                          ),
+                          SizedBox(
+                            width: 10.w,
+                          ),
+                          Text(
+                            "Tap here to pick image",
+                            style: TextStyles.bodyLarge,
+                          ),
+                        ],
+                      )),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 10),
                 RadioGroupForm(
@@ -141,15 +177,41 @@ class MultipleChoiceForm extends StatelessWidget {
                   options: viewModel.answers,
                   selectedOption: viewModel.selectedAnswer,
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (viewModel.answerCount < viewModel.maxAnswers) {
-                      viewModel.addAnswer();
-                    }
-                  },
-                  child: const Text("Add answer"),
-                ),
-                ElevatedButton(
+                viewModel.answerCount < viewModel.maxAnswers
+                    ? GestureDetector(
+                        onTap: viewModel.addAnswer,
+                        child: DottedBorder(
+                          color: Palette.primaryVariant,
+                          strokeWidth: 1,
+                          padding: const EdgeInsets.all(0),
+                          child: Container(
+                            height: 50.h,
+                            decoration: const BoxDecoration(
+                              color: Palette.textFieldFill,
+                            ),
+                            child: Center(
+                                child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.add,
+                                  size: 32,
+                                ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Text(
+                                  "Add an answer",
+                                  style: TextStyles.bodyLarge,
+                                ),
+                              ],
+                            )),
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
+                const SizedBox(height: 10),
+                Button(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       final updatedQuestion = await viewModel.submitForm(
@@ -189,16 +251,17 @@ class MultipleChoiceForm extends StatelessWidget {
                             level: levelName,
                             section: sectionName,
                             day: dayNumber,
-                            question: updatedQuestion!,
+                            question: updatedQuestion,
                           );
                         }
+                        // TODO: reflect these changes in the UI
                         print("Question added to Firebase");
                       }
                     } else {
                       print("Form validation failed.");
                     }
                   },
-                  child: Text(question == null ? "Submit" : "Update"),
+                  text: question == null ? "Submit" : "Update",
                 ),
               ],
             ),
