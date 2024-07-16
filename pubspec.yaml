@@ -13,6 +13,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  dotted_border: ^2.1.0
   flutter_screenutil: ^5.9.0
   provider: ^6.0.5
   easy_localization: ^3.0.6
