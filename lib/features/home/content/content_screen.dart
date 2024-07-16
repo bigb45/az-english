@@ -36,7 +36,6 @@ class ContentScreen extends StatelessWidget {
             ),
             ListItemCard(
               onTap: () {
-                print("test");
                 context.push('/add_question');
               },
               mainText: "Add Questions",
