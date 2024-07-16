@@ -44,5 +44,7 @@
   "passwordLength": "Password must be at least 6 characters",
   "nameRequired": "Name is required",
   "phoneRequired": "Phone number is required",
-  "phoneLength": "Phone number must be 10 digits"
+  "phoneLength": "Phone number must be 10 digits",
+
+  "requiredField": "This field is required."
 }
