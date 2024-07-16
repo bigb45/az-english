@@ -53,7 +53,8 @@ class _PassageFormState extends State<PassageForm> {
                 children: [
                   TextFormField(
                     controller: passageInEnglishController,
-                    maxLines: 5,
+                    // unlimited lines with multi-line textfield
+                    maxLines: null,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Passage in English",
@@ -69,7 +70,8 @@ class _PassageFormState extends State<PassageForm> {
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: passageInArabicController,
-                    maxLines: 5,
+                    // unlimited lines with multi-line textfield
+                    maxLines: null,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Passage in Arabic",
