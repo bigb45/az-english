@@ -453,6 +453,47 @@ class FirestoreService {
     }
   }
 
+  Future<List<BaseQuestion<dynamic>>> fetchQuestions({
+    required String level,
+    required String section,
+    required String day,
+  }) async {
+    try {
+      DocumentReference unitRef = _db
+          .collection(FirestoreConstants.levelsCollection)
+          .doc(level)
+          .collection(FirestoreConstants.sectionsCollection)
+          .doc(RouteConstants.getSectionIds(section))
+          .collection(FirestoreConstants.unitsCollection)
+          .doc('unit$day');
+
+      DocumentSnapshot unitSnapshot = await unitRef.get();
+
+      if (unitSnapshot.exists) {
+        Map<String, dynamic> data = unitSnapshot.data() as Map<String, dynamic>;
+        if (data['questions'] != null) {
+          final questionEntries =
+              (data['questions'] as Map<String, dynamic>).entries.toList();
+
+          // Sort the entries by their keys
+          questionEntries.sort((a, b) => a.key.compareTo(b.key));
+
+          return questionEntries.map((entry) {
+            final question = BaseQuestion.fromMap(entry.value);
+            question.path = "${FirestoreConstants.levelsCollection}/$level/"
+                "${FirestoreConstants.sectionsCollection}/${RouteConstants.getSectionIds(section)}/"
+                "${FirestoreConstants.unitsCollection}/unit$day/"
+                "${FirestoreConstants.questionsField}/${entry.key}";
+            return question;
+          }).toList();
+        }
+      }
+      return [];
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
+    }
+  }
+
   double calculateNewProgress(int newQuestionIndex) {
     int lastStoppedQuestionIndex =
         (allQuestionsLength - filteredQuestionsLength) + newQuestionIndex;
