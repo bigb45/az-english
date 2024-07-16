@@ -40,8 +40,7 @@ class AudioControlButtonState extends State<AudioControlButton> {
           isPressed = false;
         });
       },
-      onTap:
-          widget.isLoading ? null : widget.onPressed, // Disable tap if loading
+      onTap: widget.isLoading ? null : widget.onPressed,
       child: Transform.translate(
         offset: Offset(0, isPressed ? 5 : 0),
         child: Container(
@@ -82,8 +81,12 @@ class AudioControlButtonState extends State<AudioControlButton> {
         return Icons.mic;
       case AudioControlType.speaker:
         return Icons.volume_up;
+      case AudioControlType.play:
+        return Icons.play_arrow;
+      case AudioControlType.pause:
+        return Icons.pause;
       default:
-        return Icons.help; // Fallback icon
+        return Icons.help;
     }
   }
 }
@@ -91,4 +94,6 @@ class AudioControlButtonState extends State<AudioControlButton> {
 enum AudioControlType {
   microphone,
   speaker,
+  play,
+  pause,
 }

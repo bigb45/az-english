@@ -26,11 +26,28 @@ class WordView extends StatefulWidget {
 class _WordViewState extends State<WordView> {
   final AudioPlayer player = AudioPlayer();
   bool _isLoading = false;
+  bool _isPlaying = false; // Track if audio is playing
+  bool _isPaused = false; // Track if audio is paused
+
   @override
   void dispose() {
     player.stop(); // Stop the player if it's currently playing
     player.dispose(); // Dispose of the player
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    player.playerStateStream.listen((playerState) {
+      setState(() {
+        _isPlaying = playerState.playing;
+        if (playerState.processingState == ProcessingState.completed) {
+          _isPlaying = false;
+          _isPaused = false;
+        }
+      });
+    });
   }
 
   @override
@@ -130,17 +147,35 @@ class _WordViewState extends State<WordView> {
                                       : AudioControlButton(
                                           size: 50.w,
                                           onPressed: () async {
-                                            setState(() {
-                                              _isLoading = true;
-                                            });
-                                            await Utils.speakText(
-                                                widget.wordData.englishWord,
-                                                player);
-                                            setState(() {
-                                              _isLoading = false;
-                                            });
+                                            if (_isPlaying) {
+                                              await player.pause();
+                                              setState(() {
+                                                _isPaused = true;
+                                              });
+                                            } else if (_isPaused) {
+                                              await player.play();
+                                              setState(() {
+                                                _isPaused = false;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                _isLoading = true;
+                                              });
+                                              await Utils.speakText(
+                                                  widget.wordData.englishWord,
+                                                  player);
+                                              setState(() {
+                                                _isLoading = false;
+                                              });
+                                              await player.play();
+                                            }
                                           },
-                                          type: AudioControlType.speaker),
+                                          type: _isPlaying
+                                              ? AudioControlType.pause
+                                              : _isPaused
+                                                  ? AudioControlType.play
+                                                  : AudioControlType.speaker,
+                                        ),
                                 ],
                               ),
                             )
