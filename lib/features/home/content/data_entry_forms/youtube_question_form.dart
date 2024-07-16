@@ -40,8 +40,12 @@ class YoutubeLessonForm extends StatelessWidget {
                     hintText: "Enter the YouTube URL",
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the YouTube URL';
+                    if (value == null ||
+                        value.isEmpty ||
+                        !RegExp(
+                          r'^(https?\:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[a-zA-Z0-9_-]{11}$',
+                        ).hasMatch(value)) {
+                      return 'Please enter a valid YouTube video URL';
                     }
                     return null;
                   },
