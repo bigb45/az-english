@@ -1,14 +1,13 @@
-import 'package:ez_english/core/firebase/firestore_service.dart';
-import 'package:ez_english/features/models/base_question.dart';
-import 'package:ez_english/widgets/radio_button.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
+
+import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/core/permissions/permission_handler_service.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:ez_english/widgets/radio_button.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MultipleChoiceViewModel extends ChangeNotifier {
   final PermissionHandlerService _permissionHandlerService =
@@ -22,8 +21,9 @@ class MultipleChoiceViewModel extends ChangeNotifier {
   int answerCount = 0;
 
   Future<void> pickImage() async {
+    print("Picking image");
     bool hasPermission =
-        await _permissionHandlerService.requestPhotoPermission();
+        await _permissionHandlerService.requestStoragePermission();
     if (hasPermission) {
       final pickedFile =
           await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -74,11 +74,14 @@ class MultipleChoiceViewModel extends ChangeNotifier {
   }
 
   void addAnswer() {
+    answerCount++;
     answers.add(RadioItemData(title: "", value: answers.length.toString()));
     notifyListeners();
   }
 
   void deleteAnswer(RadioItemData option) {
+    answerCount--;
+
     answers.remove(option);
     notifyListeners();
   }
