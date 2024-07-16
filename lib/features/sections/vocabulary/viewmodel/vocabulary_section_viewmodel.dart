@@ -4,17 +4,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
+import 'package:ez_english/core/firebase/firebase_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/core/network/custom_response.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
+import 'package:ez_english/utils/utils.dart';
 
 import '../../models/word_model.dart';
 
 class VocabularySectionViewmodel extends BaseViewModel {
   final FirestoreService _firestoreService = FirestoreService();
-
+  final FirebaseService _firebaseService = FirebaseService();
   late List<WordModel> _words;
   String? levelId;
   List<BaseQuestion?> _questions = [];
@@ -32,6 +35,52 @@ class VocabularySectionViewmodel extends BaseViewModel {
     levelName = RouteConstants.getLevelName(levelId!);
     sectionName = RouteConstants.vocabularySectionName;
     fetchQuestions();
+  }
+
+  Future<String> getAudioBytes(WordDefinition question) async {
+    if (question.voiceUrl != null && question.voiceUrl!.isNotEmpty) {
+      return question.voiceUrl!;
+    } else {
+      try {
+        CustomResponse response = await Utils.speakText(question.englishWord);
+        if (response.statusCode == 200) {
+          final bytes = response.data;
+          // Upload audio to Firebase Storage
+          String audioUrl = await _firebaseService.uploadAudioToFirebase(
+              bytes, question.englishWord);
+          // Update Firestore with the new URL
+
+          // Split the path into segments
+          List<String> pathSegments = question.path!.split('/');
+
+          // Get the document path and the field path
+          String docPath =
+              pathSegments.sublist(0, pathSegments.length - 2).join('/');
+          String fieldIndex = pathSegments[pathSegments.length - 1];
+          String questionField = pathSegments[pathSegments.length - 2];
+
+          // Create the FieldPath for the specific field
+          FieldPath questionFiel = FieldPath([questionField, fieldIndex]);
+
+          // Get the document reference
+          DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
+          question.voiceUrl = audioUrl;
+          // Update the specific field
+          await _firestoreService
+              .updateQuestionUsingFieldPath<Map<String, dynamic>>(
+                  docPath: docRef,
+                  fieldPath: questionFiel,
+                  newValue: question.toMap());
+          return audioUrl;
+        } else {
+          throw Exception(
+              "Error while generating audio: ${response.statusCode}, ${response.errorMessage}");
+        }
+      } catch (e) {
+        print("Error while playing audio: $e");
+      }
+    }
+    throw Exception("No audio URL found.");
   }
 
   Future<void> fetchQuestions() async {

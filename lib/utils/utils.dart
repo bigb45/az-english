@@ -21,10 +21,8 @@ class Utils {
       ..showSnackBar(snackBar);
   }
 
-  static speakText(String text, AudioPlayer audioPlayer) async {
+  static Future<CustomResponse> speakText(String text) async {
     final String apiKey = dotenv.env['AZURE_API_KEY_1'] ?? '';
-
-    final AudioPlayer player = audioPlayer;
 
     String requestBody =
         '<speak version="1.0" xml:lang="en-US"><voice xml:lang="en-US" xml:gender="Female" name="en-US-JennyNeural">${text}</voice></speak>';
@@ -41,16 +39,9 @@ class Utils {
         body: requestBody,
         returnBytesResponse: true,
       );
-      if (response.statusCode == 200) {
-        final bytes = response.data;
-        await player.setAudioSource(AzureAudioSource(bytes));
-        player.play();
-      } else {
-        throw Exception(
-            "Error while generating audio: ${response.statusCode}, ${response.errorMessage}");
-      }
+      return response;
     } catch (e) {
-      print("Error while playing audio: $e");
+      throw Exception("Error while generating audio");
     }
   }
 }

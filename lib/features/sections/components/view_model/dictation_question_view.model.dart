@@ -7,6 +7,7 @@ import 'package:ez_english/core/network/apis_constants.dart';
 import 'package:ez_english/core/network/custom_response.dart';
 import 'package:ez_english/core/network/network_helper.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 
@@ -25,25 +26,10 @@ class DictationQuestionViewModel extends ChangeNotifier {
 
   Future<String> getAudioBytes(DictationQuestionModel question) async {
     if (question.voiceUrl != null && question.voiceUrl!.isNotEmpty) {
-      // Play existing audio from URL
       return question.voiceUrl!;
     } else {
-      // Generate audio using Azure API
-      String requestBody =
-          '<speak version="1.0" xml:lang="en-US"><voice xml:lang="en-US" xml:gender="Female" name="en-US-JennyNeural">${question.speakableText}</voice></speak>';
-      Map<String, String> requestBodyHeaders = {
-        'Ocp-Apim-Subscription-Key': apiKey,
-        'Content-Type': 'application/ssml+xml',
-        'X-Microsoft-OutputFormat': 'audio-24khz-160kbitrate-mono-mp3',
-      };
-
       try {
-        CustomResponse response = await NetworkHelper.instance.post(
-          url: APIConstants.ttsEndPoint,
-          headersForRequest: requestBodyHeaders,
-          body: requestBody,
-          returnBytesResponse: true,
-        );
+        CustomResponse response = await Utils.speakText(question.speakableText);
         if (response.statusCode == 200) {
           final bytes = response.data;
           // Upload audio to Firebase Storage
