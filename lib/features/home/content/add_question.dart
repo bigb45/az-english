@@ -56,6 +56,7 @@ class _AddQuestionState extends State<AddQuestion> {
             child: Column(
               children: [
                 TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: _dayController,
                   decoration: const InputDecoration(
                     labelText: "Day",
@@ -217,6 +218,8 @@ class _AddQuestionState extends State<AddQuestion> {
                   disabledHint: const Text(
                       "Please fill all fields above to select question type"),
                 ),
+                SizedBox(height: 16.h),
+                Text("Fields marked with * are required"),
                 SizedBox(height: 16.h),
                 Container(
                   decoration: BoxDecoration(

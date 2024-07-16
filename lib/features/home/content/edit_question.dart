@@ -4,9 +4,10 @@ import 'package:ez_english/features/home/content/data_entry_forms/multiple_choic
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/edit_question_viewmodel.dart';
-import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
-import 'package:flutter/material.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
+import 'package:ez_english/theme/text_styles.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class EditQuestion extends StatefulWidget {
@@ -34,11 +35,11 @@ class _EditQuestionState extends State<EditQuestion> {
                 contentPadding: const EdgeInsets.only(left: 0, right: 0),
                 title: Text(
                   "Edit Question",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyles.titleTextStyle,
                 ),
                 subtitle: Text(
                   "Edit existing questions",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                  style: TextStyles.subtitleTextStyle,
                 ),
               ),
             ),
@@ -50,6 +51,7 @@ class _EditQuestionState extends State<EditQuestion> {
                   child: Column(
                     children: [
                       TextFormField(
+                        keyboardType: TextInputType.number,
                         controller: _dayController,
                         decoration: const InputDecoration(
                           labelText: "Day",
