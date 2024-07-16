@@ -15,10 +15,10 @@ class MultipleChoiceViewModel extends ChangeNotifier {
   File? _image;
   File? get image => _image;
   FirestoreService _firestoreService = FirestoreService();
-  List<RadioItemData> answers = [];
+  List<RadioItemData> answers = [RadioItemData(title: "", value: "")];
   RadioItemData? selectedAnswer;
   int maxAnswers = 5;
-  int answerCount = 0;
+  int answerCount = 1;
 
   Future<void> pickImage() async {
     print("Picking image");
@@ -68,22 +68,32 @@ class MultipleChoiceViewModel extends ChangeNotifier {
   void updateAnswer(String newAnswer, RadioItemData option) {
     int index = answers.indexOf(option);
     if (index != -1) {
-      answers[index] = RadioItemData(title: newAnswer, value: option.value);
+      answers[index] = RadioItemData(title: newAnswer, value: newAnswer);
+      for (var answer in answers) {
+        print("${answer.title}, ${answer.value}");
+      }
       notifyListeners();
     }
   }
 
   void addAnswer() {
-    answerCount++;
-    answers.add(RadioItemData(title: "", value: answers.length.toString()));
-    notifyListeners();
+    if (answers.length < maxAnswers) {
+      answers
+          .add(RadioItemData(title: "terst", value: "${answers.length - 1}"));
+      answerCount++;
+      notifyListeners();
+    }
   }
 
   void deleteAnswer(RadioItemData option) {
-    answerCount--;
-
-    answers.remove(option);
-    notifyListeners();
+    if (answers.length > 1) {
+      answers.remove(option);
+      answerCount--;
+      for (var answer in answers) {
+        print("${answer.title}, ${answer.value}");
+      }
+      notifyListeners();
+    }
   }
 
   Future<MultipleChoiceQuestionModel?> submitForm({
