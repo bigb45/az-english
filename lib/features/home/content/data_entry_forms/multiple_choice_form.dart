@@ -124,18 +124,49 @@ class MultipleChoiceForm extends StatelessWidget {
                 //   ),
                 // ),
                 const SizedBox(height: 10),
-                question != null &&
-                        viewModel.image == null &&
-                        question!.imageUrl != null
-                    ? CachedNetworkImage(
-                        imageUrl: question!.imageUrl!,
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                      )
-                    : viewModel.image == null
-                        ? const Text("No image selected.")
-                        : Image.file(viewModel.image!),
+                // question != null &&
+                //         viewModel.image == null &&
+                //         question!.imageUrl != null
+                //     ? CachedNetworkImage(
+                //         imageUrl: question!.imageUrl!,
+                //         placeholder: (context, url) =>
+                //             const CircularProgressIndicator(),
+                //       )
+                //     : viewModel.image == null
+                //         ? const Text("No image selected.")
+                //         : Image.file(viewModel.image!),
                 const SizedBox(height: 10),
+                // GestureDetector(
+                //   onTap: viewModel.pickImage,
+                //   child: DottedBorder(
+                //     color: Palette.primaryVariant,
+                //     strokeWidth: 1,
+                //     padding: const EdgeInsets.all(0),
+                //     child: Container(
+                //       height: 200.h,
+                //       decoration: const BoxDecoration(
+                //         color: Color.fromARGB(255, 216, 243, 255),
+                //       ),
+                //       child: Center(
+                //           child: Row(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         children: [
+                //           const Icon(
+                //             Icons.add,
+                //             size: 32,
+                //           ),
+                //           SizedBox(
+                //             width: 10.w,
+                //           ),
+                //           Text(
+                //             "Tap here to pick image",
+                //             style: TextStyles.bodyLarge,
+                //           ),
+                //         ],
+                //       )),
+                //     ),
+                //   ),
+                // ),
                 GestureDetector(
                   onTap: viewModel.pickImage,
                   child: DottedBorder(
@@ -148,22 +179,19 @@ class MultipleChoiceForm extends StatelessWidget {
                         color: Color.fromARGB(255, 216, 243, 255),
                       ),
                       child: Center(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.add,
-                            size: 32,
-                          ),
-                          SizedBox(
-                            width: 10.w,
-                          ),
-                          Text(
-                            "Tap here to pick image",
-                            style: TextStyles.bodyLarge,
-                          ),
-                        ],
-                      )),
+                        child: viewModel.image != null
+                            ? Image.file(viewModel.image!)
+                            : (question != null && question!.imageUrl != null
+                                ? CachedNetworkImage(
+                                    imageUrl: question!.imageUrl!,
+                                    placeholder: (context, url) =>
+                                        const CircularProgressIndicator(),
+                                  )
+                                : Text(
+                                    "Tap here to pick image",
+                                    style: TextStyles.bodyLarge,
+                                  )),
+                      ),
                     ),
                   ),
                 ),
