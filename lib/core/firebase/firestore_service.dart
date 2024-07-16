@@ -215,13 +215,16 @@ class FirestoreService {
 
       SectionProgress sectionProgress =
           levelProgress.sectionProgress![sectionId]!;
-
-      if (!sectionProgress.unitsCompleted.contains(unitNumber)) {
-        sectionProgress.unitsCompleted.add(unitNumber!);
+      String tempUnitNumber = (sectionId ==
+              RouteConstants.getSectionIds(RouteConstants.testSectionName))
+          ? "unit${currentDayString!}"
+          : unitNumber!;
+      if (!sectionProgress.unitsCompleted.contains(tempUnitNumber)) {
+        sectionProgress.unitsCompleted.add(tempUnitNumber);
       }
 
       // Update isCompleted status if all units are completed
-      if (sectionProgress.isSectionCompleted(unitNumber!)) {
+      if (sectionProgress.isSectionCompleted(tempUnitNumber!)) {
         sectionProgress.isCompleted = true;
         sectionProgress.lastStoppedQuestionIndex = 0;
       }
@@ -255,7 +258,7 @@ class FirestoreService {
               testSectionProgress.toMap(),
         });
 
-        if (testSectionProgress.isSectionCompleted(unitNumber!)) {
+        if (testSectionProgress.isSectionCompleted(tempUnitNumber)) {
           testSectionProgress.isCompleted = true;
           levelProgress.currentDay++;
 
@@ -360,13 +363,17 @@ class FirestoreService {
           .sectionProgress![sectionName]!.lastStoppedQuestionIndex;
       double progress = _userModel!
           .levelsProgress![level]!.sectionProgress![sectionName]!.progress;
+      String tempUnitNumber = (sectionName ==
+              RouteConstants.getSectionIds(RouteConstants.testSectionName))
+          ? "unit${currentDayString!}"
+          : unitNumber!;
       DocumentSnapshot levelDoc = await _db
           .collection(FirestoreConstants.levelsCollection)
           .doc(level)
           .collection(FirestoreConstants.sectionsCollection)
           .doc(sectionName)
           .collection(FirestoreConstants.unitsCollection)
-          .doc(unitNumber)
+          .doc(tempUnitNumber)
           .get();
       if (levelDoc.exists) {
         Map<String, dynamic> data = levelDoc.data() as Map<String, dynamic>;
@@ -433,14 +440,14 @@ class FirestoreService {
             BaseQuestion question = BaseQuestion.fromMap(mapData);
             question.path = "${FirestoreConstants.levelsCollection}/$level/"
                 "${FirestoreConstants.sectionsCollection}/$sectionName/"
-                "${FirestoreConstants.unitsCollection}/$unitNumber/"
+                "${FirestoreConstants.unitsCollection}/$tempUnitNumber/"
                 "${FirestoreConstants.questionsField}/${entry.key}"; // Set path
             questions[entry.key] = question; // Use key as map key
           }
         }
 
         return Unit(
-            name: unitNumber!,
+            name: tempUnitNumber!,
             descriptionInEnglish: data['descriptionInEnglish'],
             descriptionInArabic: data['descriptionInArabic'],
             questions: questions,
