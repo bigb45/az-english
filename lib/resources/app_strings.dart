@@ -62,4 +62,6 @@ abstract class AppStrings {
   static final String nameRequired = "nameRequired".tr();
   static final String phoneRequired = "phoneRequired".tr();
   static final String phoneLength = "phoneLength".tr();
+
+  static final String requiredField = "requiredField".tr();
 }
