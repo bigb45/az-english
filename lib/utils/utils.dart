@@ -116,7 +116,6 @@ extension StringExtension on String {
 
   bool isArabic() {
     final RegExp arabic = RegExp(r'^[\u0621-\u064A]+');
-    print("isArabic $this: ${arabic.hasMatch(this)}");
     return arabic.hasMatch(this) ? true : false;
   }
 }
