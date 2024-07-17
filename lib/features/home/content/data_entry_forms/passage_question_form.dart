@@ -5,6 +5,8 @@ import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_que
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/passage_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/resources/app_strings.dart';
+import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -57,12 +59,12 @@ class _PassageFormState extends State<PassageForm> {
                     maxLines: null,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: "Passage in English",
+                      labelText: "Passage (English)",
                       hintText: "Enter the passage in English",
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter the passage in English';
+                        return AppStrings.requiredField;
                       }
                       return null;
                     },
@@ -74,7 +76,7 @@ class _PassageFormState extends State<PassageForm> {
                     maxLines: null,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: "Passage in Arabic",
+                      labelText: "Passage (Arabic)",
                       hintText: "Enter the passage in Arabic",
                     ),
                   ),
@@ -88,7 +90,7 @@ class _PassageFormState extends State<PassageForm> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter the title in English';
+                        return AppStrings.requiredField;
                       }
                       return null;
                     },
@@ -108,8 +110,8 @@ class _PassageFormState extends State<PassageForm> {
                     maxLines: 2,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: "Question Text in English",
-                      hintText: "Enter the question text in English",
+                      labelText: "Question Text (English)",
+                      hintText: "\"Read the follwing passage\"",
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -118,12 +120,31 @@ class _PassageFormState extends State<PassageForm> {
                     maxLines: 2,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: "Question Text in Arabic",
-                      hintText: "Enter the question text in Arabic",
+                      labelText: "Question Text (Arabic)",
+                      hintText: "\"إقرأ النص في الأسفل\"",
                     ),
                   ),
                   const SizedBox(height: 10),
-                  ElevatedButton(
+
+                  Button(
+                    type: ButtonType.secondary,
+                    onPressed: () {
+                      _showAddQuestionDialog(context, viewModel);
+                    },
+                    text: "Add paragraph question",
+                  ),
+                  const SizedBox(height: 10),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: viewModel.questions.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(viewModel.questions[index].toString()),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Button(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         final passage = viewModel.submitForm(
@@ -153,26 +174,10 @@ class _PassageFormState extends State<PassageForm> {
                         print("Please fill all the required fields");
                       }
                     },
-                    child: const Text("Submit"),
+                    text: "Submit",
                   ),
                   const SizedBox(height: 10),
                   // Adding embedded questions
-                  ElevatedButton(
-                    onPressed: () {
-                      _showAddQuestionDialog(context, viewModel);
-                    },
-                    child: const Text("Add Embedded Question"),
-                  ),
-                  const SizedBox(height: 10),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: viewModel.questions.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(viewModel.questions[index].toString()),
-                      );
-                    },
-                  ),
                 ],
               ),
             ),
