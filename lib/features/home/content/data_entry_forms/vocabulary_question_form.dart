@@ -1,10 +1,12 @@
+import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/vocabulary_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
+import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class VocabularyForm extends StatelessWidget {
+class VocabularyForm extends StatefulWidget {
   final String level;
   final String section;
   final String day;
@@ -18,11 +20,26 @@ class VocabularyForm extends StatelessWidget {
     this.onSubmit,
   });
 
+  @override
+  State<VocabularyForm> createState() => _VocabularyFormState();
+}
+
+class _VocabularyFormState extends State<VocabularyForm> {
   final _formKey = GlobalKey<FormState>();
+  bool isFormValid = false;
+  void _validateForm() {
+    setState(() {
+      isFormValid = _formKey.currentState?.validate() ?? false;
+    });
+  }
+
   final TextEditingController englishWordController = TextEditingController();
+
   final TextEditingController arabicWordController = TextEditingController();
+
   final TextEditingController exampleUsageInEnglishController =
       TextEditingController();
+
   final TextEditingController exampleUsageInArabicController =
       TextEditingController();
 
@@ -33,6 +50,7 @@ class VocabularyForm extends StatelessWidget {
       child: Consumer<VocabularyViewModel>(
         builder: (context, viewModel, child) {
           return Form(
+            onChanged: _validateForm,
             key: _formKey,
             child: Column(
               children: [
@@ -119,44 +137,63 @@ class VocabularyForm extends StatelessWidget {
                   ),
                 ],
                 const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      final question = await viewModel.submitForm(
-                        englishWord: englishWordController.text.trim(),
-                        arabicWord: arabicWordController.text.trim().isEmpty
-                            ? null
-                            : arabicWordController.text.trim(),
-                        type: viewModel.selectedWordType!,
-                        exampleUsageInEnglish:
-                            exampleUsageInEnglishController.text.trim().isEmpty
-                                ? null
-                                : [exampleUsageInEnglishController.text.trim()],
-                        exampleUsageInArabic:
-                            exampleUsageInArabicController.text.trim().isEmpty
-                                ? null
-                                : [exampleUsageInArabicController.text.trim()],
-                      );
-                      if (question != null) {
-                        if (onSubmit != null) {
-                          onSubmit!(question);
-                        } else {
-                          await viewModel.uploadQuestion(
-                            level: level,
-                            section: section,
-                            day: day,
-                            question: question,
-                          );
+                Button(
+                  onPressed: isFormValid
+                      ? () async {
+                          if (_formKey.currentState!.validate()) {
+                            final question = await viewModel.submitForm(
+                              englishWord: englishWordController.text.trim(),
+                              arabicWord:
+                                  arabicWordController.text.trim().isEmpty
+                                      ? null
+                                      : arabicWordController.text.trim(),
+                              type: viewModel.selectedWordType!,
+                              exampleUsageInEnglish:
+                                  exampleUsageInEnglishController
+                                          .text
+                                          .trim()
+                                          .isEmpty
+                                      ? null
+                                      : [
+                                          exampleUsageInEnglishController.text
+                                              .trim()
+                                        ],
+                              exampleUsageInArabic:
+                                  exampleUsageInArabicController.text
+                                          .trim()
+                                          .isEmpty
+                                      ? null
+                                      : [
+                                          exampleUsageInArabicController.text
+                                              .trim()
+                                        ],
+                            );
+                            if (question != null) {
+                              if (widget.onSubmit != null) {
+                                widget.onSubmit!(question);
+                              } else {
+                                showConfirmSubmitModalSheet(
+                                  context: context,
+                                  onSubmit: () {
+                                    viewModel.uploadQuestion(
+                                      level: widget.level,
+                                      section: widget.section,
+                                      day: widget.day,
+                                      question: question,
+                                    );
+                                  },
+                                  question: question,
+                                );
+                              }
+                            } else {
+                              print("Form validation failed.");
+                            }
+                          } else {
+                            print("Please fill all the required fields");
+                          }
                         }
-                        print("Question added to Firebase");
-                      } else {
-                        print("Form validation failed.");
-                      }
-                    } else {
-                      print("Please fill all the required fields");
-                    }
-                  },
-                  child: const Text("Submit"),
+                      : null,
+                  text: "Submit",
                 ),
               ],
             ),

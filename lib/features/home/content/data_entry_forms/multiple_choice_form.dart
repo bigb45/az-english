@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/radio_group_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/multiple_choice_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -12,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class MultipleChoiceForm extends StatelessWidget {
+class MultipleChoiceForm extends StatefulWidget {
   final String levelName;
   final String sectionName;
   final String dayNumber;
@@ -28,43 +29,64 @@ class MultipleChoiceForm extends StatelessWidget {
     this.question,
   }) : super(key: key);
 
+  @override
+  State<MultipleChoiceForm> createState() => _MultipleChoiceFormState();
+}
+
+class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
   final _formKey = GlobalKey<FormState>();
+
+  bool isFormValid = false;
+  void _validateForm() {
+    setState(() {
+      isFormValid = _formKey.currentState?.validate() ?? false;
+    });
+  }
+
   final TextEditingController questionEnglishController =
       TextEditingController();
+
   final TextEditingController questionArabicController =
       TextEditingController();
+
   final TextEditingController questionSentenceEnglishController =
       TextEditingController();
+
   final TextEditingController questionSentenceArabicController =
       TextEditingController();
+
   final TextEditingController titleInEnglishController =
       TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    if (question != null) {
+    if (widget.question != null) {
       // Pre-fill the form fields with existing question data
-      questionEnglishController.text = question!.questionTextInEnglish ?? '';
-      questionArabicController.text = question!.questionTextInArabic ?? '';
+      questionEnglishController.text =
+          widget.question!.questionTextInEnglish ?? '';
+      questionArabicController.text =
+          widget.question!.questionTextInArabic ?? '';
       questionSentenceEnglishController.text =
-          question!.questionSentenceInEnglish ?? '';
+          widget.question!.questionSentenceInEnglish ?? '';
       questionSentenceArabicController.text =
-          question!.questionSentenceInArabic ?? '';
-      titleInEnglishController.text = question!.titleInEnglish ?? '';
+          widget.question!.questionSentenceInArabic ?? '';
+      titleInEnglishController.text = widget.question!.titleInEnglish ?? '';
     }
 
     return ChangeNotifierProvider(
       create: (_) => MultipleChoiceViewModel(),
       child: Consumer<MultipleChoiceViewModel>(
         builder: (context, viewModel, child) {
-          if (question != null && viewModel.answers.isEmpty) {
+          if (widget.question != null && viewModel.answers.isEmpty) {
             // Pre-fill the answers and selected answer
             viewModel.updateAnswerInEditMode(
-                question!.options, question!.answer!.answer!);
+                widget.question!.options, widget.question!.answer!.answer!);
           }
 
           return Form(
+            onChanged: _validateForm,
             key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               children: [
                 TextFormField(
@@ -77,7 +99,7 @@ class MultipleChoiceForm extends StatelessWidget {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return AppStrings.accountSettingsScreenTitle;
+                      return AppStrings.requiredField;
                     }
                     return null;
                   },
@@ -169,30 +191,48 @@ class MultipleChoiceForm extends StatelessWidget {
                 // ),
                 GestureDetector(
                   onTap: viewModel.pickImage,
-                  child: DottedBorder(
-                    color: Palette.primaryVariant,
-                    strokeWidth: 1,
-                    padding: const EdgeInsets.all(0),
-                    child: Container(
-                      height: 200.h,
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 216, 243, 255),
+                  child: Stack(
+                    children: [
+                      DottedBorder(
+                        color: Palette.primaryVariant,
+                        strokeWidth: 1,
+                        padding: const EdgeInsets.all(0),
+                        child: Container(
+                          height: 200.h,
+                          decoration: const BoxDecoration(
+                            color: Color.fromARGB(255, 216, 243, 255),
+                          ),
+                          child: Center(
+                            child: viewModel.image != null
+                                ? Image.file(viewModel.image!)
+                                : (widget.question != null &&
+                                        widget.question!.imageUrl != null
+                                    ? CachedNetworkImage(
+                                        imageUrl: widget.question!.imageUrl!,
+                                        placeholder: (context, url) =>
+                                            const CircularProgressIndicator(),
+                                      )
+                                    : Text(
+                                        "Tap here to pick image",
+                                        style: TextStyles.bodyLarge,
+                                      )),
+                          ),
+                        ),
                       ),
-                      child: Center(
-                        child: viewModel.image != null
-                            ? Image.file(viewModel.image!)
-                            : (question != null && question!.imageUrl != null
-                                ? CachedNetworkImage(
-                                    imageUrl: question!.imageUrl!,
-                                    placeholder: (context, url) =>
-                                        const CircularProgressIndicator(),
-                                  )
-                                : Text(
-                                    "Tap here to pick image",
-                                    style: TextStyles.bodyLarge,
-                                  )),
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.close,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            viewModel.removeImage();
+                          },
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -240,56 +280,72 @@ class MultipleChoiceForm extends StatelessWidget {
                     : const SizedBox(),
                 const SizedBox(height: 10),
                 Button(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      final updatedQuestion = await viewModel.submitForm(
-                          questionTextInEnglish:
-                              questionEnglishController.text.trim().isEmpty
-                                  ? null
-                                  : questionEnglishController.text.trim(),
-                          questionTextInArabic:
-                              questionArabicController.text.trim().isEmpty
-                                  ? null
-                                  : questionArabicController.text.trim(),
-                          questionSentenceInEnglish:
-                              questionSentenceEnglishController.text
-                                      .trim()
-                                      .isEmpty
-                                  ? null
-                                  : questionSentenceEnglishController.text
-                                      .trim(),
-                          questionSentenceInArabic:
-                              questionSentenceArabicController.text
-                                      .trim()
-                                      .isEmpty
-                                  ? null
-                                  : questionSentenceArabicController.text
-                                      .trim(),
-                          titleInEnglish:
-                              titleInEnglishController.text.trim().isEmpty
-                                  ? null
-                                  : titleInEnglishController.text.trim(),
-                          imageUrlInEditMode: question?.imageUrl);
-                      if (updatedQuestion != null) {
-                        if (onSubmit != null) {
-                          updatedQuestion.path = question?.path ?? '';
-                          onSubmit!(updatedQuestion);
-                        } else {
-                          await viewModel.uploadQuestion(
-                            level: levelName,
-                            section: sectionName,
-                            day: dayNumber,
-                            question: updatedQuestion,
-                          );
+                  onPressed: isFormValid
+                      ? () {
+                          if (_formKey.currentState!.validate()) {
+                            viewModel
+                                .submitForm(
+                                    questionTextInEnglish: questionEnglishController
+                                            .text
+                                            .trim()
+                                            .isEmpty
+                                        ? null
+                                        : questionEnglishController.text.trim(),
+                                    questionTextInArabic: questionArabicController
+                                            .text
+                                            .trim()
+                                            .isEmpty
+                                        ? null
+                                        : questionArabicController.text.trim(),
+                                    questionSentenceInEnglish:
+                                        questionSentenceEnglishController.text
+                                                .trim()
+                                                .isEmpty
+                                            ? null
+                                            : questionSentenceEnglishController
+                                                .text
+                                                .trim(),
+                                    questionSentenceInArabic:
+                                        questionSentenceArabicController.text
+                                                .trim()
+                                                .isEmpty
+                                            ? null
+                                            : questionSentenceArabicController.text
+                                                .trim(),
+                                    titleInEnglish: titleInEnglishController
+                                            .text
+                                            .trim()
+                                            .isEmpty
+                                        ? null
+                                        : titleInEnglishController.text.trim(),
+                                    imageUrlInEditMode:
+                                        widget.question?.imageUrl)
+                                .then((updatedQuestion) {
+                              if (updatedQuestion != null) {
+                                if (widget.onSubmit != null) {
+                                  updatedQuestion.path =
+                                      widget.question?.path ?? '';
+                                  widget.onSubmit!(updatedQuestion);
+                                } else {
+                                  showConfirmSubmitModalSheet(
+                                      context: context,
+                                      onSubmit: viewModel.uploadQuestion(
+                                        level: widget.levelName,
+                                        section: widget.sectionName,
+                                        day: widget.dayNumber,
+                                        question: updatedQuestion,
+                                      ),
+                                      question: updatedQuestion);
+                                  // TODO: reflect changes in the UI using snackbar
+                                }
+                              }
+                            });
+                          } else {
+                            print("Form validation failed.");
+                          }
                         }
-                        // TODO: reflect these changes in the UI
-                        print("Question added to Firebase");
-                      }
-                    } else {
-                      print("Form validation failed.");
-                    }
-                  },
-                  text: question == null ? "Submit" : "Update",
+                      : null,
+                  text: widget.question == null ? "Submit" : "Update",
                 ),
               ],
             ),
