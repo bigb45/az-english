@@ -4,7 +4,6 @@ import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/audio_control_button.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
@@ -67,7 +66,18 @@ class _DictationQuestionState extends State<DictationQuestion> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  "Type the sentence you hear",
+                  widget.question.questionTextInEnglish ??
+                      "Type the sentence you hear",
+                  style: TextStyles.questionTextStyle.copyWith(height: 2),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  textDirection: TextDirection.rtl,
+                  widget.question.questionTextInArabic ?? "",
                   style: TextStyles.questionTextStyle.copyWith(height: 2),
                 ),
               ],
