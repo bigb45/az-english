@@ -36,6 +36,11 @@ class MultipleChoiceViewModel extends ChangeNotifier {
     }
   }
 
+  void removeImage() {
+    _image = null;
+    notifyListeners();
+  }
+
   Future<String> uploadImageAndGetUrl(File file, String imageName) async {
     try {
       UploadTask uploadTask =
