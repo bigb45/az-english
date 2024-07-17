@@ -7,6 +7,7 @@ import 'package:ez_english/features/home/content/viewmodels/edit_question_viewmo
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/list_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +29,7 @@ class _EditQuestionState extends State<EditQuestion> {
     return ChangeNotifierProvider(
       create: (_) => EditQuestionViewModel(),
       child: Consumer<EditQuestionViewModel>(
-        builder: (context, viewModel, child) {
+        builder: (context, viewmodel, child) {
           return Scaffold(
             appBar: AppBar(
               title: ListTile(
@@ -43,171 +44,121 @@ class _EditQuestionState extends State<EditQuestion> {
                 ),
               ),
             ),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: _dayController,
-                        decoration: const InputDecoration(
-                          labelText: "Day",
-                          hintText: "Enter the day",
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter the day';
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          if (_dayController.text.isNotEmpty &&
-                              selectedLevel != null &&
-                              selectedSection != null) {
-                            viewModel.fetchQuestions(
-                              level: selectedLevel!,
-                              section: selectedSection!,
-                              day: value,
-                            );
-                          }
-                        },
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: _dayController,
+                      decoration: const InputDecoration(
+                        labelText: "Day",
+                        hintText: "Enter the day",
+                        border: OutlineInputBorder(),
                       ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: DropdownButtonFormField(
-                              items: const [
-                                DropdownMenuItem(
-                                  value: "A1",
-                                  child: Text("A1"),
-                                ),
-                                DropdownMenuItem(
-                                  value: "A2",
-                                  child: Text("A2"),
-                                ),
-                                DropdownMenuItem(
-                                  value: "B1",
-                                  child: Text("B1"),
-                                ),
-                                DropdownMenuItem(
-                                  value: "B2",
-                                  child: Text("B2"),
-                                ),
-                                DropdownMenuItem(
-                                  value: "C1",
-                                  child: Text("C1"),
-                                ),
-                                DropdownMenuItem(
-                                  value: "C2",
-                                  child: Text("C2"),
-                                ),
-                              ],
-                              onChanged: (levelSelection) {
-                                setState(() {
-                                  selectedLevel = levelSelection as String?;
-                                });
-                                if (_dayController.text.isNotEmpty &&
-                                    selectedLevel != null &&
-                                    selectedSection != null) {
-                                  viewModel.fetchQuestions(
-                                    level: selectedLevel!,
-                                    section: selectedSection!,
-                                    day: _dayController.text,
-                                  );
-                                }
-                              },
-                              decoration: const InputDecoration(
-                                labelText: "Select level",
-                                hintText: "Select level",
-                                border: OutlineInputBorder(),
-                              ),
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Please select a level';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: DropdownButtonFormField(
-                              items: const [
-                                DropdownMenuItem(
-                                  value: "reading",
-                                  child: Text("Reading"),
-                                ),
-                                DropdownMenuItem(
-                                  value: "listeningWriting",
-                                  child: Text("Writing & Listening"),
-                                ),
-                                DropdownMenuItem(
-                                  value: "vocabulary",
-                                  child: Text("Vocabulary"),
-                                ),
-                                DropdownMenuItem(
-                                  value: "grammar",
-                                  child: Text("Grammar"),
-                                ),
-                              ],
-                              onChanged: (sectionSelection) {
-                                setState(() {
-                                  selectedSection = sectionSelection as String?;
-                                });
-                                if (_dayController.text.isNotEmpty &&
-                                    selectedLevel != null &&
-                                    selectedSection != null) {
-                                  viewModel.fetchQuestions(
-                                    level: selectedLevel!,
-                                    section: selectedSection!,
-                                    day: _dayController.text,
-                                  );
-                                }
-                              },
-                              decoration: const InputDecoration(
-                                labelText: "Section",
-                                hintText: "Select section",
-                                border: OutlineInputBorder(),
-                              ),
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Please select a section';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      if (viewModel.questions.isNotEmpty)
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.5,
-                          child: PageView.builder(
-                            itemCount: viewModel.questions.length,
-                            itemBuilder: (context, index) {
-                              final question = viewModel.questions[index];
-                              return ListTile(
-                                title:
-                                    Text(question.questionType.toShortString()),
-                                onTap: () {
-                                  _showEditQuestionDialog(context, question);
-                                },
-                              );
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the day';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        if (_dayController.text.isNotEmpty &&
+                            selectedLevel != null &&
+                            selectedSection != null) {
+                          viewmodel.fetchQuestions(
+                            level: selectedLevel!,
+                            section: selectedSection!,
+                            day: value,
+                          );
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: levelsDropDown(
+                            onChanged: (levelSelection) {
+                              setState(() {
+                                selectedLevel = levelSelection;
+                              });
+                              if (_dayController.text.isNotEmpty &&
+                                  selectedLevel != null &&
+                                  selectedSection != null) {
+                                viewmodel.fetchQuestions(
+                                  level: selectedLevel!,
+                                  section: selectedSection!,
+                                  day: _dayController.text,
+                                );
+                              }
                             },
                           ),
-                        )
-                      else if (selectedLevel != null &&
-                          selectedSection != null &&
-                          _dayController.text.isNotEmpty)
-                        const Text("No questions found for the selected day."),
-                    ],
-                  ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: sectionDropDown(
+                            onChanged: (sectionSelection) {
+                              setState(() {
+                                selectedSection = sectionSelection as String?;
+                              });
+                              if (_dayController.text.isNotEmpty &&
+                                  selectedLevel != null &&
+                                  selectedSection != null) {
+                                viewmodel.fetchQuestions(
+                                  level: selectedLevel!,
+                                  section: selectedSection!,
+                                  day: _dayController.text,
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    if (viewmodel.questions.isNotEmpty)
+                      Expanded(
+                        // height: 300,
+                        child: ListView.builder(
+                          itemCount: viewmodel.questions.length,
+                          itemBuilder: (context, index) {
+                            return ListItemCard(
+                              mainText:
+                                  "${viewmodel.questions[index].questionType.toShortString()}",
+                              // info: ,
+                              actionIcon: Icons.arrow_forward_ios,
+                              // onTap: () {},
+                              // result:
+                            );
+                          },
+                        ),
+                      )
+
+                    // Container(
+                    //   color: Colors.red,
+                    //   height: MediaQuery.of(context).size.height * 0.5,
+                    //   child: PageView.builder(
+                    //     itemCount: viewmodel.questions.length,
+                    //     itemBuilder: (context, index) {
+                    //       final question = viewmodel.questions[index];
+                    //       return ListTile(
+                    //         title:
+                    //             Text(question.questionType.toShortString()),
+                    //         onTap: () {
+                    //           _showEditQuestionDialog(context, question);
+                    //         },
+                    //       );
+                    //     },
+                    //   ),
+                    // )
+                    else if (selectedLevel != null &&
+                        selectedSection != null &&
+                        _dayController.text.isNotEmpty)
+                      const Text("No questions found for the selected day."),
+                  ],
                 ),
               ),
             ),
@@ -312,4 +263,80 @@ class _EditQuestionState extends State<EditQuestion> {
       ),
     );
   }
+}
+
+Widget sectionDropDown({required onChanged}) {
+  return DropdownButtonFormField(
+    items: const [
+      DropdownMenuItem(
+        value: "reading",
+        child: Text("Reading"),
+      ),
+      DropdownMenuItem(
+        value: "listeningWriting",
+        child: Text("Writing & Listening"),
+      ),
+      DropdownMenuItem(
+        value: "vocabulary",
+        child: Text("Vocabulary"),
+      ),
+      DropdownMenuItem(
+        value: "grammar",
+        child: Text("Grammar"),
+      ),
+    ],
+    onChanged: (sectionSelection) {
+      onChanged(sectionSelection);
+    },
+    decoration: const InputDecoration(
+      labelText: "Section",
+      hintText: "Select section",
+      border: OutlineInputBorder(),
+    ),
+    validator: (value) {
+      if (value == null) {
+        return 'Please select a section';
+      }
+      return null;
+    },
+  );
+}
+
+Widget levelsDropDown({required onChanged}) {
+  return DropdownButtonFormField(
+    decoration: const InputDecoration(
+      labelText: "Level",
+      hintText: "Select level",
+      border: OutlineInputBorder(),
+    ),
+    items: const [
+      DropdownMenuItem(
+        value: "A1",
+        child: Text("A1"),
+      ),
+      DropdownMenuItem(
+        value: "A2",
+        child: Text("A2"),
+      ),
+      DropdownMenuItem(
+        value: "B1",
+        child: Text("B1"),
+      ),
+      DropdownMenuItem(
+        value: "B2",
+        child: Text("B2"),
+      ),
+      DropdownMenuItem(
+        value: "C1",
+        child: Text("C1"),
+      ),
+      DropdownMenuItem(
+        value: "C2",
+        child: Text("C2"),
+      ),
+    ],
+    onChanged: (levelSelection) {
+      onChanged(levelSelection);
+    },
+  );
 }
