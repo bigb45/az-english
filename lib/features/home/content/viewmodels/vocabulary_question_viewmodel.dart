@@ -1,10 +1,10 @@
+import 'dart:io';
+
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 
 class VocabularyViewModel extends ChangeNotifier {
@@ -34,6 +34,7 @@ class VocabularyViewModel extends ChangeNotifier {
     required List<String>? exampleUsageInEnglish,
     required List<String>? exampleUsageInArabic,
   }) async {
+    // TODO: remove dead code
     if (englishWord == null) {
       return null;
     }

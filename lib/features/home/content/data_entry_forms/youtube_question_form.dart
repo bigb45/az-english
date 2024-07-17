@@ -1,5 +1,6 @@
 import 'package:ez_english/features/home/content/viewmodels/youtube_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -60,7 +61,7 @@ class YoutubeLessonForm extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                ElevatedButton(
+                Button(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       final question = await viewModel.submitForm(
@@ -91,7 +92,7 @@ class YoutubeLessonForm extends StatelessWidget {
                       print("Please fill all the required fields");
                     }
                   },
-                  child: const Text("Submit"),
+                  text: "Submit",
                 ),
               ],
             ),

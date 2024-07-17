@@ -1,9 +1,10 @@
+import 'dart:io';
+
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 class DictationQuestionViewModel extends ChangeNotifier {
   File? image;
@@ -44,6 +45,7 @@ class DictationQuestionViewModel extends ChangeNotifier {
     required String day,
     required DictationQuestionModel question,
   }) async {
+    print("Uploading question to firestore");
     _firestoreService.uploadQuestionToFirestore(
         day: day,
         level: level,
