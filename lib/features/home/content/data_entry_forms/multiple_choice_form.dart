@@ -8,7 +8,9 @@ import 'package:ez_english/features/sections/models/multiple_choice_question_mod
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
+import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +38,7 @@ class MultipleChoiceForm extends StatefulWidget {
 class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
   final _formKey = GlobalKey<FormState>();
 
+  bool isSubformValid = false;
   bool isFormValid = false;
   void _validateForm() {
     setState(() {
@@ -57,9 +60,10 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
 
   final TextEditingController titleInEnglishController =
       TextEditingController();
-
+  late List<RadioItemData>? options;
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     if (widget.question != null) {
       // Pre-fill the form fields with existing question data
       questionEnglishController.text =
@@ -71,15 +75,20 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
       questionSentenceArabicController.text =
           widget.question!.questionSentenceInArabic ?? '';
       titleInEnglishController.text = widget.question!.titleInEnglish ?? '';
+      options = widget.question!.options;
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => MultipleChoiceViewModel(),
       child: Consumer<MultipleChoiceViewModel>(
-        builder: (context, viewModel, child) {
-          if (widget.question != null && viewModel.answers.isEmpty) {
+        builder: (context, viewmodel, child) {
+          if (widget.question != null && viewmodel.shouldSetOptions) {
             // Pre-fill the answers and selected answer
-            viewModel.updateAnswerInEditMode(
+            print("${options?.map((option) => option.title)}");
+            viewmodel.updateAnswerInEditMode(
                 widget.question!.options, widget.question!.answer!.answer!);
           }
 
@@ -190,7 +199,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                 //   ),
                 // ),
                 GestureDetector(
-                  onTap: viewModel.pickImage,
+                  onTap: viewmodel.pickImage,
                   child: Stack(
                     children: [
                       DottedBorder(
@@ -203,8 +212,8 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                             color: Color.fromARGB(255, 216, 243, 255),
                           ),
                           child: Center(
-                            child: viewModel.image != null
-                                ? Image.file(viewModel.image!)
+                            child: viewmodel.image != null
+                                ? Image.file(viewmodel.image!)
                                 : (widget.question != null &&
                                         widget.question!.imageUrl != null
                                     ? CachedNetworkImage(
@@ -228,7 +237,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                             color: Colors.red,
                           ),
                           onPressed: () {
-                            viewModel.removeImage();
+                            viewmodel.removeImage();
                           },
                         ),
                       ),
@@ -237,17 +246,23 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                 ),
                 const SizedBox(height: 10),
                 RadioGroupForm(
-                  onChanged: (newSelection) {
-                    viewModel.selectedAnswer = newSelection;
+                  onFormChanged: (isNewFormValid) {
+                    isSubformValid = isNewFormValid;
                   },
-                  onAnswerUpdated: viewModel.updateAnswer,
-                  onDeleteItem: viewModel.deleteAnswer,
-                  options: viewModel.answers,
-                  selectedOption: viewModel.selectedAnswer,
+                  onSelectionChanged: (newSelection) {
+                    viewmodel.setSelectedAnswer(newSelection);
+                  },
+                  onAnswerUpdated: viewmodel.updateAnswer,
+                  onDeleteItem: viewmodel.deleteAnswer,
+                  options: viewmodel.answers,
+                  selectedOption: viewmodel.selectedAnswer,
                 ),
-                viewModel.answerCount < viewModel.maxAnswers
+                viewmodel.answerCount < viewmodel.maxAnswers
                     ? GestureDetector(
-                        onTap: viewModel.addAnswer,
+                        onTap: () {
+                          viewmodel.addAnswer();
+                          isSubformValid = false;
+                        },
                         child: DottedBorder(
                           color: Palette.primaryVariant,
                           strokeWidth: 1,
@@ -280,10 +295,10 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                     : const SizedBox(),
                 const SizedBox(height: 10),
                 Button(
-                  onPressed: isFormValid
+                  onPressed: isFormValid && isSubformValid
                       ? () {
                           if (_formKey.currentState!.validate()) {
-                            viewModel
+                            viewmodel
                                 .submitForm(
                                     questionTextInEnglish: questionEnglishController
                                             .text
@@ -329,7 +344,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                                 } else {
                                   showConfirmSubmitModalSheet(
                                       context: context,
-                                      onSubmit: viewModel.uploadQuestion(
+                                      onSubmit: viewmodel.uploadQuestion(
                                         level: widget.levelName,
                                         section: widget.sectionName,
                                         day: widget.dayNumber,
@@ -341,6 +356,9 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                               }
                             });
                           } else {
+                            Utils.showSnackBar(
+                              "Please select an answer as the correct answer.",
+                            );
                             print("Form validation failed.");
                           }
                         }
