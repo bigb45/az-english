@@ -1,11 +1,11 @@
+import 'dart:io';
+
+import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
-import 'package:ez_english/core/firebase/firestore_service.dart';
 
 class FillTheBlanksViewModel extends ChangeNotifier {
   File? image;
@@ -48,7 +48,7 @@ class FillTheBlanksViewModel extends ChangeNotifier {
     required FillTheBlanksQuestionModel question,
   }) async {
     try {
-      _firestoreService.uploadQuestionToFirestore(
+      await _firestoreService.uploadQuestionToFirestore(
           day: day,
           level: level,
           section: section,

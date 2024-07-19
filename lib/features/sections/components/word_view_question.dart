@@ -3,10 +3,8 @@ import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/vocabulary/viewmodel/vocabulary_section_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
-import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/audio_control_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
@@ -63,7 +61,7 @@ class _WordViewQuestionState extends State<WordViewQuestion> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: Constants.padding30),
                 child: Text(
-                  "${widget.wordData.questionTextInEnglish}",
+                  "${widget.wordData.questionTextInEnglish ?? ""}",
                   style: TextStyles.practiceCardSecondaryText.copyWith(
                     color: Palette.primaryText,
                     fontSize: 24.sp,

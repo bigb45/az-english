@@ -38,6 +38,7 @@ class DictationQuestionViewModel extends ChangeNotifier {
           // Update Firestore with the new URL
 
           // Split the path into segments
+          // TODO: fix audio playing issue in add question preview
           List<String> pathSegments = question.path!.split('/');
 
           // Get the document path and the field path

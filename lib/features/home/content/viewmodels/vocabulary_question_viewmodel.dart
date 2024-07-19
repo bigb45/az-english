@@ -33,19 +33,16 @@ class VocabularyViewModel extends ChangeNotifier {
     required WordType type,
     required List<String>? exampleUsageInEnglish,
     required List<String>? exampleUsageInArabic,
+    required String? questionTextInEnglish,
   }) async {
-    // TODO: remove dead code
-    if (englishWord == null) {
-      return null;
-    }
-
     return WordDefinition(
-      englishWord: englishWord,
+      englishWord: englishWord!,
       arabicWord: arabicWord,
       type: type,
       exampleUsageInEnglish: exampleUsageInEnglish,
       exampleUsageInArabic: exampleUsageInArabic,
       questionType: QuestionType.vocabulary,
+      questionTextInEnglish: questionTextInEnglish,
     );
   }
 
@@ -56,7 +53,7 @@ class VocabularyViewModel extends ChangeNotifier {
     required WordDefinition question,
   }) async {
     try {
-      _firestoreService.uploadQuestionToFirestore(
+      await _firestoreService.uploadQuestionToFirestore(
           day: day,
           level: level,
           section: section,
