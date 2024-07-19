@@ -130,7 +130,17 @@ class _EditQuestionState extends State<EditQuestion> {
                                   "${viewmodel.questions[index].questionType.toShortString()}",
                               // info: ,
                               actionIcon: Icons.arrow_forward_ios,
-                              // onTap: () {},
+                              onTap: () {
+                                _showEditQuestionDialog(
+                                  context,
+                                  viewmodel.questions[index],
+                                );
+                                // Navigator.pushNamed(
+                                //   context,
+                                //   Routes.editQuestion,
+                                //   arguments: viewmodel.questions[index],
+                                //
+                              },
                               // result:
                             );
                           },
