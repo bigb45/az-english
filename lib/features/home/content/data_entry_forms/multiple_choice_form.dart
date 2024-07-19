@@ -344,19 +344,27 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                                 } else {
                                   showConfirmSubmitModalSheet(
                                       context: context,
-                                      onSubmit: viewmodel.uploadQuestion(
-                                        level: widget.levelName,
-                                        section: widget.sectionName,
-                                        day: widget.dayNumber,
-                                        question: updatedQuestion,
-                                      ),
+                                      onSubmit: () {
+                                        viewmodel
+                                            .uploadQuestion(
+                                          level: widget.levelName,
+                                          section: widget.sectionName,
+                                          day: widget.dayNumber,
+                                          question: updatedQuestion,
+                                        )
+                                            .then((_) {
+                                          Utils.showSnackbar(
+                                            text: "Question added successfully",
+                                          );
+                                        });
+                                      },
                                       question: updatedQuestion);
                                   // TODO: reflect changes in the UI using snackbar
                                 }
                               }
                             });
                           } else {
-                            Utils.showSnackBar(
+                            Utils.showErrorSnackBar(
                               "Please select an answer as the correct answer.",
                             );
                             print("Form validation failed.");

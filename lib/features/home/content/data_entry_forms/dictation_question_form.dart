@@ -4,6 +4,7 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/util/build_question.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -130,12 +131,17 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                             showConfirmSubmitModalSheet(
                                 context: context,
                                 onSubmit: () {
-                                  viewModel.uploadQuestion(
-                                      level: widget.level,
-                                      section: widget.section,
-                                      day: widget.day,
-                                      // Add question to the onSubmit function
-                                      question: question!);
+                                  viewModel
+                                      .uploadQuestion(
+                                          level: widget.level,
+                                          section: widget.section,
+                                          day: widget.day,
+                                          // Add question to the onSubmit function
+                                          question: question!)
+                                      .then((_) {
+                                    Utils.showSnackbar(
+                                        text: "Question uploaded successfully");
+                                  });
                                   if (widget.onSubmit != null) {
                                     widget.onSubmit!(question);
                                   }
@@ -183,8 +189,8 @@ void showConfirmSubmitModalSheet<BaseQuestion>(
                     ),
                     Button(
                       onPressed: () {
-                        print("submitting question");
                         onSubmit();
+                        print("submitting question");
                         Navigator.pop(context);
                       },
                       text: "Submit",

@@ -1,5 +1,6 @@
 import 'package:ez_english/features/home/content/viewmodels/youtube_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,7 @@ class YoutubeLessonForm extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => YoutubeLessonViewModel(),
       child: Consumer<YoutubeLessonViewModel>(
-        builder: (context, viewModel, child) {
+        builder: (context, viewmodel, child) {
           return Form(
             key: _formKey,
             child: Column(
@@ -64,7 +65,7 @@ class YoutubeLessonForm extends StatelessWidget {
                 Button(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      final question = await viewModel.submitForm(
+                      final question = await viewmodel.submitForm(
                         youtubeUrl: youtubeUrlController.text.trim().isEmpty
                             ? null
                             : youtubeUrlController.text.trim(),
@@ -77,19 +78,26 @@ class YoutubeLessonForm extends StatelessWidget {
                         if (onSubmit != null) {
                           onSubmit!(question);
                         } else {
-                          await viewModel.uploadQuestion(
+                          await viewmodel.uploadQuestion(
                             level: level,
                             section: section,
                             day: day,
                             question: question,
                           );
                         }
-                        print("Question added to Firebase");
+                        Utils.showSnackbar(
+                          text: "Question added successfully",
+                        );
+                        _formKey.currentState!.reset();
                       } else {
-                        print("Form validation failed.");
+                        Utils.showSnackbar(
+                          text: "Please check all the fields before submitting",
+                        );
                       }
                     } else {
-                      print("Please fill all the required fields");
+                      Utils.showSnackbar(
+                        text: "An error occurred while uploading the question",
+                      );
                     }
                   },
                   text: "Submit",
