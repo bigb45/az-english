@@ -8,18 +8,21 @@ import 'package:ez_english/widgets/radio_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class MultipleChoiceViewModel extends ChangeNotifier {
   final PermissionHandlerService _permissionHandlerService =
       PermissionHandlerService();
   File? _image;
   File? get image => _image;
-  FirestoreService _firestoreService = FirestoreService();
-  List<RadioItemData> answers = [RadioItemData(title: "", value: "")];
-  RadioItemData? selectedAnswer;
-  int maxAnswers = 5;
+  final FirestoreService _firestoreService = FirestoreService();
+  List<RadioItemData> answers = [RadioItemData(title: "", value: "0")];
+  RadioItemData _selectedAnswer = RadioItemData(title: "", value: "0");
+  RadioItemData get selectedAnswer => _selectedAnswer;
+  bool shouldSetOptions = true;
+  final int maxAnswers = 5;
   int answerCount = 1;
-
+  final idGenerator = const Uuid();
   Future<void> pickImage() async {
     print("Picking image");
     bool hasPermission =
@@ -57,25 +60,24 @@ class MultipleChoiceViewModel extends ChangeNotifier {
   void updateAnswerInEditMode(
       List<RadioItemData> options, RadioItemData answer) {
     answers = options;
-    selectedAnswer = answer;
+    _selectedAnswer = answer;
+    shouldSetOptions = false;
     notifyListeners();
   }
 
-  bool validateOptions() {
-    for (var option in answers) {
-      if (option.title.isEmpty) {
-        return false;
-      }
-    }
-    return true;
+  void setSelectedAnswer(RadioItemData newAnswer) {
+    _selectedAnswer = newAnswer;
+    notifyListeners();
   }
 
   void updateAnswer(String newAnswer, RadioItemData option) {
     int index = answers.indexOf(option);
     if (index != -1) {
-      answers[index] = RadioItemData(title: newAnswer, value: newAnswer);
+      answers[index].title = newAnswer;
+      // answers[index].value = (index + 1).toString();
       for (var answer in answers) {
-        print("${answer.title}, ${answer.value}");
+        print(
+            "updating answer, title: ${answer.title}, value: ${answer.value}");
       }
       notifyListeners();
     }
@@ -83,8 +85,7 @@ class MultipleChoiceViewModel extends ChangeNotifier {
 
   void addAnswer() {
     if (answers.length < maxAnswers) {
-      answers
-          .add(RadioItemData(title: "terst", value: "${answers.length - 1}"));
+      answers.add(RadioItemData(title: "", value: idGenerator.v4()));
       answerCount++;
       notifyListeners();
     }
@@ -95,7 +96,7 @@ class MultipleChoiceViewModel extends ChangeNotifier {
       answers.remove(option);
       answerCount--;
       for (var answer in answers) {
-        print("${answer.title}, ${answer.value}");
+        print("title: ${answer.title}, value: ${answer.value}");
       }
       notifyListeners();
     }
@@ -109,9 +110,7 @@ class MultipleChoiceViewModel extends ChangeNotifier {
     required String? titleInEnglish,
     required String? imageUrlInEditMode,
   }) async {
-    if (selectedAnswer != null &&
-        validateOptions() &&
-        questionTextInEnglish != null) {
+    if (selectedAnswer != null && questionTextInEnglish != null) {
       String? imageUrl;
       if (_image != null) {
         imageUrl = await uploadImageAndGetUrl(
