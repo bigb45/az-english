@@ -18,7 +18,6 @@ import 'package:ez_english/features/sections/models/speaking_question_model.dart
 import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
-import 'package:ez_english/features/sections/vocabulary/word_view.dart';
 import 'package:flutter/material.dart';
 
 Widget buildQuestion({
@@ -77,6 +76,7 @@ Widget buildQuestion({
         ),
       );
     case QuestionType.vocabularyWithListening:
+    case QuestionType.vocabulary:
       return WordViewQuestion(wordData: question as WordDefinition);
     case QuestionType.fillTheBlanks:
       return FillTheBlanksQuestion(
