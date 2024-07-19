@@ -9,12 +9,24 @@ import 'package:just_audio/just_audio.dart';
 
 class Utils {
   static final messengerKey = GlobalKey<ScaffoldMessengerState>();
-  static showSnackBar(String? text) {
-    if (text == null) return;
+  static showErrorSnackBar(String? errorText) {
+    if (errorText == null) return;
 
     final snackBar = SnackBar(
-      content: Text(text),
+      content: Text(errorText),
       backgroundColor: Colors.red,
+    );
+    messengerKey.currentState!
+      ..removeCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
+  static showSnackbar({required String text, Color? color}) {
+    final snackBar = SnackBar(
+      content: Text(
+        text,
+      ),
+      backgroundColor: color ?? Colors.black,
     );
     messengerKey.currentState!
       ..removeCurrentSnackBar()

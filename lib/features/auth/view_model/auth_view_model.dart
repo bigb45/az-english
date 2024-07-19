@@ -159,7 +159,7 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   void _handleError(String e) {
-    Utils.showSnackBar(e);
+    Utils.showErrorSnackBar(e);
     errorOccurred = true;
     navigatorKey.currentState!.pop();
   }
