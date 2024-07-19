@@ -58,14 +58,14 @@ class _RadioGroupState extends State<RadioGroup> {
 }
 
 class RadioItemData {
-  final String title;
-  final String value;
+  String title;
+  String value;
 
   RadioItemData({required this.title, required this.value});
 
   @override
   bool operator ==(Object other) {
-    if (identical(this, other)) return true;
+    // if (identical(this, other)) return true;
 
     return other is RadioItemData &&
         other.title == title &&
