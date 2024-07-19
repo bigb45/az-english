@@ -2,6 +2,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/dictation_ques
 import 'package:ez_english/features/home/content/viewmodels/vocabulary_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
 
   final TextEditingController exampleUsageInArabicController =
       TextEditingController();
-
+  final TextEditingController questionTitleController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -54,6 +55,15 @@ class _VocabularyFormState extends State<VocabularyForm> {
             key: _formKey,
             child: Column(
               children: [
+                TextFormField(
+                  controller: questionTitleController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Word title",
+                    hintText: "Ex: \"Everyday Greetings\"",
+                  ),
+                ),
+                const SizedBox(height: 10),
                 TextFormField(
                   controller: englishWordController,
                   decoration: const InputDecoration(
@@ -167,6 +177,10 @@ class _VocabularyFormState extends State<VocabularyForm> {
                                           exampleUsageInArabicController.text
                                               .trim()
                                         ],
+                              questionTextInEnglish:
+                                  questionTitleController.text.trim().isEmpty
+                                      ? null
+                                      : questionTitleController.text.trim(),
                             );
                             if (question != null) {
                               if (widget.onSubmit != null) {
@@ -174,22 +188,29 @@ class _VocabularyFormState extends State<VocabularyForm> {
                               } else {
                                 showConfirmSubmitModalSheet(
                                   context: context,
-                                  onSubmit: () {
-                                    viewModel.uploadQuestion(
+                                  onSubmit: () async {
+                                    await viewModel.uploadQuestion(
                                       level: widget.level,
                                       section: widget.section,
                                       day: widget.day,
                                       question: question,
                                     );
+                                    Utils.showSnackbar(
+                                        text: "Question added successfully");
+                                    print(_formKey);
+                                    _formKey.currentState!.reset();
+                                    print(_formKey);
                                   },
                                   question: question,
                                 );
                               }
                             } else {
-                              print("Form validation failed.");
+                              Utils.showErrorSnackBar(
+                                  "Please check all the fields before submitting");
                             }
                           } else {
-                            print("Please fill all the required fields");
+                            Utils.showErrorSnackBar(
+                                "Check all the fields before submitting");
                           }
                         }
                       : null,
