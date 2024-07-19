@@ -113,7 +113,7 @@ class LevelSelectionViewmodel extends BaseViewModel {
   FutureOr<void> init() {}
 
   void _handleError(String e) {
-    Utils.showSnackBar(e);
+    Utils.showErrorSnackBar(e);
     // errorOccurred = true;
     // navigatorKey.currentState!.pop();
   }
