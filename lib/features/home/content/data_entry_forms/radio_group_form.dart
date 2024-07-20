@@ -32,7 +32,7 @@ class _RadioGroupFormState extends State<RadioGroupForm> {
   @override
   void initState() {
     super.initState();
-    selectedOption = widget.options[0];
+    selectedOption = widget.selectedOption ?? widget.options.first;
   }
 
   @override

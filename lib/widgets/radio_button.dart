@@ -62,14 +62,15 @@ class RadioItemData {
   String value;
 
   RadioItemData({required this.title, required this.value});
+  RadioItemData.copy(RadioItemData source)
+      : title = source.title,
+        value = source.value;
 
   @override
   bool operator ==(Object other) {
     // if (identical(this, other)) return true;
 
-    return other is RadioItemData &&
-        other.title == title &&
-        other.value == value;
+    return other is RadioItemData && other.title == title;
   }
 
   @override

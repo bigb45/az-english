@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
@@ -48,6 +50,15 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
   late String originalQuestionSentenceInArabic;
   late String originalTitleInEnglish;
   List<RadioItemData>? originalOptions;
+  late RadioItemData originalAnswer;
+
+  File? currentImage;
+  File? originalImage;
+
+  String? currentImageURL;
+  String? originalImageURL;
+
+  String? updateMessage;
 
   final TextEditingController questionEnglishController =
       TextEditingController();
@@ -60,7 +71,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
   final TextEditingController titleInEnglishController =
       TextEditingController();
   late List<RadioItemData>? options;
-
+  late RadioItemData answer;
   @override
   void initState() {
     super.initState();
@@ -76,7 +87,6 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
       questionSentenceArabicController.text =
           widget.question!.questionSentenceInArabic ?? '';
       titleInEnglishController.text = widget.question!.titleInEnglish ?? '';
-      options = widget.question!.options;
       originalQuestionTextInEnglish =
           widget.question!.questionTextInEnglish ?? '';
       originalQuestionTextInArabic =
@@ -86,22 +96,35 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
       originalQuestionSentenceInArabic =
           widget.question!.questionSentenceInArabic ?? '';
       originalTitleInEnglish = widget.question!.titleInEnglish ?? '';
-      originalOptions = _deepCopyOptions(widget.question!.options);
+      originalOptions = widget.question?.options
+              .map((option) => RadioItemData.copy(option))
+              .toList() ??
+          [];
+      options = widget.question?.options
+              .map((option) => RadioItemData.copy(option))
+              .toList() ??
+          [];
+      originalAnswer = RadioItemData.copy(widget.question!.answer!.answer!);
+      answer = RadioItemData.copy(widget.question!.answer!.answer!);
+      originalImageURL = widget.question!.imageUrl;
+      currentImageURL = widget.question!.imageUrl;
     } else {
       options = [];
     }
 
-    // Validate the form on initialization to set the initial state of isFormValid and isSubformValid
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _validateForm();
     });
   }
 
-  List<RadioItemData> _deepCopyOptions(List<RadioItemData> options) {
-    return options
-        .map(
-            (option) => RadioItemData(title: option.title, value: option.value))
-        .toList();
+  @override
+  void dispose() {
+    questionEnglishController.dispose();
+    questionArabicController.dispose();
+    questionSentenceEnglishController.dispose();
+    questionSentenceArabicController.dispose();
+    titleInEnglishController.dispose();
+    super.dispose();
   }
 
   void _validateForm() {
@@ -113,6 +136,9 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
       isSubformValid = widget.question != null
           ? widget.question!.options.isNotEmpty
           : isSubformValid;
+      if (changesMade) {
+        updateMessage = null;
+      }
     });
   }
 
@@ -124,7 +150,10 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
         questionSentenceArabicController.text !=
             originalQuestionSentenceInArabic ||
         titleInEnglishController.text != originalTitleInEnglish ||
-        !listEquals(options, originalOptions);
+        !listEquals(options, originalOptions) ||
+        answer != originalAnswer ||
+        currentImage != originalImage ||
+        currentImageURL != originalImageURL;
   }
 
   @override
@@ -135,7 +164,10 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
         builder: (context, viewmodel, child) {
           if (widget.question != null && viewmodel.shouldSetOptions) {
             viewmodel.updateAnswerInEditMode(
-                widget.question!.options, widget.question!.answer!.answer!);
+                widget.question!.options
+                    .map((option) => RadioItemData.copy(option))
+                    .toList(),
+                RadioItemData.copy(widget.question!.answer!.answer!));
           }
 
           return Form(
@@ -203,7 +235,13 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                 ),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: viewmodel.pickImage,
+                  onTap: () {
+                    setState(() async {
+                      await viewmodel.pickImage();
+                      currentImage = viewmodel.image;
+                      _validateForm();
+                    });
+                  },
                   child: Stack(
                     children: [
                       DottedBorder(
@@ -243,8 +281,12 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                               color: Colors.red,
                             ),
                             onPressed: () {
-                              viewmodel.removeImage();
-                              _validateForm();
+                              setState(() {
+                                viewmodel.removeImage();
+                                currentImage = null;
+                                currentImageURL = null;
+                                _validateForm();
+                              });
                             },
                           ),
                         ),
@@ -261,10 +303,17 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                   },
                   onSelectionChanged: (newSelection) {
                     viewmodel.setSelectedAnswer(newSelection);
+                    setState(() {
+                      answer = newSelection;
+                    });
+
                     _validateForm();
                   },
                   onAnswerUpdated: (newAnswer, option) {
                     viewmodel.updateAnswer(newAnswer, option);
+                    setState(() {
+                      answer.title = newAnswer;
+                    });
                     _validateForm();
                   },
                   onDeleteItem: (option) {
@@ -314,88 +363,126 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                       )
                     : const SizedBox(),
                 const SizedBox(height: 10),
-                Button(
-                  onPressed: isFormValid && isSubformValid
-                      ? () {
-                          if (_formKey.currentState!.validate()) {
-                            viewmodel
-                                .submitForm(
-                                    questionTextInEnglish: questionEnglishController
-                                            .text
-                                            .trim()
-                                            .isEmpty
-                                        ? null
-                                        : questionEnglishController.text.trim(),
-                                    questionTextInArabic: questionArabicController
-                                            .text
-                                            .trim()
-                                            .isEmpty
-                                        ? null
-                                        : questionArabicController.text.trim(),
-                                    questionSentenceInEnglish:
-                                        questionSentenceEnglishController.text
-                                                .trim()
-                                                .isEmpty
-                                            ? null
-                                            : questionSentenceEnglishController
-                                                .text
-                                                .trim(),
-                                    questionSentenceInArabic:
-                                        questionSentenceArabicController.text
-                                                .trim()
-                                                .isEmpty
-                                            ? null
-                                            : questionSentenceArabicController.text
-                                                .trim(),
-                                    titleInEnglish: titleInEnglishController
-                                            .text
-                                            .trim()
-                                            .isEmpty
-                                        ? null
-                                        : titleInEnglishController.text.trim(),
-                                    imageUrlInEditMode:
-                                        widget.question?.imageUrl)
-                                .then((updatedQuestion) {
-                              if (updatedQuestion != null) {
-                                if (widget.onSubmit != null) {
-                                  updatedQuestion.path =
-                                      widget.question?.path ?? '';
-                                  widget.onSubmit!(updatedQuestion);
-                                } else {
-                                  showConfirmSubmitModalSheet(
-                                      context: context,
-                                      onSubmit: () {
-                                        viewmodel
-                                            .uploadQuestion(
-                                          level: widget.levelName,
-                                          section: widget.sectionName,
-                                          day: widget.dayNumber,
-                                          question: updatedQuestion,
-                                        )
-                                            .then((_) {
-                                          Utils.showSnackbar(
-                                            text: "Question added successfully",
-                                          );
-                                        });
-                                      },
-                                      question: updatedQuestion);
-                                }
-                              }
-                            });
-                          } else {
-                            Utils.showErrorSnackBar(
-                              "Please select an answer as the correct answer.",
-                            );
-                          }
-                        }
-                      : null,
-                  text: widget.question == null ? "Submit" : "Update",
-                ),
+                _updateButton(viewmodel),
               ],
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget _updateButton(MultipleChoiceViewModel viewmodel) {
+    // Determine if the button should be enabled
+
+    bool isEnabled = isFormValid && isSubformValid;
+
+    return Column(
+      children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Button(
+              onPressed: isEnabled
+                  ? () {
+                      if (_formKey.currentState!.validate()) {
+                        viewmodel
+                            .submitForm(
+                                questionTextInEnglish: questionEnglishController
+                                        .text
+                                        .trim()
+                                        .isEmpty
+                                    ? null
+                                    : questionEnglishController.text.trim(),
+                                questionTextInArabic: questionArabicController
+                                        .text
+                                        .trim()
+                                        .isEmpty
+                                    ? null
+                                    : questionArabicController.text.trim(),
+                                questionSentenceInEnglish:
+                                    questionSentenceEnglishController.text
+                                            .trim()
+                                            .isEmpty
+                                        ? null
+                                        : questionSentenceEnglishController
+                                            .text
+                                            .trim(),
+                                questionSentenceInArabic:
+                                    questionSentenceArabicController.text
+                                            .trim()
+                                            .isEmpty
+                                        ? null
+                                        : questionSentenceArabicController.text
+                                            .trim(),
+                                titleInEnglish:
+                                    titleInEnglishController.text.trim().isEmpty
+                                        ? null
+                                        : titleInEnglishController.text.trim(),
+                                imageUrlInEditMode: widget.question?.imageUrl)
+                            .then((updatedQuestion) {
+                          if (updatedQuestion != null) {
+                            if (widget.onSubmit != null) {
+                              updatedQuestion.path =
+                                  widget.question?.path ?? '';
+                              widget.onSubmit!(updatedQuestion);
+                            } else {
+                              showConfirmSubmitModalSheet(
+                                  context: context,
+                                  onSubmit: () {
+                                    viewmodel
+                                        .uploadQuestion(
+                                      level: widget.levelName,
+                                      section: widget.sectionName,
+                                      day: widget.dayNumber,
+                                      question: updatedQuestion,
+                                    )
+                                        .then((_) {
+                                      Utils.showSnackbar(
+                                        text: "Question added successfully",
+                                      );
+                                    });
+                                  },
+                                  question: updatedQuestion);
+                            }
+                          }
+                        });
+                      } else {
+                        Utils.showErrorSnackBar(
+                          "Please select an answer as the correct answer.",
+                        );
+                      }
+                    }
+                  : null,
+              text: "Update",
+            ),
+            if (!isEnabled)
+              Positioned.fill(
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: isEnabled
+                        ? null
+                        : () {
+                            setState(() {
+                              updateMessage =
+                                  "Please make changes to enable the update.";
+                            });
+                          },
+                  ),
+                ),
+              ),
+          ],
+        ),
+        if (updateMessage != null) // Display the message if it's not null
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              updateMessage!,
+              style: TextStyle(color: Colors.red, fontSize: 16),
+            ),
+          ),
+      ],
     );
   }
 }
