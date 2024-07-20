@@ -10,7 +10,7 @@ class DictationQuestionModel extends BaseQuestion<String> {
   DictationQuestionModel({
     // required this.answer,
     required super.answer,
-    required super.voiceUrl,
+    super.voiceUrl,
     required this.speakableText,
     required super.questionTextInArabic,
     required super.questionTextInEnglish,

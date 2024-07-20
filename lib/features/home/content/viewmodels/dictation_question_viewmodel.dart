@@ -32,7 +32,6 @@ class DictationQuestionViewModel extends ChangeNotifier {
       questionTextInEnglish: questionTextInEnglish,
       questionTextInArabic: questionTextInArabic ?? '',
       imageUrl: null,
-      voiceUrl: '', // Add logic to handle voiceUrl if necessary
       speakableText: speakableText,
       answer: StringAnswer(answer: speakableText),
       titleInEnglish: titleInEnglish,

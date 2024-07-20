@@ -35,30 +35,31 @@ class DictationQuestionViewModel extends ChangeNotifier {
           // Upload audio to Firebase Storage
           String audioUrl = await _firebaseService.uploadAudioToFirebase(
               bytes, question.speakableText);
+          question.voiceUrl = audioUrl;
           // Update Firestore with the new URL
 
           // Split the path into segments
-          // TODO: fix audio playing issue in add question preview
-          List<String> pathSegments = question.path!.split('/');
+          if (question.path != null && question.path!.isNotEmpty) {
+            List<String> pathSegments = question.path!.split('/');
 
-          // Get the document path and the field path
-          String docPath =
-              pathSegments.sublist(0, pathSegments.length - 2).join('/');
-          String fieldIndex = pathSegments[pathSegments.length - 1];
-          String questionField = pathSegments[pathSegments.length - 2];
+            // Get the document path and the field path
+            String docPath =
+                pathSegments.sublist(0, pathSegments.length - 2).join('/');
+            String fieldIndex = pathSegments[pathSegments.length - 1];
+            String questionField = pathSegments[pathSegments.length - 2];
 
-          // Create the FieldPath for the specific field
-          FieldPath questionFiel = FieldPath([questionField, fieldIndex]);
+            // Create the FieldPath for the specific field
+            FieldPath questionFiel = FieldPath([questionField, fieldIndex]);
 
-          // Get the document reference
-          DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
-          question.voiceUrl = audioUrl;
-          // Update the specific field
-          await _firestoreService
-              .updateQuestionUsingFieldPath<Map<String, dynamic>>(
-                  docPath: docRef,
-                  fieldPath: questionFiel,
-                  newValue: question.toMap());
+            // Get the document reference
+            DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
+            // Update the specific field
+            await _firestoreService
+                .updateQuestionUsingFieldPath<Map<String, dynamic>>(
+                    docPath: docRef,
+                    fieldPath: questionFiel,
+                    newValue: question.toMap());
+          }
           return audioUrl;
         } else {
           throw Exception(
