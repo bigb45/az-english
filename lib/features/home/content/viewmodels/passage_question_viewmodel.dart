@@ -12,7 +12,6 @@ class PassageViewModel extends ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
   final Uuid uuid = Uuid();
   List<BaseQuestion<dynamic>> questions = [];
-  QuestionType? _selectedQuestionType;
 
   Future<void> pickImage() async {
     final pickedFile =
@@ -28,7 +27,7 @@ class PassageViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  PassageQuestionModel? submitForm({
+  PassageQuestionModel submitForm({
     required String passageInEnglish,
     required String passageInArabic,
     required String titleInEnglish,
@@ -36,10 +35,6 @@ class PassageViewModel extends ChangeNotifier {
     required String questionTextInEnglish,
     required String questionTextInArabic,
   }) {
-    if (passageInEnglish.isEmpty || titleInEnglish.isEmpty) {
-      return null;
-    }
-
     return PassageQuestionModel(
       questions: questions,
       passageInEnglish: passageInEnglish,

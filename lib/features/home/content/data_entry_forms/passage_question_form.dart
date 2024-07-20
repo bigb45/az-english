@@ -5,7 +5,9 @@ import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_que
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/passage_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/resources/app_strings.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,12 +17,16 @@ class PassageForm extends StatefulWidget {
   final String level;
   final String section;
   final String day;
+  final Function(BaseQuestion<dynamic>)? onSubmit;
+  final PassageQuestionModel? question;
 
   PassageForm({
     super.key,
     required this.level,
     required this.section,
     required this.day,
+    this.onSubmit,
+    this.question,
   });
 
   @override
@@ -29,6 +35,7 @@ class PassageForm extends StatefulWidget {
 
 class _PassageFormState extends State<PassageForm> {
   final _formKey = GlobalKey<FormState>();
+  bool isFormValid = false;
 
   final TextEditingController passageInEnglishController =
       TextEditingController();
@@ -41,14 +48,78 @@ class _PassageFormState extends State<PassageForm> {
       TextEditingController();
   final TextEditingController questionTextInArabicController =
       TextEditingController();
+  String? updateMessage;
+
+  String? originalPassageInEnglish;
+  String? originalPassageInArabic;
+  String? originalTitleInEnglish;
+  String? originalTitleInArabic;
+  String? originalQuestionTextInEnglish;
+  String? originalQuestionTextInArabic;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.question != null) {
+      passageInEnglishController.text =
+          originalPassageInEnglish = widget.question!.passageInEnglish ?? "";
+      passageInArabicController.text =
+          originalPassageInArabic = widget.question!.passageInArabic ?? "";
+      titleInEnglishController.text =
+          originalTitleInEnglish = widget.question!.titleInEnglish ?? "";
+      titleInArabicController.text =
+          originalTitleInArabic = widget.question!.titleInArabic ?? "";
+      questionTextInEnglishController.text = originalQuestionTextInEnglish =
+          widget.question!.questionTextInEnglish ?? "";
+      questionTextInArabicController.text = originalQuestionTextInArabic =
+          widget.question!.questionTextInArabic ?? "";
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _validateForm();
+    });
+  }
+
+  void _validateForm() {
+    bool formValid = _formKey.currentState?.validate() ?? false;
+    bool changesMade = _checkForChanges();
+    setState(() {
+      isFormValid = formValid && (widget.question == null || changesMade);
+      if (changesMade) {
+        updateMessage = null;
+      }
+    });
+  }
+
+  bool _checkForChanges() {
+    return passageInEnglishController.text != originalPassageInEnglish ||
+        passageInArabicController.text != originalPassageInArabic ||
+        titleInEnglishController.text != originalTitleInEnglish ||
+        titleInEnglishController.text != originalTitleInEnglish ||
+        titleInArabicController.text != originalTitleInArabic ||
+        questionTextInEnglishController.text != originalQuestionTextInEnglish ||
+        questionTextInArabicController.text != originalQuestionTextInArabic;
+  }
+
+  @override
+  void dispose() {
+    passageInEnglishController.dispose();
+    passageInArabicController.dispose();
+    titleInEnglishController.dispose();
+    titleInArabicController.dispose();
+    questionTextInEnglishController.dispose();
+    questionTextInArabicController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => PassageViewModel(),
       child: Consumer<PassageViewModel>(
-        builder: (context, viewModel, child) {
+        builder: (context, viewmodel, child) {
           return Form(
+            onChanged: _validateForm,
             key: _formKey,
             child: SingleChildScrollView(
               child: Column(
@@ -125,57 +196,26 @@ class _PassageFormState extends State<PassageForm> {
                     ),
                   ),
                   const SizedBox(height: 10),
-
                   Button(
                     type: ButtonType.secondary,
                     onPressed: () {
-                      _showAddQuestionDialog(context, viewModel);
+                      if (_formKey.currentState!.validate())
+                        _showAddQuestionDialog(context, viewmodel);
                     },
                     text: "Add paragraph question",
                   ),
                   const SizedBox(height: 10),
                   ListView.builder(
                     shrinkWrap: true,
-                    itemCount: viewModel.questions.length,
+                    itemCount: viewmodel.questions.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(viewModel.questions[index].toString()),
+                        title: Text(viewmodel.questions[index].toString()),
                       );
                     },
                   ),
                   const SizedBox(height: 10),
-                  Button(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        final passage = viewModel.submitForm(
-                          passageInEnglish:
-                              passageInEnglishController.text.trim(),
-                          passageInArabic:
-                              passageInArabicController.text.trim(),
-                          titleInEnglish: titleInEnglishController.text.trim(),
-                          titleInArabic: titleInArabicController.text.trim(),
-                          questionTextInEnglish:
-                              questionTextInEnglishController.text.trim(),
-                          questionTextInArabic:
-                              questionTextInArabicController.text.trim(),
-                        );
-                        if (passage != null) {
-                          await viewModel.uploadQuestion(
-                            level: widget.level,
-                            section: widget.section,
-                            day: widget.day,
-                            question: passage,
-                          );
-                          print("Passage added to Firebase");
-                        } else {
-                          print("Form validation failed.");
-                        }
-                      } else {
-                        print("Please fill all the required fields");
-                      }
-                    },
-                    text: "Submit",
-                  ),
+                  _updateButton(viewmodel),
                   const SizedBox(height: 10),
                   // Adding embedded questions
                 ],
@@ -216,6 +256,92 @@ class _PassageFormState extends State<PassageForm> {
           ],
         );
       },
+    );
+  }
+
+  Widget _updateButton(PassageViewModel viewmodel) {
+    bool isEnabled = isFormValid;
+
+    return Column(
+      children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Button(
+              onPressed: isEnabled
+                  ? () {
+                      if (_formKey.currentState!.validate()) {
+                        final updatedQuestion = viewmodel.submitForm(
+                          passageInEnglish:
+                              passageInEnglishController.text.trim(),
+                          passageInArabic:
+                              passageInArabicController.text.trim(),
+                          titleInEnglish: titleInEnglishController.text.trim(),
+                          titleInArabic: titleInArabicController.text.trim(),
+                          questionTextInEnglish:
+                              questionTextInEnglishController.text.trim(),
+                          questionTextInArabic:
+                              questionTextInArabicController.text.trim(),
+                        );
+                        if (widget.onSubmit != null) {
+                          updatedQuestion.path = widget.question?.path ?? '';
+                          widget.onSubmit!(updatedQuestion);
+                        } else {
+                          showConfirmSubmitModalSheet(
+                              context: context,
+                              onSubmit: () {
+                                viewmodel
+                                    .uploadQuestion(
+                                        level: widget.level,
+                                        section: widget.section,
+                                        day: widget.day,
+                                        question: updatedQuestion)
+                                    .then((_) {
+                                  Utils.showSnackbar(
+                                      text: "Question uploaded successfully");
+                                });
+                                if (widget.onSubmit != null) {
+                                  widget.onSubmit!(updatedQuestion);
+                                }
+                              },
+                              question: updatedQuestion);
+                        }
+                      } else {
+                        Utils.showErrorSnackBar(
+                          "Please select an answer as the correct answer.",
+                        );
+                      }
+                    }
+                  : null,
+              text: "Update",
+            ),
+            if (!isEnabled)
+              Positioned.fill(
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: isEnabled
+                        ? null
+                        : () {
+                            setState(() {
+                              updateMessage =
+                                  "Please make changes to update the question.";
+                            });
+                          },
+                  ),
+                ),
+              ),
+          ],
+        ),
+        if (updateMessage != null)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              updateMessage!,
+              style: TextStyle(color: Colors.red, fontSize: 16),
+            ),
+          ),
+      ],
     );
   }
 }

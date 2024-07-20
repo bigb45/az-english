@@ -33,18 +33,19 @@ class _YoutubeLessonFormState extends State<YoutubeLessonForm> {
   final TextEditingController youtubeUrlController = TextEditingController();
   final TextEditingController titleInEnglishController =
       TextEditingController();
-  late String originalYoutubeUrl;
-  late String originalTitleInEnglish;
+  String? originalYoutubeUrl;
+  String? originalTitleInEnglish;
 
   String? updateMessage;
   @override
   void initState() {
     super.initState();
-    youtubeUrlController.text =
-        originalYoutubeUrl = widget.question!.youtubeUrl ?? "";
-    titleInEnglishController.text =
-        originalTitleInEnglish = widget.question?.titleInEnglish ?? "";
-
+    if (widget.question != null) {
+      youtubeUrlController.text =
+          originalYoutubeUrl = widget.question!.youtubeUrl ?? "";
+      titleInEnglishController.text =
+          originalTitleInEnglish = widget.question?.titleInEnglish ?? "";
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _validateForm();
     });
