@@ -6,6 +6,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/youtube_questi
 import 'package:ez_english/features/home/content/viewmodels/edit_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
+import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
@@ -269,7 +270,7 @@ class _EditQuestionState extends State<EditQuestion> {
                   viewModel.updateQuestion(updatedQuestion);
                   Navigator.of(context).pop();
                 },
-                // question: question as FillTheBlanksQuestionModel,
+                question: question as FillTheBlanksQuestionModel,
               );
             default:
               return const Text("Question type not supported.");

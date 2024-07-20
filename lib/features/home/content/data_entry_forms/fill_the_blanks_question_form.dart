@@ -3,8 +3,10 @@
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/fill_the_blanks_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,13 +17,14 @@ class FillTheBlanksForm extends StatefulWidget {
   final String section;
   final String day;
   final Function(BaseQuestion<dynamic>)? onSubmit;
-
+  final FillTheBlanksQuestionModel? question;
   FillTheBlanksForm({
     super.key,
     required this.level,
     required this.section,
     required this.day,
     this.onSubmit,
+    this.question,
   });
 
   @override
@@ -33,7 +36,9 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
   int englishBlankEnd = 0;
   int arabicBlankStart = 0;
   int arabicBlankEnd = 0;
+
   final _formKey = GlobalKey<FormState>();
+  bool isFormValid = false;
 
   final TextEditingController incompleteSentenceInEnglishController =
       TextEditingController();
@@ -46,6 +51,94 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
 
   final TextEditingController questionArabicController =
       TextEditingController();
+
+  late String originalIncompleteSentenceInEnglish;
+  late String originalIncompleteSentenceInArabic;
+  late String originalQuestionEnglish;
+  late String originalQuestionArabic;
+
+  late int originalEnglishBlankStart;
+  late int originalEnglishBlankEnd;
+  late int originalArabicBlankStart;
+  late int originalArabicBlankEnd;
+
+  String? updateMessage;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.question != null) {
+      int? startIndexOfEnglishWord =
+          widget.question!.incompleteSentenceInEnglish?.indexOf("_____");
+      if (startIndexOfEnglishWord != -1) {
+        englishBlankStart = originalEnglishBlankStart =
+            startIndexOfEnglishWord ?? englishBlankStart;
+        englishBlankEnd =
+            (startIndexOfEnglishWord ?? englishBlankEnd) + "_____".length;
+      }
+
+      final newText = widget.question!.incompleteSentenceInEnglish
+          ?.replaceRange(englishBlankStart, englishBlankEnd,
+              widget.question!.answer!.answer!);
+
+      englishBlankEnd = originalEnglishBlankEnd =
+          startIndexOfEnglishWord! + widget.question!.answer!.answer!.length;
+
+      // TODO: add the Arabic word with blank to the API
+      //       var startIndexOfArabicWord = widget.question!.incompleteSentenceInArabic
+      //     ?.indexOf(widget.question!.answer!.answer!);
+      // if (startIndexOfEnglishWord != -1) {
+      //   englishBlankStart = startIndexOfEnglishWord ?? englishBlankStart;
+      //   englishBlankEnd = (startIndexOfEnglishWord ?? englishBlankEnd) +
+      //       widget.question!.answer!.answer!.length;
+      // }
+
+      incompleteSentenceInEnglishController.text =
+          originalIncompleteSentenceInEnglish = newText ?? "";
+      incompleteSentenceInArabicController.text =
+          originalIncompleteSentenceInArabic =
+              widget.question!.incompleteSentenceInArabic ?? "";
+      questionEnglishController.text = originalQuestionEnglish =
+          widget.question!.questionTextInEnglish ?? "";
+      questionArabicController.text =
+          originalQuestionArabic = widget.question!.questionTextInArabic ?? "";
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _validateForm();
+    });
+  }
+
+  void _validateForm() {
+    bool formValid = _formKey.currentState?.validate() ?? false;
+    bool changesMade = _checkForChanges();
+    setState(() {
+      isFormValid = formValid && (widget.question == null || changesMade);
+      if (changesMade) {
+        updateMessage = null;
+      }
+    });
+  }
+
+  bool _checkForChanges() {
+    return questionEnglishController.text != originalQuestionEnglish ||
+        questionArabicController.text != originalQuestionArabic ||
+        incompleteSentenceInEnglishController.text !=
+            originalIncompleteSentenceInEnglish ||
+        incompleteSentenceInArabicController.text !=
+            originalIncompleteSentenceInArabic ||
+        englishBlankStart != originalEnglishBlankStart ||
+        englishBlankEnd != originalEnglishBlankEnd;
+  }
+
+  @override
+  void dispose() {
+    questionEnglishController.dispose();
+    questionArabicController.dispose();
+    incompleteSentenceInEnglishController.dispose();
+    incompleteSentenceInArabicController.dispose();
+    super.dispose();
+  }
 
   void insertBlank(TextEditingController controller,
       {bool isEnglishField = true}) {
@@ -71,6 +164,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
       child: Consumer<FillTheBlanksViewModel>(
         builder: (context, viewmodel, child) {
           return Form(
+            onChanged: _validateForm,
             key: _formKey,
             child: SingleChildScrollView(
               child: Column(
@@ -84,6 +178,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                         suffixIcon: TextButton(
                           onPressed: () {
                             insertBlank(incompleteSentenceInEnglishController);
+                            _validateForm();
                           },
                           child: const Text("Insert blank"),
                         )),
@@ -208,8 +303,27 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Button(
-                    onPressed: () async {
+                  _updateButton(viewmodel),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _updateButton(FillTheBlanksViewModel viewmodel) {
+    bool isEnabled = isFormValid;
+
+    return Column(
+      children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Button(
+              onPressed: isEnabled
+                  ? () {
                       if (_formKey.currentState!.validate()) {
                         final text =
                             incompleteSentenceInEnglishController.text.trim();
@@ -236,53 +350,72 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                                   ? null
                                   : questionArabicController.text.trim(),
                         )
-                            .then((question) {
-                          showConfirmSubmitModalSheet(
-                              context: context,
-                              onSubmit: () async {
-                                await viewmodel.uploadQuestion(
-                                  level: widget.level,
-                                  section: widget.section,
-                                  day: widget.day,
-                                  question: question!,
-                                );
-                              },
-                              question: question);
+                            .then((updatedQuestion) {
+                          if (updatedQuestion != null) {
+                            if (widget.onSubmit != null) {
+                              updatedQuestion.path =
+                                  widget.question?.path ?? '';
+                              widget.onSubmit!(updatedQuestion);
+                            } else {
+                              showConfirmSubmitModalSheet(
+                                  context: context,
+                                  onSubmit: () async {
+                                    await viewmodel
+                                        .uploadQuestion(
+                                      level: widget.level,
+                                      section: widget.section,
+                                      day: widget.day,
+                                      question: updatedQuestion,
+                                    )
+                                        .then((_) {
+                                      Utils.showSnackbar(
+                                          text:
+                                              "Question uploaded successfully");
+                                    });
+                                    if (widget.onSubmit != null) {
+                                      widget.onSubmit!(updatedQuestion);
+                                    }
+                                  },
+                                  question: updatedQuestion);
+                            }
+                          }
                         });
-                        // if (question != null) {
-                        // if (widget.onSubmit != null) {
-                        //   widget.onSubmit!(question);
-                        // }
-                        // else {
-                        //   showConfirmSubmitModalSheet(
-                        //       context: context,
-                        //       onSubmit: () async {
-                        //         await viewmodel.uploadQuestion(
-                        //           level: widget.level,
-                        //           section: widget.section,
-                        //           day: widget.day,
-                        //           question: question,
-                        //         );
-                        //       },
-                        //       question: question);
-                        // }
-                        //   print("Question added to Firebase");
-                        // }
-                        //  else {
-                        //   print("Form validation failed.");
-                        // }
                       } else {
-                        print("Please fill all the required fields");
+                        Utils.showErrorSnackBar(
+                          "Please select an answer as the correct answer.",
+                        );
                       }
-                    },
-                    text: "Submit",
-                  ),
-                ],
-              ),
+                    }
+                  : null,
+              text: "Update",
             ),
-          );
-        },
-      ),
+            if (!isEnabled)
+              Positioned.fill(
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: isEnabled
+                        ? null
+                        : () {
+                            setState(() {
+                              updateMessage =
+                                  "Please make changes to update the question.";
+                            });
+                          },
+                  ),
+                ),
+              ),
+          ],
+        ),
+        if (updateMessage != null)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              updateMessage!,
+              style: TextStyle(color: Colors.red, fontSize: 16),
+            ),
+          ),
+      ],
     );
   }
 }
