@@ -23,8 +23,9 @@ class MultipleChoiceViewModel extends ChangeNotifier {
   final int maxAnswers = 5;
   int answerCount = 1;
   final idGenerator = const Uuid();
+  bool _showCachedImage = true; // Flag to control cached image display
+  bool get showCachedImage => _showCachedImage;
   Future<void> pickImage() async {
-    print("Picking image");
     bool hasPermission =
         await _permissionHandlerService.requestStoragePermission();
     if (hasPermission) {
@@ -32,6 +33,8 @@ class MultipleChoiceViewModel extends ChangeNotifier {
           await ImagePicker().pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+        _showCachedImage = false;
+
         notifyListeners();
       }
     } else {
@@ -41,6 +44,7 @@ class MultipleChoiceViewModel extends ChangeNotifier {
 
   void removeImage() {
     _image = null;
+    _showCachedImage = false;
     notifyListeners();
   }
 
@@ -62,7 +66,7 @@ class MultipleChoiceViewModel extends ChangeNotifier {
     answers = options;
     _selectedAnswer = answer;
     shouldSetOptions = false;
-    notifyListeners();
+    // notifyListeners();
   }
 
   void setSelectedAnswer(RadioItemData newAnswer) {

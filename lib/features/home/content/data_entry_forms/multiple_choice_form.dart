@@ -11,6 +11,7 @@ import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/radio_button.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -40,30 +41,30 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
 
   bool isSubformValid = false;
   bool isFormValid = false;
-  void _validateForm() {
-    setState(() {
-      isFormValid = _formKey.currentState?.validate() ?? false;
-    });
-  }
+
+  late String originalQuestionTextInEnglish;
+  late String originalQuestionTextInArabic;
+  late String originalQuestionSentenceInEnglish;
+  late String originalQuestionSentenceInArabic;
+  late String originalTitleInEnglish;
+  List<RadioItemData>? originalOptions;
 
   final TextEditingController questionEnglishController =
       TextEditingController();
-
   final TextEditingController questionArabicController =
       TextEditingController();
-
   final TextEditingController questionSentenceEnglishController =
       TextEditingController();
-
   final TextEditingController questionSentenceArabicController =
       TextEditingController();
-
   final TextEditingController titleInEnglishController =
       TextEditingController();
   late List<RadioItemData>? options;
+
   @override
   void initState() {
     super.initState();
+
     if (widget.question != null) {
       // Pre-fill the form fields with existing question data
       questionEnglishController.text =
@@ -76,7 +77,54 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
           widget.question!.questionSentenceInArabic ?? '';
       titleInEnglishController.text = widget.question!.titleInEnglish ?? '';
       options = widget.question!.options;
+      originalQuestionTextInEnglish =
+          widget.question!.questionTextInEnglish ?? '';
+      originalQuestionTextInArabic =
+          widget.question!.questionTextInArabic ?? '';
+      originalQuestionSentenceInEnglish =
+          widget.question!.questionSentenceInEnglish ?? '';
+      originalQuestionSentenceInArabic =
+          widget.question!.questionSentenceInArabic ?? '';
+      originalTitleInEnglish = widget.question!.titleInEnglish ?? '';
+      originalOptions = _deepCopyOptions(widget.question!.options);
+    } else {
+      options = [];
     }
+
+    // Validate the form on initialization to set the initial state of isFormValid and isSubformValid
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _validateForm();
+    });
+  }
+
+  List<RadioItemData> _deepCopyOptions(List<RadioItemData> options) {
+    return options
+        .map(
+            (option) => RadioItemData(title: option.title, value: option.value))
+        .toList();
+  }
+
+  void _validateForm() {
+    bool formValid = _formKey.currentState?.validate() ?? false;
+    bool changesMade = _checkForChanges();
+
+    setState(() {
+      isFormValid = formValid && (widget.question == null || changesMade);
+      isSubformValid = widget.question != null
+          ? widget.question!.options.isNotEmpty
+          : isSubformValid;
+    });
+  }
+
+  bool _checkForChanges() {
+    return questionEnglishController.text != originalQuestionTextInEnglish ||
+        questionArabicController.text != originalQuestionTextInArabic ||
+        questionSentenceEnglishController.text !=
+            originalQuestionSentenceInEnglish ||
+        questionSentenceArabicController.text !=
+            originalQuestionSentenceInArabic ||
+        titleInEnglishController.text != originalTitleInEnglish ||
+        !listEquals(options, originalOptions);
   }
 
   @override
@@ -86,8 +134,6 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
       child: Consumer<MultipleChoiceViewModel>(
         builder: (context, viewmodel, child) {
           if (widget.question != null && viewmodel.shouldSetOptions) {
-            // Pre-fill the answers and selected answer
-            print("${options?.map((option) => option.title)}");
             viewmodel.updateAnswerInEditMode(
                 widget.question!.options, widget.question!.answer!.answer!);
           }
@@ -103,7 +149,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                   maxLines: 2,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: "Question text (Egnlish)",
+                    labelText: "Question text (English)",
                     hintText: "Ex: \"Answer the following sentence\"",
                   ),
                   validator: (value) {
@@ -111,6 +157,9 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                       return AppStrings.requiredField;
                     }
                     return null;
+                  },
+                  onChanged: (value) {
+                    _validateForm();
                   },
                 ),
                 const SizedBox(height: 10),
@@ -122,6 +171,9 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                     labelText: "Question text (Arabic)",
                     hintText: "\"أجب على الجملة التالية\"",
                   ),
+                  onChanged: (value) {
+                    _validateForm();
+                  },
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
@@ -132,6 +184,9 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                     labelText: "Question sentence (English)",
                     hintText: "\"What did Ali eat for breakfast?\"",
                   ),
+                  onChanged: (value) {
+                    _validateForm();
+                  },
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
@@ -142,62 +197,11 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                     labelText: "Question Sentence (Arabic)",
                     hintText: "\"ماذا تناول علي على الإفطار؟\"",
                   ),
+                  onChanged: (value) {
+                    _validateForm();
+                  },
                 ),
-
-                // TODO: remove this field
-                // const SizedBox(height: 10),
-                // TextFormField(
-                //   controller: titleInEnglishController,
-                //   decoration: const InputDecoration(
-                //     border: OutlineInputBorder(),
-                //     labelText: "Question title",
-                //     hintText: "Enter the question title",
-                //   ),
-                // ),
                 const SizedBox(height: 10),
-                // question != null &&
-                //         viewModel.image == null &&
-                //         question!.imageUrl != null
-                //     ? CachedNetworkImage(
-                //         imageUrl: question!.imageUrl!,
-                //         placeholder: (context, url) =>
-                //             const CircularProgressIndicator(),
-                //       )
-                //     : viewModel.image == null
-                //         ? const Text("No image selected.")
-                //         : Image.file(viewModel.image!),
-                const SizedBox(height: 10),
-                // GestureDetector(
-                //   onTap: viewModel.pickImage,
-                //   child: DottedBorder(
-                //     color: Palette.primaryVariant,
-                //     strokeWidth: 1,
-                //     padding: const EdgeInsets.all(0),
-                //     child: Container(
-                //       height: 200.h,
-                //       decoration: const BoxDecoration(
-                //         color: Color.fromARGB(255, 216, 243, 255),
-                //       ),
-                //       child: Center(
-                //           child: Row(
-                //         mainAxisAlignment: MainAxisAlignment.center,
-                //         children: [
-                //           const Icon(
-                //             Icons.add,
-                //             size: 32,
-                //           ),
-                //           SizedBox(
-                //             width: 10.w,
-                //           ),
-                //           Text(
-                //             "Tap here to pick image",
-                //             style: TextStyles.bodyLarge,
-                //           ),
-                //         ],
-                //       )),
-                //     ),
-                //   ),
-                // ),
                 GestureDetector(
                   onTap: viewmodel.pickImage,
                   child: Stack(
@@ -214,7 +218,8 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                           child: Center(
                             child: viewmodel.image != null
                                 ? Image.file(viewmodel.image!)
-                                : (widget.question != null &&
+                                : (viewmodel.showCachedImage &&
+                                        widget.question != null &&
                                         widget.question!.imageUrl != null
                                     ? CachedNetworkImage(
                                         imageUrl: widget.question!.imageUrl!,
@@ -228,32 +233,44 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                           ),
                         ),
                       ),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.close,
-                            color: Colors.red,
+                      if (viewmodel.image != null || viewmodel.showCachedImage)
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.close,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              viewmodel.removeImage();
+                              _validateForm();
+                            },
                           ),
-                          onPressed: () {
-                            viewmodel.removeImage();
-                          },
                         ),
-                      ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 10),
                 RadioGroupForm(
                   onFormChanged: (isNewFormValid) {
-                    isSubformValid = isNewFormValid;
+                    setState(() {
+                      isSubformValid = isNewFormValid;
+                      _validateForm();
+                    });
                   },
                   onSelectionChanged: (newSelection) {
                     viewmodel.setSelectedAnswer(newSelection);
+                    _validateForm();
                   },
-                  onAnswerUpdated: viewmodel.updateAnswer,
-                  onDeleteItem: viewmodel.deleteAnswer,
+                  onAnswerUpdated: (newAnswer, option) {
+                    viewmodel.updateAnswer(newAnswer, option);
+                    _validateForm();
+                  },
+                  onDeleteItem: (option) {
+                    viewmodel.deleteAnswer(option);
+                    _validateForm();
+                  },
                   options: viewmodel.answers,
                   selectedOption: viewmodel.selectedAnswer,
                 ),
@@ -261,7 +278,10 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                     ? GestureDetector(
                         onTap: () {
                           viewmodel.addAnswer();
-                          isSubformValid = false;
+                          setState(() {
+                            isSubformValid = false;
+                            _validateForm();
+                          });
                         },
                         child: DottedBorder(
                           color: Palette.primaryVariant,
@@ -359,7 +379,6 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                                         });
                                       },
                                       question: updatedQuestion);
-                                  // TODO: reflect changes in the UI using snackbar
                                 }
                               }
                             });
@@ -367,7 +386,6 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                             Utils.showErrorSnackBar(
                               "Please select an answer as the correct answer.",
                             );
-                            print("Form validation failed.");
                           }
                         }
                       : null,
