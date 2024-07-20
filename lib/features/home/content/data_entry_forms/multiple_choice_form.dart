@@ -373,8 +373,6 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
   }
 
   Widget _updateButton(MultipleChoiceViewModel viewmodel) {
-    // Determine if the button should be enabled
-
     bool isEnabled = isFormValid && isSubformValid;
 
     return Column(
@@ -466,7 +464,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                         : () {
                             setState(() {
                               updateMessage =
-                                  "Please make changes to enable the update.";
+                                  "Please make changes to enable update the question.";
                             });
                           },
                   ),

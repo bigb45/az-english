@@ -5,6 +5,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_que
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/edit_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/list_item_card.dart';
@@ -231,7 +232,7 @@ class _EditQuestionState extends State<EditQuestion> {
                   viewModel.updateQuestion(updatedQuestion);
                   Navigator.of(context).pop();
                 },
-                // question: question as DictationQuestionModel,
+                question: question as DictationQuestionModel,
               );
             case QuestionType.fillTheBlanks:
               return FillTheBlanksForm(

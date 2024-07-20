@@ -2,6 +2,7 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/content/viewmodels/dictation_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
+import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/util/build_question.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/utils/utils.dart';
@@ -14,6 +15,7 @@ class DictationQuestionForm extends StatefulWidget {
   final String section;
   final String day;
   final Function(BaseQuestion<dynamic>)? onSubmit;
+  final DictationQuestionModel? question;
 
   DictationQuestionForm({
     super.key,
@@ -21,6 +23,7 @@ class DictationQuestionForm extends StatefulWidget {
     required this.section,
     required this.day,
     this.onSubmit,
+    this.question,
   });
 
   @override
@@ -30,13 +33,11 @@ class DictationQuestionForm extends StatefulWidget {
 class _DictationQuestionFormState extends State<DictationQuestionForm> {
   final _formKey = GlobalKey<FormState>();
   bool isFormValid = false;
-
-  void _validateForm() {
-    setState(() {
-      isFormValid = _formKey.currentState?.validate() ?? false;
-    });
-  }
-
+  late String originalQuestionTextInEnglish;
+  late String originalQuestionTextInArabic;
+  late String originalSpeakableText;
+  late String originalTitleInEnglish;
+  String? updateMessage;
   final TextEditingController questionEnglishController =
       TextEditingController();
 
@@ -47,13 +48,59 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
 
   final TextEditingController titleInEnglishController =
       TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.question != null) {
+      questionEnglishController.text = originalQuestionTextInEnglish =
+          widget.question!.questionTextInEnglish ?? "";
+      questionArabicController.text = originalQuestionTextInArabic =
+          widget.question!.questionTextInArabic ?? "";
+      speakableTextController.text =
+          originalSpeakableText = widget.question!.speakableText;
+      titleInEnglishController.text =
+          originalTitleInEnglish = widget.question!.titleInEnglish ?? "";
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _validateForm();
+    });
+  }
+
+  @override
+  void dispose() {
+    questionEnglishController.dispose();
+    questionArabicController.dispose();
+    speakableTextController.dispose();
+    titleInEnglishController.dispose();
+    super.dispose();
+  }
+
+  void _validateForm() {
+    bool formValid = _formKey.currentState?.validate() ?? false;
+    bool changesMade = _checkForChanges();
+    setState(() {
+      isFormValid = formValid && (widget.question == null || changesMade);
+      if (changesMade) {
+        updateMessage = null;
+      }
+    });
+  }
+
+  bool _checkForChanges() {
+    return questionEnglishController.text != originalQuestionTextInEnglish ||
+        questionArabicController.text != originalQuestionTextInArabic ||
+        speakableTextController.text != originalSpeakableText ||
+        titleInEnglishController.text != originalTitleInEnglish;
+  }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => DictationQuestionViewModel(),
       child: Consumer<DictationQuestionViewModel>(
-        builder: (context, viewModel, child) {
+        builder: (context, viewmodel, child) {
           return Form(
             onChanged: _validateForm,
             autovalidateMode: AutovalidateMode.always,
@@ -95,68 +142,122 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                     return null;
                   },
                 ),
-                // const SizedBox(height: 10),
-                // TextFormField(
-                //   controller: titleInEnglishController,
-                //   decoration: const InputDecoration(
-                //     border: OutlineInputBorder(),
-                //     labelText: "Question title",
-                //     hintText: "Enter the title in English",
-                //   ),
-                // ),
                 const SizedBox(height: 10),
-                Button(
-                  onPressed: isFormValid
-                      ? () {
-                          viewModel
-                              .submitForm(
-                            questionTextInEnglish:
-                                questionEnglishController.text.trim().isEmpty
-                                    ? null
-                                    : questionEnglishController.text.trim(),
-                            questionTextInArabic:
-                                questionArabicController.text.trim().isEmpty
-                                    ? null
-                                    : questionArabicController.text.trim(),
-                            speakableText:
-                                speakableTextController.text.trim().isEmpty
-                                    ? null
-                                    : speakableTextController.text.trim(),
-                            titleInEnglish:
-                                titleInEnglishController.text.trim().isEmpty
-                                    ? null
-                                    : titleInEnglishController.text.trim(),
-                          )
-                              .then((question) {
-                            showConfirmSubmitModalSheet(
-                                context: context,
-                                onSubmit: () {
-                                  viewModel
-                                      .uploadQuestion(
-                                          level: widget.level,
-                                          section: widget.section,
-                                          day: widget.day,
-                                          // Add question to the onSubmit function
-                                          question: question!)
-                                      .then((_) {
-                                    Utils.showSnackbar(
-                                        text: "Question uploaded successfully");
-                                  });
-                                  if (widget.onSubmit != null) {
-                                    widget.onSubmit!(question);
-                                  }
-                                },
-                                question: question);
-                          });
-                        }
-                      : null,
-                  text: "Submit",
+                TextFormField(
+                  controller: titleInEnglishController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Question title",
+                    hintText: "Enter the title in English",
+                  ),
                 ),
+                const SizedBox(height: 10),
+                _updateButton(viewmodel),
               ],
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget _updateButton(DictationQuestionViewModel viewmodel) {
+    bool isEnabled = isFormValid;
+
+    return Column(
+      children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Button(
+              onPressed: isEnabled
+                  ? () {
+                      if (_formKey.currentState!.validate()) {
+                        viewmodel
+                            .submitForm(
+                          questionTextInEnglish:
+                              questionEnglishController.text.trim().isEmpty
+                                  ? null
+                                  : questionEnglishController.text.trim(),
+                          questionTextInArabic:
+                              questionArabicController.text.trim().isEmpty
+                                  ? null
+                                  : questionArabicController.text.trim(),
+                          speakableText:
+                              speakableTextController.text.trim().isEmpty
+                                  ? null
+                                  : speakableTextController.text.trim(),
+                          titleInEnglish:
+                              titleInEnglishController.text.trim().isEmpty
+                                  ? null
+                                  : titleInEnglishController.text.trim(),
+                        )
+                            .then((updatedQuestion) {
+                          if (updatedQuestion != null) {
+                            if (widget.onSubmit != null) {
+                              updatedQuestion.path =
+                                  widget.question?.path ?? '';
+                              widget.onSubmit!(updatedQuestion);
+                            } else {
+                              showConfirmSubmitModalSheet(
+                                  context: context,
+                                  onSubmit: () {
+                                    viewmodel
+                                        .uploadQuestion(
+                                            level: widget.level,
+                                            section: widget.section,
+                                            day: widget.day,
+                                            // Add question to the onSubmit function
+                                            question: updatedQuestion!)
+                                        .then((_) {
+                                      Utils.showSnackbar(
+                                          text:
+                                              "Question uploaded successfully");
+                                    });
+                                    if (widget.onSubmit != null) {
+                                      widget.onSubmit!(updatedQuestion);
+                                    }
+                                  },
+                                  question: updatedQuestion);
+                            }
+                          }
+                        });
+                      } else {
+                        Utils.showErrorSnackBar(
+                          "Please select an answer as the correct answer.",
+                        );
+                      }
+                    }
+                  : null,
+              text: "Update",
+            ),
+            if (!isEnabled)
+              Positioned.fill(
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: isEnabled
+                        ? null
+                        : () {
+                            setState(() {
+                              updateMessage =
+                                  "Please make changes to update the question.";
+                            });
+                          },
+                  ),
+                ),
+              ),
+          ],
+        ),
+        if (updateMessage != null)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              updateMessage!,
+              style: TextStyle(color: Colors.red, fontSize: 16),
+            ),
+          ),
+      ],
     );
   }
 }
