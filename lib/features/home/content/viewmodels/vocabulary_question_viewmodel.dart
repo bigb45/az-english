@@ -11,7 +11,6 @@ class VocabularyViewModel extends ChangeNotifier {
   File? image;
   final FirestoreService _firestoreService = FirestoreService();
   final Uuid uuid = Uuid();
-  WordType? selectedWordType;
 
   Future<void> pickImage() async {
     final pickedFile =
@@ -20,11 +19,6 @@ class VocabularyViewModel extends ChangeNotifier {
       image = File(pickedFile.path);
       notifyListeners();
     }
-  }
-
-  void setSelectedWordType(WordType? type) {
-    selectedWordType = type;
-    notifyListeners();
   }
 
   Future<WordDefinition?> submitForm({

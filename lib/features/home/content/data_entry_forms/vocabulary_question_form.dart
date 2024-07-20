@@ -12,6 +12,7 @@ class VocabularyForm extends StatefulWidget {
   final String section;
   final String day;
   final Function(BaseQuestion<dynamic>)? onSubmit;
+  final WordDefinition? question;
 
   VocabularyForm({
     super.key,
@@ -19,6 +20,7 @@ class VocabularyForm extends StatefulWidget {
     required this.section,
     required this.day,
     this.onSubmit,
+    this.question,
   });
 
   @override
@@ -28,11 +30,6 @@ class VocabularyForm extends StatefulWidget {
 class _VocabularyFormState extends State<VocabularyForm> {
   final _formKey = GlobalKey<FormState>();
   bool isFormValid = false;
-  void _validateForm() {
-    setState(() {
-      isFormValid = _formKey.currentState?.validate() ?? false;
-    });
-  }
 
   final TextEditingController englishWordController = TextEditingController();
 
@@ -44,12 +41,73 @@ class _VocabularyFormState extends State<VocabularyForm> {
   final TextEditingController exampleUsageInArabicController =
       TextEditingController();
   final TextEditingController questionTitleController = TextEditingController();
+  WordType? currentWordType;
+
+  late String originalEnglishWord;
+  late String originalArabicWord;
+  late String originalExampleUsageInEnglish;
+  late String originalExampleUsageInArabic;
+  late String originalQuestionTitle;
+  WordType? originalWordType;
+  String? updateMessage;
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.question != null) {
+      englishWordController.text =
+          originalEnglishWord = widget.question!.englishWord;
+      arabicWordController.text =
+          originalArabicWord = widget.question!.arabicWord ?? "";
+      exampleUsageInEnglishController.text = originalExampleUsageInEnglish =
+          widget.question!.exampleUsageInEnglish?[0] ?? "";
+      exampleUsageInArabicController.text = originalExampleUsageInArabic =
+          widget.question!.exampleUsageInArabic?[0] ?? "";
+      questionTitleController.text =
+          originalQuestionTitle = widget.question!.titleInEnglish ?? "";
+      currentWordType = originalWordType = widget.question!.type;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _validateForm();
+    });
+  }
+
+  void _validateForm() {
+    bool formValid = _formKey.currentState?.validate() ?? false;
+    bool changesMade = _checkForChanges();
+    setState(() {
+      isFormValid = formValid && (widget.question == null || changesMade);
+      if (changesMade) {
+        updateMessage = null;
+      }
+    });
+  }
+
+  bool _checkForChanges() {
+    return englishWordController.text != originalEnglishWord ||
+        arabicWordController.text != originalArabicWord ||
+        exampleUsageInEnglishController.text != originalExampleUsageInEnglish ||
+        exampleUsageInArabicController.text != originalExampleUsageInArabic ||
+        questionTitleController.text != originalQuestionTitle ||
+        currentWordType != originalWordType;
+  }
+
+  @override
+  void dispose() {
+    englishWordController.dispose();
+    arabicWordController.dispose();
+    exampleUsageInEnglishController.dispose();
+    exampleUsageInArabicController.dispose();
+    questionTitleController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => VocabularyViewModel(),
       child: Consumer<VocabularyViewModel>(
-        builder: (context, viewModel, child) {
+        builder: (context, viewmodel, child) {
           return Form(
             onChanged: _validateForm,
             key: _formKey,
@@ -94,7 +152,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
                     labelText: "Word Type",
                     hintText: "Select the word type",
                   ),
-                  value: viewModel.selectedWordType,
+                  value: currentWordType,
                   items: WordType.values.map((WordType type) {
                     return DropdownMenuItem<WordType>(
                       value: type,
@@ -102,7 +160,14 @@ class _VocabularyFormState extends State<VocabularyForm> {
                     );
                   }).toList(),
                   onChanged: (WordType? newValue) {
-                    viewModel.setSelectedWordType(newValue);
+                    setState(() {
+                      currentWordType = newValue;
+                      if (newValue == WordType.sentence) {
+                        exampleUsageInArabicController.clear();
+                        exampleUsageInEnglishController.clear();
+                      }
+                      _validateForm();
+                    });
                   },
                   validator: (value) {
                     if (value == null) {
@@ -112,8 +177,8 @@ class _VocabularyFormState extends State<VocabularyForm> {
                   },
                 ),
                 const SizedBox(height: 10),
-                if (viewModel.selectedWordType == WordType.verb ||
-                    viewModel.selectedWordType == WordType.word) ...[
+                if (currentWordType == WordType.verb ||
+                    currentWordType == WordType.word) ...[
                   TextFormField(
                     controller: exampleUsageInEnglishController,
                     decoration: const InputDecoration(
@@ -122,7 +187,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
                       hintText: "Enter example usage in English",
                     ),
                     validator: (value) {
-                      if (viewModel.selectedWordType != WordType.sentence &&
+                      if (currentWordType != WordType.sentence &&
                           (value == null || value.isEmpty)) {
                         return 'Please enter example usage in English';
                       }
@@ -138,7 +203,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
                       hintText: "Enter example usage in Arabic",
                     ),
                     validator: (value) {
-                      if (viewModel.selectedWordType != WordType.sentence &&
+                      if (currentWordType != WordType.sentence &&
                           (value == null || value.isEmpty)) {
                         return 'Please enter example usage in Arabic';
                       }
@@ -147,80 +212,116 @@ class _VocabularyFormState extends State<VocabularyForm> {
                   ),
                 ],
                 const SizedBox(height: 10),
-                Button(
-                  onPressed: isFormValid
-                      ? () async {
-                          if (_formKey.currentState!.validate()) {
-                            final question = await viewModel.submitForm(
-                              englishWord: englishWordController.text.trim(),
-                              arabicWord:
-                                  arabicWordController.text.trim().isEmpty
-                                      ? null
-                                      : arabicWordController.text.trim(),
-                              type: viewModel.selectedWordType!,
-                              exampleUsageInEnglish:
-                                  exampleUsageInEnglishController
-                                          .text
-                                          .trim()
-                                          .isEmpty
-                                      ? null
-                                      : [
-                                          exampleUsageInEnglishController.text
-                                              .trim()
-                                        ],
-                              exampleUsageInArabic:
-                                  exampleUsageInArabicController.text
-                                          .trim()
-                                          .isEmpty
-                                      ? null
-                                      : [
-                                          exampleUsageInArabicController.text
-                                              .trim()
-                                        ],
-                              questionTextInEnglish:
-                                  questionTitleController.text.trim().isEmpty
-                                      ? null
-                                      : questionTitleController.text.trim(),
-                            );
-                            if (question != null) {
-                              if (widget.onSubmit != null) {
-                                widget.onSubmit!(question);
-                              } else {
-                                showConfirmSubmitModalSheet(
-                                  context: context,
-                                  onSubmit: () async {
-                                    await viewModel.uploadQuestion(
-                                      level: widget.level,
-                                      section: widget.section,
-                                      day: widget.day,
-                                      question: question,
-                                    );
-                                    Utils.showSnackbar(
-                                        text: "Question added successfully");
-                                    print(_formKey);
-                                    _formKey.currentState!.reset();
-                                    print(_formKey);
-                                  },
-                                  question: question,
-                                );
-                              }
-                            } else {
-                              Utils.showErrorSnackBar(
-                                  "Please check all the fields before submitting");
-                            }
-                          } else {
-                            Utils.showErrorSnackBar(
-                                "Check all the fields before submitting");
-                          }
-                        }
-                      : null,
-                  text: "Submit",
-                ),
+                _updateButton(viewmodel),
               ],
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget _updateButton(VocabularyViewModel viewmodel) {
+    bool isEnabled = isFormValid;
+
+    return Column(
+      children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Button(
+              onPressed: isEnabled
+                  ? () {
+                      if (_formKey.currentState!.validate()) {
+                        viewmodel
+                            .submitForm(
+                          englishWord: englishWordController.text.trim(),
+                          arabicWord: arabicWordController.text.trim().isEmpty
+                              ? null
+                              : arabicWordController.text.trim(),
+                          type: currentWordType!,
+                          exampleUsageInEnglish: exampleUsageInEnglishController
+                                  .text
+                                  .trim()
+                                  .isEmpty
+                              ? null
+                              : [exampleUsageInEnglishController.text.trim()],
+                          exampleUsageInArabic:
+                              exampleUsageInArabicController.text.trim().isEmpty
+                                  ? null
+                                  : [
+                                      exampleUsageInArabicController.text.trim()
+                                    ],
+                          questionTextInEnglish:
+                              questionTitleController.text.trim().isEmpty
+                                  ? null
+                                  : questionTitleController.text.trim(),
+                        )
+                            .then((updatedQuestion) {
+                          if (updatedQuestion != null) {
+                            if (widget.onSubmit != null) {
+                              updatedQuestion.path =
+                                  widget.question?.path ?? '';
+                              widget.onSubmit!(updatedQuestion);
+                            } else {
+                              showConfirmSubmitModalSheet(
+                                  context: context,
+                                  onSubmit: () {
+                                    viewmodel
+                                        .uploadQuestion(
+                                            level: widget.level,
+                                            section: widget.section,
+                                            day: widget.day,
+                                            question: updatedQuestion)
+                                        .then((_) {
+                                      Utils.showSnackbar(
+                                          text:
+                                              "Question uploaded successfully");
+                                    });
+                                    if (widget.onSubmit != null) {
+                                      widget.onSubmit!(updatedQuestion);
+                                    }
+                                  },
+                                  question: updatedQuestion);
+                            }
+                          }
+                        });
+                      } else {
+                        Utils.showErrorSnackBar(
+                          "Please select an answer as the correct answer.",
+                        );
+                      }
+                    }
+                  : null,
+              text: "Update",
+            ),
+            if (!isEnabled)
+              Positioned.fill(
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: isEnabled
+                        ? null
+                        : () {
+                            setState(() {
+                              updateMessage =
+                                  "Please make changes to update the question.";
+                            });
+                          },
+                  ),
+                ),
+              ),
+          ],
+        ),
+        if (updateMessage != null)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              updateMessage!,
+              style: TextStyle(color: Colors.red, fontSize: 16),
+            ),
+          ),
+      ],
     );
   }
 }

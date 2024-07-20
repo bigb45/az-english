@@ -7,6 +7,7 @@ import 'package:ez_english/features/home/content/viewmodels/edit_question_viewmo
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
+import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/list_item_card.dart';
@@ -247,6 +248,18 @@ class _EditQuestionState extends State<EditQuestion> {
                 question: question as YoutubeLessonModel,
               );
 
+            case QuestionType.vocabulary:
+              return VocabularyForm(
+                level: selectedLevel!,
+                section: selectedSection!,
+                day: _dayController.text,
+                onSubmit: (updatedQuestion) {
+                  viewModel.updateQuestion(updatedQuestion);
+                  Navigator.of(context).pop();
+                },
+                question: question as WordDefinition,
+              );
+
             case QuestionType.fillTheBlanks:
               return FillTheBlanksForm(
                 level: selectedLevel!,
@@ -257,17 +270,6 @@ class _EditQuestionState extends State<EditQuestion> {
                   Navigator.of(context).pop();
                 },
                 // question: question as FillTheBlanksQuestionModel,
-              );
-            case QuestionType.vocabulary:
-              return VocabularyForm(
-                level: selectedLevel!,
-                section: selectedSection!,
-                day: _dayController.text,
-                onSubmit: (updatedQuestion) {
-                  viewModel.updateQuestion(updatedQuestion);
-                  Navigator.of(context).pop();
-                },
-                // question: question as VocabularyQuestionModel,
               );
             default:
               return const Text("Question type not supported.");
