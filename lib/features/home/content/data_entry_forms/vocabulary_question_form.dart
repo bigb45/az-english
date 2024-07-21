@@ -136,114 +136,116 @@ class _VocabularyFormState extends State<VocabularyForm> {
       create: (_) => VocabularyViewModel(),
       child: Consumer<VocabularyViewModel>(
         builder: (context, viewmodel, child) {
-          return Form(
-            onChanged: _validateForm,
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: questionTitleController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Word title",
-                    hintText: "Ex: \"Everyday Greetings\"",
+          return viewmodel.isLoading
+              ? CircularProgressIndicator()
+              : Form(
+                  onChanged: _validateForm,
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: questionTitleController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Word title",
+                          hintText: "Ex: \"Everyday Greetings\"",
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: englishWordController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "English Word",
+                          hintText: "Enter the English word",
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the English word';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: arabicWordController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Arabic Word",
+                          hintText: "Enter the Arabic word",
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      DropdownButtonFormField<WordType>(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Word Type",
+                          hintText: "Select the word type",
+                        ),
+                        value: currentWordType,
+                        items: WordType.values.map((WordType type) {
+                          return DropdownMenuItem<WordType>(
+                            value: type,
+                            child: Text(type.toString().split('.').last),
+                          );
+                        }).toList(),
+                        onChanged: (WordType? newValue) {
+                          setState(() {
+                            currentWordType = newValue;
+                            if (newValue == WordType.sentence) {
+                              exampleUsageInArabicController.clear();
+                              exampleUsageInEnglishController.clear();
+                            }
+                            _validateForm();
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please select the word type';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      if (currentWordType == WordType.verb ||
+                          currentWordType == WordType.word) ...[
+                        TextFormField(
+                          controller: exampleUsageInEnglishController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Example Usage in English",
+                            hintText: "Enter example usage in English",
+                          ),
+                          validator: (value) {
+                            if (currentWordType != WordType.sentence &&
+                                (value == null || value.isEmpty)) {
+                              return 'Please enter example usage in English';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: exampleUsageInArabicController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Example Usage in Arabic",
+                            hintText: "Enter example usage in Arabic",
+                          ),
+                          validator: (value) {
+                            if (currentWordType != WordType.sentence &&
+                                (value == null || value.isEmpty)) {
+                              return 'Please enter example usage in Arabic';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                      const SizedBox(height: 10),
+                      _updateButton(viewmodel),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: englishWordController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "English Word",
-                    hintText: "Enter the English word",
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the English word';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: arabicWordController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Arabic Word",
-                    hintText: "Enter the Arabic word",
-                  ),
-                ),
-                const SizedBox(height: 10),
-                DropdownButtonFormField<WordType>(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Word Type",
-                    hintText: "Select the word type",
-                  ),
-                  value: currentWordType,
-                  items: WordType.values.map((WordType type) {
-                    return DropdownMenuItem<WordType>(
-                      value: type,
-                      child: Text(type.toString().split('.').last),
-                    );
-                  }).toList(),
-                  onChanged: (WordType? newValue) {
-                    setState(() {
-                      currentWordType = newValue;
-                      if (newValue == WordType.sentence) {
-                        exampleUsageInArabicController.clear();
-                        exampleUsageInEnglishController.clear();
-                      }
-                      _validateForm();
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Please select the word type';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                if (currentWordType == WordType.verb ||
-                    currentWordType == WordType.word) ...[
-                  TextFormField(
-                    controller: exampleUsageInEnglishController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Example Usage in English",
-                      hintText: "Enter example usage in English",
-                    ),
-                    validator: (value) {
-                      if (currentWordType != WordType.sentence &&
-                          (value == null || value.isEmpty)) {
-                        return 'Please enter example usage in English';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: exampleUsageInArabicController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Example Usage in Arabic",
-                      hintText: "Enter example usage in Arabic",
-                    ),
-                    validator: (value) {
-                      if (currentWordType != WordType.sentence &&
-                          (value == null || value.isEmpty)) {
-                        return 'Please enter example usage in Arabic';
-                      }
-                      return null;
-                    },
-                  ),
-                ],
-                const SizedBox(height: 10),
-                _updateButton(viewmodel),
-              ],
-            ),
-          );
+                );
         },
       ),
     );
@@ -308,6 +310,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
                                       Utils.showSnackbar(
                                           text:
                                               "Question uploaded successfully");
+                                      resetForm();
                                     });
                                     if (widget.onSubmit != null) {
                                       widget.onSubmit!(updatedQuestion);
@@ -354,5 +357,16 @@ class _VocabularyFormState extends State<VocabularyForm> {
           ),
       ],
     );
+  }
+
+  void resetForm() {
+    englishWordController.clear();
+    arabicWordController.clear();
+    exampleUsageInEnglishController.clear();
+    exampleUsageInArabicController.clear();
+    questionTitleController.clear();
+    currentWordType = null;
+    updateMessage = null;
+    _validateForm();
   }
 }

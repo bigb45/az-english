@@ -11,7 +11,9 @@ class VocabularyViewModel extends ChangeNotifier {
   File? image;
   final FirestoreService _firestoreService = FirestoreService();
   final Uuid uuid = Uuid();
+  bool _isLoading = false;
 
+  get isLoading => _isLoading;
   Future<void> pickImage() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -46,6 +48,8 @@ class VocabularyViewModel extends ChangeNotifier {
     required String day,
     required WordDefinition question,
   }) async {
+    _isLoading = true;
+    notifyListeners();
     try {
       await _firestoreService.uploadQuestionToFirestore(
           day: day,
@@ -54,6 +58,9 @@ class VocabularyViewModel extends ChangeNotifier {
           questionMap: question.toMap());
     } catch (e) {
       print('Error adding question: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 }
