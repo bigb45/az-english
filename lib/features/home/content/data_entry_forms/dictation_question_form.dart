@@ -33,10 +33,10 @@ class DictationQuestionForm extends StatefulWidget {
 class _DictationQuestionFormState extends State<DictationQuestionForm> {
   final _formKey = GlobalKey<FormState>();
   bool isFormValid = false;
-  late String originalQuestionTextInEnglish;
-  late String originalQuestionTextInArabic;
-  late String originalSpeakableText;
-  late String originalTitleInEnglish;
+  String? originalQuestionTextInEnglish;
+  String? originalQuestionTextInArabic;
+  String? originalSpeakableText;
+  String? originalTitleInEnglish;
   String? updateMessage;
   final TextEditingController questionEnglishController =
       TextEditingController();

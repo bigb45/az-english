@@ -43,11 +43,11 @@ class _VocabularyFormState extends State<VocabularyForm> {
   final TextEditingController questionTitleController = TextEditingController();
   WordType? currentWordType;
 
-  late String originalEnglishWord;
-  late String originalArabicWord;
-  late String originalExampleUsageInEnglish;
-  late String originalExampleUsageInArabic;
-  late String originalQuestionTitle;
+  String? originalEnglishWord;
+  String? originalArabicWord;
+  String? originalExampleUsageInEnglish;
+  String? originalExampleUsageInArabic;
+  String? originalQuestionTitle;
   WordType? originalWordType;
   String? updateMessage;
   @override

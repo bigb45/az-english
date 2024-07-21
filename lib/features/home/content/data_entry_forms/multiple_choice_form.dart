@@ -44,13 +44,13 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
   bool isSubformValid = false;
   bool isFormValid = false;
 
-  late String originalQuestionTextInEnglish;
-  late String originalQuestionTextInArabic;
-  late String originalQuestionSentenceInEnglish;
-  late String originalQuestionSentenceInArabic;
-  late String originalTitleInEnglish;
+  String? originalQuestionTextInEnglish;
+  String? originalQuestionTextInArabic;
+  String? originalQuestionSentenceInEnglish;
+  String? originalQuestionSentenceInArabic;
+  String? originalTitleInEnglish;
   List<RadioItemData>? originalOptions;
-  late RadioItemData originalAnswer;
+  RadioItemData? originalAnswer;
 
   File? currentImage;
   File? originalImage;
@@ -70,8 +70,8 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
       TextEditingController();
   final TextEditingController titleInEnglishController =
       TextEditingController();
-  late List<RadioItemData>? options;
-  late RadioItemData answer;
+  List<RadioItemData>? options;
+  RadioItemData? answer;
   @override
   void initState() {
     super.initState();
@@ -312,7 +312,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                   onAnswerUpdated: (newAnswer, option) {
                     viewmodel.updateAnswer(newAnswer, option);
                     setState(() {
-                      answer.title = newAnswer;
+                      answer?.title = newAnswer;
                     });
                     _validateForm();
                   },

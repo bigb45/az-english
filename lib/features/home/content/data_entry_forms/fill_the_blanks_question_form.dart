@@ -52,15 +52,15 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
   final TextEditingController questionArabicController =
       TextEditingController();
 
-  late String originalIncompleteSentenceInEnglish;
-  late String originalIncompleteSentenceInArabic;
-  late String originalQuestionEnglish;
-  late String originalQuestionArabic;
+  String? originalIncompleteSentenceInEnglish;
+  String? originalIncompleteSentenceInArabic;
+  String? originalQuestionEnglish;
+  String? originalQuestionArabic;
 
-  late int originalEnglishBlankStart;
-  late int originalEnglishBlankEnd;
-  late int originalArabicBlankStart;
-  late int originalArabicBlankEnd;
+  int originalEnglishBlankStart = 0;
+  int originalEnglishBlankEnd = 0;
+  int originalArabicBlankStart = 0;
+  int originalArabicBlankEnd = 0;
 
   String? updateMessage;
 
