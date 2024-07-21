@@ -352,6 +352,11 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                   },
                   onDeleteItem: (option) {
                     viewmodel.deleteAnswer(option);
+                    setState(() {
+                      if (options!.length > 1) {
+                        options!.remove(option);
+                      }
+                    });
                     _validateForm();
                   },
                   options: viewmodel.answers,

@@ -7,7 +7,7 @@ class RadioGroupForm extends StatefulWidget {
   final Function(bool) onFormChanged;
 
   final List<RadioItemData> options;
-  final RadioItemData? selectedOption;
+  final RadioItemData selectedOption;
   final Function(RadioItemData) onDeleteItem;
   final Function(String, RadioItemData) onAnswerUpdated;
 
@@ -33,7 +33,9 @@ class _RadioGroupFormState extends State<RadioGroupForm> {
   void initState() {
     super.initState();
 
-    selectedOption = widget.selectedOption ?? widget.options.first;
+    selectedOption = widget.selectedOption.title.isNotEmpty
+        ? widget.selectedOption
+        : widget.options.first;
   }
 
   @override
