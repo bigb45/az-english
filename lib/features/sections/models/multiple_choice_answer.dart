@@ -19,4 +19,16 @@ class MultipleChoiceAnswer extends BaseAnswer<RadioItemData> {
   bool validate(BaseAnswer? userAnswer) {
     return userAnswer?.answer.value == answer?.value && userAnswer != null;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! MultipleChoiceAnswer) return false;
+    return other.answer ==
+        answer; // Assuming RadioItemData has a proper == operator
+  }
+
+  @override
+  int get hashCode => answer
+      .hashCode; // Assumes RadioItemData has a proper hashCode implementation
 }

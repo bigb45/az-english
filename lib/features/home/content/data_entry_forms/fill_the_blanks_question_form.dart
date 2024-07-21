@@ -4,6 +4,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/dictation_ques
 import 'package:ez_english/features/home/content/viewmodels/fill_the_blanks_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
+import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/utils/utils.dart';
@@ -63,6 +64,34 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
   int originalArabicBlankEnd = 0;
 
   String? updateMessage;
+
+  void updateQuestion(FillTheBlanksQuestionModel updatedQuestion) {
+    if (widget.question != null) {
+      if (incompleteSentenceInEnglishController.text !=
+          originalIncompleteSentenceInEnglish) {
+        widget.question!.incompleteSentenceInEnglish =
+            incompleteSentenceInEnglishController.text;
+      }
+      if (incompleteSentenceInArabicController.text !=
+          originalIncompleteSentenceInArabic) {
+        widget.question!.incompleteSentenceInArabic =
+            incompleteSentenceInArabicController.text;
+      }
+      if (questionEnglishController.text != originalQuestionEnglish) {
+        widget.question!.questionTextInEnglish = questionEnglishController.text;
+      }
+      if (questionArabicController.text != originalQuestionArabic) {
+        widget.question!.questionTextInArabic = questionArabicController.text;
+      }
+      if (englishBlankStart != originalEnglishBlankStart ||
+          englishBlankEnd != originalEnglishBlankEnd) {
+        widget.question!.answer = StringAnswer(
+            answer: incompleteSentenceInEnglishController.text
+                .substring(englishBlankStart, englishBlankEnd)
+                .trim());
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -352,6 +381,9 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                         )
                             .then((updatedQuestion) {
                           if (updatedQuestion != null) {
+                            setState(() {
+                              updateQuestion(updatedQuestion);
+                            });
                             if (widget.onSubmit != null) {
                               updatedQuestion.path =
                                   widget.question?.path ?? '';

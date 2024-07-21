@@ -4,8 +4,8 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/string_answer.dart';
 
 class FillTheBlanksQuestionModel extends BaseQuestion<String> {
-  final String? incompleteSentenceInEnglish;
-  final String? incompleteSentenceInArabic;
+   String? incompleteSentenceInEnglish;
+   String? incompleteSentenceInArabic;
   FillTheBlanksQuestionModel({
     this.incompleteSentenceInEnglish,
     this.incompleteSentenceInArabic,
@@ -48,4 +48,42 @@ class FillTheBlanksQuestionModel extends BaseQuestion<String> {
     userAnswer = userAnswer ?? StringAnswer(answer: "");
     return answer?.validate(userAnswer) ?? false;
   }
+
+  // @override
+  // bool operator ==(Object other) {
+  //   if (identical(this, other)) return true;
+  //   return other is FillTheBlanksQuestionModel &&
+  //       super == other && // Comparing all properties in the superclass
+  //       other.incompleteSentenceInEnglish == incompleteSentenceInEnglish &&
+  //       other.incompleteSentenceInArabic == incompleteSentenceInArabic;
+  // }
+
+  // @override
+  // int get hashCode => Object.hash(
+  //       super.hashCode, // Include the hashCode of the superclass
+  //       incompleteSentenceInEnglish,
+  //       incompleteSentenceInArabic,
+  //     );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is FillTheBlanksQuestionModel &&
+        other.questionTextInEnglish == questionTextInEnglish &&
+        other.questionTextInArabic == questionTextInArabic &&
+        other.imageUrl == imageUrl &&
+        other.voiceUrl == voiceUrl &&
+        other.titleInEnglish == titleInEnglish &&
+        other.incompleteSentenceInEnglish == incompleteSentenceInEnglish &&
+        other.incompleteSentenceInArabic == incompleteSentenceInArabic;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      questionTextInEnglish,
+      questionTextInArabic,
+      imageUrl,
+      voiceUrl,
+      titleInEnglish,
+      incompleteSentenceInEnglish,
+      incompleteSentenceInArabic);
 }

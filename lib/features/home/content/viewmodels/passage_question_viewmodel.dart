@@ -11,7 +11,6 @@ class PassageViewModel extends ChangeNotifier {
   File? image;
   final FirestoreService _firestoreService = FirestoreService();
   final Uuid uuid = Uuid();
-  Map<int, BaseQuestion<dynamic>?> questions = {};
 
   Future<void> pickImage() async {
     final pickedFile =
@@ -22,19 +21,14 @@ class PassageViewModel extends ChangeNotifier {
     }
   }
 
-  void addQuestion(BaseQuestion<dynamic> question) {
-    questions[questions.length + 1] = question;
-    notifyListeners();
-  }
-
-  PassageQuestionModel submitForm({
-    required String passageInEnglish,
-    required String passageInArabic,
-    required String titleInEnglish,
-    required String titleInArabic,
-    required String questionTextInEnglish,
-    required String questionTextInArabic,
-  }) {
+  PassageQuestionModel submitForm(
+      {required String passageInEnglish,
+      required String passageInArabic,
+      required String titleInEnglish,
+      required String titleInArabic,
+      required String questionTextInEnglish,
+      required String questionTextInArabic,
+      required Map<int, BaseQuestion<dynamic>?> questions}) {
     return PassageQuestionModel(
       questions: questions,
       passageInEnglish: passageInEnglish,
@@ -46,6 +40,36 @@ class PassageViewModel extends ChangeNotifier {
       imageUrl: '', // Handle image URL if necessary
       voiceUrl: '', // Handle voice URL if necessary
     );
+  }
+
+  Future<void> updateQuestion(BaseQuestion<dynamic> question) async {
+    try {
+      // Split the path into segments
+      List<String> pathSegments = question.path!.split('/');
+
+      // Get the document path and the field path
+      String docPath =
+          pathSegments.sublist(0, pathSegments.length - 4).join('/');
+      String fieldIndex = pathSegments[pathSegments.length - 1];
+      String questionField = pathSegments[pathSegments.length - 2];
+      String parentQuestionIndex = pathSegments[pathSegments.length - 3];
+      String parentField = pathSegments[pathSegments.length - 4];
+
+      // Create the FieldPath for the specific field
+      FieldPath questionFiel = FieldPath(
+          [parentField, parentQuestionIndex, questionField, fieldIndex]);
+
+      // Get the document reference
+      DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
+      await _firestoreService
+          .updateQuestionUsingFieldPath<Map<String, dynamic>>(
+              docPath: docRef,
+              fieldPath: questionFiel,
+              newValue: question.toMap());
+      notifyListeners();
+    } catch (e) {
+      print('Error updating question: $e');
+    }
   }
 
   Future<void> uploadQuestion({

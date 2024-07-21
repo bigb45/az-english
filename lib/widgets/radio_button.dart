@@ -69,7 +69,7 @@ class RadioItemData {
   @override
   bool operator ==(Object other) {
     // if (identical(this, other)) return true;
-
+    // TODO:should we compare the hash codes too ???
     return other is RadioItemData && other.title == title;
   }
 

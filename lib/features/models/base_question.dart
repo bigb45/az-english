@@ -75,6 +75,18 @@ abstract class BaseQuestion<T> {
         throw Exception('Unknown question type: $questionType');
     }
   }
+
+  bool equals(BaseQuestion other) {
+    if (other == null) {
+      return false;
+    }
+    return questionTextInEnglish == other.questionTextInEnglish &&
+        questionTextInArabic == other.questionTextInArabic &&
+        imageUrl == other.imageUrl &&
+        voiceUrl == other.voiceUrl &&
+        titleInEnglish == other.titleInEnglish &&
+        questionType == other.questionType;
+  }
 }
 
 enum QuestionType {

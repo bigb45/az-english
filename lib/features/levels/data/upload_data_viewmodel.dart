@@ -132,7 +132,6 @@ class UploadDataViewmodel extends ChangeNotifier {
           // Add questions dynamically based on the row data
           Map<int, BaseQuestion?> questions = {};
           int nextIndex = existingUnit!.questions.length;
-          int indexInPassage = 0;
           switch (QuestionTypeExtension.fromString(questionType)) {
             case QuestionType.dictation:
               questionText?.split(';').forEach((word) {
@@ -146,9 +145,8 @@ class UploadDataViewmodel extends ChangeNotifier {
                   titleInEnglish: titleInEnglish,
                 );
                 if (currentPassage != null) {
-                  currentPassage.questions[currentPassage.questions.length +
-                      indexInPassage] = question;
-                  indexInPassage++; // Increment local index within the passage
+                  currentPassage.questions[currentPassage.questions.length] =
+                      question;
                 } else {
                   existingUnit.questions[nextIndex++] = question;
                 }
@@ -187,9 +185,8 @@ class UploadDataViewmodel extends ChangeNotifier {
                 titleInEnglish: titleInEnglish,
               );
               if (currentPassage != null) {
-                currentPassage.questions[currentPassage.questions.length +
-                    indexInPassage] = question;
-                indexInPassage++; // Increment local index within the passage
+                currentPassage.questions[currentPassage.questions.length] =
+                    question;
               } else {
                 existingUnit.questions[nextIndex++] = question;
               }
@@ -212,9 +209,8 @@ class UploadDataViewmodel extends ChangeNotifier {
                 titleInEnglish: titleInEnglish,
               );
               if (currentPassage != null) {
-                currentPassage.questions[currentPassage.questions.length +
-                    indexInPassage] = question;
-                indexInPassage++; // Increment local index within the passage
+                currentPassage.questions[currentPassage.questions.length] =
+                    question;
               } else {
                 existingUnit.questions[nextIndex++] = question;
               }
@@ -268,9 +264,8 @@ class UploadDataViewmodel extends ChangeNotifier {
                 );
 
                 if (currentPassage != null) {
-                  currentPassage.questions[currentPassage.questions.length +
-                      indexInPassage] = question;
-                  indexInPassage++; // Increment local index within the passage
+                  currentPassage.questions[currentPassage.questions.length] =
+                      question;
                 } else {
                   existingUnit.questions[nextIndex++] = question;
                 }
@@ -296,9 +291,8 @@ class UploadDataViewmodel extends ChangeNotifier {
                 );
 
                 if (currentPassage != null) {
-                  currentPassage.questions[currentPassage.questions.length +
-                      indexInPassage] = question;
-                  indexInPassage++; // Increment local index within the passage
+                  currentPassage.questions[currentPassage.questions.length] =
+                      question;
                 } else {
                   existingUnit.questions[nextIndex++] = question;
                 }
@@ -316,9 +310,8 @@ class UploadDataViewmodel extends ChangeNotifier {
                 titleInEnglish: titleInEnglish,
               );
               if (currentPassage != null) {
-                currentPassage.questions[currentPassage.questions.length +
-                    indexInPassage] = question;
-                indexInPassage++; // Increment local index within the passage
+                currentPassage.questions[currentPassage.questions.length] =
+                    question;
               } else {
                 existingUnit.questions[nextIndex++] = question;
               }

@@ -1,8 +1,10 @@
+import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/fill_the_blanks_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/multiple_choice_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
+import 'package:ez_english/features/home/content/edit_question.dart';
 import 'package:ez_english/features/home/content/viewmodels/passage_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
@@ -48,6 +50,7 @@ class _PassageFormState extends State<PassageForm> {
       TextEditingController();
   final TextEditingController questionTextInArabicController =
       TextEditingController();
+  Map<int, BaseQuestion<dynamic>?> questions = {};
   String? updateMessage;
 
   String? originalPassageInEnglish;
@@ -56,6 +59,7 @@ class _PassageFormState extends State<PassageForm> {
   String? originalTitleInArabic;
   String? originalQuestionTextInEnglish;
   String? originalQuestionTextInArabic;
+  Map<int, BaseQuestion<dynamic>?> originalQuestions = {};
 
   @override
   void initState() {
@@ -74,6 +78,7 @@ class _PassageFormState extends State<PassageForm> {
           widget.question!.questionTextInEnglish ?? "";
       questionTextInArabicController.text = originalQuestionTextInArabic =
           widget.question!.questionTextInArabic ?? "";
+      questions = originalQuestions = widget.question!.questions;
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _validateForm();
@@ -92,13 +97,28 @@ class _PassageFormState extends State<PassageForm> {
   }
 
   bool _checkForChanges() {
-    return passageInEnglishController.text != originalPassageInEnglish ||
+    bool basicInfoChanged = passageInEnglishController.text !=
+            originalPassageInEnglish ||
         passageInArabicController.text != originalPassageInArabic ||
         titleInEnglishController.text != originalTitleInEnglish ||
         titleInEnglishController.text != originalTitleInEnglish ||
         titleInArabicController.text != originalTitleInArabic ||
         questionTextInEnglishController.text != originalQuestionTextInEnglish ||
         questionTextInArabicController.text != originalQuestionTextInArabic;
+    // Check if the number of questions has changed
+    bool questionCountChanged = questions.length != originalQuestions.length;
+
+    // Check if any of the questions themselves have changed
+    bool questionsChanged = false;
+    for (int i = 0; i < questions.length; i++) {
+      if (i >= originalQuestions.length ||
+          !questions[i]!.equals(originalQuestions[i]!)) {
+        questionsChanged = true;
+        break;
+      }
+    }
+
+    return basicInfoChanged || questionCountChanged || questionsChanged;
   }
 
   @override
@@ -207,10 +227,23 @@ class _PassageFormState extends State<PassageForm> {
                   const SizedBox(height: 10),
                   ListView.builder(
                     shrinkWrap: true,
-                    itemCount: viewmodel.questions.length,
+                    itemCount: questions.length,
                     itemBuilder: (context, index) {
+                      if (widget.question != null) {
+                        questions[index]!.path =
+                            "${widget.question!.path}/questions/$index";
+                      }
+                      ;
                       return ListTile(
-                        title: Text(viewmodel.questions[index].toString()),
+                        onTap: () => showEditQuestionDialog(
+                            context,
+                            questions[index]!,
+                            widget.level,
+                            widget.section,
+                            widget.day,
+                            updateQuestionCallback: viewmodel.updateQuestion,
+                            onChangesCallBack: _checkForChanges),
+                        title: Text(questions[index].toString()),
                       );
                     },
                   ),
@@ -238,7 +271,9 @@ class _PassageFormState extends State<PassageForm> {
           content: SizedBox(
             child: AddEmbeddedQuestionForm(
               onAddQuestion: (BaseQuestion<dynamic> question) {
-                viewModel.addQuestion(question);
+                setState(() {
+                  questions[questions.length] = question;
+                });
                 Navigator.of(context).pop();
               },
               level: widget.level,
@@ -272,6 +307,7 @@ class _PassageFormState extends State<PassageForm> {
                   ? () {
                       if (_formKey.currentState!.validate()) {
                         final updatedQuestion = viewmodel.submitForm(
+                          questions: questions,
                           passageInEnglish:
                               passageInEnglishController.text.trim(),
                           passageInArabic:
@@ -285,26 +321,18 @@ class _PassageFormState extends State<PassageForm> {
                         );
                         if (widget.onSubmit != null) {
                           updatedQuestion.path = widget.question?.path ?? '';
-                          widget.onSubmit!(updatedQuestion);
+                          viewmodel.updateQuestion(updatedQuestion);
                         } else {
-                          showConfirmSubmitModalSheet(
-                              context: context,
-                              onSubmit: () {
-                                viewmodel
-                                    .uploadQuestion(
-                                        level: widget.level,
-                                        section: widget.section,
-                                        day: widget.day,
-                                        question: updatedQuestion)
-                                    .then((_) {
-                                  Utils.showSnackbar(
-                                      text: "Question uploaded successfully");
-                                });
-                                if (widget.onSubmit != null) {
-                                  widget.onSubmit!(updatedQuestion);
-                                }
-                              },
-                              question: updatedQuestion);
+                          viewmodel
+                              .uploadQuestion(
+                                  level: widget.level,
+                                  section: widget.section,
+                                  day: widget.day,
+                                  question: updatedQuestion)
+                              .then((_) {
+                            Utils.showSnackbar(
+                                text: "Question uploaded successfully");
+                          });
                         }
                       } else {
                         Utils.showErrorSnackBar(

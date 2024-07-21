@@ -5,7 +5,7 @@ import 'package:ez_english/features/sections/models/string_answer.dart';
 
 class DictationQuestionModel extends BaseQuestion<String> {
   // final String answer;
-  final String speakableText;
+  String speakableText;
 
   DictationQuestionModel({
     // required this.answer,
@@ -39,7 +39,22 @@ class DictationQuestionModel extends BaseQuestion<String> {
       titleInEnglish: json["titleInEnglish"],
     );
   }
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is DictationQuestionModel &&
+        other.speakableText == speakableText &&
+        other.answer == answer &&
+        other.questionTextInEnglish == questionTextInEnglish &&
+        other.questionTextInArabic == questionTextInArabic &&
+        other.imageUrl == imageUrl &&
+        other.voiceUrl == voiceUrl &&
+        other.titleInEnglish == titleInEnglish;
+  }
 
+  @override
+  int get hashCode => Object.hash(speakableText, answer, questionTextInEnglish,
+      questionTextInArabic, imageUrl, voiceUrl, titleInEnglish);
   @override
   bool evaluateAnswer() {
     userAnswer = userAnswer ?? StringAnswer(answer: "");

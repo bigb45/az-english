@@ -48,6 +48,23 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
 
   final TextEditingController titleInEnglishController =
       TextEditingController();
+  void updateQuestion(DictationQuestionModel updatedQuestion) {
+    if (widget.question != null) {
+      if (questionEnglishController.text != originalQuestionTextInEnglish) {
+        widget.question!.questionTextInEnglish = questionEnglishController.text;
+      }
+      if (questionArabicController.text != originalQuestionTextInArabic) {
+        widget.question!.questionTextInArabic = questionArabicController.text;
+      }
+      if (speakableTextController.text != originalSpeakableText) {
+        widget.question!.speakableText = speakableTextController.text;
+      }
+      if (titleInEnglishController.text != originalTitleInEnglish) {
+        widget.question!.titleInEnglish = titleInEnglishController.text;
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -194,6 +211,9 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                         )
                             .then((updatedQuestion) {
                           if (updatedQuestion != null) {
+                            setState(() {
+                              updateQuestion(updatedQuestion);
+                            });
                             if (widget.onSubmit != null) {
                               updatedQuestion.path =
                                   widget.question?.path ?? '';

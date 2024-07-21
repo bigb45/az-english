@@ -39,10 +39,16 @@ class EditQuestionViewModel extends ChangeNotifier {
       String questionField = pathSegments[pathSegments.length - 2];
 
       // Create the FieldPath for the specific field
-      FieldPath questionFiel = FieldPath([questionField, fieldIndex]);
+      FieldPath questionFiel = FieldPath([
+        "questions",
+        "09368ec1-60af-4361-b74c-3b36aa205f20",
+        questionField,
+        fieldIndex
+      ]);
 
       // Get the document reference
-      DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
+      DocumentReference docRef =
+          FirebaseFirestore.instance.doc('levels/A1/sections/1/units/unit7');
       await _firestoreService
           .updateQuestionUsingFieldPath<Map<String, dynamic>>(
               docPath: docRef,

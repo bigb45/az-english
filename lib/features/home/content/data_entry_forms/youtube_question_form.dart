@@ -12,7 +12,7 @@ class YoutubeLessonForm extends StatefulWidget {
   final String section;
   final String day;
   final Function(BaseQuestion<dynamic>)? onSubmit;
-  final YoutubeLessonModel? question;
+  YoutubeLessonModel? question;
 
   YoutubeLessonForm({
     super.key,
@@ -49,6 +49,17 @@ class _YoutubeLessonFormState extends State<YoutubeLessonForm> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _validateForm();
     });
+  }
+
+  void updateQuestion(YoutubeLessonModel updatedQuestion) {
+    if (widget.question != null) {
+      if (youtubeUrlController.text != originalYoutubeUrl) {
+        widget.question!.youtubeUrl = youtubeUrlController.text;
+      }
+      if (titleInEnglishController.text != originalTitleInEnglish) {
+        widget.question!.titleInEnglish = titleInEnglishController.text;
+      }
+    }
   }
 
   @override
@@ -147,6 +158,10 @@ class _YoutubeLessonFormState extends State<YoutubeLessonForm> {
                             .then((updatedQuestion) {
                           if (updatedQuestion != null) {
                             if (widget.onSubmit != null) {
+                              setState(() {
+                                updateQuestion(updatedQuestion);
+                              });
+
                               updatedQuestion.path =
                                   widget.question?.path ?? '';
                               widget.onSubmit!(updatedQuestion);

@@ -1,7 +1,7 @@
 import 'package:ez_english/features/models/base_question.dart';
 
 class YoutubeLessonModel extends BaseQuestion {
-  final String? youtubeUrl;
+  String? youtubeUrl;
 
   YoutubeLessonModel(
       {required this.youtubeUrl,
@@ -32,7 +32,23 @@ class YoutubeLessonModel extends BaseQuestion {
       titleInEnglish: map["titleInEnglish"],
     );
   }
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
+    return other is YoutubeLessonModel &&
+        other.youtubeUrl == youtubeUrl &&
+        other.questionTextInEnglish == questionTextInEnglish &&
+        other.questionTextInArabic == questionTextInArabic &&
+        other.voiceUrl == voiceUrl &&
+        other.imageUrl == imageUrl &&
+        other.titleInEnglish == titleInEnglish &&
+        other.questionType == questionType;
+  }
+
+  @override
+  int get hashCode => Object.hash(youtubeUrl, questionTextInEnglish,
+      questionTextInArabic, voiceUrl, imageUrl, titleInEnglish, questionType);
   @override
   bool evaluateAnswer() {
     return true;

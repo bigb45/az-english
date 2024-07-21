@@ -102,6 +102,34 @@ class _VocabularyFormState extends State<VocabularyForm> {
     super.dispose();
   }
 
+  void updateQuestion(WordDefinition updatedQuestion) {
+    if (widget.question != null) {
+      if (englishWordController.text != originalEnglishWord) {
+        widget.question!.englishWord = englishWordController.text;
+      }
+      if (arabicWordController.text != originalArabicWord) {
+        widget.question!.arabicWord = arabicWordController.text;
+      }
+      if (exampleUsageInEnglishController.text !=
+          originalExampleUsageInEnglish) {
+        widget.question!.exampleUsageInEnglish = [
+          exampleUsageInEnglishController.text
+        ];
+      }
+      if (exampleUsageInArabicController.text != originalExampleUsageInArabic) {
+        widget.question!.exampleUsageInArabic = [
+          exampleUsageInArabicController.text
+        ];
+      }
+      if (questionTitleController.text != originalQuestionTitle) {
+        widget.question!.titleInEnglish = questionTitleController.text;
+      }
+      if (currentWordType != originalWordType) {
+        widget.question!.type = currentWordType!;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -259,6 +287,9 @@ class _VocabularyFormState extends State<VocabularyForm> {
                         )
                             .then((updatedQuestion) {
                           if (updatedQuestion != null) {
+                            setState(() {
+                              updateQuestion(updatedQuestion);
+                            });
                             if (widget.onSubmit != null) {
                               updatedQuestion.path =
                                   widget.question?.path ?? '';

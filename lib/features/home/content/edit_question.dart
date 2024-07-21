@@ -139,10 +139,12 @@ class _EditQuestionState extends State<EditQuestion> {
                               // info: ,
                               actionIcon: Icons.arrow_forward_ios,
                               onTap: () {
-                                _showEditQuestionDialog(
-                                  context,
-                                  viewmodel.questions[index],
-                                );
+                                showEditQuestionDialog(
+                                    context,
+                                    viewmodel.questions[index],
+                                    selectedLevel,
+                                    selectedSection,
+                                    _dayController.text);
                                 // Navigator.pushNamed(
                                 //   context,
                                 //   Routes.editQuestion,
@@ -176,19 +178,6 @@ class _EditQuestionState extends State<EditQuestion> {
                         selectedSection != null &&
                         _dayController.text.isNotEmpty)
                       const Text("No questions found for the selected day."),
-                    ElevatedButton(
-                      onPressed: () async {
-                        UploadDataViewmodel _dataViewmodel =
-                            Provider.of<UploadDataViewmodel>(context,
-                                listen: false);
-
-                        List<Level> levels = await _dataViewmodel.parseData();
-                        for (Level level in levels) {
-                          await _dataViewmodel.saveLevelToFirestore(level);
-                        }
-                      },
-                      child: const Text("Add data"),
-                    ),
                   ],
                 ),
               ),
@@ -198,116 +187,135 @@ class _EditQuestionState extends State<EditQuestion> {
       ),
     );
   }
+}
 
-  void _showEditQuestionDialog(
-      BuildContext context, BaseQuestion<dynamic> question) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Edit Question"),
-          insetPadding: EdgeInsets.all(8),
-          content: SingleChildScrollView(
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.75,
-              child: _buildQuestionForm(question),
-            ),
+void showEditQuestionDialog(
+    BuildContext context,
+    BaseQuestion<dynamic> question,
+    String? selectedLevel,
+    String? selectedSection,
+    String? dayController,
+    {Function(BaseQuestion<dynamic>)? updateQuestionCallback,
+    bool Function()? onChangesCallBack}) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text("Edit Question"),
+        insetPadding: EdgeInsets.all(8),
+        content: SingleChildScrollView(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.75,
+            child: buildQuestionForm(
+                question, selectedLevel, selectedSection, dayController,
+                updateQuestionCallback: updateQuestionCallback),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Cancel"),
-            ),
-          ],
-        );
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              if (onChangesCallBack != null) {
+                onChangesCallBack();
+              }
+            },
+            child: const Text("Cancel"),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Widget buildQuestionForm(BaseQuestion<dynamic> question, String? selectedLevel,
+    String? selectedSection, String? dayController,
+    {Function(BaseQuestion<dynamic>)? updateQuestionCallback}) {
+  return ChangeNotifierProvider(
+    create: (_) => EditQuestionViewModel(),
+    child: Consumer<EditQuestionViewModel>(
+      builder: (context, viewModel, child) {
+        switch (question.questionType) {
+          case QuestionType.multipleChoice:
+            return MultipleChoiceForm(
+              levelName: selectedLevel!,
+              sectionName: selectedSection!,
+              dayNumber: dayController!,
+              onSubmit: updateQuestionCallback ??
+                  (updatedQuestion) {
+                    viewModel.updateQuestion(updatedQuestion);
+                    Navigator.of(context).pop();
+                  },
+              question: question as MultipleChoiceQuestionModel,
+            );
+          case QuestionType.dictation:
+            return DictationQuestionForm(
+              level: selectedLevel!,
+              section: selectedSection!,
+              day: dayController!,
+              onSubmit: updateQuestionCallback ??
+                  (updatedQuestion) {
+                    viewModel.updateQuestion(updatedQuestion);
+                    Navigator.of(context).pop();
+                  },
+              question: question as DictationQuestionModel,
+            );
+          case QuestionType.youtubeLesson:
+            return YoutubeLessonForm(
+              level: selectedLevel!,
+              section: selectedSection!,
+              day: dayController!,
+              onSubmit: updateQuestionCallback ??
+                  (updatedQuestion) {
+                    viewModel.updateQuestion(updatedQuestion);
+                    Navigator.of(context).pop();
+                  },
+              question: question as YoutubeLessonModel,
+            );
+
+          case QuestionType.vocabulary:
+            return VocabularyForm(
+              level: selectedLevel!,
+              section: selectedSection!,
+              day: dayController!,
+              onSubmit: updateQuestionCallback ??
+                  (updatedQuestion) {
+                    viewModel.updateQuestion(updatedQuestion);
+                    Navigator.of(context).pop();
+                  },
+              question: question as WordDefinition,
+            );
+
+          case QuestionType.fillTheBlanks:
+            return FillTheBlanksForm(
+              level: selectedLevel!,
+              section: selectedSection!,
+              day: dayController!,
+              onSubmit: updateQuestionCallback ??
+                  (updatedQuestion) {
+                    viewModel.updateQuestion(updatedQuestion);
+                    Navigator.of(context).pop();
+                  },
+              question: question as FillTheBlanksQuestionModel,
+            );
+          case QuestionType.passage:
+            return PassageForm(
+              level: selectedLevel!,
+              section: selectedSection!,
+              day: dayController!,
+              onSubmit: updateQuestionCallback ??
+                  (updatedQuestion) {
+                    viewModel.updateQuestion(updatedQuestion);
+                    Navigator.of(context).pop();
+                  },
+              question: question as PassageQuestionModel,
+            );
+
+          default:
+            return const Text("Question type not supported.");
+        }
       },
-    );
-  }
-
-  Widget _buildQuestionForm(BaseQuestion<dynamic> question) {
-    return ChangeNotifierProvider(
-      create: (_) => EditQuestionViewModel(),
-      child: Consumer<EditQuestionViewModel>(
-        builder: (context, viewModel, child) {
-          switch (question.questionType) {
-            case QuestionType.multipleChoice:
-              return MultipleChoiceForm(
-                levelName: selectedLevel!,
-                sectionName: selectedSection!,
-                dayNumber: _dayController.text,
-                onSubmit: (updatedQuestion) {
-                  viewModel.updateQuestion(updatedQuestion);
-                  Navigator.of(context).pop();
-                },
-                question: question as MultipleChoiceQuestionModel,
-              );
-            case QuestionType.dictation:
-              return DictationQuestionForm(
-                level: selectedLevel!,
-                section: selectedSection!,
-                day: _dayController.text,
-                onSubmit: (updatedQuestion) {
-                  viewModel.updateQuestion(updatedQuestion);
-                  Navigator.of(context).pop();
-                },
-                question: question as DictationQuestionModel,
-              );
-            case QuestionType.youtubeLesson:
-              return YoutubeLessonForm(
-                level: selectedLevel!,
-                section: selectedSection!,
-                day: _dayController.text,
-                onSubmit: (updatedQuestion) {
-                  viewModel.updateQuestion(updatedQuestion);
-                  Navigator.of(context).pop();
-                },
-                question: question as YoutubeLessonModel,
-              );
-
-            case QuestionType.vocabulary:
-              return VocabularyForm(
-                level: selectedLevel!,
-                section: selectedSection!,
-                day: _dayController.text,
-                onSubmit: (updatedQuestion) {
-                  viewModel.updateQuestion(updatedQuestion);
-                  Navigator.of(context).pop();
-                },
-                question: question as WordDefinition,
-              );
-
-            case QuestionType.fillTheBlanks:
-              return FillTheBlanksForm(
-                level: selectedLevel!,
-                section: selectedSection!,
-                day: _dayController.text,
-                onSubmit: (updatedQuestion) {
-                  viewModel.updateQuestion(updatedQuestion);
-                  Navigator.of(context).pop();
-                },
-                question: question as FillTheBlanksQuestionModel,
-              );
-            case QuestionType.passage:
-              return PassageForm(
-                level: selectedLevel!,
-                section: selectedSection!,
-                day: _dayController.text,
-                onSubmit: (updatedQuestion) {
-                  viewModel.updateQuestion(updatedQuestion);
-                  Navigator.of(context).pop();
-                },
-                question: question as PassageQuestionModel,
-              );
-
-            default:
-              return const Text("Question type not supported.");
-          }
-        },
-      ),
-    );
-  }
+    ),
+  );
 }
 
 Widget sectionDropDown({required onChanged}) {

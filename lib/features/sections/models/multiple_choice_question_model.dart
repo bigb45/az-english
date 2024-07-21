@@ -5,11 +5,11 @@ import 'package:ez_english/features/sections/models/multiple_choice_answer.dart'
 import 'package:ez_english/widgets/radio_button.dart';
 
 class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
-  final List<RadioItemData> options;
-  final String? paragraph;
+  List<RadioItemData> options;
+  String? paragraph;
   // final String? paragraphTranslation;
-  final String? questionSentenceInEnglish;
-  final String? questionSentenceInArabic;
+  String? questionSentenceInEnglish;
+  String? questionSentenceInArabic;
   @override
   MultipleChoiceQuestionModel(
       {required this.options,
@@ -36,6 +36,41 @@ class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
     };
   }
 
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! MultipleChoiceQuestionModel) return false;
+
+    return other.runtimeType == runtimeType &&
+        other.options == options &&
+        other.paragraph == paragraph &&
+        other.questionSentenceInEnglish == questionSentenceInEnglish &&
+        other.questionSentenceInArabic == questionSentenceInArabic &&
+        other.questionTextInEnglish == questionTextInEnglish &&
+        other.questionTextInArabic == questionTextInArabic &&
+        other.imageUrl == imageUrl &&
+        other.voiceUrl == voiceUrl &&
+        other.titleInEnglish == titleInEnglish &&
+        other.answer ==
+            answer; // Ensure that BaseAnswer also correctly implements equality
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      Object.hashAll(
+          options), // Assuming RadioItemData has a proper hashCode implementation
+      paragraph,
+      questionSentenceInEnglish,
+      questionSentenceInArabic,
+      // Combine hash codes of inherited properties
+      questionTextInEnglish,
+      questionTextInArabic,
+      imageUrl,
+      voiceUrl,
+      titleInEnglish,
+      answer // Assuming BaseAnswer has a proper hashCode implementation
+      );
   factory MultipleChoiceQuestionModel.fromMap(Map<String, dynamic> map) {
     return MultipleChoiceQuestionModel(
       options: (map['options'] as List<dynamic>)

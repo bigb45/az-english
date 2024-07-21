@@ -6,6 +6,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/dictation_ques
 import 'package:ez_english/features/home/content/data_entry_forms/radio_group_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/multiple_choice_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -125,6 +126,39 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
     questionSentenceArabicController.dispose();
     titleInEnglishController.dispose();
     super.dispose();
+  }
+
+  void updateQuestion(MultipleChoiceQuestionModel updatedQuestion) {
+    if (widget.question != null) {
+      if (questionEnglishController.text != originalQuestionTextInEnglish) {
+        widget.question!.questionTextInEnglish = questionEnglishController.text;
+      }
+      if (questionArabicController.text != originalQuestionTextInArabic) {
+        widget.question!.questionTextInArabic = questionArabicController.text;
+      }
+      if (questionSentenceEnglishController.text !=
+          originalQuestionSentenceInEnglish) {
+        widget.question!.questionSentenceInEnglish =
+            questionSentenceEnglishController.text;
+      }
+      if (questionSentenceArabicController.text !=
+          originalQuestionSentenceInArabic) {
+        widget.question!.questionSentenceInArabic =
+            questionSentenceArabicController.text;
+      }
+      if (titleInEnglishController.text != originalTitleInEnglish) {
+        widget.question!.titleInEnglish = titleInEnglishController.text;
+      }
+      if (options != originalOptions) {
+        widget.question!.options = options!;
+      }
+      if (answer != originalAnswer) {
+        widget.question!.answer = MultipleChoiceAnswer(answer: answer!);
+      }
+      if (currentImageURL != originalImageURL) {
+        widget.question!.imageUrl = currentImageURL;
+      }
+    }
   }
 
   void _validateForm() {
@@ -420,6 +454,9 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                                 imageUrlInEditMode: widget.question?.imageUrl)
                             .then((updatedQuestion) {
                           if (updatedQuestion != null) {
+                            setState(() {
+                              updateQuestion(updatedQuestion);
+                            });
                             if (widget.onSubmit != null) {
                               updatedQuestion.path =
                                   widget.question?.path ?? '';

@@ -1,14 +1,15 @@
 import 'dart:convert';
 
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:flutter/foundation.dart';
 
 class WordDefinition extends BaseQuestion {
-  final String englishWord;
-  final String? arabicWord;
-  final WordType type;
-  final String? definition;
-  final List<String>? exampleUsageInEnglish;
-  final List<String>? exampleUsageInArabic;
+   String englishWord;
+   String? arabicWord;
+   WordType type;
+   String? definition;
+   List<String>? exampleUsageInEnglish;
+   List<String>? exampleUsageInArabic;
 
   final String? tenses;
   bool isNew;
@@ -80,6 +81,33 @@ class WordDefinition extends BaseQuestion {
   bool evaluateAnswer() {
     return true;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is WordDefinition &&
+        other.englishWord == englishWord &&
+        other.arabicWord == arabicWord &&
+        other.type == type &&
+        other.definition == definition &&
+        listEquals(other.exampleUsageInEnglish, exampleUsageInEnglish) &&
+        listEquals(other.exampleUsageInArabic, exampleUsageInArabic) &&
+        other.tenses == tenses &&
+        other.isNew == isNew &&
+        super == other;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      englishWord,
+      arabicWord,
+      type,
+      definition,
+      Object.hashAll(exampleUsageInEnglish ?? []),
+      Object.hashAll(exampleUsageInArabic ?? []),
+      tenses,
+      isNew,
+      super.hashCode);
 }
 
 enum WordType {

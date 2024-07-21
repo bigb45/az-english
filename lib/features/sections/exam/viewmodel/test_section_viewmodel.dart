@@ -67,10 +67,6 @@ class TestSectionViewmodel extends BaseViewModel {
           passageTexts[entry.key] = passageQuestion
               .passageInEnglish!; // Assuming you want to track passage texts by question index.
 
-          // Insert passage question itself if needed or just the embedded questions.
-          // _questions.add(passageQuestion); // Uncomment this if you want the passage question in the list as well.
-
-          // Flatten the embedded questions into the list.
           passageQuestion.questions.values.forEach((question) {
             if (question != null) {
               _questions.add(question);
