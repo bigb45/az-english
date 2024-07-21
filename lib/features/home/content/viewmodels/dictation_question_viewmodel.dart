@@ -51,4 +51,9 @@ class DictationQuestionViewModel extends ChangeNotifier {
         section: section,
         questionMap: question.toMap());
   }
+
+  void reset() {
+    image = null;
+    notifyListeners();
+  }
 }

@@ -228,11 +228,12 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                                             section: widget.section,
                                             day: widget.day,
                                             // Add question to the onSubmit function
-                                            question: updatedQuestion!)
+                                            question: updatedQuestion)
                                         .then((_) {
                                       Utils.showSnackbar(
                                           text:
                                               "Question uploaded successfully");
+                                      resetForm(viewmodel.reset);
                                     });
                                     if (widget.onSubmit != null) {
                                       widget.onSubmit!(updatedQuestion);
@@ -279,6 +280,18 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
           ),
       ],
     );
+  }
+
+  void resetForm(Function resetViewmodel) {
+    resetViewmodel();
+    questionEnglishController.text = "";
+    questionArabicController.text = "";
+    speakableTextController.text = "";
+    titleInEnglishController.text = "";
+    setState(() {
+      isFormValid = false;
+      updateMessage = null;
+    });
   }
 }
 
