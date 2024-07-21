@@ -32,11 +32,13 @@ class _RadioGroupFormState extends State<RadioGroupForm> {
   @override
   void initState() {
     super.initState();
+
     selectedOption = widget.selectedOption ?? widget.options.first;
   }
 
   @override
   Widget build(BuildContext context) {
+    print("selected options: ${selectedOption?.value}");
     return Form(
       key: _formKey,
       onChanged: () {
@@ -56,7 +58,6 @@ class _RadioGroupFormState extends State<RadioGroupForm> {
                   setState(() {
                     widget.onSelectionChanged(option);
                     selectedOption = option;
-                    print('Option selected: ${selectedOption?.title}');
                   });
                 }
               },
@@ -82,7 +83,6 @@ class _RadioGroupFormState extends State<RadioGroupForm> {
               trailing: IconButton(
                 icon: const Icon(Icons.delete, color: Colors.red),
                 onPressed: () {
-                  print('Delete option: ${option.title}');
                   setState(() {
                     // _formKey.currentState!.validate();
                     widget.onDeleteItem(option);
@@ -96,12 +96,13 @@ class _RadioGroupFormState extends State<RadioGroupForm> {
                 value: option,
                 groupValue: selectedOption,
                 onChanged: (value) {
-                  if (option.title.isNotEmpty) {
-                    setState(() {
-                      widget.onSelectionChanged(value!);
-                      selectedOption = value;
-                    });
-                  }
+                  // if (option.title.isNotEmpty) {
+                  // print
+                  setState(() {
+                    selectedOption = value;
+                    widget.onSelectionChanged(value!);
+                  });
+                  // }
                 },
               ),
             );

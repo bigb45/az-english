@@ -269,9 +269,9 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                 ),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: () {
-                    setState(() async {
-                      await viewmodel.pickImage();
+                  onTap: () async {
+                    await viewmodel.pickImage();
+                    setState(() {
                       currentImage = viewmodel.image;
                       _validateForm();
                     });
@@ -476,6 +476,8 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                                       Utils.showSnackbar(
                                         text: "Question added successfully",
                                       );
+                                      _formKey.currentState!.reset();
+                                      resetForm(viewmodel.reset);
                                     });
                                   },
                                   question: updatedQuestion);
@@ -519,5 +521,24 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
           ),
       ],
     );
+  }
+
+  void resetForm(VoidCallback resetViewmodel) {
+    print("resetting form");
+    setState(() {
+      questionEnglishController.clear();
+      questionArabicController.clear();
+      questionSentenceEnglishController.clear();
+      questionSentenceArabicController.clear();
+      titleInEnglishController.clear();
+      options = [];
+      resetViewmodel();
+      answer = null;
+      currentImage = null;
+      currentImageURL = null;
+      isFormValid = false;
+      isSubformValid = false;
+      updateMessage = null;
+    });
   }
 }
