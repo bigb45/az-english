@@ -4,12 +4,12 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:flutter/foundation.dart';
 
 class WordDefinition extends BaseQuestion {
-   String englishWord;
-   String? arabicWord;
-   WordType type;
-   String? definition;
-   List<String>? exampleUsageInEnglish;
-   List<String>? exampleUsageInArabic;
+  String englishWord;
+  String? arabicWord;
+  WordType type;
+  String? definition;
+  List<String>? exampleUsageInEnglish;
+  List<String>? exampleUsageInArabic;
 
   final String? tenses;
   bool isNew;
@@ -28,6 +28,30 @@ class WordDefinition extends BaseQuestion {
       required super.questionType,
       super.imageUrl,
       super.voiceUrl});
+  @override
+  WordDefinition copy() {
+    return WordDefinition(
+      englishWord: englishWord,
+      arabicWord: arabicWord,
+      type: type,
+      definition: definition,
+      exampleUsageInEnglish: exampleUsageInEnglish != null
+          ? List<String>.from(exampleUsageInEnglish!)
+          : null,
+      exampleUsageInArabic: exampleUsageInArabic != null
+          ? List<String>.from(exampleUsageInArabic!)
+          : null,
+      tenses: tenses,
+      isNew: isNew,
+      titleInEnglish: titleInEnglish,
+      questionTextInEnglish: questionTextInEnglish,
+      questionTextInArabic: questionTextInArabic,
+      questionType: questionType,
+      imageUrl: imageUrl,
+      voiceUrl: voiceUrl,
+    );
+  }
+
   @override
   Map<String, dynamic> toMap() {
     Map<String, dynamic> baseMap = super.toMap();

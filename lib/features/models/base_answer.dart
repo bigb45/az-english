@@ -10,6 +10,8 @@ abstract class BaseAnswer<T> {
     };
   }
 
+  BaseAnswer<T> copy();
+
   BaseAnswer({required this.answerType, this.answer});
 }
 

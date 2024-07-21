@@ -18,6 +18,19 @@ class DictationQuestionModel extends BaseQuestion<String> {
     required super.titleInEnglish,
     super.questionType = QuestionType.dictation,
   });
+  @override
+  DictationQuestionModel copy() {
+    return DictationQuestionModel(
+      speakableText: speakableText,
+      answer: StringAnswer(answer: answer?.answer),
+      questionTextInArabic: questionTextInArabic,
+      questionTextInEnglish: questionTextInEnglish,
+      imageUrl: imageUrl,
+      voiceUrl: voiceUrl,
+      titleInEnglish: titleInEnglish,
+      questionType: questionType,
+    );
+  }
 
   @override
   Map<String, dynamic> toMap() {

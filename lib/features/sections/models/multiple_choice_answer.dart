@@ -29,6 +29,13 @@ class MultipleChoiceAnswer extends BaseAnswer<RadioItemData> {
   }
 
   @override
+  MultipleChoiceAnswer copy() {
+    return MultipleChoiceAnswer(
+      answer: RadioItemData.copy(answer!),
+    )..userAnswer = userAnswer;
+  }
+
+  @override
   int get hashCode => answer
       .hashCode; // Assumes RadioItemData has a proper hashCode implementation
 }

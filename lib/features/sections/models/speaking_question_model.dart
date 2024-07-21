@@ -48,6 +48,12 @@ class SpeakingQuestionModel extends BaseQuestion<String> {
         questionType, // From BaseQuestion
       );
 
+  @override
+  BaseQuestion<String> copy() {
+    // TODO: implement copy
+    throw UnimplementedError();
+  }
+
 // TODO: make sure this is correct
   // factory SpeakingQuestionModel.fromJson(Map<String, dynamic> json) {
   //   return SpeakingQuestionModel(

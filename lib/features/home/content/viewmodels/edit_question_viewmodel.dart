@@ -39,12 +39,7 @@ class EditQuestionViewModel extends ChangeNotifier {
       String questionField = pathSegments[pathSegments.length - 2];
 
       // Create the FieldPath for the specific field
-      FieldPath questionFiel = FieldPath([
-        "questions",
-        "09368ec1-60af-4361-b74c-3b36aa205f20",
-        questionField,
-        fieldIndex
-      ]);
+      FieldPath questionFiel = FieldPath([questionField, fieldIndex]);
 
       // Get the document reference
       DocumentReference docRef =

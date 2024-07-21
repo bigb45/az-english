@@ -19,6 +19,24 @@ class PassageQuestionModel extends BaseQuestion {
       required super.voiceUrl,
       super.questionType = QuestionType.passage});
 
+  @override
+  PassageQuestionModel copy() {
+    return PassageQuestionModel(
+      passageInArabic: passageInArabic,
+      passageInEnglish: passageInEnglish,
+      titleInArabic: titleInArabic,
+      titleInEnglish: titleInEnglish,
+      questionTextInEnglish: questionTextInEnglish,
+      questionTextInArabic: questionTextInArabic,
+      imageUrl: imageUrl,
+      voiceUrl: voiceUrl,
+      questionType: questionType,
+      questions: questions.map(
+        (key, value) => MapEntry(key, value?.copy()),
+      ),
+    );
+  }
+
   factory PassageQuestionModel.fromMap(Map<String, dynamic> map) {
     return PassageQuestionModel(
       passageInEnglish: map['passageInEnglish'] ?? "No English Passage",

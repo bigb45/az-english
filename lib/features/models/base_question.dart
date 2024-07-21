@@ -29,6 +29,7 @@ abstract class BaseQuestion<T> {
     required this.questionType,
     required this.titleInEnglish,
   });
+  BaseQuestion<T> copy();
 
   bool evaluateAnswer() {
     return answer?.validate(userAnswer) ?? false;

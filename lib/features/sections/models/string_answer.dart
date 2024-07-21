@@ -31,4 +31,11 @@ class StringAnswer extends BaseAnswer<String> {
 
   @override
   int get hashCode => answer.hashCode;
+
+  @override
+  StringAnswer copy() {
+    return StringAnswer(
+      answer: answer ?? '',
+    )..userAnswer = userAnswer;
+  }
 }

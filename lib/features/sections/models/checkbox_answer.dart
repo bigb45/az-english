@@ -31,4 +31,10 @@ class CheckboxAnswer extends BaseAnswer<List<CheckboxData>> {
 
     return validationResult.every((element) => element == true);
   }
+
+  @override
+  BaseAnswer<List<CheckboxData>> copy() {
+    // TODO: implement copy
+    throw UnimplementedError();
+  }
 }

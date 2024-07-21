@@ -24,6 +24,24 @@ class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
       super.voiceUrl,
       super.questionType = QuestionType.multipleChoice,
       required super.titleInEnglish});
+  @override
+  MultipleChoiceQuestionModel copy() {
+    return MultipleChoiceQuestionModel(
+      options: options
+          .map((option) => RadioItemData.copy(option))
+          .toList(), // Ensuring a deep copy of options
+      paragraph: paragraph,
+      questionSentenceInEnglish: questionSentenceInEnglish,
+      questionSentenceInArabic: questionSentenceInArabic,
+      answer: answer?.copy(),
+      questionTextInArabic: questionTextInArabic,
+      questionTextInEnglish: questionTextInEnglish,
+      imageUrl: imageUrl,
+      voiceUrl: voiceUrl,
+      questionType: questionType,
+      titleInEnglish: titleInEnglish,
+    );
+  }
 
   @override
   Map<String, dynamic> toMap() {

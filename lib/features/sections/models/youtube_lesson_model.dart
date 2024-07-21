@@ -11,6 +11,17 @@ class YoutubeLessonModel extends BaseQuestion {
       super.questionTextInArabic,
       super.imageUrl,
       required super.titleInEnglish});
+  @override
+  YoutubeLessonModel copy() {
+    return YoutubeLessonModel(
+        youtubeUrl: youtubeUrl,
+        questionType: questionType,
+        voiceUrl: voiceUrl,
+        questionTextInEnglish: questionTextInEnglish,
+        questionTextInArabic: questionTextInArabic,
+        imageUrl: imageUrl,
+        titleInEnglish: titleInEnglish);
+  }
 
   @override
   Map<String, dynamic> toMap() {

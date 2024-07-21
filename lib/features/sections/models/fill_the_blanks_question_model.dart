@@ -4,8 +4,8 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/string_answer.dart';
 
 class FillTheBlanksQuestionModel extends BaseQuestion<String> {
-   String? incompleteSentenceInEnglish;
-   String? incompleteSentenceInArabic;
+  String? incompleteSentenceInEnglish;
+  String? incompleteSentenceInArabic;
   FillTheBlanksQuestionModel({
     this.incompleteSentenceInEnglish,
     this.incompleteSentenceInArabic,
@@ -17,6 +17,21 @@ class FillTheBlanksQuestionModel extends BaseQuestion<String> {
     super.voiceUrl,
     super.titleInEnglish,
   });
+
+  @override
+  FillTheBlanksQuestionModel copy() {
+    return FillTheBlanksQuestionModel(
+      incompleteSentenceInEnglish: incompleteSentenceInEnglish,
+      incompleteSentenceInArabic: incompleteSentenceInArabic,
+      answer: answer?.copy(),
+      questionTextInEnglish: questionTextInEnglish,
+      questionTextInArabic: questionTextInArabic,
+      imageUrl: imageUrl,
+      voiceUrl: voiceUrl,
+      titleInEnglish: titleInEnglish,
+      questionType: questionType,
+    );
+  }
 
   @override
   Map<String, dynamic> toMap() {
@@ -49,21 +64,6 @@ class FillTheBlanksQuestionModel extends BaseQuestion<String> {
     return answer?.validate(userAnswer) ?? false;
   }
 
-  // @override
-  // bool operator ==(Object other) {
-  //   if (identical(this, other)) return true;
-  //   return other is FillTheBlanksQuestionModel &&
-  //       super == other && // Comparing all properties in the superclass
-  //       other.incompleteSentenceInEnglish == incompleteSentenceInEnglish &&
-  //       other.incompleteSentenceInArabic == incompleteSentenceInArabic;
-  // }
-
-  // @override
-  // int get hashCode => Object.hash(
-  //       super.hashCode, // Include the hashCode of the superclass
-  //       incompleteSentenceInEnglish,
-  //       incompleteSentenceInArabic,
-  //     );
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

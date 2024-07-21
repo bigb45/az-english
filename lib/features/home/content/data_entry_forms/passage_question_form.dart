@@ -77,7 +77,10 @@ class _PassageFormState extends State<PassageForm> {
           widget.question!.questionTextInEnglish ?? "";
       questionTextInArabicController.text = originalQuestionTextInArabic =
           widget.question!.questionTextInArabic ?? "";
-      questions = originalQuestions = widget.question!.questions;
+      originalQuestions = widget.question!.questions
+          .map((key, value) => MapEntry(key, value?.copy()));
+      questions = widget.question!.questions
+          .map((key, value) => MapEntry(key, value?.copy()));
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _validateForm();
@@ -273,6 +276,7 @@ class _PassageFormState extends State<PassageForm> {
                 setState(() {
                   questions[questions.length] = question;
                 });
+                _validateForm();
                 Navigator.of(context).pop();
               },
               level: widget.level,
@@ -320,7 +324,7 @@ class _PassageFormState extends State<PassageForm> {
                         );
                         if (widget.onSubmit != null) {
                           updatedQuestion.path = widget.question?.path ?? '';
-                          viewmodel.updateQuestion(updatedQuestion);
+                          widget.onSubmit!(updatedQuestion);
                         } else {
                           viewmodel
                               .uploadQuestion(
