@@ -5,7 +5,9 @@ import 'package:ez_english/features/home/content/data_entry_forms/passage_questi
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/edit_question_viewmodel.dart';
+import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
@@ -174,6 +176,19 @@ class _EditQuestionState extends State<EditQuestion> {
                         selectedSection != null &&
                         _dayController.text.isNotEmpty)
                       const Text("No questions found for the selected day."),
+                    ElevatedButton(
+                      onPressed: () async {
+                        UploadDataViewmodel _dataViewmodel =
+                            Provider.of<UploadDataViewmodel>(context,
+                                listen: false);
+
+                        List<Level> levels = await _dataViewmodel.parseData();
+                        for (Level level in levels) {
+                          await _dataViewmodel.saveLevelToFirestore(level);
+                        }
+                      },
+                      child: const Text("Add data"),
+                    ),
                   ],
                 ),
               ),

@@ -22,7 +22,7 @@ class TestSectionViewmodel extends BaseViewModel {
   bool _isReadyToSubmit = false;
   bool _isSubmitted = false;
   String? levelId;
-  List<BaseQuestion> _questions = [];
+  List<BaseQuestion?> _questions = [];
   List<bool?> _answers = [];
 
   bool get isReadyToSubmit => _isReadyToSubmit;
@@ -44,7 +44,7 @@ class TestSectionViewmodel extends BaseViewModel {
     sectionName = RouteConstants.testSectionName;
     await fetchQuestions();
     if (_questions.isNotEmpty &&
-        _questions[currentIndex].questionType == QuestionType.youtubeLesson) {
+        _questions[currentIndex]?.questionType == QuestionType.youtubeLesson) {
       answerState = EvaluationState.noState;
     }
     isInitialized = true;
@@ -52,29 +52,36 @@ class TestSectionViewmodel extends BaseViewModel {
 
   Future<void> fetchQuestions() async {
     isLoading = true;
-    // UserModel userData = (await _firestoreService.getUser(_firebaseAuthService.getUser()!.uid))!;
-    // int lastQuestionIndex = userData.levelsProgress![_levelName]!
-    //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
       Unit unit = await _firestoreService.fetchUnit(
         RouteConstants.sectionNameId[RouteConstants.testSectionName]!,
         levelName!,
       );
-      _questions = unit.questions.values.cast<BaseQuestion>().toList();
+      _questions.clear(); // Assuming you want to reset the questions.
+      _answers.clear(); // Reset answers as well.
 
-      for (int i = 0; i < _questions.length; i++) {
-        if (_questions[i] is PassageQuestionModel) {
+      for (var entry in unit.questions.entries) {
+        if (entry.value is PassageQuestionModel) {
           PassageQuestionModel passageQuestion =
-              _questions[i] as PassageQuestionModel;
-          passageTexts[i] = passageQuestion.passageInEnglish!;
-          _questions.removeAt(i);
-          _questions.insertAll(
-              i,
-              passageQuestion.questions
-                  .where((q) => q != null)
-                  .cast<BaseQuestion>());
+              entry.value as PassageQuestionModel;
+          passageTexts[entry.key] = passageQuestion
+              .passageInEnglish!; // Assuming you want to track passage texts by question index.
+
+          // Insert passage question itself if needed or just the embedded questions.
+          // _questions.add(passageQuestion); // Uncomment this if you want the passage question in the list as well.
+
+          // Flatten the embedded questions into the list.
+          passageQuestion.questions.values.forEach((question) {
+            if (question != null) {
+              _questions.add(question);
+              _answers.add(
+                  null); // Assuming each question needs a corresponding answer placeholder.
+            }
+          });
+        } else {
+          _questions.add(entry.value);
+          _answers.add(null); // Add null for each normal question.
         }
-        _answers = [..._answers, null];
       }
 
       progress = unit.progress;

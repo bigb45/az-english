@@ -11,7 +11,7 @@ class PassageViewModel extends ChangeNotifier {
   File? image;
   final FirestoreService _firestoreService = FirestoreService();
   final Uuid uuid = Uuid();
-  List<BaseQuestion<dynamic>> questions = [];
+  Map<int, BaseQuestion<dynamic>?> questions = {};
 
   Future<void> pickImage() async {
     final pickedFile =
@@ -23,7 +23,7 @@ class PassageViewModel extends ChangeNotifier {
   }
 
   void addQuestion(BaseQuestion<dynamic> question) {
-    questions.add(question);
+    questions[questions.length + 1] = question;
     notifyListeners();
   }
 
