@@ -179,7 +179,8 @@ class _YoutubeLessonFormState extends State<YoutubeLessonForm> {
                                       Utils.showSnackbar(
                                           text:
                                               "Question uploaded successfully");
-                                      _formKey.currentState!.reset();
+                                      // _formKey.currentState!.reset();
+                                      resetForm();
                                     });
                                     if (widget.onSubmit != null) {
                                       widget.onSubmit!(updatedQuestion);
@@ -226,5 +227,10 @@ class _YoutubeLessonFormState extends State<YoutubeLessonForm> {
           ),
       ],
     );
+  }
+
+  void resetForm() {
+    youtubeUrlController.text = "";
+    titleInEnglishController.text = "";
   }
 }

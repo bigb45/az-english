@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uuid/uuid.dart';
+import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
-import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class PassageViewModel extends ChangeNotifier {
   File? image;
@@ -87,5 +88,10 @@ class PassageViewModel extends ChangeNotifier {
     } catch (e) {
       print('Error adding question: $e');
     }
+  }
+
+  void reset() {
+    image = null;
+    notifyListeners();
   }
 }

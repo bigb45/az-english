@@ -1,4 +1,3 @@
-import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/fill_the_blanks_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/multiple_choice_form.dart';
@@ -332,7 +331,24 @@ class _PassageFormState extends State<PassageForm> {
                               .then((_) {
                             Utils.showSnackbar(
                                 text: "Question uploaded successfully");
+                            resetForm(viewmodel.reset);
                           });
+                          // showConfirmSubmitModalSheet(
+                          //     question: updatedQuestion,
+                          //     context: context,
+                          //     onSubmit: () {
+                          //       viewmodel
+                          //           .uploadQuestion(
+                          //               level: widget.level,
+                          //               section: widget.section,
+                          //               day: widget.day,
+                          //               question: updatedQuestion)
+                          //           .then((_) {
+                          //         Utils.showSnackbar(
+                          //             text: "Question uploaded successfully");
+                          //         resetForm(viewmodel.reset);
+                          //       });
+                          //     });
                         }
                       } else {
                         Utils.showErrorSnackBar(
@@ -371,6 +387,20 @@ class _PassageFormState extends State<PassageForm> {
           ),
       ],
     );
+  }
+
+  void resetForm(VoidCallback resetCallback) {
+    resetCallback();
+    passageInEnglishController.clear();
+    passageInArabicController.clear();
+    titleInEnglishController.clear();
+    titleInArabicController.clear();
+    questionTextInEnglishController.clear();
+    questionTextInArabicController.clear();
+    questions.clear();
+    setState(() {
+      isFormValid = false;
+    });
   }
 }
 
