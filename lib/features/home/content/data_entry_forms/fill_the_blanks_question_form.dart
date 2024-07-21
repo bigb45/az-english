@@ -199,6 +199,13 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
               child: Column(
                 children: [
                   TextFormField(
+                    onChanged: (value) {
+                      if (value.length < englishBlankStart ||
+                          value.length < englishBlankEnd) {
+                        englishBlankStart = value.length;
+                        englishBlankEnd = value.length;
+                      }
+                    },
                     controller: incompleteSentenceInEnglishController,
                     decoration: InputDecoration(
                         border: const OutlineInputBorder(),
@@ -260,6 +267,13 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    onChanged: (value) {
+                      if (value.length < arabicBlankStart ||
+                          value.length < arabicBlankEnd) {
+                        arabicBlankStart = value.length;
+                        arabicBlankEnd = value.length;
+                      }
+                    },
                     controller: incompleteSentenceInArabicController,
                     decoration: InputDecoration(
                         border: const OutlineInputBorder(),
@@ -343,32 +357,36 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
   }
 
   Widget _updateButton(FillTheBlanksViewModel viewmodel) {
-    bool isEnabled = isFormValid;
-
     return Column(
       children: [
         Stack(
           alignment: Alignment.center,
           children: [
             Button(
-              onPressed: isEnabled
+              onPressed: isFormValid
                   ? () {
                       if (_formKey.currentState!.validate()) {
-                        final text =
+                        final englishText =
                             incompleteSentenceInEnglishController.text.trim();
 
-                        final newText = text.replaceRange(
+                        final newEnglishText = englishText.replaceRange(
                             englishBlankStart, englishBlankEnd, '_____');
+
+                        final arabicText =
+                            incompleteSentenceInArabicController.text.trim();
+
+                        final newArabicText = arabicText.replaceRange(
+                            arabicBlankStart, arabicBlankEnd, '_____');
+
                         viewmodel
                             .submitForm(
-                          incompleteSentenceInEnglish: newText,
+                          incompleteSentenceInEnglish: newEnglishText,
                           incompleteSentenceInArabic:
                               incompleteSentenceInArabicController.text
                                       .trim()
                                       .isEmpty
                                   ? null
-                                  : incompleteSentenceInArabicController.text
-                                      .trim(),
+                                  : newArabicText,
                           answer: incompleteSentenceInEnglishController.text
                               .substring(englishBlankStart, englishBlankEnd)
                               .trim(),
@@ -391,8 +409,8 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                             } else {
                               showConfirmSubmitModalSheet(
                                   context: context,
-                                  onSubmit: () async {
-                                    await viewmodel
+                                  onSubmit: () {
+                                    viewmodel
                                         .uploadQuestion(
                                       level: widget.level,
                                       section: widget.section,
@@ -410,6 +428,8 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                                   },
                                   question: updatedQuestion);
                             }
+                          } else {
+                            print("not working");
                           }
                         });
                       } else {
@@ -421,12 +441,12 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                   : null,
               text: "Update",
             ),
-            if (!isEnabled)
+            if (!isFormValid)
               Positioned.fill(
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: isEnabled
+                    onTap: isFormValid
                         ? null
                         : () {
                             setState(() {

@@ -28,10 +28,6 @@ class FillTheBlanksViewModel extends ChangeNotifier {
     String? questionTextInEnglish,
     String? questionTextInArabic,
   }) async {
-    if (incompleteSentenceInEnglish == null || answer.isEmpty) {
-      return null;
-    }
-
     return FillTheBlanksQuestionModel(
       incompleteSentenceInEnglish: incompleteSentenceInEnglish,
       incompleteSentenceInArabic: incompleteSentenceInArabic,
