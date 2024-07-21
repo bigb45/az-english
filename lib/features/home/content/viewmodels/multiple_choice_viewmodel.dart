@@ -91,6 +91,12 @@ class MultipleChoiceViewModel extends ChangeNotifier {
     if (answers.length < maxAnswers) {
       answers.add(RadioItemData(title: "", value: idGenerator.v4()));
       answerCount++;
+      print("selected answer: ${_selectedAnswer.value}");
+
+      for (var answer in answers) {
+        print(
+            "updating answer, title: ${answer.title}, value: ${answer.value}");
+      }
       notifyListeners();
     }
   }
@@ -153,5 +159,16 @@ class MultipleChoiceViewModel extends ChangeNotifier {
     } catch (e) {
       print('Error adding question: $e');
     }
+  }
+
+  void reset() {
+    final id = idGenerator.v4();
+    _image = null;
+    _showCachedImage = true;
+    answers = [RadioItemData(title: "", value: id)];
+    _selectedAnswer = answers[0];
+    shouldSetOptions = true;
+    answerCount = 1;
+    notifyListeners();
   }
 }
