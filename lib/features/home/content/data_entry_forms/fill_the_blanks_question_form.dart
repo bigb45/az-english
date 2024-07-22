@@ -64,7 +64,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
   int originalArabicBlankEnd = 0;
 
   String? updateMessage;
-
+  String answer = "";
   void updateQuestion(FillTheBlanksQuestionModel updatedQuestion) {
     if (widget.question != null) {
       if (incompleteSentenceInEnglishController.text !=
@@ -114,15 +114,6 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
       englishBlankEnd = originalEnglishBlankEnd =
           startIndexOfEnglishWord! + widget.question!.answer!.answer!.length;
 
-      // TODO: add the Arabic word with blank to the API
-      //       var startIndexOfArabicWord = widget.question!.incompleteSentenceInArabic
-      //     ?.indexOf(widget.question!.answer!.answer!);
-      // if (startIndexOfEnglishWord != -1) {
-      //   englishBlankStart = startIndexOfEnglishWord ?? englishBlankStart;
-      //   englishBlankEnd = (startIndexOfEnglishWord ?? englishBlankEnd) +
-      //       widget.question!.answer!.answer!.length;
-      // }
-
       incompleteSentenceInEnglishController.text =
           originalIncompleteSentenceInEnglish = newText ?? "";
       incompleteSentenceInArabicController.text =
@@ -139,7 +130,8 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
   }
 
   void _validateForm() {
-    bool formValid = _formKey.currentState?.validate() ?? false;
+    bool formValid =
+        (_formKey.currentState?.validate() ?? false) && answer.isNotEmpty;
     bool changesMade = _checkForChanges();
     setState(() {
       isFormValid = formValid && (widget.question == null || changesMade);
@@ -179,6 +171,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
     if (isEnglishField) {
       englishBlankStart = selection.start;
       englishBlankEnd = selection.end;
+      answer = controller.text.substring(englishBlankStart, englishBlankEnd);
     } else {
       arabicBlankStart = selection.start;
       arabicBlankEnd = selection.end;
@@ -246,11 +239,12 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                                     .substring(0, englishBlankStart),
                                 style: const TextStyle(color: Colors.black),
                               ),
-                              TextSpan(
-                                text: '_____',
-                                style:
-                                    const TextStyle(color: Palette.primaryText),
-                              ),
+                              if (englishBlankStart != englishBlankEnd)
+                                TextSpan(
+                                  text: '_____',
+                                  style: const TextStyle(
+                                      color: Palette.primaryText),
+                                ),
                               TextSpan(
                                 text: incompleteSentenceInEnglishController.text
                                     .substring(englishBlankEnd),
@@ -306,11 +300,12 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                                     .substring(0, arabicBlankStart),
                                 style: const TextStyle(color: Colors.black),
                               ),
-                              TextSpan(
-                                text: '_____',
-                                style:
-                                    const TextStyle(color: Palette.primaryText),
-                              ),
+                              if (arabicBlankEnd != arabicBlankStart)
+                                TextSpan(
+                                  text: '_____',
+                                  style: const TextStyle(
+                                      color: Palette.primaryText),
+                                ),
                               TextSpan(
                                 text: incompleteSentenceInArabicController.text
                                     .substring(arabicBlankEnd),
