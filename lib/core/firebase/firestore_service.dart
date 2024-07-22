@@ -364,7 +364,7 @@ class FirestoreService {
     String sectionName,
     String level,
   ) async {
-    Map<int, BaseQuestion> questions = {};
+    Map<String, BaseQuestion> questions = {};
     try {
       _userModel = await getUser(_user!.uid);
       int lastQuestionIndex = _userModel!.levelsProgress![level]!
@@ -454,7 +454,7 @@ class FirestoreService {
                 "${FirestoreConstants.sectionsCollection}/$sectionName/"
                 "${FirestoreConstants.unitsCollection}/$tempUnitNumber/"
                 "${FirestoreConstants.questionsField}/${entry.key}"; // Set path
-            questions[entry.key] = question; // Use key as map key
+            questions["${entry.key}"] = question; // Use key as map key
           }
         }
 
@@ -636,6 +636,26 @@ class FirestoreService {
         return Level.fromMap(doc.data() as Map<String, dynamic>);
       }).toList();
       return levels;
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<Unit?>> getDays(String level, String section) async {
+    try {
+      QuerySnapshot querySnapshot = await _db
+          .collection(FirestoreConstants.levelsCollection)
+          .doc(level)
+          .collection(FirestoreConstants.sectionsCollection)
+          .doc(RouteConstants.getSectionIds(section))
+          .collection(FirestoreConstants.unitsCollection)
+          .get();
+      List<Unit?> units = querySnapshot.docs.map((doc) {
+        return Unit.fromMap(doc.data() as Map<String, dynamic>);
+      }).toList();
+      return units;
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
     } catch (e) {

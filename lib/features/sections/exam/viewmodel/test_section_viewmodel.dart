@@ -18,7 +18,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class TestSectionViewmodel extends BaseViewModel {
   final sectionId = "4";
-  Map<int, String> passageTexts = {};
+  Map<String, String> passageTexts = {};
   bool _isReadyToSubmit = false;
   bool _isSubmitted = false;
   String? levelId;

@@ -8,6 +8,7 @@ import 'package:ez_english/features/home/content/viewmodels/edit_question_viewmo
 import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/level.dart';
+import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
@@ -28,9 +29,16 @@ class EditQuestion extends StatefulWidget {
 
 class _EditQuestionState extends State<EditQuestion> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _dayController = TextEditingController();
   String? selectedLevel;
   String? selectedSection;
+  Unit? selectedUnit;
+  bool isDayMenuEnabled = false;
+
+  void _updateDayMenuState() {
+    setState(() {
+      isDayMenuEnabled = selectedLevel != null && selectedSection != null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,33 +66,6 @@ class _EditQuestionState extends State<EditQuestion> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    TextFormField(
-                      keyboardType: TextInputType.number,
-                      controller: _dayController,
-                      decoration: const InputDecoration(
-                        labelText: "Day",
-                        hintText: "Enter the day",
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter the day';
-                        }
-                        return null;
-                      },
-                      onChanged: (value) {
-                        if (_dayController.text.isNotEmpty &&
-                            selectedLevel != null &&
-                            selectedSection != null) {
-                          viewmodel.fetchQuestions(
-                            level: selectedLevel!,
-                            section: selectedSection!,
-                            day: value,
-                          );
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
@@ -93,13 +74,24 @@ class _EditQuestionState extends State<EditQuestion> {
                               setState(() {
                                 selectedLevel = levelSelection;
                               });
-                              if (_dayController.text.isNotEmpty &&
+                              _updateDayMenuState();
+                              if (selectedLevel != null &&
+                                  selectedSection != null) {
+                                setState(() {
+                                  selectedUnit = null;
+                                  viewmodel.questions.clear();
+                                });
+                                viewmodel.fetchDays(
+                                    level: selectedLevel!,
+                                    section: selectedSection!);
+                              }
+                              if (selectedUnit != null &&
                                   selectedLevel != null &&
                                   selectedSection != null) {
                                 viewmodel.fetchQuestions(
                                   level: selectedLevel!,
                                   section: selectedSection!,
-                                  day: _dayController.text,
+                                  day: selectedUnit!.name.split("t")[1],
                                 );
                               }
                             },
@@ -112,13 +104,24 @@ class _EditQuestionState extends State<EditQuestion> {
                               setState(() {
                                 selectedSection = sectionSelection as String?;
                               });
-                              if (_dayController.text.isNotEmpty &&
+                              _updateDayMenuState();
+                              if (selectedLevel != null &&
+                                  selectedSection != null) {
+                                setState(() {
+                                  selectedUnit = null;
+                                  viewmodel.questions.clear();
+                                });
+                                viewmodel.fetchDays(
+                                    level: selectedLevel!,
+                                    section: selectedSection!);
+                              }
+                              if (selectedUnit != null &&
                                   selectedLevel != null &&
                                   selectedSection != null) {
                                 viewmodel.fetchQuestions(
                                   level: selectedLevel!,
                                   section: selectedSection!,
-                                  day: _dayController.text,
+                                  day: selectedUnit!.name.split("t")[1],
                                 );
                               }
                             },
@@ -127,57 +130,78 @@ class _EditQuestionState extends State<EditQuestion> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    if (viewmodel.questions.isNotEmpty)
-                      Expanded(
-                        // height: 300,
-                        child: ListView.builder(
-                          itemCount: viewmodel.questions.length,
-                          itemBuilder: (context, index) {
-                            return ListItemCard(
-                              mainText:
-                                  "${viewmodel.questions[index].questionType.toShortString()}",
-                              // info: ,
-                              actionIcon: Icons.arrow_forward_ios,
-                              onTap: () {
-                                showEditQuestionDialog(
-                                    context,
-                                    viewmodel.questions[index],
-                                    selectedLevel,
-                                    selectedSection,
-                                    _dayController.text);
-                                // Navigator.pushNamed(
-                                //   context,
-                                //   Routes.editQuestion,
-                                //   arguments: viewmodel.questions[index],
-                                //
-                              },
-                              // result:
-                            );
-                          },
-                        ),
-                      )
-
-                    // Container(
-                    //   color: Colors.red,
-                    //   height: MediaQuery.of(context).size.height * 0.5,
-                    //   child: PageView.builder(
-                    //     itemCount: viewmodel.questions.length,
-                    //     itemBuilder: (context, index) {
-                    //       final question = viewmodel.questions[index];
-                    //       return ListTile(
-                    //         title:
-                    //             Text(question.questionType.toShortString()),
-                    //         onTap: () {
-                    //           _showEditQuestionDialog(context, question);
-                    //         },
-                    //       );
-                    //     },
-                    //   ),
-                    // )
-                    else if (selectedLevel != null &&
-                        selectedSection != null &&
-                        _dayController.text.isNotEmpty)
-                      const Text("No questions found for the selected day."),
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField<Unit>(
+                      value: selectedUnit,
+                      items: viewmodel.units != null
+                          ? viewmodel.units!.map((Unit? unit) {
+                              return DropdownMenuItem<Unit>(
+                                value: unit,
+                                child: Text(unit!.name.capitalizeFirst()),
+                              );
+                            }).toList()
+                          : [],
+                      onChanged: isDayMenuEnabled
+                          ? (Unit? newUnit) {
+                              setState(() {
+                                selectedUnit = newUnit;
+                              });
+                              if (selectedUnit != null &&
+                                  selectedLevel != null &&
+                                  selectedSection != null) {
+                                viewmodel.fetchQuestions(
+                                  level: selectedLevel!,
+                                  section: selectedSection!,
+                                  day: selectedUnit!.name.split("t")[1],
+                                );
+                                setState(() {
+                                  selectedUnit = newUnit;
+                                });
+                              }
+                            }
+                          : null,
+                      decoration: const InputDecoration(
+                        labelText: "Please select a unit",
+                        hintText: "Select a unit",
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select a unit';
+                        }
+                        return null;
+                      },
+                      disabledHint: viewmodel.units == null
+                          ? const Text(
+                              "Please fill all fields above to select a unit")
+                          : const Text("Please add the level first"),
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                        child: viewmodel.isLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : viewmodel.questions.isNotEmpty
+                                ? ListView.builder(
+                                    itemCount: viewmodel.questions.length,
+                                    itemBuilder: (context, index) {
+                                      return ListItemCard(
+                                        mainText:
+                                            "${viewmodel.questions[index].questionType.toShortString()}",
+                                        actionIcon: Icons.arrow_forward_ios,
+                                        onTap: () {
+                                          showEditQuestionDialog(
+                                              context,
+                                              viewmodel.questions[index],
+                                              selectedLevel,
+                                              selectedSection,
+                                              selectedUnit!.name.split("t")[1]);
+                                        },
+                                        // result:
+                                      );
+                                    },
+                                  )
+                                : const Text(
+                                    "No questions found for the selected day."))
                   ],
                 ),
               ),

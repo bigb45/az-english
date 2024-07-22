@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:flutter/foundation.dart';
 
 class Unit {
   String name;
   String? descriptionInEnglish;
   String? descriptionInArabic;
   int numberOfQuestions;
-  Map<int, BaseQuestion?> questions;
+  Map<String, BaseQuestion?> questions;
   double progress;
 
   Unit({
@@ -27,7 +28,7 @@ class Unit {
           map['descriptionInArabic'] ?? "No Arabic Description",
       numberOfQuestions: map['numberOfQuestions'],
       questions: (map['questions'] as Map<String, dynamic>).map(
-        (key, value) => MapEntry(int.parse(key), BaseQuestion.fromMap(value)),
+        (key, value) => MapEntry(key, BaseQuestion.fromMap(value)),
       ),
     );
   }
@@ -48,4 +49,17 @@ class Unit {
   }
 
   String toJson() => json.encode(toMap());
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Unit &&
+        other.name == name &&
+        other.descriptionInEnglish == descriptionInEnglish &&
+        other.descriptionInArabic == descriptionInArabic &&
+        other.numberOfQuestions == numberOfQuestions &&
+        other.progress == progress;
+  }
+
+  @override
+  int get hashCode => super.hashCode;
 }

@@ -1,5 +1,6 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/features/models/unit.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -7,6 +8,9 @@ import 'package:ez_english/features/models/base_question.dart';
 class EditQuestionViewModel extends ChangeNotifier {
   List<BaseQuestion<dynamic>> questions = [];
   FirestoreService _firestoreService = FirestoreService();
+  List<Unit?>? units;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   Future<void> fetchQuestions({
     required String level,
@@ -14,10 +18,28 @@ class EditQuestionViewModel extends ChangeNotifier {
     required String day,
   }) async {
     try {
+      _isLoading = true;
+      notifyListeners();
       questions = await _firestoreService.fetchQuestions(
         level: level,
         section: section,
         day: day,
+      );
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      print('Error fetching questions: $e');
+      questions = [];
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchDays(
+      {required String level, required String section, d}) async {
+    try {
+      units = await _firestoreService.getDays(
+        level,
+        section,
       );
       notifyListeners();
     } catch (e) {
