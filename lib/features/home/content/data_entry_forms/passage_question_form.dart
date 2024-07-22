@@ -10,6 +10,7 @@ import 'package:ez_english/features/sections/models/passage_question_model.dart'
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
+import 'package:ez_english/widgets/vertical_list_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -227,27 +228,35 @@ class _PassageFormState extends State<PassageForm> {
                     text: "Add paragraph question",
                   ),
                   const SizedBox(height: 10),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: questions.length,
-                    itemBuilder: (context, index) {
-                      if (widget.question != null) {
-                        questions[index]!.path =
-                            "${widget.question!.path}/questions/$index";
-                      }
-                      ;
-                      return ListTile(
-                        onTap: () => showEditQuestionDialog(
-                            context,
-                            questions[index]!,
-                            widget.level,
-                            widget.section,
-                            widget.day,
-                            updateQuestionCallback: viewmodel.updateQuestion,
-                            onChangesCallBack: _checkForChanges),
-                        title: Text(questions[index].toString()),
-                      );
-                    },
+                  SizedBox(
+                    height: 300.h,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: questions.length,
+                      itemBuilder: (context, index) {
+                        if (widget.question != null) {
+                          questions[index]!.path =
+                              "${widget.question!.path}/questions/$index";
+                        }
+
+                        return VerticalListItemCard(
+                          mainText:
+                              "${index + 1}. ${questions[index]?.questionTextInEnglish.toString() ?? "No question text"}",
+                          info: Text(questions[index]!.titleInEnglish ?? ""),
+                          subText:
+                              questions[index]!.questionType.toShortString(),
+                          actionIcon: Icons.arrow_forward_ios,
+                          onTap: () => showEditQuestionDialog(
+                              context,
+                              questions[index]!,
+                              widget.level,
+                              widget.section,
+                              widget.day,
+                              updateQuestionCallback: viewmodel.updateQuestion,
+                              onChangesCallBack: _checkForChanges),
+                        );
+                      },
+                    ),
                   ),
                   const SizedBox(height: 10),
                   _updateButton(viewmodel),
@@ -325,6 +334,9 @@ class _PassageFormState extends State<PassageForm> {
                         if (widget.onSubmit != null) {
                           updatedQuestion.path = widget.question?.path ?? '';
                           widget.onSubmit!(updatedQuestion);
+                          Navigator.of(context).pop();
+                          Utils.showSnackbar(
+                              text: "Question updated successfully");
                         } else {
                           viewmodel
                               .uploadQuestion(

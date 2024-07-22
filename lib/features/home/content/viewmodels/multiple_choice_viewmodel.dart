@@ -13,6 +13,8 @@ import 'package:uuid/uuid.dart';
 class MultipleChoiceViewModel extends ChangeNotifier {
   final PermissionHandlerService _permissionHandlerService =
       PermissionHandlerService();
+  bool _isLoading = false;
+  get isLoading => _isLoading;
   File? _image;
   File? get image => _image;
   final FirestoreService _firestoreService = FirestoreService();
@@ -49,6 +51,8 @@ class MultipleChoiceViewModel extends ChangeNotifier {
   }
 
   Future<String> uploadImageAndGetUrl(File file, String imageName) async {
+    _isLoading = true;
+    notifyListeners();
     try {
       UploadTask uploadTask =
           FirebaseStorage.instance.ref('questions/$imageName').putFile(file);
@@ -57,8 +61,11 @@ class MultipleChoiceViewModel extends ChangeNotifier {
       return downloadUrl;
     } catch (e) {
       print("Error uploading image: $e");
-      return '';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
+    return '';
   }
 
   void updateAnswerInEditMode(

@@ -9,6 +9,7 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
+import 'package:ez_english/widgets/rich_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -64,7 +65,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
   int originalArabicBlankEnd = 0;
 
   String? updateMessage;
-
+  String answer = "";
   void updateQuestion(FillTheBlanksQuestionModel updatedQuestion) {
     if (widget.question != null) {
       if (incompleteSentenceInEnglishController.text !=
@@ -114,15 +115,6 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
       englishBlankEnd = originalEnglishBlankEnd =
           startIndexOfEnglishWord! + widget.question!.answer!.answer!.length;
 
-      // TODO: add the Arabic word with blank to the API
-      //       var startIndexOfArabicWord = widget.question!.incompleteSentenceInArabic
-      //     ?.indexOf(widget.question!.answer!.answer!);
-      // if (startIndexOfEnglishWord != -1) {
-      //   englishBlankStart = startIndexOfEnglishWord ?? englishBlankStart;
-      //   englishBlankEnd = (startIndexOfEnglishWord ?? englishBlankEnd) +
-      //       widget.question!.answer!.answer!.length;
-      // }
-
       incompleteSentenceInEnglishController.text =
           originalIncompleteSentenceInEnglish = newText ?? "";
       incompleteSentenceInArabicController.text =
@@ -139,7 +131,8 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
   }
 
   void _validateForm() {
-    bool formValid = _formKey.currentState?.validate() ?? false;
+    bool formValid =
+        (_formKey.currentState?.validate() ?? false) && answer.isNotEmpty;
     bool changesMade = _checkForChanges();
     setState(() {
       isFormValid = formValid && (widget.question == null || changesMade);
@@ -179,6 +172,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
     if (isEnglishField) {
       englishBlankStart = selection.start;
       englishBlankEnd = selection.end;
+      answer = controller.text.substring(englishBlankStart, englishBlankEnd);
     } else {
       arabicBlankStart = selection.start;
       arabicBlankEnd = selection.end;
@@ -198,6 +192,16 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  Text(
+                      "Select part of the sentence and press the 'insert blank' button to insert a blank.",
+                      style: TextStyles.bodyMedium),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  RichTextfield(),
+                  SizedBox(
+                    height: 10.h,
+                  ),
                   TextFormField(
                     onChanged: (value) {
                       if (value.length < englishBlankStart ||
@@ -211,13 +215,30 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                         border: const OutlineInputBorder(),
                         labelText: "Full sentence (English)",
                         hintText: "Ex: \"The boy kicks the ball.\"",
-                        suffixIcon: TextButton(
-                          onPressed: () {
-                            insertBlank(incompleteSentenceInEnglishController);
-                            _validateForm();
-                          },
-                          child: const Text("Insert blank"),
-                        )),
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.format_underline),
+                              onPressed: () {},
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.minimize),
+                              onPressed: () {
+                                insertBlank(
+                                    incompleteSentenceInEnglishController);
+                              },
+                            ),
+                          ],
+                        )
+                        //  TextButton(
+                        //   onPressed: () {
+                        //     insertBlank(incompleteSentenceInEnglishController);
+                        //     _validateForm();
+                        //   },
+                        //   child: const Text("Insert blank"),
+                        // ),
+                        ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the incomplete sentence in English';
@@ -246,11 +267,12 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                                     .substring(0, englishBlankStart),
                                 style: const TextStyle(color: Colors.black),
                               ),
-                              TextSpan(
-                                text: '_____',
-                                style:
-                                    const TextStyle(color: Palette.primaryText),
-                              ),
+                              if (englishBlankStart != englishBlankEnd)
+                                TextSpan(
+                                  text: '_____',
+                                  style: const TextStyle(
+                                      color: Palette.primaryText),
+                                ),
                               TextSpan(
                                 text: incompleteSentenceInEnglishController.text
                                     .substring(englishBlankEnd),
@@ -306,11 +328,12 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                                     .substring(0, arabicBlankStart),
                                 style: const TextStyle(color: Colors.black),
                               ),
-                              TextSpan(
-                                text: '_____',
-                                style:
-                                    const TextStyle(color: Palette.primaryText),
-                              ),
+                              if (arabicBlankEnd != arabicBlankStart)
+                                TextSpan(
+                                  text: '_____',
+                                  style: const TextStyle(
+                                      color: Palette.primaryText),
+                                ),
                               TextSpan(
                                 text: incompleteSentenceInArabicController.text
                                     .substring(arabicBlankEnd),
@@ -406,6 +429,9 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                               updatedQuestion.path =
                                   widget.question?.path ?? '';
                               widget.onSubmit!(updatedQuestion);
+                              Navigator.of(context).pop();
+                              Utils.showSnackbar(
+                                  text: "Question updated successfully");
                             } else {
                               showConfirmSubmitModalSheet(
                                   context: context,

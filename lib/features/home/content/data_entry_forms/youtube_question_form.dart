@@ -165,6 +165,9 @@ class _YoutubeLessonFormState extends State<YoutubeLessonForm> {
                               updatedQuestion.path =
                                   widget.question?.path ?? '';
                               widget.onSubmit!(updatedQuestion);
+                              Navigator.of(context).pop();
+                              Utils.showSnackbar(
+                                  text: "Question updated successfully");
                             } else {
                               showConfirmSubmitModalSheet(
                                   context: context,

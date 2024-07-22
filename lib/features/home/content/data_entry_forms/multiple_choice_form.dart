@@ -204,208 +204,212 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                 RadioItemData.copy(widget.question!.answer!.answer!));
           }
 
-          return Form(
-            onChanged: _validateForm,
-            key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: questionEnglishController,
-                  maxLines: 2,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Question text (English)",
-                    hintText: "Ex: \"Answer the following sentence\"",
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return AppStrings.requiredField;
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    _validateForm();
-                  },
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: questionArabicController,
-                  maxLines: 2,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Question text (Arabic)",
-                    hintText: "\"أجب على الجملة التالية\"",
-                  ),
-                  onChanged: (value) {
-                    _validateForm();
-                  },
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: questionSentenceEnglishController,
-                  maxLines: 2,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Question sentence (English)",
-                    hintText: "\"What did Ali eat for breakfast?\"",
-                  ),
-                  onChanged: (value) {
-                    _validateForm();
-                  },
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: questionSentenceArabicController,
-                  maxLines: 2,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Question Sentence (Arabic)",
-                    hintText: "\"ماذا تناول علي على الإفطار؟\"",
-                  ),
-                  onChanged: (value) {
-                    _validateForm();
-                  },
-                ),
-                const SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () async {
-                    await viewmodel.pickImage();
-                    setState(() {
-                      currentImage = viewmodel.image;
-                      _validateForm();
-                    });
-                  },
-                  child: Stack(
+          return viewmodel.isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Form(
+                  onChanged: _validateForm,
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
                     children: [
-                      DottedBorder(
-                        color: Palette.primaryVariant,
-                        strokeWidth: 1,
-                        padding: const EdgeInsets.all(0),
-                        child: Container(
-                          height: 200.h,
-                          decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 216, 243, 255),
-                          ),
-                          child: Center(
-                            child: viewmodel.image != null
-                                ? Image.file(viewmodel.image!)
-                                : (viewmodel.showCachedImage &&
-                                        widget.question != null &&
-                                        widget.question!.imageUrl != null
-                                    ? CachedNetworkImage(
-                                        imageUrl: widget.question!.imageUrl!,
-                                        placeholder: (context, url) =>
-                                            const CircularProgressIndicator(),
-                                      )
-                                    : Text(
-                                        "Tap here to pick image",
-                                        style: TextStyles.bodyLarge,
-                                      )),
-                          ),
+                      TextFormField(
+                        controller: questionEnglishController,
+                        maxLines: 2,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Question text (English)",
+                          hintText: "Ex: \"Answer the following sentence\"",
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return AppStrings.requiredField;
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          _validateForm();
+                        },
                       ),
-                      if (viewmodel.image != null || viewmodel.showCachedImage)
-                        Positioned(
-                          top: 0,
-                          right: 0,
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.close,
-                              color: Colors.red,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                viewmodel.removeImage();
-                                currentImage = null;
-                                currentImageURL = null;
-                                _validateForm();
-                              });
-                            },
-                          ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: questionArabicController,
+                        maxLines: 2,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Question text (Arabic)",
+                          hintText: "\"أجب على الجملة التالية\"",
                         ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                RadioGroupForm(
-                  onFormChanged: (isNewFormValid) {
-                    setState(() {
-                      isSubformValid = isNewFormValid;
-                      _validateForm();
-                    });
-                  },
-                  onSelectionChanged: (newSelection) {
-                    viewmodel.setSelectedAnswer(newSelection);
-                    setState(() {
-                      answer = newSelection;
-                    });
-
-                    _validateForm();
-                  },
-                  onAnswerUpdated: (newAnswer, option) {
-                    viewmodel.updateAnswer(newAnswer, option);
-                    setState(() {
-                      answer?.title = newAnswer;
-                    });
-                    _validateForm();
-                  },
-                  onDeleteItem: (option) {
-                    viewmodel.deleteAnswer(option);
-                    setState(() {
-                      if (options!.length > 1) {
-                        options!.remove(option);
-                      }
-                    });
-                    _validateForm();
-                  },
-                  options: viewmodel.answers,
-                  selectedOption: viewmodel.selectedAnswer,
-                ),
-                viewmodel.answerCount < viewmodel.maxAnswers
-                    ? GestureDetector(
-                        onTap: () {
-                          viewmodel.addAnswer();
+                        onChanged: (value) {
+                          _validateForm();
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: questionSentenceEnglishController,
+                        maxLines: 2,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Question sentence (English)",
+                          hintText: "\"What did Ali eat for breakfast?\"",
+                        ),
+                        onChanged: (value) {
+                          _validateForm();
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: questionSentenceArabicController,
+                        maxLines: 2,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Question Sentence (Arabic)",
+                          hintText: "\"ماذا تناول علي على الإفطار؟\"",
+                        ),
+                        onChanged: (value) {
+                          _validateForm();
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: () async {
+                          await viewmodel.pickImage();
                           setState(() {
-                            isSubformValid = false;
+                            currentImage = viewmodel.image;
                             _validateForm();
                           });
                         },
-                        child: DottedBorder(
-                          color: Palette.primaryVariant,
-                          strokeWidth: 1,
-                          padding: const EdgeInsets.all(0),
-                          child: Container(
-                            height: 50.h,
-                            decoration: const BoxDecoration(
-                              color: Palette.textFieldFill,
+                        child: Stack(
+                          children: [
+                            DottedBorder(
+                              color: Palette.primaryVariant,
+                              strokeWidth: 1,
+                              padding: const EdgeInsets.all(0),
+                              child: Container(
+                                height: 200.h,
+                                decoration: const BoxDecoration(
+                                  color: Color.fromARGB(255, 216, 243, 255),
+                                ),
+                                child: Center(
+                                  child: viewmodel.image != null
+                                      ? Image.file(viewmodel.image!)
+                                      : (viewmodel.showCachedImage &&
+                                              widget.question != null &&
+                                              widget.question!.imageUrl != null
+                                          ? CachedNetworkImage(
+                                              imageUrl:
+                                                  widget.question!.imageUrl!,
+                                              placeholder: (context, url) =>
+                                                  const CircularProgressIndicator(),
+                                            )
+                                          : Text(
+                                              "Tap here to pick image",
+                                              style: TextStyles.bodyLarge,
+                                            )),
+                                ),
+                              ),
                             ),
-                            child: Center(
-                                child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.add,
-                                  size: 32,
+                            if (viewmodel.image != null ||
+                                viewmodel.showCachedImage)
+                              Positioned(
+                                top: 0,
+                                right: 0,
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.close,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      viewmodel.removeImage();
+                                      currentImage = null;
+                                      currentImageURL = null;
+                                      _validateForm();
+                                    });
+                                  },
                                 ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Text(
-                                  "Add an answer",
-                                  style: TextStyles.bodyLarge,
-                                ),
-                              ],
-                            )),
-                          ),
+                              ),
+                          ],
                         ),
-                      )
-                    : const SizedBox(),
-                const SizedBox(height: 10),
-                _updateButton(viewmodel),
-              ],
-            ),
-          );
+                      ),
+                      const SizedBox(height: 10),
+                      RadioGroupForm(
+                        onFormChanged: (isNewFormValid) {
+                          setState(() {
+                            isSubformValid = isNewFormValid;
+                            _validateForm();
+                          });
+                        },
+                        onSelectionChanged: (newSelection) {
+                          viewmodel.setSelectedAnswer(newSelection);
+                          setState(() {
+                            answer = newSelection;
+                          });
+
+                          _validateForm();
+                        },
+                        onAnswerUpdated: (newAnswer, option) {
+                          viewmodel.updateAnswer(newAnswer, option);
+                          setState(() {
+                            answer?.title = newAnswer;
+                          });
+                          _validateForm();
+                        },
+                        onDeleteItem: (option) {
+                          viewmodel.deleteAnswer(option);
+                          setState(() {
+                            if (options!.length > 1) {
+                              options!.remove(option);
+                            }
+                          });
+                          _validateForm();
+                        },
+                        options: viewmodel.answers,
+                        selectedOption: viewmodel.selectedAnswer,
+                      ),
+                      viewmodel.answerCount < viewmodel.maxAnswers
+                          ? GestureDetector(
+                              onTap: () {
+                                viewmodel.addAnswer();
+                                setState(() {
+                                  isSubformValid = false;
+                                  _validateForm();
+                                });
+                              },
+                              child: DottedBorder(
+                                color: Palette.primaryVariant,
+                                strokeWidth: 1,
+                                padding: const EdgeInsets.all(0),
+                                child: Container(
+                                  height: 50.h,
+                                  decoration: const BoxDecoration(
+                                    color: Palette.textFieldFill,
+                                  ),
+                                  child: Center(
+                                      child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        Icons.add,
+                                        size: 32,
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Text(
+                                        "Add an answer",
+                                        style: TextStyles.bodyLarge,
+                                      ),
+                                    ],
+                                  )),
+                                ),
+                              ),
+                            )
+                          : const SizedBox(),
+                      const SizedBox(height: 10),
+                      _updateButton(viewmodel),
+                    ],
+                  ),
+                );
         },
       ),
     );
@@ -466,6 +470,9 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                               updatedQuestion.path =
                                   widget.question?.path ?? '';
                               widget.onSubmit!(updatedQuestion);
+                              Navigator.of(context).pop();
+                              Utils.showSnackbar(
+                                  text: "Question updated successfully");
                             } else {
                               showConfirmSubmitModalSheet(
                                   context: context,
@@ -521,7 +528,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               updateMessage!,
-              style: TextStyle(color: Colors.red, fontSize: 16),
+              style: const TextStyle(color: Colors.red, fontSize: 16),
             ),
           ),
       ],
