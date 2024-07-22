@@ -9,6 +9,7 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
+import 'package:ez_english/widgets/rich_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -197,6 +198,10 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                   SizedBox(
                     height: 10.h,
                   ),
+                  RichTextfield(),
+                  SizedBox(
+                    height: 10.h,
+                  ),
                   TextFormField(
                     onChanged: (value) {
                       if (value.length < englishBlankStart ||
@@ -210,13 +215,30 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                         border: const OutlineInputBorder(),
                         labelText: "Full sentence (English)",
                         hintText: "Ex: \"The boy kicks the ball.\"",
-                        suffixIcon: TextButton(
-                          onPressed: () {
-                            insertBlank(incompleteSentenceInEnglishController);
-                            _validateForm();
-                          },
-                          child: const Text("Insert blank"),
-                        )),
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.format_underline),
+                              onPressed: () {},
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.minimize),
+                              onPressed: () {
+                                insertBlank(
+                                    incompleteSentenceInEnglishController);
+                              },
+                            ),
+                          ],
+                        )
+                        //  TextButton(
+                        //   onPressed: () {
+                        //     insertBlank(incompleteSentenceInEnglishController);
+                        //     _validateForm();
+                        //   },
+                        //   child: const Text("Insert blank"),
+                        // ),
+                        ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the incomplete sentence in English';
@@ -407,6 +429,9 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                               updatedQuestion.path =
                                   widget.question?.path ?? '';
                               widget.onSubmit!(updatedQuestion);
+                              Navigator.of(context).pop();
+                              Utils.showSnackbar(
+                                  text: "Question updated successfully");
                             } else {
                               showConfirmSubmitModalSheet(
                                   context: context,

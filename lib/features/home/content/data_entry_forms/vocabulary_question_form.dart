@@ -137,7 +137,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
       child: Consumer<VocabularyViewModel>(
         builder: (context, viewmodel, child) {
           return viewmodel.isLoading
-              ? CircularProgressIndicator()
+              ? const Center(child: CircularProgressIndicator())
               : Form(
                   onChanged: _validateForm,
                   key: _formKey,
@@ -296,6 +296,9 @@ class _VocabularyFormState extends State<VocabularyForm> {
                               updatedQuestion.path =
                                   widget.question?.path ?? '';
                               widget.onSubmit!(updatedQuestion);
+                              Navigator.of(context).pop();
+                              Utils.showSnackbar(
+                                  text: "Question updated successfully");
                             } else {
                               showConfirmSubmitModalSheet(
                                   context: context,
@@ -312,9 +315,6 @@ class _VocabularyFormState extends State<VocabularyForm> {
                                               "Question uploaded successfully");
                                       resetForm();
                                     });
-                                    if (widget.onSubmit != null) {
-                                      widget.onSubmit!(updatedQuestion);
-                                    }
                                   },
                                   question: updatedQuestion);
                             }
@@ -352,7 +352,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               updateMessage!,
-              style: TextStyle(color: Colors.red, fontSize: 16),
+              style: const TextStyle(color: Colors.red, fontSize: 16),
             ),
           ),
       ],

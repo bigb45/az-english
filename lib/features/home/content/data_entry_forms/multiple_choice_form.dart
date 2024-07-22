@@ -205,7 +205,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
           }
 
           return viewmodel.isLoading
-              ? CircularProgressIndicator()
+              ? const Center(child: CircularProgressIndicator())
               : Form(
                   onChanged: _validateForm,
                   key: _formKey,
@@ -470,6 +470,9 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                               updatedQuestion.path =
                                   widget.question?.path ?? '';
                               widget.onSubmit!(updatedQuestion);
+                              Navigator.of(context).pop();
+                              Utils.showSnackbar(
+                                  text: "Question updated successfully");
                             } else {
                               showConfirmSubmitModalSheet(
                                   context: context,
@@ -525,7 +528,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               updateMessage!,
-              style: TextStyle(color: Colors.red, fontSize: 16),
+              style: const TextStyle(color: Colors.red, fontSize: 16),
             ),
           ),
       ],

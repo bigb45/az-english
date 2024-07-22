@@ -1,8 +1,7 @@
-import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/core/firebase/firestore_service.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:flutter/material.dart';
 
 class EditQuestionViewModel extends ChangeNotifier {
   List<BaseQuestion<dynamic>> questions = [];
@@ -29,7 +28,6 @@ class EditQuestionViewModel extends ChangeNotifier {
 
   Future<void> updateQuestion(BaseQuestion<dynamic> question) async {
     try {
-      // Split the path into segments
       List<String> pathSegments = question.path!.split('/');
 
       // Get the document path and the field path
@@ -42,13 +40,18 @@ class EditQuestionViewModel extends ChangeNotifier {
       FieldPath questionFiel = FieldPath([questionField, fieldIndex]);
 
       // Get the document reference
-      DocumentReference docRef =
-          FirebaseFirestore.instance.doc('levels/A1/sections/1/units/unit7');
+      DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
       await _firestoreService
           .updateQuestionUsingFieldPath<Map<String, dynamic>>(
               docPath: docRef,
               fieldPath: questionFiel,
               newValue: question.toMap());
+      questions = questions.map((q) {
+        if (q.path == question.path) {
+          return question;
+        }
+        return q;
+      }).toList();
       notifyListeners();
     } catch (e) {
       print('Error updating question: $e');
