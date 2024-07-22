@@ -5,9 +5,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/passage_questi
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/edit_question_viewmodel.dart';
-import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
-import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
@@ -15,7 +13,7 @@ import 'package:ez_english/features/sections/models/passage_question_model.dart'
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 import 'package:ez_english/theme/text_styles.dart';
-import 'package:ez_english/widgets/list_item_card.dart';
+import 'package:ez_english/widgets/vertical_list_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -133,25 +131,27 @@ class _EditQuestionState extends State<EditQuestion> {
                         child: ListView.builder(
                           itemCount: viewmodel.questions.length,
                           itemBuilder: (context, index) {
-                            return ListItemCard(
+                            return VerticalListItemCard(
                               mainText:
-                                  "${viewmodel.questions[index].questionType.toShortString()}",
-                              // info: ,
+                                  "${index + 1}. ${viewmodel.questions[index].questionTextInEnglish ?? "No question text"}",
+                              info: Text(
+                                  viewmodel.questions[index].titleInEnglish ??
+                                      ""),
+                              subText: viewmodel.questions[index].questionType
+                                  .toShortString(),
                               actionIcon: Icons.arrow_forward_ios,
                               onTap: () {
                                 showEditQuestionDialog(
-                                    context,
-                                    viewmodel.questions[index],
-                                    selectedLevel,
-                                    selectedSection,
-                                    _dayController.text);
-                                // Navigator.pushNamed(
-                                //   context,
-                                //   Routes.editQuestion,
-                                //   arguments: viewmodel.questions[index],
-                                //
+                                  context,
+                                  viewmodel.questions[index],
+                                  selectedLevel,
+                                  selectedSection,
+                                  updateQuestionCallback: (updatedQuestion) {
+                                    viewmodel.updateQuestion(updatedQuestion);
+                                  },
+                                  _dayController.text,
+                                );
                               },
-                              // result:
                             );
                           },
                         ),
@@ -202,9 +202,9 @@ void showEditQuestionDialog(
     builder: (context) {
       return AlertDialog(
         title: const Text("Edit Question"),
-        insetPadding: EdgeInsets.all(8),
+        insetPadding: const EdgeInsets.all(8),
         content: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.75,
             child: buildQuestionForm(
                 question, selectedLevel, selectedSection, dayController,
@@ -214,10 +214,11 @@ void showEditQuestionDialog(
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
               if (onChangesCallBack != null) {
                 onChangesCallBack();
               }
+
+              Navigator.of(context).pop();
             },
             child: const Text("Cancel"),
           ),
@@ -255,7 +256,6 @@ Widget buildQuestionForm(BaseQuestion<dynamic> question, String? selectedLevel,
               onSubmit: updateQuestionCallback ??
                   (updatedQuestion) {
                     viewModel.updateQuestion(updatedQuestion);
-                    Navigator.of(context).pop();
                   },
               question: question as DictationQuestionModel,
             );
