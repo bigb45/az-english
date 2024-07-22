@@ -191,6 +191,12 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  Text(
+                      "Select part of the sentence and press the 'insert blank' button to insert a blank.",
+                      style: TextStyles.bodyMedium),
+                  SizedBox(
+                    height: 10.h,
+                  ),
                   TextFormField(
                     onChanged: (value) {
                       if (value.length < englishBlankStart ||
