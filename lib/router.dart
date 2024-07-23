@@ -4,6 +4,7 @@ import 'package:ez_english/components.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/auth/screens/sign_in.dart';
 import 'package:ez_english/features/auth/screens/sign_up.dart';
+import 'package:ez_english/features/home/admin/admin_screen.dart';
 import 'package:ez_english/features/home/admin/all_users.dart';
 import 'package:ez_english/features/home/admin/user_settings.dart';
 import 'package:ez_english/features/home/content/add_question.dart';
@@ -158,5 +159,6 @@ final loggedInRouter = GoRouter(
       path: '/all_questions',
       builder: (context, state) => const ContentScreen(),
     ),
+    GoRoute(path: '/admin', builder: (context, state) => AdminScreen()),
   ],
 );

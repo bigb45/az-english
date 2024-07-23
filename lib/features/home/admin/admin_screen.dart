@@ -16,6 +16,7 @@ class AdminScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Palette.primaryText),
         title: const Text(
           'Administrator',
           style: TextStyle(color: Palette.primaryText),
