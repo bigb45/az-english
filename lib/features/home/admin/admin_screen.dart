@@ -51,8 +51,8 @@ class AdminScreen extends StatelessWidget {
                       children: [
                         SvgPicture.asset(
                           "assets/images/users.svg",
-                          height: 100,
-                          width: 100,
+                          height: 80.h,
+                          width: 80.w,
                         ),
                         Text(
                           "Users",
@@ -70,12 +70,11 @@ class AdminScreen extends StatelessWidget {
                       print("selected");
                     },
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         SvgPicture.asset(
                           "assets/images/question-mark.svg",
-                          height: 60,
-                          width: 60,
+                          height: 60.h,
+                          width: 60.w,
                         ),
                         Text(
                           "Questions",
@@ -84,23 +83,23 @@ class AdminScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SelectableCard(
-                    onPressed: null,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SvgPicture.asset(
-                          "assets/images/statistics.svg",
-                          height: 100,
-                          width: 100,
-                        ),
-                        Text(
-                          "Statistics",
-                          style: TextStyles.bodyLarge,
-                        )
-                      ],
-                    ),
-                  ),
+                  // SelectableCard(
+                  //   onPressed: null,
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  //     children: [
+                  //       SvgPicture.asset(
+                  //         "assets/images/statistics.svg",
+                  //         height: 100.h,
+                  //         width: 100.w,
+                  //       ),
+                  //       Text(
+                  //         "Statistics",
+                  //         style: TextStyles.bodyLarge,
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               ),
             ),
