@@ -82,10 +82,12 @@ class _GenericMultipleChoiceQuestionState
             if (widget.question.questionSentenceInArabic != null)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  widget.question.questionSentenceInArabic!,
-                  style: TextStyles.questionTextStyle.copyWith(height: 1.5),
-                  textDirection: TextDirection.rtl,
+                child: RichText(
+                  text: TextSpan(
+                      children: stringToRichText(
+                    widget.question.questionSentenceInArabic!,
+                  )),
+                  // style: TextStyles.questionTextStyle.copyWith(height: 1.5),
                   maxLines: 5,
                 ),
               ),

@@ -96,18 +96,22 @@ class _FillTheBlanksQuestionState extends State<FillTheBlanksQuestion> {
                       child: Wrap(
                         runSpacing: 30.h,
                         children: [
-                          Text(
-                            firstPart,
-                            style: TextStyles.bodyLarge,
+                          RichText(
+                            text: TextSpan(
+                              children: stringToRichText(firstPart),
+                            ),
+                            // style: TextStyles.bodyLarge,
                           ),
                           WordChipTextField(
                             onChanged: (value) {
                               widget.onChanged(StringAnswer(answer: value));
                             },
                           ),
-                          Text(
-                            secondPart,
-                            style: TextStyles.bodyLarge,
+                          RichText(
+                            text: TextSpan(
+                              children: stringToRichText(secondPart),
+                            ),
+                            // style: TextStyles.bodyLarge,
                           ),
                         ],
                       ),
