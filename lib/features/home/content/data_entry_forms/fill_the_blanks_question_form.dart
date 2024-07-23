@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/fill_the_blanks_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -209,7 +210,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                     },
                     controller: incompleteSentenceInEnglishController,
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   RichTextfield(
                     type: QuestionTextFormFieldType.underline,
                     controller: incompleteSentenceInArabicController,
@@ -280,7 +281,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                   //     ],
                   //   ),
                   // ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   TextFormField(
                     controller: questionEnglishController,
                     maxLines: 2,
@@ -290,7 +291,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                       hintText: "Enter the question in English",
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   TextFormField(
                     controller: questionArabicController,
                     maxLines: 2,
@@ -300,7 +301,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                       hintText: "Enter the question in Arabic",
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   _updateButton(viewmodel),
                 ],
               ),
@@ -419,7 +420,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
         ),
         if (updateMessage != null)
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(Constants.padding8),
             child: Text(
               updateMessage!,
               style: TextStyle(color: Colors.red, fontSize: 16),

@@ -1,3 +1,4 @@
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/vocabulary_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -5,6 +6,7 @@ import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class VocabularyForm extends StatefulWidget {
@@ -151,7 +153,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
                           hintText: "Ex: \"Everyday Greetings\"",
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       TextFormField(
                         controller: englishWordController,
                         decoration: const InputDecoration(
@@ -166,7 +168,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       TextFormField(
                         controller: arabicWordController,
                         decoration: const InputDecoration(
@@ -175,7 +177,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
                           hintText: "Enter the Arabic word",
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       DropdownButtonFormField<WordType>(
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -206,7 +208,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       if (currentWordType == WordType.verb ||
                           currentWordType == WordType.word) ...[
                         TextFormField(
@@ -224,7 +226,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10.h),
                         TextFormField(
                           controller: exampleUsageInArabicController,
                           decoration: const InputDecoration(
@@ -241,7 +243,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
                           },
                         ),
                       ],
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       _updateButton(viewmodel),
                     ],
                   ),
@@ -349,10 +351,10 @@ class _VocabularyFormState extends State<VocabularyForm> {
         ),
         if (updateMessage != null)
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(Constants.padding8),
             child: Text(
               updateMessage!,
-              style: const TextStyle(color: Colors.red, fontSize: 16),
+              style: TextStyle(color: Colors.red, fontSize: 16.sp),
             ),
           ),
       ],

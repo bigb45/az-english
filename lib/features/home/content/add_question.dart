@@ -1,3 +1,4 @@
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/fill_the_blanks_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/multiple_choice_form.dart';
@@ -66,12 +67,12 @@ class _AddQuestionState extends State<AddQuestion> {
           ),
           body: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(Constants.padding12),
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: [
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     Row(
                       children: [
                         Expanded(
@@ -248,7 +249,7 @@ class _AddQuestionState extends State<AddQuestion> {
                               "Please fill all fields above to select a unit")
                           : const Text("Please add the level first"),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     DropdownButtonFormField(
                       value: selectedQuestionType,
                       items: const [
@@ -309,7 +310,7 @@ class _AddQuestionState extends State<AddQuestion> {
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(12.w),
+                        padding: EdgeInsets.all(Constants.padding12),
                         child: selectedQuestionType == null
                             ? const Text("Select question type to start")
                             : _buildQuestionForm(),

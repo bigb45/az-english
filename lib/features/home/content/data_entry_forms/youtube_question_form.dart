@@ -1,3 +1,4 @@
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/youtube_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -5,6 +6,7 @@ import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class YoutubeLessonForm extends StatefulWidget {
@@ -114,7 +116,7 @@ class _YoutubeLessonFormState extends State<YoutubeLessonForm> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 TextFormField(
                   controller: titleInEnglishController,
                   decoration: const InputDecoration(
@@ -123,7 +125,7 @@ class _YoutubeLessonFormState extends State<YoutubeLessonForm> {
                     hintText: "Enter the title in English",
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 _updateButton(viewmodel)
               ],
             ),
@@ -222,7 +224,7 @@ class _YoutubeLessonFormState extends State<YoutubeLessonForm> {
         ),
         if (updateMessage != null)
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(Constants.padding8),
             child: Text(
               updateMessage!,
               style: TextStyle(color: Colors.red, fontSize: 16),

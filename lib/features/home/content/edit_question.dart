@@ -18,6 +18,7 @@ import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/vertical_list_item_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class EditQuestion extends StatefulWidget {
@@ -97,7 +98,7 @@ class _EditQuestionState extends State<EditQuestion> {
                             },
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        SizedBox(width: 16.w),
                         Expanded(
                           child: sectionDropDown(
                             onChanged: (sectionSelection) {

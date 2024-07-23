@@ -1,3 +1,4 @@
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/fill_the_blanks_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/multiple_choice_form.dart';
@@ -164,7 +165,7 @@ class _PassageFormState extends State<PassageForm> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   TextFormField(
                     controller: passageInArabicController,
                     // unlimited lines with multi-line textfield
@@ -175,7 +176,7 @@ class _PassageFormState extends State<PassageForm> {
                       hintText: "Enter the passage in Arabic",
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   TextFormField(
                     controller: titleInEnglishController,
                     decoration: const InputDecoration(
@@ -190,7 +191,7 @@ class _PassageFormState extends State<PassageForm> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   TextFormField(
                     controller: titleInArabicController,
                     decoration: const InputDecoration(
@@ -199,7 +200,7 @@ class _PassageFormState extends State<PassageForm> {
                       hintText: "Enter the title in Arabic",
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   TextFormField(
                     controller: questionTextInEnglishController,
                     maxLines: 2,
@@ -209,7 +210,7 @@ class _PassageFormState extends State<PassageForm> {
                       hintText: "\"Read the follwing passage\"",
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   TextFormField(
                     controller: questionTextInArabicController,
                     maxLines: 2,
@@ -219,7 +220,7 @@ class _PassageFormState extends State<PassageForm> {
                       hintText: "\"إقرأ النص في الأسفل\"",
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   Button(
                     type: ButtonType.secondary,
                     onPressed: () {
@@ -228,9 +229,9 @@ class _PassageFormState extends State<PassageForm> {
                     },
                     text: "Add paragraph question",
                   ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    height: 300.h,
+                  SizedBox(height: 10.h),
+                  Container(
+                    constraints: BoxConstraints(maxHeight: 300.h),
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: questions.keys.length,
@@ -264,9 +265,9 @@ class _PassageFormState extends State<PassageForm> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   _updateButton(viewmodel),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   // Adding embedded questions
                 ],
               ),
@@ -400,10 +401,10 @@ class _PassageFormState extends State<PassageForm> {
         ),
         if (updateMessage != null)
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(Constants.padding8),
             child: Text(
               updateMessage!,
-              style: TextStyle(color: Colors.red, fontSize: 16),
+              style: TextStyle(color: Colors.red, fontSize: 16.sp),
             ),
           ),
       ],
@@ -454,12 +455,12 @@ class _AddEmbeddedQuestionFormState extends State<AddEmbeddedQuestionForm> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(Constants.padding12),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               DropdownButtonFormField(
                 items: const [
                   DropdownMenuItem(

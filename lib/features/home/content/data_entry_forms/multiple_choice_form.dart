@@ -230,7 +230,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                           _validateForm();
                         },
                       ),
-                      const SizedBox(height: 10),
+                       SizedBox(height: 10.h),
                       TextFormField(
                         controller: questionArabicController,
                         maxLines: 2,
@@ -243,7 +243,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                           _validateForm();
                         },
                       ),
-                      const SizedBox(height: 10),
+                       SizedBox(height: 10.h),
                       TextFormField(
                         controller: questionSentenceEnglishController,
                         maxLines: 2,
@@ -256,7 +256,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                           _validateForm();
                         },
                       ),
-                      const SizedBox(height: 10),
+                       SizedBox(height: 10.h),
                       TextFormField(
                         controller: questionSentenceArabicController,
                         maxLines: 2,
@@ -269,7 +269,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                           _validateForm();
                         },
                       ),
-                      const SizedBox(height: 10),
+                       SizedBox(height: 10.h),
                       GestureDetector(
                         onTap: () async {
                           await viewmodel.pickImage();
@@ -331,7 +331,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 10),
+                       SizedBox(height: 10.h),
                       RadioGroupForm(
                         onFormChanged: (isNewFormValid) {
                           setState(() {
@@ -405,7 +405,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                               ),
                             )
                           : const SizedBox(),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       _updateButton(viewmodel),
                     ],
                   ),

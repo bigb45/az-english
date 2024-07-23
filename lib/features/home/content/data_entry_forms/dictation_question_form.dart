@@ -8,6 +8,7 @@ import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class DictationQuestionForm extends StatefulWidget {
@@ -133,7 +134,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                     hintText: "Ex: \"Write what you hear\"",
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 TextFormField(
                   controller: questionArabicController,
                   maxLines: 2,
@@ -143,7 +144,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                     hintText: "Ex: \"اكتب ما تسمع\"",
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 TextFormField(
                   controller: speakableTextController,
                   maxLines: 2,
@@ -159,7 +160,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 TextFormField(
                   controller: titleInEnglishController,
                   decoration: const InputDecoration(
@@ -168,7 +169,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                     hintText: "Enter the title in English",
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 _updateButton(viewmodel),
               ],
             ),
@@ -275,7 +276,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
         ),
         if (updateMessage != null)
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(Constants.padding8),
             child: Text(
               updateMessage!,
               style: TextStyle(color: Colors.red, fontSize: 16),
@@ -321,8 +322,8 @@ void showConfirmSubmitModalSheet<BaseQuestion>(
                         question: question,
                         onChanged: (value) {},
                         answerState: EvaluationState.empty),
-                    const SizedBox(
-                      height: 20,
+                    SizedBox(
+                      height: 20.h,
                     ),
                     Button(
                       onPressed: () {
