@@ -5,12 +5,12 @@ import 'package:ez_english/features/home/content/viewmodels/fill_the_blanks_ques
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/string_answer.dart';
-import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/rich_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
@@ -66,6 +66,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
 
   String? updateMessage;
   String answer = "";
+  String formattedText = "";
   void updateQuestion(FillTheBlanksQuestionModel updatedQuestion) {
     if (widget.question != null) {
       if (incompleteSentenceInEnglishController.text !=
@@ -198,156 +199,87 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                   SizedBox(
                     height: 10.h,
                   ),
-                  RichTextfield(),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  TextFormField(
-                    onChanged: (value) {
-                      if (value.length < englishBlankStart ||
-                          value.length < englishBlankEnd) {
-                        englishBlankStart = value.length;
-                        englishBlankEnd = value.length;
-                      }
+                  RichTextfield(
+                    type: QuestionTextFormFieldType.blank,
+                    onChanged: (answer, formattedText) {
+                      this.answer = answer;
+                      this.formattedText = formattedText;
+                      print("Answer: $answer, formattedText: $formattedText");
+                      _validateForm();
                     },
                     controller: incompleteSentenceInEnglishController,
-                    decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        labelText: "Full sentence (English)",
-                        hintText: "Ex: \"The boy kicks the ball.\"",
-                        suffixIcon: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.format_underline),
-                              onPressed: () {},
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.minimize),
-                              onPressed: () {
-                                insertBlank(
-                                    incompleteSentenceInEnglishController);
-                              },
-                            ),
-                          ],
-                        )
-                        //  TextButton(
-                        //   onPressed: () {
-                        //     insertBlank(incompleteSentenceInEnglishController);
-                        //     _validateForm();
-                        //   },
-                        //   child: const Text("Insert blank"),
-                        // ),
-                        ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the incomplete sentence in English';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    width: double.infinity,
-                    height: 70.h,
-                    child: Column(
-                      children: [
-                        Text.rich(
-                          style: TextStyles.bodyLarge,
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: incompleteSentenceInEnglishController.text
-                                    .substring(0, englishBlankStart),
-                                style: const TextStyle(color: Colors.black),
-                              ),
-                              if (englishBlankStart != englishBlankEnd)
-                                TextSpan(
-                                  text: '_____',
-                                  style: const TextStyle(
-                                      color: Palette.primaryText),
-                                ),
-                              TextSpan(
-                                text: incompleteSentenceInEnglishController.text
-                                    .substring(englishBlankEnd),
-                                style: const TextStyle(color: Colors.black),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                            "Answer: ${incompleteSentenceInEnglishController.text.substring(englishBlankStart, englishBlankEnd)}",
-                            style: TextStyles.bodyLarge)
-                      ],
-                    ),
                   ),
                   const SizedBox(height: 10),
-                  TextFormField(
-                    onChanged: (value) {
-                      if (value.length < arabicBlankStart ||
-                          value.length < arabicBlankEnd) {
-                        arabicBlankStart = value.length;
-                        arabicBlankEnd = value.length;
-                      }
-                    },
+                  RichTextfield(
+                    type: QuestionTextFormFieldType.underline,
                     controller: incompleteSentenceInArabicController,
-                    decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        labelText: "Full sentence (Arabic)",
-                        hintText: "Enter the incomplete sentence in Arabic",
-                        suffixIcon: TextButton(
-                          onPressed: () {
-                            insertBlank(incompleteSentenceInArabicController,
-                                isEnglishField: false);
-                          },
-                          child: const Text("Insert blank"),
-                        )),
+                    onChanged: (answer, formattedText) {
+                      this.answer = answer;
+                      this.formattedText = formattedText;
+                      print("Answer: $answer, formattedText: $formattedText");
+                      _validateForm();
+                    },
                   ),
-                  const SizedBox(height: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    width: double.infinity,
-                    height: 70.h,
-                    child: Column(
-                      children: [
-                        Text.rich(
-                          style: TextStyles.bodyLarge,
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: incompleteSentenceInArabicController.text
-                                    .substring(0, arabicBlankStart),
-                                style: const TextStyle(color: Colors.black),
-                              ),
-                              if (arabicBlankEnd != arabicBlankStart)
-                                TextSpan(
-                                  text: '_____',
-                                  style: const TextStyle(
-                                      color: Palette.primaryText),
-                                ),
-                              TextSpan(
-                                text: incompleteSentenceInArabicController.text
-                                    .substring(arabicBlankEnd),
-                                style: const TextStyle(color: Colors.black),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                            "Answer: ${incompleteSentenceInArabicController.text.substring(arabicBlankStart, arabicBlankEnd)}",
-                            style: TextStyles.bodyLarge)
-                      ],
-                    ),
-                  ),
+                  // TextFormField(
+                  //   onChanged: (value) {
+                  //     if (value.length < arabicBlankStart ||
+                  //         value.length < arabicBlankEnd) {
+                  //       arabicBlankStart = value.length;
+                  //       arabicBlankEnd = value.length;
+                  //     }
+                  //   },
+                  //   controller: incompleteSentenceInArabicController,
+                  //   decoration: InputDecoration(
+                  //       border: const OutlineInputBorder(),
+                  //       labelText: "Full sentence (Arabic)",
+                  //       hintText: "Enter the incomplete sentence in Arabic",
+                  //       suffixIcon: TextButton(
+                  //         onPressed: () {
+                  //           insertBlank(incompleteSentenceInArabicController,
+                  //               isEnglishField: false);
+                  //         },
+                  //         child: const Text("Insert blank"),
+                  //       )),
+                  // ),
+                  // const SizedBox(height: 10),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     border: Border.all(color: Colors.grey),
+                  //     borderRadius: BorderRadius.circular(5),
+                  //   ),
+                  //   width: double.infinity,
+                  //   height: 70.h,
+                  //   child: Column(
+                  //     children: [
+                  //       Text.rich(
+                  //         style: TextStyles.bodyLarge,
+                  //         TextSpan(
+                  //           children: [
+                  //             TextSpan(
+                  //               text: incompleteSentenceInArabicController.text
+                  //                   .substring(0, arabicBlankStart),
+                  //               style: const TextStyle(color: Colors.black),
+                  //             ),
+                  //             if (arabicBlankEnd != arabicBlankStart)
+                  //               TextSpan(
+                  //                 text: '_____',
+                  //                 style: const TextStyle(
+                  //                     color: Palette.primaryText),
+                  //               ),
+                  //             TextSpan(
+                  //               text: incompleteSentenceInArabicController.text
+                  //                   .substring(arabicBlankEnd),
+                  //               style: const TextStyle(color: Colors.black),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       Text(
+                  //           "Answer: ${incompleteSentenceInArabicController.text.substring(arabicBlankStart, arabicBlankEnd)}",
+                  //           style: TextStyles.bodyLarge)
+                  //     ],
+                  //   ),
+                  // ),
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: questionEnglishController,
@@ -392,9 +324,9 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                         final englishText =
                             incompleteSentenceInEnglishController.text.trim();
 
-                        final newEnglishText = englishText.replaceRange(
-                            englishBlankStart, englishBlankEnd, '_____');
-
+                        // final newEnglishText = englishText.replaceRange(
+                        //     englishBlankStart, englishBlankEnd, '_____');
+                        final newEnglishText = formattedText;
                         final arabicText =
                             incompleteSentenceInArabicController.text.trim();
 
@@ -494,6 +426,53 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
             ),
           ),
       ],
+    );
+  }
+}
+
+class CustomQuillToolbar extends StatelessWidget {
+  final quill.QuillController controller;
+
+  const CustomQuillToolbar({Key? key, required this.controller})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey[200],
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.format_underline),
+            onPressed: () {
+              // Toggle underline attribute
+              if (controller
+                  .getSelectionStyle()
+                  .attributes
+                  .containsKey(quill.Attribute.underline.key)) {
+                controller.formatSelection(
+                    quill.Attribute.clone(quill.Attribute.underline, null));
+              } else {
+                controller.formatSelection(quill.Attribute.underline);
+              }
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.space_bar),
+            onPressed: () {
+              print(controller.getPlainText());
+              final cursorPosition = controller.selection.baseOffset;
+              if (cursorPosition != -1) {
+                // controller.formatText(
+                //   controller.selection.start,
+                //   controller.selection.end,
+                //   quill.Attribute.bold,
+                // );
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 }

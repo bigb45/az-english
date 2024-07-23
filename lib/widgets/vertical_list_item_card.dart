@@ -72,12 +72,12 @@ class VerticalListItemCard extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    if (actionIcon != null)
-                      Icon(
-                        actionIcon,
-                        color: Palette.primaryText,
-                      ),
-                    SizedBox(height: 5.h),
+                    // if (actionIcon != null)
+                    //   Icon(
+                    //     actionIcon,
+                    //     color: Palette.primaryText,
+                    //   ),
+                    // SizedBox(height: 5.h),
                     IconButton(
                       icon: const Icon(Icons.delete),
                       color: Colors.red,
