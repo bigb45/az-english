@@ -1,11 +1,11 @@
-import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
+import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
-import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/info_card.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Account extends StatelessWidget {
   Account({super.key});
@@ -27,10 +27,6 @@ class Account extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Text(
-              //   'Signed in as ${vm.user?.email}',
-              //   style: TextStyles.bodyLarge,
-              // ),
               const Icon(
                 Icons.account_circle,
                 size: 200,
@@ -45,57 +41,24 @@ class Account extends StatelessWidget {
               InfoCard(
                   title: AppStrings.phoneNumber,
                   subtitle: "${vm.userData?.parentPhoneNumber}"),
-              // Padding(
-              //   padding: EdgeInsets.all(Constants.padding12),
-              //   child: Card(
-              //     elevation: 0,
-              //     child: Padding(
-              //       padding: EdgeInsets.all(Constants.padding12),
-              //       child: SizedBox(
-              //         width: double.infinity,
-              //         child: Column(
-              //           mainAxisAlignment: MainAxisAlignment.start,
-              //           crossAxisAlignment: CrossAxisAlignment.stretch,
-              //           children: [
-              //             Text(
-              //               'User ID',
-              //               style: TextStyles.bodyLarge,
-              //             ),
-              //             Text(
-              //               " ${vm.user?.uid}",
-              //               style: TextStyles.bodyMedium,
-              //             )
-              //           ],
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-
+              if (vm.userData?.userType == UserType.admin ||
+                  vm.userData?.userType == UserType.developer) ...[
+                Button(
+                  text: 'Manage Content and Users',
+                  onPressed: () {
+                    context.push('/admin');
+                  },
+                ),
+                SizedBox(height: 20),
+              ],
               Button(
                 text: 'Sign out',
+                type: ButtonType.error,
                 onPressed: () async {
                   await vm.signOut(context);
                 },
               ),
-              // SizedBox(
-              //   height: Constants.padding8,
-              // ),
-              // Button(
-              //   text: 'Go to Components',
-              //   onPressed: () {
-              //     context.push('/components');
-              //   },
-              // ),
-              // SizedBox(
-              //   height: Constants.padding8,
-              // ),
-              // Button(
-              //   text: 'Go to Settings',
-              //   onPressed: () {
-              //     context.push('/settings');
-              //   },
-              // ),
+              SizedBox(height: 20),
             ],
           ),
         ),
