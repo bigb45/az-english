@@ -70,6 +70,7 @@ class EditQuestionViewModel extends ChangeNotifier {
               docPath: docRef,
               fieldPath: questionFiel,
               newValue: question.toMap());
+
       questions = questions.map((q) {
         if (q.path == question.path) {
           return question;
@@ -82,5 +83,32 @@ class EditQuestionViewModel extends ChangeNotifier {
     }
   }
 
-  // Add other methods for updating and deleting questions if needed
+  Future<void> deleteQuestion(BaseQuestion<dynamic> question, int index) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      List<String> pathSegments = question.path!.split('/');
+
+      // Get the document path and the field path
+      String docPath =
+          pathSegments.sublist(0, pathSegments.length - 2).join('/');
+      String fieldIndex = pathSegments[pathSegments.length - 1];
+      String questionField = pathSegments[pathSegments.length - 2];
+
+      String fieldPath =
+          "$questionField.$fieldIndex"; // Create a dot-separated path string
+
+      // Get the document reference
+      DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
+      await _firestoreService.deleteQuestionUsingFieldPath(
+          docRef: docRef, questionFieldPath: fieldPath);
+      questions.removeAt(index);
+
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      print('Error updating question: $e');
+    }
+  }
 }

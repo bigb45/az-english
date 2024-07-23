@@ -166,7 +166,7 @@ class FirestoreService {
 
           dynamic questionsNumber = await unitReference.get().then((snapshot) {
             return (snapshot.data()
-                as Map<String, dynamic>)['numberOfQuestions']!;
+                as Map<String, dynamic>)['numberOfQuestionsWithDeletion']!;
           });
 
           section.numberOfQuestions = questionsNumber;
@@ -582,6 +582,21 @@ class FirestoreService {
     }
   }
 
+  Future<void> deleteQuestionUsingFieldPath({
+    required DocumentReference docRef,
+    required String questionFieldPath,
+  }) async {
+    try {
+      WriteBatch batch = FirebaseFirestore.instance.batch();
+      batch.update(docRef, {questionFieldPath: FieldValue.delete()});
+      batch.update(
+          docRef, {'numberOfQuestionsWithDeletion': FieldValue.increment(-1)});
+      await batch.commit();
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
+    }
+  }
+
   Future<void> addUser(UserModel user) async {
     try {
       await _db
@@ -712,7 +727,8 @@ class FirestoreService {
           'descriptionInEnglish': '',
           'descriptionInArabic': '',
           'questions': {},
-          "numberOfQuestions": 0
+          "numberOfQuestionsWithDeletion": 0,
+          "numberOfQuestionWithoutDeletion": 0
         });
       }
 
@@ -724,14 +740,15 @@ class FirestoreService {
         }
 
         Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-        int numberOfQuestions = data['numberOfQuestions'] ?? 0;
+        int numberOfQuestions = data['numberOfQuestionWithoutDeletion'] ?? 0;
         String questionId = (numberOfQuestions + 1).toString();
 
         transaction.set(
           unitRef,
           {
             'questions': {questionId: questionMap},
-            'numberOfQuestions': FieldValue.increment(1),
+            'numberOfQuestionsWithDeletion': FieldValue.increment(1),
+            "numberOfQuestionWithoutDeletion": FieldValue.increment(1)
           },
           SetOptions(merge: true),
         );
@@ -774,6 +791,8 @@ class FirestoreService {
           CollectionReference unitsCollection = sectionsCollection
               .doc(RouteConstants.getSectionIds(section.name))
               .collection(FirestoreConstants.unitsCollection);
+          unit.numberOfQuestionWithoutDeletion =
+              unit.numberOfQuestionsWithDeletion;
           Map<String, dynamic> unitData = unit.toMap();
 
           uploadFutures.add(unitsCollection.doc(unit.name).set(unitData));

@@ -203,7 +203,7 @@ class _AddQuestionState extends State<AddQuestion> {
                           DropdownMenuItem<Unit>(
                             value: Unit(
                                 name: "+ Add new unit",
-                                numberOfQuestions: 0,
+                                numberOfQuestionsWithDeletion: 0,
                                 questions: {}),
                             child: const Row(
                               children: [Icon(Icons.add), Text("Add new unit")],

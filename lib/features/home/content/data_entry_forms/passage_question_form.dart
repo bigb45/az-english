@@ -111,11 +111,12 @@ class _PassageFormState extends State<PassageForm> {
     // Check if the number of questions has changed
     bool questionCountChanged = questions.length != originalQuestions.length;
 
-    // Check if any of the questions themselves have changed
     bool questionsChanged = false;
-    for (int i = 0; i < questions.length; i++) {
-      if (i >= originalQuestions.length ||
-          !questions[i]!.equals(originalQuestions[i]!)) {
+    var allKeys = {...questions.keys, ...originalQuestions.keys};
+    for (var key in allKeys) {
+      if (!questions.containsKey(key) ||
+          !originalQuestions.containsKey(key) ||
+          !questions[key]!.equals(originalQuestions[key]!)) {
         questionsChanged = true;
         break;
       }
@@ -232,28 +233,33 @@ class _PassageFormState extends State<PassageForm> {
                     height: 300.h,
                     child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: questions.length,
+                      itemCount: questions.keys.length,
                       itemBuilder: (context, index) {
+                        var key = questions.keys.elementAt(index);
+                        var question = questions[key];
+
                         if (widget.question != null) {
-                          questions[index]!.path =
-                              "${widget.question!.path}/questions/$index";
+                          question!.path =
+                              "${widget.question!.path}/questions/$key";
                         }
 
                         return VerticalListItemCard(
                           mainText:
-                              "${index + 1}. ${questions[index]?.questionTextInEnglish.toString() ?? "No question text"}",
-                          info: Text(questions[index]!.titleInEnglish ?? ""),
-                          subText:
-                              questions[index]!.questionType.toShortString(),
+                              "${index + 1}. ${question?.questionTextInEnglish.toString() ?? "No question text"}",
+                          info: Text(question!.titleInEnglish ?? ""),
+                          subText: question.questionType.toShortString(),
                           actionIcon: Icons.arrow_forward_ios,
-                          onTap: () => showEditQuestionDialog(
-                              context,
-                              questions[index]!,
-                              widget.level,
-                              widget.section,
-                              widget.day,
+                          onTap: () => showEditQuestionDialog(context, question,
+                              widget.level, widget.section, widget.day,
                               updateQuestionCallback: viewmodel.updateQuestion,
                               onChangesCallBack: _checkForChanges),
+                          isEditMode: true,
+                          onDeletionPressed: () {
+                            viewmodel.deleteQuestion(question);
+                            setState(() {
+                              questions.remove(key);
+                            });
+                          },
                         );
                       },
                     ),
@@ -286,7 +292,6 @@ class _PassageFormState extends State<PassageForm> {
                   questions[questions.length] = question;
                 });
                 _validateForm();
-                Navigator.of(context).pop();
               },
               level: widget.level,
               section: widget.section,

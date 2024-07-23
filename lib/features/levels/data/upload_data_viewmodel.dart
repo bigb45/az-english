@@ -150,7 +150,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 } else {
                   existingUnit.questions[nextIndex++] = question;
                 }
-                existingUnit.numberOfQuestions++;
+                existingUnit.numberOfQuestionsWithDeletion++;
               });
 
               break;
@@ -190,7 +190,7 @@ class UploadDataViewmodel extends ChangeNotifier {
               } else {
                 existingUnit.questions[nextIndex++] = question;
               }
-              existingUnit.numberOfQuestions++;
+              existingUnit.numberOfQuestionsWithDeletion++;
 
               break;
 
@@ -214,7 +214,7 @@ class UploadDataViewmodel extends ChangeNotifier {
               } else {
                 existingUnit.questions[nextIndex++] = question;
               }
-              existingUnit!.numberOfQuestions++;
+              existingUnit!.numberOfQuestionsWithDeletion++;
 
               break;
             case QuestionType.vocabularyWithListening:
@@ -269,7 +269,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 } else {
                   existingUnit.questions[nextIndex++] = question;
                 }
-                existingUnit!.numberOfQuestions++;
+                existingUnit!.numberOfQuestionsWithDeletion++;
               });
               break;
 
@@ -296,7 +296,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 } else {
                   existingUnit.questions[nextIndex++] = question;
                 }
-                existingUnit.numberOfQuestions++;
+                existingUnit.numberOfQuestionsWithDeletion++;
               });
 
               break;
@@ -315,7 +315,7 @@ class UploadDataViewmodel extends ChangeNotifier {
               } else {
                 existingUnit.questions[nextIndex++] = question;
               }
-              existingUnit!.numberOfQuestions++;
+              existingUnit!.numberOfQuestionsWithDeletion++;
               break;
             case QuestionType.passage:
               currentPassage = PassageQuestionModel(

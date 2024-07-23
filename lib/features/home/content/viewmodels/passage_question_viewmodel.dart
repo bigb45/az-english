@@ -73,6 +73,30 @@ class PassageViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> deleteQuestion(BaseQuestion<dynamic> question) async {
+    try {
+      notifyListeners();
+
+      List<String> pathSegments = question.path!.split('/');
+
+      String docPath =
+          pathSegments.sublist(0, pathSegments.length - 4).join('/');
+      String fieldIndex = pathSegments[pathSegments.length - 1];
+      String questionField = pathSegments[pathSegments.length - 2];
+      String parentQuestionIndex = pathSegments[pathSegments.length - 3];
+      String parentField = pathSegments[pathSegments.length - 4];
+      String fieldPath =
+          "$parentField.$parentQuestionIndex.$questionField.$fieldIndex";
+      DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
+
+      await _firestoreService.deleteQuestionUsingFieldPath(
+          docRef: docRef, questionFieldPath: fieldPath);
+      notifyListeners();
+    } catch (e) {
+      print('Error updating question: $e');
+    }
+  }
+
   Future<void> uploadQuestion({
     required String level,
     required String section,

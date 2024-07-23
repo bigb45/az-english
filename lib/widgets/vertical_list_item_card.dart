@@ -9,8 +9,10 @@ class VerticalListItemCard extends StatelessWidget {
   final String? subText;
   final Widget? info;
   final IconData? actionIcon;
-  final VoidCallback? onTap;
+  final bool isEditMode;
 
+  final VoidCallback? onTap;
+  final VoidCallback? onDeletionPressed;
   const VerticalListItemCard({
     super.key,
     required this.mainText,
@@ -18,6 +20,8 @@ class VerticalListItemCard extends StatelessWidget {
     this.info,
     this.onTap,
     this.actionIcon,
+    required this.isEditMode,
+    this.onDeletionPressed,
   });
 
   @override
@@ -66,11 +70,22 @@ class VerticalListItemCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (actionIcon != null)
-                  Icon(
-                    actionIcon,
-                    color: Palette.primaryText,
-                  ),
+                Column(
+                  children: [
+                    if (actionIcon != null)
+                      Icon(
+                        actionIcon,
+                        color: Palette.primaryText,
+                      ),
+                    SizedBox(height: 5.h),
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      color: Colors.red,
+                      onPressed: onDeletionPressed,
+                      iconSize: 25.w,
+                    )
+                  ],
+                )
               ],
             ),
           ),
