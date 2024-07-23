@@ -8,7 +8,7 @@ class Unit {
   String? descriptionInEnglish;
   String? descriptionInArabic;
   int numberOfQuestions;
-  Map<String, BaseQuestion?> questions;
+  Map<int, BaseQuestion?> questions;
   double progress;
 
   Unit({
@@ -28,7 +28,7 @@ class Unit {
           map['descriptionInArabic'] ?? "No Arabic Description",
       numberOfQuestions: map['numberOfQuestions'],
       questions: (map['questions'] as Map<String, dynamic>).map(
-        (key, value) => MapEntry(key, BaseQuestion.fromMap(value)),
+        (key, value) => MapEntry(int.parse(key), BaseQuestion.fromMap(value)),
       ),
     );
   }

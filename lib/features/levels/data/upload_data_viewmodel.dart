@@ -130,7 +130,7 @@ class UploadDataViewmodel extends ChangeNotifier {
           previousSectionName = sectionName;
 
           // Add questions dynamically based on the row data
-          Map<String, BaseQuestion?> questions = {};
+          Map<int, BaseQuestion?> questions = {};
           int nextIndex = existingUnit!.questions.length;
           switch (QuestionTypeExtension.fromString(questionType)) {
             case QuestionType.dictation:
@@ -148,7 +148,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   currentPassage.questions[currentPassage.questions.length] =
                       question;
                 } else {
-                  existingUnit.questions["${nextIndex++}"] = question;
+                  existingUnit.questions[nextIndex++] = question;
                 }
                 existingUnit.numberOfQuestions++;
               });
@@ -188,7 +188,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 currentPassage.questions[currentPassage.questions.length] =
                     question;
               } else {
-                existingUnit.questions["${nextIndex++}"] = question;
+                existingUnit.questions[nextIndex++] = question;
               }
               existingUnit.numberOfQuestions++;
 
@@ -212,7 +212,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 currentPassage.questions[currentPassage.questions.length] =
                     question;
               } else {
-                existingUnit.questions["${nextIndex++}"] = question;
+                existingUnit.questions[nextIndex++] = question;
               }
               existingUnit!.numberOfQuestions++;
 
@@ -267,7 +267,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   currentPassage.questions[currentPassage.questions.length] =
                       question;
                 } else {
-                  existingUnit.questions["${nextIndex++}"] = question;
+                  existingUnit.questions[nextIndex++] = question;
                 }
                 existingUnit!.numberOfQuestions++;
               });
@@ -294,7 +294,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                   currentPassage.questions[currentPassage.questions.length] =
                       question;
                 } else {
-                  existingUnit.questions["${nextIndex++}"] = question;
+                  existingUnit.questions[nextIndex++] = question;
                 }
                 existingUnit.numberOfQuestions++;
               });
@@ -313,7 +313,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 currentPassage.questions[currentPassage.questions.length] =
                     question;
               } else {
-                existingUnit.questions["${nextIndex++}"] = question;
+                existingUnit.questions[nextIndex++] = question;
               }
               existingUnit!.numberOfQuestions++;
               break;
@@ -335,7 +335,7 @@ class UploadDataViewmodel extends ChangeNotifier {
           }
 
           if (currentPassage != null && currentPassage.questions.isEmpty) {
-            existingUnit.questions["${nextIndex++}"] = currentPassage;
+            existingUnit.questions[nextIndex++] = currentPassage;
           }
 
           // Add the unit to the section if it's not already added

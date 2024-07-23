@@ -10,7 +10,6 @@ import 'package:ez_english/features/models/section_progress.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:uuid/uuid.dart';
 
 class FirestoreService {
   FirestoreService._privateConstructor();
@@ -28,7 +27,6 @@ class FirestoreService {
   int filteredQuestionsLength = 0;
   String? unitNumber;
   String? currentDayString;
-  final Uuid uuid = const Uuid();
 
   void reset() {
     _userModel = null;
@@ -364,7 +362,7 @@ class FirestoreService {
     String sectionName,
     String level,
   ) async {
-    Map<String, BaseQuestion> questions = {};
+    Map<int, BaseQuestion> questions = {};
     try {
       _userModel = await getUser(_user!.uid);
       int lastQuestionIndex = _userModel!.levelsProgress![level]!
@@ -454,7 +452,7 @@ class FirestoreService {
                 "${FirestoreConstants.sectionsCollection}/$sectionName/"
                 "${FirestoreConstants.unitsCollection}/$tempUnitNumber/"
                 "${FirestoreConstants.questionsField}/${entry.key}"; // Set path
-            questions["${entry.key}"] = question; // Use key as map key
+            questions[entry.key] = question; // Use key as map key
           }
         }
 
@@ -725,10 +723,10 @@ class FirestoreService {
           throw Exception("Unit document does not exist!");
         }
 
-        // Generate a unique key for the question
-        String questionId = uuid.v4();
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        int numberOfQuestions = data['numberOfQuestions'] ?? 0;
+        String questionId = (numberOfQuestions + 1).toString();
 
-        // Add the question to the questions map field inside the unit document
         transaction.set(
           unitRef,
           {
