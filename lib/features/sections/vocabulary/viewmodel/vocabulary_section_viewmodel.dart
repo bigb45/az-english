@@ -24,6 +24,9 @@ class VocabularySectionViewmodel extends BaseViewModel {
   Unit unit = Unit(name: "vocabulary_unit", questions: {});
   List<BaseQuestion?> get questions => _questions;
   get words => _words;
+  List<BaseQuestion?> _originalQuestions = [];
+  Map<int, int> indexMap = {}; // Map to track filtered to original indices
+  List<BaseQuestion?> get originalQuestions => _originalQuestions;
 
   @override
   FutureOr<void> init() {
@@ -34,7 +37,8 @@ class VocabularySectionViewmodel extends BaseViewModel {
     currentIndex = 0;
     levelName = RouteConstants.getLevelName(levelId!);
     sectionName = RouteConstants.vocabularySectionName;
-    fetchQuestions();
+    await fetchQuestions();
+    filterQuestions();
   }
 
   Future<String> getAudioBytes(WordDefinition question) async {
@@ -92,6 +96,9 @@ class VocabularySectionViewmodel extends BaseViewModel {
       );
 
       _questions = unit.questions.values.toList();
+      _originalQuestions = unit.questions.values.toList();
+      _questions = List.from(_originalQuestions);
+
       progress = unit.progress;
 
       error = null;
@@ -106,6 +113,39 @@ class VocabularySectionViewmodel extends BaseViewModel {
     }
   }
 
+  void filterQuestions() {
+    indexMap.clear(); // Clear the map before populating
+    List<BaseQuestion?> notNewQuestions = [];
+    List<BaseQuestion?> newQuestions = [];
+
+    // Split the questions into 'new' and 'not new'
+    for (int i = 0; i < _originalQuestions.length; i++) {
+      var question = _originalQuestions[i];
+      if ((question as WordDefinition).isNew) {
+        newQuestions.add(question);
+      } else {
+        notNewQuestions.add(question);
+      }
+    }
+
+    // Combine new questions first, followed by not new questions
+    List<BaseQuestion?> combinedQuestions = [
+      ...newQuestions,
+      ...notNewQuestions
+    ];
+
+    // Populate _questions and indexMap with the combined list
+    _questions = [];
+    for (int i = 0; i < combinedQuestions.length; i++) {
+      var question = combinedQuestions[i];
+      indexMap[_questions.length] = _originalQuestions
+          .indexOf(question); // Map the filtered index to the original index
+      _questions.add(question);
+    }
+
+    notifyListeners();
+  }
+
   Future<void> updateWordStatus(WordDefinition question) async {
     if (question.isNew) {
       isLoading = true;
@@ -113,7 +153,6 @@ class VocabularySectionViewmodel extends BaseViewModel {
       try {
         question.isNew = false;
         incrementIndex();
-
         error = null;
       } on CustomException catch (e) {
         error = e;
@@ -127,6 +166,12 @@ class VocabularySectionViewmodel extends BaseViewModel {
         notifyListeners();
       }
     }
+  }
+
+  Future<void> updateInteractedQuestionsList(int filteredIndex) async {
+    int originalIndex = indexMap[filteredIndex]!;
+    _firestoreService.updateInteractedQuestionsList(
+        originalIndex, levelName!, sectionName!);
   }
 
   void reset() {
@@ -153,5 +198,6 @@ class VocabularySectionViewmodel extends BaseViewModel {
       currentIndex = currentIndex + 1;
       progress = _firestoreService.calculateNewProgress(currentIndex);
     }
+    notifyListeners();
   }
 }

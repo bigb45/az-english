@@ -130,6 +130,7 @@ class FirestoreService {
             'lastStoppedQuestionIndex': 0,
             'progress': 0,
             'unitsCompleted': [],
+            "interactedQuestions": {},
             'sectionName': section.name
           };
         }
@@ -279,6 +280,7 @@ class FirestoreService {
               sectionProgress.isCompleted = false;
               sectionProgress.lastStoppedQuestionIndex = 0;
               sectionProgress.progress = 0.0;
+              sectionProgress.interactedQuestions = {};
 
               // Add the reset section progress update to the batch
               batch.update(userDocRef, {
@@ -365,8 +367,9 @@ class FirestoreService {
     Map<int, BaseQuestion> questions = {};
     try {
       _userModel = await getUser(_user!.uid);
-      int lastQuestionIndex = _userModel!.levelsProgress![level]!
-          .sectionProgress![sectionName]!.lastStoppedQuestionIndex;
+      Map<int, bool> interactedQuestions = _userModel!.levelsProgress![level]!
+          .sectionProgress![sectionName]!.interactedQuestions;
+
       double progress = _userModel!
           .levelsProgress![level]!.sectionProgress![sectionName]!.progress;
       String tempUnitNumber = (sectionName ==
@@ -398,11 +401,10 @@ class FirestoreService {
           var sortedEntries = questionsData.entries.toList()
             ..sort((a, b) => a.key.compareTo(b.key));
 
-          List<MapEntry<int, dynamic>> filteredQuestionsData;
+          List<MapEntry<int, dynamic>> filteredQuestionsData = [];
+
           if (RouteConstants.getSectionName(sectionName) ==
               RouteConstants.readingSectionName) {
-            filteredQuestionsData = [];
-
             if (sortedEntries.first.value is Map<String, dynamic>) {
               var firstQuestion = sortedEntries.first;
 
@@ -419,13 +421,11 @@ class FirestoreService {
                 embeddedQuestions.sort((a, b) => a.key.compareTo(b.key));
 
                 allQuestionsLength = embeddedQuestions.length + 1;
-                var skippedEmbeddedQuestions =
-                    embeddedQuestions.skip(lastQuestionIndex).toList();
 
                 filteredQuestionsData.add(firstQuestion);
 
-                filteredQuestionsData.addAll(skippedEmbeddedQuestions
-                    .map((e) => MapEntry(e.key + 1, e.value)));
+                filteredQuestionsData.addAll(
+                    embeddedQuestions.map((e) => MapEntry(e.key + 1, e.value)));
 
                 filteredQuestionsLength = filteredQuestionsData.length;
 
@@ -447,24 +447,19 @@ class FirestoreService {
             }
           } else if (RouteConstants.getSectionName(sectionName) ==
               RouteConstants.vocabularySectionName) {
-            // Reorder questions for vocabulary section
-            filteredQuestionsData = [];
-            var questionsAfterIndex =
-                sortedEntries.skip(lastQuestionIndex).toList();
-            filteredQuestionsLength = questionsAfterIndex.length;
-            var questionsBeforeIndex =
-                sortedEntries.take(lastQuestionIndex).toList();
-            for (var entry in questionsBeforeIndex) {
-              if (entry.value is Map) {
-                entry.value['isNew'] = false;
+            for (var entry in sortedEntries) {
+              if (interactedQuestions.containsKey(entry.key)) {
+                if (entry.value is Map<String, dynamic>) {
+                  (entry.value as Map<String, dynamic>)['isNew'] = false;
+                }
               }
             }
 
-            filteredQuestionsData.addAll(questionsAfterIndex);
-            filteredQuestionsData.addAll(questionsBeforeIndex);
+            filteredQuestionsData.addAll(sortedEntries);
+            filteredQuestionsLength =
+                filteredQuestionsData.length - interactedQuestions.length;
           } else {
-            filteredQuestionsData =
-                sortedEntries.skip(lastQuestionIndex).toList();
+            filteredQuestionsData = sortedEntries;
             filteredQuestionsLength = filteredQuestionsData.length;
           }
 
@@ -616,6 +611,24 @@ class FirestoreService {
           docPath: userDocRef,
           fieldPath: sectionProgressIndex,
           newValue: sectionProgress);
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
+    }
+  }
+
+  Future<void> updateInteractedQuestionsList(
+      int questionIndex, String levelName, String sectionName) async {
+    try {
+      DocumentReference userDocRef = FirebaseFirestore.instance
+          .collection(FirestoreConstants.usersCollections)
+          .doc(_user!.uid);
+
+      // Manually construct the path string
+      String interactedQuestionsPath =
+          'levelsProgress.$levelName.sectionProgress.${RouteConstants.sectionNameId[sectionName]}.interactedQuestions.$questionIndex';
+
+      // Use Firestore's FieldValue to update the map directly
+      await userDocRef.update({interactedQuestionsPath: true});
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
     }

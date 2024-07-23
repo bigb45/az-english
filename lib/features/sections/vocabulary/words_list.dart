@@ -113,45 +113,52 @@ class _WordsListViewState extends State<WordsListView> {
                   child: ProgressBar(value: viewmodel.progress!),
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        for (var word in viewmodel.questions)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 5),
-                            child: Builder(
-                              builder: (context) {
-                                switch (word?.questionType) {
-                                  case QuestionType.vocabulary:
-                                    return WordListTile(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => WordView(
-                                                pageTitle: widget.pageTitle,
-                                                pageSubtitle:
-                                                    widget.pageSubtitle,
-                                                wordData: word),
-                                          ),
+                  child: ListView.builder(
+                      itemCount: viewmodel.questions.length,
+                      itemBuilder: (context, index) {
+                        var word = viewmodel.questions[index];
+                        return SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 5),
+                                child: Builder(
+                                  builder: (context) {
+                                    switch (word?.questionType) {
+                                      case QuestionType.vocabulary:
+                                        return WordListTile(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => WordView(
+                                                    pageTitle: widget.pageTitle,
+                                                    pageSubtitle:
+                                                        widget.pageSubtitle,
+                                                    wordData: word),
+                                              ),
+                                            );
+                                            viewmodel.updateWordStatus(word);
+                                            viewmodel
+                                                .updateInteractedQuestionsList(
+                                                    index);
+                                            finishedAllVocab =
+                                                _checkAllWordsStatus(viewmodel);
+                                          },
+                                          word: word as WordDefinition,
                                         );
-                                        viewmodel.updateWordStatus(word);
-                                        finishedAllVocab =
-                                            _checkAllWordsStatus(viewmodel);
-                                      },
-                                      word: word as WordDefinition,
-                                    );
-                                  default:
-                                    return Text(
-                                        "Unsupported Question Type ${word?.questionType}");
-                                }
-                              },
-                            ),
+                                      default:
+                                        return Text(
+                                            "Unsupported Question Type ${word?.questionType}");
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
-                      ],
-                    ),
-                  ),
+                        );
+                      }),
                 ),
               ],
             ),
