@@ -401,27 +401,50 @@ class FirestoreService {
           List<MapEntry<int, dynamic>> filteredQuestionsData;
           if (RouteConstants.getSectionName(sectionName) ==
               RouteConstants.readingSectionName) {
-            // Always include the first question for reading section
-
             filteredQuestionsData = [];
-            var embeddedQuestions = (sortedEntries.first.value
-                    as Map<String, dynamic>)[FirestoreConstants.questionsField]
-                as List<dynamic>;
-            var firstQuestion = [sortedEntries.first.value];
 
-            allQuestionsLength = embeddedQuestions.length + 1;
-            var skippedEmbeddedQuestions =
-                embeddedQuestions.skip(lastQuestionIndex).toList();
-            filteredQuestionsData.addAll(firstQuestion
-                .asMap()
-                .entries
-                .map((e) => MapEntry(e.key, e.value)));
+            if (sortedEntries.first.value is Map<String, dynamic>) {
+              var firstQuestion = sortedEntries.first;
 
-            filteredQuestionsData.addAll(skippedEmbeddedQuestions
-                .asMap()
-                .entries
-                .map((e) => MapEntry(e.key + 1, e.value)));
-            filteredQuestionsLength = filteredQuestionsData.length;
+              if (firstQuestion.value[FirestoreConstants.questionsField]
+                  is Map<String, dynamic>) {
+                var embeddedQuestionsMap =
+                    firstQuestion.value[FirestoreConstants.questionsField]
+                        as Map<String, dynamic>;
+
+                var embeddedQuestions = embeddedQuestionsMap.entries
+                    .map((entry) => MapEntry(int.parse(entry.key), entry.value))
+                    .toList();
+
+                embeddedQuestions.sort((a, b) => a.key.compareTo(b.key));
+
+                allQuestionsLength = embeddedQuestions.length + 1;
+                var skippedEmbeddedQuestions =
+                    embeddedQuestions.skip(lastQuestionIndex).toList();
+
+                filteredQuestionsData.add(firstQuestion);
+
+                filteredQuestionsData.addAll(skippedEmbeddedQuestions
+                    .map((e) => MapEntry(e.key + 1, e.value)));
+
+                filteredQuestionsLength = filteredQuestionsData.length;
+
+                // Convert back to Map<String, dynamic> for embedded questions
+                Map<String, dynamic> orderedEmbeddedQuestions = {
+                  for (var entry in embeddedQuestions)
+                    entry.key.toString(): entry.value
+                };
+
+                (firstQuestion.value as Map<String, dynamic>)[FirestoreConstants
+                    .questionsField] = orderedEmbeddedQuestions;
+              } else {
+                throw Exception(
+                    "Unexpected data structure for embedded questions");
+              }
+            } else {
+              throw Exception(
+                  "Unexpected data structure for the first question");
+            }
           } else if (RouteConstants.getSectionName(sectionName) ==
               RouteConstants.vocabularySectionName) {
             // Reorder questions for vocabulary section
@@ -446,13 +469,17 @@ class FirestoreService {
           }
 
           for (var entry in filteredQuestionsData) {
-            var mapData = entry.value as Map<String, dynamic>;
-            BaseQuestion question = BaseQuestion.fromMap(mapData);
-            question.path = "${FirestoreConstants.levelsCollection}/$level/"
-                "${FirestoreConstants.sectionsCollection}/$sectionName/"
-                "${FirestoreConstants.unitsCollection}/$tempUnitNumber/"
-                "${FirestoreConstants.questionsField}/${entry.key}"; // Set path
-            questions[entry.key] = question; // Use key as map key
+            if (entry.value is Map<String, dynamic>) {
+              var mapData = entry.value as Map<String, dynamic>;
+              BaseQuestion question = BaseQuestion.fromMap(mapData);
+              question.path = "${FirestoreConstants.levelsCollection}/$level/"
+                  "${FirestoreConstants.sectionsCollection}/$sectionName/"
+                  "${FirestoreConstants.unitsCollection}/$tempUnitNumber/"
+                  "${FirestoreConstants.questionsField}/${entry.key}"; // Set path
+              questions[entry.key] = question; // Use key as map key
+            } else {
+              throw Exception("Unexpected data structure for question");
+            }
           }
         }
 
@@ -488,14 +515,50 @@ class FirestoreService {
 
       if (unitSnapshot.exists) {
         Map<String, dynamic> data = unitSnapshot.data() as Map<String, dynamic>;
-        if (data['questions'] != null) {
-          final questionEntries =
-              (data['questions'] as Map<String, dynamic>).entries.toList();
+        if (data[FirestoreConstants.questionsField] != null) {
+          Map<int, dynamic> questionsData =
+              (data[FirestoreConstants.questionsField] as Map<String, dynamic>)
+                  .map((key, value) => MapEntry(int.parse(key), value));
 
-          // Sort the entries by their keys
-          questionEntries.sort((a, b) => a.key.compareTo(b.key));
+          var sortedEntries = questionsData.entries.toList()
+            ..sort((a, b) => a.key.compareTo(b.key));
 
-          return questionEntries.map((entry) {
+          if (section == RouteConstants.readingSectionName) {
+            if (sortedEntries.first.value is Map<String, dynamic>) {
+              var firstQuestion =
+                  sortedEntries.first.value as Map<String, dynamic>;
+
+              if (firstQuestion[FirestoreConstants.questionsField]
+                  is Map<String, dynamic>) {
+                var embeddedQuestionsMap =
+                    firstQuestion[FirestoreConstants.questionsField]
+                        as Map<String, dynamic>;
+
+                var embeddedQuestions = embeddedQuestionsMap.entries
+                    .map((entry) => MapEntry(int.parse(entry.key), entry.value))
+                    .toList();
+
+                embeddedQuestions.sort((a, b) => a.key.compareTo(b.key));
+
+                // Convert back to Map<String, dynamic>
+                Map<String, dynamic> orderedEmbeddedQuestions = {
+                  for (var entry in embeddedQuestions)
+                    entry.key.toString(): entry.value
+                };
+
+                firstQuestion[FirestoreConstants.questionsField] =
+                    orderedEmbeddedQuestions;
+              } else {
+                throw Exception(
+                    "Unexpected data structure for embedded questions");
+              }
+            } else {
+              throw Exception(
+                  "Unexpected data structure for the first question");
+            }
+          }
+
+          return sortedEntries.map((entry) {
             final question = BaseQuestion.fromMap(entry.value);
             question.path = "${FirestoreConstants.levelsCollection}/$level/"
                 "${FirestoreConstants.sectionsCollection}/${RouteConstants.getSectionIds(section)}/"
