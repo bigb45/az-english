@@ -19,6 +19,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class TestSectionViewmodel extends BaseViewModel {
   final sectionId = "4";
   Map<int, String> passageTexts = {};
+  Map<int, String?> passageTextTranslations = {};
   bool _isReadyToSubmit = false;
   bool _isSubmitted = false;
   String? levelId;
@@ -64,8 +65,8 @@ class TestSectionViewmodel extends BaseViewModel {
         if (entry.value is PassageQuestionModel) {
           PassageQuestionModel passageQuestion =
               entry.value as PassageQuestionModel;
-          passageTexts[entry.key] = passageQuestion
-              .passageInEnglish!; // Assuming you want to track passage texts by question index.
+          passageTexts[entry.key] = passageQuestion.passageInEnglish!;
+          passageTextTranslations[entry.key] = passageQuestion.passageInArabic;
 
           passageQuestion.questions.values.forEach((question) {
             if (question != null) {
@@ -114,6 +115,7 @@ class TestSectionViewmodel extends BaseViewModel {
     _isSubmitted = false;
     _answers = [];
     passageTexts.clear();
+    passageTextTranslations.clear();
     levelId = null;
     _questions.clear();
     currentIndex = 0;

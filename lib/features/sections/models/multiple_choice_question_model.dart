@@ -7,13 +7,13 @@ import 'package:ez_english/widgets/radio_button.dart';
 class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
   List<RadioItemData> options;
   String? paragraph;
-  // final String? paragraphTranslation;
+  final String? paragraphTranslation;
   String? questionSentenceInEnglish;
   String? questionSentenceInArabic;
   @override
   MultipleChoiceQuestionModel(
       {required this.options,
-      // this.paragraphTranslation,
+      this.paragraphTranslation,
       this.questionSentenceInEnglish,
       required this.questionSentenceInArabic,
       this.paragraph,

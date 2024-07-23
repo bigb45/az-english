@@ -46,7 +46,7 @@ class _GenericMultipleChoiceQuestionState
             _isReadMore
                 ? ExpandableTextBox(
                     paragraph: widget.question.paragraph!,
-                    // paragraphTranslation: widget.question.paragraphTranslation!,
+                    paragraphTranslation: widget.question.paragraphTranslation!,
                     isFocused: _isFocused,
                     isReadMore: _isReadMore,
                     readMoreText: AppStrings.mcQuestionReadMoreText)

@@ -161,8 +161,8 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                                 ? ExpandableTextBox(
                                     paragraph:
                                         passageQuestion!.passageInEnglish!,
-                                    // paragraphTranslation:
-                                    //     passageQuestion!.passageInArabic!,
+                                    paragraphTranslation:
+                                        passageQuestion!.passageInArabic!,
                                     isFocused: _isFocused,
                                     readMoreText:
                                         AppStrings.mcQuestionReadMoreText)
