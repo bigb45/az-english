@@ -83,6 +83,7 @@ class _GenericMultipleChoiceQuestionState
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: RichText(
+                  textDirection: TextDirection.rtl,
                   text: TextSpan(
                       children: stringToRichText(
                     widget.question.questionSentenceInArabic!,
