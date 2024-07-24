@@ -71,11 +71,12 @@ class AdminScreen extends StatelessWidget {
                       print("selected");
                     },
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         SvgPicture.asset(
                           "assets/images/question-mark.svg",
-                          height: 60.h,
-                          width: 60.w,
+                          height: 80.h,
+                          width: 80.w,
                         ),
                         Text(
                           "Questions",
