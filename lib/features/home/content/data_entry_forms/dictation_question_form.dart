@@ -254,7 +254,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                       }
                     }
                   : null,
-              text: "Update",
+              text: widget.question == null ? "submit" : "Update",
             ),
             if (!isEnabled)
               Positioned.fill(

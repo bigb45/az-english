@@ -398,7 +398,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                       }
                     }
                   : null,
-              text: "Update",
+              text: widget.question == null ? "submit" : "Update",
             ),
             if (!isFormValid)
               Positioned.fill(

@@ -329,7 +329,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
                       }
                     }
                   : null,
-              text: "Update",
+              text: widget.question == null ? "submit" : "Update",
             ),
             if (!isEnabled)
               Positioned.fill(
