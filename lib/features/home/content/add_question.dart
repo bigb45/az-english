@@ -138,6 +138,7 @@ class _AddQuestionState extends State<AddQuestion> {
                         SizedBox(width: 16.w),
                         Expanded(
                           child: DropdownButtonFormField(
+                            isExpanded: true,
                             items: const [
                               DropdownMenuItem(
                                 value: "reading",
@@ -191,6 +192,7 @@ class _AddQuestionState extends State<AddQuestion> {
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<Unit>(
+                      isExpanded: true,
                       value: selectedUnit,
                       items: viewmodel.units != null
                           ? viewmodel.units!.map((Unit? unit) {
@@ -252,6 +254,7 @@ class _AddQuestionState extends State<AddQuestion> {
                     SizedBox(height: 16.h),
                     DropdownButtonFormField(
                       value: selectedQuestionType,
+                      isExpanded: true,
                       items: const [
                         DropdownMenuItem(
                           value: QuestionType.multipleChoice,

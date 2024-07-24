@@ -14,6 +14,7 @@ import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/radio_button.dart';
+import 'package:ez_english/widgets/rich_textfield.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -60,6 +61,9 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
   String? originalImageURL;
 
   String? updateMessage;
+
+  String formattedTextInEnglish = "";
+  String formattedTextInArabic = "";
 
   final TextEditingController questionEnglishController =
       TextEditingController();
@@ -230,7 +234,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                           _validateForm();
                         },
                       ),
-                       SizedBox(height: 10.h),
+                      SizedBox(height: 10.h),
                       TextFormField(
                         controller: questionArabicController,
                         maxLines: 2,
@@ -243,33 +247,29 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                           _validateForm();
                         },
                       ),
-                       SizedBox(height: 10.h),
-                      TextFormField(
+                      SizedBox(height: 10.h),
+                      RichTextfield(
+                        isRequired: false,
+                        type: QuestionTextFormFieldType.underline,
                         controller: questionSentenceEnglishController,
-                        maxLines: 2,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: "Question sentence (English)",
-                          hintText: "\"What did Ali eat for breakfast?\"",
-                        ),
-                        onChanged: (value) {
+                        onChanged: (answer, formattedText) {
+                          formattedTextInEnglish = formattedText;
                           _validateForm();
                         },
                       ),
-                       SizedBox(height: 10.h),
-                      TextFormField(
+                      SizedBox(height: 10.h),
+                      RichTextfield(
+                        isRequired: false,
+                        isArabicText: true,
+                        type: QuestionTextFormFieldType.underline,
                         controller: questionSentenceArabicController,
-                        maxLines: 2,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: "Question Sentence (Arabic)",
-                          hintText: "\"ماذا تناول علي على الإفطار؟\"",
-                        ),
-                        onChanged: (value) {
+                        onChanged: (answer, formattedText) {
+                          formattedTextInArabic = formattedText;
+
                           _validateForm();
                         },
                       ),
-                       SizedBox(height: 10.h),
+                      SizedBox(height: 10.h),
                       GestureDetector(
                         onTap: () async {
                           await viewmodel.pickImage();
@@ -331,7 +331,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                           ],
                         ),
                       ),
-                       SizedBox(height: 10.h),
+                      SizedBox(height: 10.h),
                       RadioGroupForm(
                         onFormChanged: (isNewFormValid) {
                           setState(() {
@@ -435,27 +435,18 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                                         .isEmpty
                                     ? null
                                     : questionEnglishController.text.trim(),
-                                questionTextInArabic: questionArabicController
-                                        .text
-                                        .trim()
-                                        .isEmpty
-                                    ? null
-                                    : questionArabicController.text.trim(),
+                                questionTextInArabic:
+                                    questionArabicController.text.trim().isEmpty
+                                        ? null
+                                        : questionArabicController.text.trim(),
                                 questionSentenceInEnglish:
-                                    questionSentenceEnglishController.text
-                                            .trim()
-                                            .isEmpty
+                                    formattedTextInEnglish.trim().isEmpty
                                         ? null
-                                        : questionSentenceEnglishController
-                                            .text
-                                            .trim(),
+                                        : formattedTextInEnglish.trim(),
                                 questionSentenceInArabic:
-                                    questionSentenceArabicController.text
-                                            .trim()
-                                            .isEmpty
+                                    formattedTextInArabic.trim().isEmpty
                                         ? null
-                                        : questionSentenceArabicController.text
-                                            .trim(),
+                                        : formattedTextInArabic.trim(),
                                 titleInEnglish:
                                     titleInEnglishController.text.trim().isEmpty
                                         ? null

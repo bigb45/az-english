@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/fill_the_blanks_question_viewmodel.dart';
@@ -11,7 +9,6 @@ import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/rich_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
@@ -67,7 +64,9 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
 
   String? updateMessage;
   String answer = "";
-  String formattedText = "";
+  String formattedTextInEnglish = "";
+  String formattedTextInArabic = "";
+
   void updateQuestion(FillTheBlanksQuestionModel updatedQuestion) {
     if (widget.question != null) {
       if (incompleteSentenceInEnglishController.text !=
@@ -201,10 +200,11 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                     height: 10.h,
                   ),
                   RichTextfield(
-                    type: QuestionTextFormFieldType.blank,
+                    isRequired: true,
+                    type: QuestionTextFormFieldType.both,
                     onChanged: (answer, formattedText) {
                       this.answer = answer;
-                      this.formattedText = formattedText;
+                      formattedTextInEnglish = formattedText;
                       print("Answer: $answer, formattedText: $formattedText");
                       _validateForm();
                     },
@@ -212,75 +212,16 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                   ),
                   SizedBox(height: 10.h),
                   RichTextfield(
-                    type: QuestionTextFormFieldType.underline,
+                    isRequired: true,
+                    isArabicText: true,
+                    type: QuestionTextFormFieldType.both,
                     controller: incompleteSentenceInArabicController,
                     onChanged: (answer, formattedText) {
-                      this.answer = answer;
-                      this.formattedText = formattedText;
+                      formattedTextInArabic = formattedText;
                       print("Answer: $answer, formattedText: $formattedText");
                       _validateForm();
                     },
                   ),
-                  // TextFormField(
-                  //   onChanged: (value) {
-                  //     if (value.length < arabicBlankStart ||
-                  //         value.length < arabicBlankEnd) {
-                  //       arabicBlankStart = value.length;
-                  //       arabicBlankEnd = value.length;
-                  //     }
-                  //   },
-                  //   controller: incompleteSentenceInArabicController,
-                  //   decoration: InputDecoration(
-                  //       border: const OutlineInputBorder(),
-                  //       labelText: "Full sentence (Arabic)",
-                  //       hintText: "Enter the incomplete sentence in Arabic",
-                  //       suffixIcon: TextButton(
-                  //         onPressed: () {
-                  //           insertBlank(incompleteSentenceInArabicController,
-                  //               isEnglishField: false);
-                  //         },
-                  //         child: const Text("Insert blank"),
-                  //       )),
-                  // ),
-                  // const SizedBox(height: 10),
-                  // Container(
-                  //   decoration: BoxDecoration(
-                  //     border: Border.all(color: Colors.grey),
-                  //     borderRadius: BorderRadius.circular(5),
-                  //   ),
-                  //   width: double.infinity,
-                  //   height: 70.h,
-                  //   child: Column(
-                  //     children: [
-                  //       Text.rich(
-                  //         style: TextStyles.bodyLarge,
-                  //         TextSpan(
-                  //           children: [
-                  //             TextSpan(
-                  //               text: incompleteSentenceInArabicController.text
-                  //                   .substring(0, arabicBlankStart),
-                  //               style: const TextStyle(color: Colors.black),
-                  //             ),
-                  //             if (arabicBlankEnd != arabicBlankStart)
-                  //               TextSpan(
-                  //                 text: '_____',
-                  //                 style: const TextStyle(
-                  //                     color: Palette.primaryText),
-                  //               ),
-                  //             TextSpan(
-                  //               text: incompleteSentenceInArabicController.text
-                  //                   .substring(arabicBlankEnd),
-                  //               style: const TextStyle(color: Colors.black),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //       Text(
-                  //           "Answer: ${incompleteSentenceInArabicController.text.substring(arabicBlankStart, arabicBlankEnd)}",
-                  //           style: TextStyles.bodyLarge)
-                  //     ],
-                  //   ),
-                  // ),
                   SizedBox(height: 10.h),
                   TextFormField(
                     controller: questionEnglishController,
@@ -322,30 +263,15 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
               onPressed: isFormValid
                   ? () {
                       if (_formKey.currentState!.validate()) {
-                        final englishText =
-                            incompleteSentenceInEnglishController.text.trim();
-
-                        // final newEnglishText = englishText.replaceRange(
-                        //     englishBlankStart, englishBlankEnd, '_____');
-                        final newEnglishText = formattedText;
-                        final arabicText =
-                            incompleteSentenceInArabicController.text.trim();
-
-                        final newArabicText = arabicText.replaceRange(
-                            arabicBlankStart, arabicBlankEnd, '_____');
+                        final newEnglishText = formattedTextInEnglish;
+                        final arabicText = formattedTextInArabic;
 
                         viewmodel
                             .submitForm(
                           incompleteSentenceInEnglish: newEnglishText,
                           incompleteSentenceInArabic:
-                              incompleteSentenceInArabicController.text
-                                      .trim()
-                                      .isEmpty
-                                  ? null
-                                  : newArabicText,
-                          answer: incompleteSentenceInEnglishController.text
-                              .substring(englishBlankStart, englishBlankEnd)
-                              .trim(),
+                              arabicText.isEmpty ? null : arabicText,
+                          answer: answer.trim(),
                           questionTextInEnglish:
                               questionEnglishController.text.trim(),
                           questionTextInArabic:
@@ -427,53 +353,6 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
             ),
           ),
       ],
-    );
-  }
-}
-
-class CustomQuillToolbar extends StatelessWidget {
-  final quill.QuillController controller;
-
-  const CustomQuillToolbar({Key? key, required this.controller})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[200],
-      child: Row(
-        children: [
-          IconButton(
-            icon: Icon(Icons.format_underline),
-            onPressed: () {
-              // Toggle underline attribute
-              if (controller
-                  .getSelectionStyle()
-                  .attributes
-                  .containsKey(quill.Attribute.underline.key)) {
-                controller.formatSelection(
-                    quill.Attribute.clone(quill.Attribute.underline, null));
-              } else {
-                controller.formatSelection(quill.Attribute.underline);
-              }
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.space_bar),
-            onPressed: () {
-              print(controller.getPlainText());
-              final cursorPosition = controller.selection.baseOffset;
-              if (cursorPosition != -1) {
-                // controller.formatText(
-                //   controller.selection.start,
-                //   controller.selection.end,
-                //   quill.Attribute.bold,
-                // );
-              }
-            },
-          ),
-        ],
-      ),
     );
   }
 }

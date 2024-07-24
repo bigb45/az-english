@@ -134,6 +134,7 @@ class _EditQuestionState extends State<EditQuestion> {
                     const SizedBox(height: 16),
                     DropdownButtonFormField<Unit>(
                       value: selectedUnit,
+                      isExpanded: true,
                       items: viewmodel.units != null
                           ? viewmodel.units!.map((Unit? unit) {
                               return DropdownMenuItem<Unit>(
@@ -314,6 +315,7 @@ Widget buildQuestionForm(BaseQuestion<dynamic> question, String? selectedLevel,
               question: question as YoutubeLessonModel,
             );
 
+          case QuestionType.vocabularyWithListening:
           case QuestionType.vocabulary:
             return VocabularyForm(
               level: selectedLevel!,
@@ -362,6 +364,7 @@ Widget buildQuestionForm(BaseQuestion<dynamic> question, String? selectedLevel,
 
 Widget sectionDropDown({required onChanged}) {
   return DropdownButtonFormField(
+    isExpanded: true,
     items: const [
       DropdownMenuItem(
         value: "reading",

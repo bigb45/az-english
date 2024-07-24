@@ -54,6 +54,8 @@ class _RadioGroupFormState extends State<RadioGroupForm> {
           (index) {
             RadioItemData option = widget.options[index];
             return ListTile(
+              horizontalTitleGap: 0,
+              minLeadingWidth: 0,
               key: ValueKey(option.value),
               onTap: () {
                 if (option.title.isNotEmpty) {
