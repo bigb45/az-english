@@ -6,63 +6,66 @@ import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class Account extends StatelessWidget {
-  Account({super.key});
-  final AuthViewModel vm = AuthViewModel();
+  const Account({super.key});
 
   @override
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          AppStrings.accountSettingsScreenTitle,
-          style: TextStyle(color: Palette.primaryText),
+    return Consumer<AuthViewModel>(builder: (context, viewmodel, child) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppStrings.accountSettingsScreenTitle,
+            style: TextStyle(color: Palette.primaryText),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
         ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.account_circle,
-                size: 200,
-                color: Palette.primaryText,
-              ),
-              InfoCard(
-                  title: AppStrings.username,
-                  subtitle: "${vm.userData?.studentName}"),
-              InfoCard(
-                  title: AppStrings.emailAddress,
-                  subtitle: "${vm.userData?.emailAddress}"),
-              InfoCard(
-                  title: AppStrings.phoneNumber,
-                  subtitle: "${vm.userData?.parentPhoneNumber}"),
-              if (vm.userData?.userType == UserType.admin ||
-                  vm.userData?.userType == UserType.developer) ...[
+        body: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.account_circle,
+                  size: 200,
+                  color: Palette.primaryText,
+                ),
+                InfoCard(
+                    title: AppStrings.username,
+                    subtitle: "${viewmodel.userData?.studentName}"),
+                InfoCard(
+                    title: AppStrings.emailAddress,
+                    subtitle: "${viewmodel.userData?.emailAddress}"),
+                InfoCard(
+                    title: AppStrings.phoneNumber,
+                    subtitle: "${viewmodel.userData?.parentPhoneNumber}"),
+                if (viewmodel.userData?.userType == UserType.admin ||
+                    viewmodel.userData?.userType == UserType.developer) ...[
+                  Button(
+                    text: 'Manage Content and Users',
+                    onPressed: () {
+                      context.push('/admin');
+                    },
+                  ),
+                  SizedBox(height: 20),
+                ],
                 Button(
-                  text: 'Manage Content and Users',
-                  onPressed: () {
-                    context.push('/admin');
+                  text: 'Sign out',
+                  type: ButtonType.error,
+                  onPressed: () async {
+                    await viewmodel.signOut(context);
                   },
                 ),
                 SizedBox(height: 20),
               ],
-              Button(
-                text: 'Sign out',
-                type: ButtonType.error,
-                onPressed: () async {
-                  await vm.signOut(context);
-                },
-              ),
-              SizedBox(height: 20),
-            ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

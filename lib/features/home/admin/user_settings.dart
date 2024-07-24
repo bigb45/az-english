@@ -1,4 +1,5 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/features/home/admin/users_settings_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/resources/app_strings.dart';
@@ -15,6 +16,8 @@ class UserSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authViewmodel = Provider.of<AuthViewModel>(context, listen: false);
+
     return Consumer<UsersSettingsViewmodel>(
       builder: (context, viewmodel, _) {
         int userIdNumber = int.tryParse(userId)!;
@@ -87,6 +90,7 @@ class UserSettings extends StatelessWidget {
                           type: user.userType,
                           onSubmitted: (value) {
                             viewmodel.updateUserType(value, user.id!);
+                            authViewmodel.refreshUserData();
                           },
                         );
                       },

@@ -169,6 +169,13 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void refreshUserData() async {
+    if (_user != null) {
+      _userData = await _firestoreService.getUser(_user!.uid);
+    }
+    notifyListeners();
+  }
+
   void _handleError(String e) {
     Utils.showErrorSnackBar(e);
     errorOccurred = true;
