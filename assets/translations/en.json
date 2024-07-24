@@ -46,5 +46,7 @@
   "phoneRequired": "Phone number is required",
   "phoneLength": "Phone number must be 10 digits",
 
-  "requiredField": "This field is required."
+  "requiredField": "This field is required.",
+
+  "checkAllFields": "Please check all the required fields."
 }

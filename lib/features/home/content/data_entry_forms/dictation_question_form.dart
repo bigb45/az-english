@@ -4,6 +4,7 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/util/build_question.dart';
+import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
@@ -265,8 +266,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                         ? null
                         : () {
                             setState(() {
-                              updateMessage =
-                                  "Please make changes to update the question.";
+                              updateMessage = AppStrings.checkAllFields;
                             });
                           },
                   ),

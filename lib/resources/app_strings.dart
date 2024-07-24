@@ -64,4 +64,6 @@ abstract class AppStrings {
   static final String phoneLength = "phoneLength".tr();
 
   static final String requiredField = "requiredField".tr();
+
+  static final String checkAllFields = "checkAllFields".tr();
 }

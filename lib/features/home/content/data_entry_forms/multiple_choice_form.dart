@@ -181,6 +181,8 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
   }
 
   bool _checkForChanges() {
+    print(
+        "${formattedTextInEnglish?.trim()} == $originalQuestionSentenceInEnglish");
     return questionEnglishController.text != originalQuestionTextInEnglish ||
         questionArabicController.text != originalQuestionTextInArabic ||
         questionSentenceEnglishController.text !=
@@ -254,6 +256,8 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                         controller: questionSentenceEnglishController,
                         onChanged: (answer, formattedText) {
                           formattedTextInEnglish = formattedText;
+                          print(
+                              "formattedTextInEnglish: $formattedTextInEnglish");
                           _validateForm();
                         },
                       ),
@@ -265,7 +269,6 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                         controller: questionSentenceArabicController,
                         onChanged: (answer, formattedText) {
                           formattedTextInArabic = formattedText;
-
                           _validateForm();
                         },
                       ),
@@ -407,6 +410,9 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                           : const SizedBox(),
                       SizedBox(height: 10.h),
                       _updateButton(viewmodel),
+                      SizedBox(
+                        height: 10.h,
+                      )
                     ],
                   ),
                 );
@@ -494,7 +500,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                       }
                     }
                   : null,
-              text:  widget.question == null ? "submit" :"Update",
+              text: widget.question == null ? "submit" : "Update",
             ),
             if (!isEnabled)
               Positioned.fill(
@@ -505,8 +511,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                         ? null
                         : () {
                             setState(() {
-                              updateMessage =
-                                  "Please make changes to enable update the question.";
+                              updateMessage = AppStrings.checkAllFields;
                             });
                           },
                   ),
@@ -527,7 +532,6 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
   }
 
   void resetForm(VoidCallback resetViewmodel) {
-    print("resetting form");
     setState(() {
       questionEnglishController.clear();
       questionArabicController.clear();

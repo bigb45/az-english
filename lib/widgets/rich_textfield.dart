@@ -1,5 +1,4 @@
 import 'package:ez_english/resources/app_strings.dart';
-import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -301,24 +300,29 @@ class _RichTextfieldState extends State<RichTextfield> {
     String text = _controller.text;
     for (TextRange underlineRange in underlines) {
       if (underlineRange.start > lastEnd) {
-        children.add(TextSpan(
-          text: text.substring(lastEnd, underlineRange.start),
-        ));
+        children.add(
+          TextSpan(
+            text: text.substring(lastEnd, underlineRange.start),
+            style: TextStyles.bodyLarge,
+          ),
+        );
       }
-      children.add(TextSpan(
-        text: text.substring(underlineRange.start, underlineRange.end),
-        style: TextStyle(
-          decoration: TextDecoration.underline,
-          decorationThickness: 3,
-          color: Colors.blue, // Optional: color of the underlined text
+      children.add(
+        TextSpan(
+          text: text.substring(underlineRange.start, underlineRange.end),
+          style: TextStyles.bodyLarge.copyWith(
+            decoration: TextDecoration.underline,
+            decorationThickness: 3,
+          ),
         ),
-      ));
+      );
       lastEnd = underlineRange.end;
     }
 
     if (lastEnd < text.length) {
       children.add(TextSpan(
         text: text.substring(lastEnd),
+        style: TextStyles.bodyLarge,
       ));
     }
 

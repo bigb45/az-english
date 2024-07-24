@@ -4,6 +4,7 @@ import 'package:ez_english/features/home/content/viewmodels/fill_the_blanks_ques
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/string_answer.dart';
+import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
@@ -359,7 +360,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                         : () {
                             setState(() {
                               updateMessage =
-                                  "Please make changes to update the question.";
+                                AppStrings.checkAllFields;
                             });
                           },
                   ),

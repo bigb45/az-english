@@ -391,7 +391,7 @@ class _PassageFormState extends State<PassageForm> {
                         : () {
                             setState(() {
                               updateMessage =
-                                  "Please make changes to update the question.";
+                                AppStrings.checkAllFields;
                             });
                           },
                   ),

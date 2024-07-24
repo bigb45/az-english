@@ -3,6 +3,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/dictation_ques
 import 'package:ez_english/features/home/content/viewmodels/vocabulary_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
+import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
@@ -340,8 +341,7 @@ class _VocabularyFormState extends State<VocabularyForm> {
                         ? null
                         : () {
                             setState(() {
-                              updateMessage =
-                                  "Please make changes to update the question.";
+                              updateMessage = AppStrings.checkAllFields;
                             });
                           },
                   ),
