@@ -109,6 +109,9 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
               .map((option) => RadioItemData.copy(option))
               .toList() ??
           [];
+      formattedTextInEnglish = originalQuestionSentenceInEnglish!;
+      formattedTextInArabic = originalQuestionSentenceInArabic!;
+
       originalAnswer = RadioItemData.copy(widget.question!.answer!.answer!);
       answer = RadioItemData.copy(widget.question!.answer!.answer!);
       originalImageURL = widget.question!.imageUrl;
@@ -193,7 +196,9 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
         !listEquals(options, originalOptions) ||
         answer != originalAnswer ||
         currentImage != originalImage ||
-        currentImageURL != originalImageURL;
+        currentImageURL != originalImageURL ||
+        originalQuestionSentenceInEnglish != formattedTextInEnglish ||
+        originalQuestionSentenceInArabic != formattedTextInArabic;
   }
 
   @override

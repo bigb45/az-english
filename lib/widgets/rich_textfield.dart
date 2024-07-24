@@ -235,9 +235,9 @@ class _RichTextfieldState extends State<RichTextfield> {
     });
   }
 
-  @override
   Widget buildTextfield(
       {required VoidCallback onInsert,
+      required QuestionTextFormFieldType questionTextFormFieldType,
       required IconData icon,
       List<Widget>? additionalIcons}) {
     return Column(
@@ -284,7 +284,8 @@ class _RichTextfieldState extends State<RichTextfield> {
           child: Column(
             children: [
               buildRichText(),
-              if (!widget.isArabicText)
+              if (!widget.isArabicText &&
+                  questionTextFormFieldType == QuestionTextFormFieldType.both)
                 Text("Answer: $answer", style: TextStyles.bodyLarge),
             ],
           ),
@@ -331,6 +332,7 @@ class _RichTextfieldState extends State<RichTextfield> {
 
   Widget buildBlankTextfield() {
     return buildTextfield(
+      questionTextFormFieldType: QuestionTextFormFieldType.blank,
       onInsert: insertOrRemoveBlank,
       icon: Icons.space_bar,
     );
@@ -338,6 +340,7 @@ class _RichTextfieldState extends State<RichTextfield> {
 
   Widget buildUnderlineTextfield() {
     return buildTextfield(
+      questionTextFormFieldType: QuestionTextFormFieldType.underline,
       onInsert: insertOrRemoveUnderline,
       icon: Icons.format_underline,
     );
@@ -350,6 +353,7 @@ class _RichTextfieldState extends State<RichTextfield> {
         insertOrRemoveUnderline();
       },
       icon: Icons.space_bar,
+      questionTextFormFieldType: QuestionTextFormFieldType.both,
       additionalIcons: [
         IconButton(
           icon: const Icon(Icons.format_underline),

@@ -115,41 +115,10 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
       questionArabicController.text = originalQuestionArabic!;
       formattedTextInEnglish = originalIncompleteSentenceInEnglish!;
       formattedTextInArabic = originalIncompleteSentenceInArabic!;
-      parseInitialFormattedText(originalIncompleteSentenceInEnglish!,
-          isEnglish: true);
-      parseInitialFormattedText(originalIncompleteSentenceInArabic!,
-          isEnglish: false);
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _validateForm();
     });
-  }
-
-  void parseInitialFormattedText(String text, {bool isEnglish = true}) {
-    RegExp blankRegex = RegExp(
-        r'\{\{blank\|(.*?)\}\}'); // Adjust regex based on your actual format
-    Iterable<RegExpMatch> matches = blankRegex.allMatches(text);
-
-    for (var match in matches) {
-      int start = match.start;
-      int end = match.end;
-      String answer = match.group(1) ?? "";
-
-      if (isEnglish) {
-        englishBlankStart = start;
-        englishBlankEnd = end;
-      } else {
-        arabicBlankStart = start;
-        arabicBlankEnd = end;
-      }
-
-      // Assuming you have a method in RichTextfield to set initial state
-      if (isEnglish) {
-        // Set initial state for English RichTextfield
-      } else {
-        // Set initial state for Arabic RichTextfield
-      }
-    }
   }
 
   void _validateForm() {
@@ -359,8 +328,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                         ? null
                         : () {
                             setState(() {
-                              updateMessage =
-                                AppStrings.checkAllFields;
+                              updateMessage = AppStrings.checkAllFields;
                             });
                           },
                   ),
