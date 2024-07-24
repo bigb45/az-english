@@ -78,6 +78,20 @@ class UserSettings extends StatelessWidget {
                       subtitle: user.emailAddress,
                     ),
                     InfoCard(
+                      title: "User Type",
+                      subtitle: user.userType.toShortString(),
+                      actionIcon: Icons.edit,
+                      onTap: () {
+                        showEditUserTypeDialog(
+                          context,
+                          type: user.userType,
+                          onSubmitted: (value) {
+                            viewmodel.updateUserType(value, user.id!);
+                          },
+                        );
+                      },
+                    ),
+                    InfoCard(
                       title: AppStrings.phoneNumber,
                       subtitle: user.parentPhoneNumber!,
                       actionIcon: Icons.edit,
@@ -177,6 +191,41 @@ void showAssignedLevelsDialog(
         ),
       ],
     ),
+  );
+}
+
+void showEditUserTypeDialog(context,
+    {required UserType type, required Function(UserType) onSubmitted}) {
+  UserType newType = type;
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text("Edit User Type"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: UserType.values
+              .where((userTypeIter) => userTypeIter != UserType.developer)
+              .map((e) {
+            return RadioListTile(
+              title: Text(e.toShortString()),
+              value: e,
+              groupValue: newType,
+              onChanged: (value) {
+                onSubmitted(value!);
+                Navigator.pop(context);
+              },
+            );
+          }).toList(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+        ],
+      );
+    },
   );
 }
 

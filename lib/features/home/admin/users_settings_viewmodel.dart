@@ -6,7 +6,6 @@ import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/widgets/checkbox.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class UsersSettingsViewmodel extends BaseViewModel {
   List<UserModel?> _users = [];
@@ -21,7 +20,6 @@ class UsersSettingsViewmodel extends BaseViewModel {
     notifyListeners();
   }
 
-// TODO: removing this will make the circular indicator disappear
   @override
   bool isLoading = false;
 
@@ -47,7 +45,28 @@ class UsersSettingsViewmodel extends BaseViewModel {
       }
       notifyListeners();
     } catch (e) {
+      // Utils.showErrorSnackBar("Error updating studentName");
       print("Error updating studentName: $e");
+    }
+  }
+
+  Future<void> updateUserType(UserType newUserType, String userId) async {
+    try {
+      DocumentReference userDocRef =
+          FirebaseFirestore.instance.collection("users").doc(userId);
+      await _firestoreService.updateQuestionUsingFieldPath(
+        docPath: userDocRef,
+        fieldPath: FieldPath(const ['userType']),
+        newValue: newUserType.toShortString(),
+      );
+      // Update the local user model
+      UserModel? user = _users.firstWhere((user) => user?.id == userId);
+      if (user != null) {
+        user.userType = newUserType;
+      }
+      notifyListeners();
+    } catch (e) {
+      print("Error updating user type: $e");
     }
   }
 

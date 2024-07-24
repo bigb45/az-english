@@ -21,9 +21,10 @@ class AuthViewModel extends ChangeNotifier {
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   final FirestoreService _firestoreService = FirestoreService();
   bool errorOccurred = false;
-
+  // bool _isAdmin = false;
   User? _user;
 
+  // get isAdmin => _isAdmin;
   User? get user => _user;
 
   UserModel? _userData;
@@ -43,6 +44,16 @@ class AuthViewModel extends ChangeNotifier {
   void _unsubscribeFromAuthChanges() {
     _authStateSubscription?.cancel();
   }
+
+  // Future<void> checkUserType() async {
+  //   final user = await _firestoreService.getUser(_user!.uid);
+  //   if (user != null) {
+  //     _isAdmin = user.userType == UserType.admin ||
+  //         user.userType == UserType.developer;
+  //   }
+  //   print(user?.userType.toShortString());
+  //   notifyListeners();
+  // }
 
   //TODO remove this after testing
   Future<void> signInDev() async {
