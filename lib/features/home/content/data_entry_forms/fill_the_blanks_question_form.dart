@@ -98,37 +98,57 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
   @override
   void initState() {
     super.initState();
-
     if (widget.question != null) {
-      int? startIndexOfEnglishWord =
-          widget.question!.incompleteSentenceInEnglish?.indexOf("_____");
-      if (startIndexOfEnglishWord != -1) {
-        englishBlankStart = originalEnglishBlankStart =
-            startIndexOfEnglishWord ?? englishBlankStart;
-        englishBlankEnd =
-            (startIndexOfEnglishWord ?? englishBlankEnd) + "_____".length;
-      }
-
-      final newText = widget.question!.incompleteSentenceInEnglish
-          ?.replaceRange(englishBlankStart, englishBlankEnd,
-              widget.question!.answer!.answer!);
-
-      englishBlankEnd = originalEnglishBlankEnd =
-          startIndexOfEnglishWord! + widget.question!.answer!.answer!.length;
-
+      originalIncompleteSentenceInEnglish =
+          widget.question!.incompleteSentenceInEnglish ?? "";
+      originalIncompleteSentenceInArabic =
+          widget.question!.incompleteSentenceInArabic ?? "";
+      originalQuestionEnglish = widget.question!.questionTextInEnglish ?? "";
+      originalQuestionArabic = widget.question!.questionTextInArabic ?? "";
+      answer = widget.question!.answer!.answer!;
       incompleteSentenceInEnglishController.text =
-          originalIncompleteSentenceInEnglish = newText ?? "";
+          originalIncompleteSentenceInEnglish!;
       incompleteSentenceInArabicController.text =
-          originalIncompleteSentenceInArabic =
-              widget.question!.incompleteSentenceInArabic ?? "";
-      questionEnglishController.text = originalQuestionEnglish =
-          widget.question!.questionTextInEnglish ?? "";
-      questionArabicController.text =
-          originalQuestionArabic = widget.question!.questionTextInArabic ?? "";
+          originalIncompleteSentenceInArabic!;
+      questionEnglishController.text = originalQuestionEnglish!;
+      questionArabicController.text = originalQuestionArabic!;
+      formattedTextInEnglish = originalIncompleteSentenceInEnglish!;
+      formattedTextInArabic = originalIncompleteSentenceInArabic!;
+      parseInitialFormattedText(originalIncompleteSentenceInEnglish!,
+          isEnglish: true);
+      parseInitialFormattedText(originalIncompleteSentenceInArabic!,
+          isEnglish: false);
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _validateForm();
     });
+  }
+
+  void parseInitialFormattedText(String text, {bool isEnglish = true}) {
+    RegExp blankRegex = RegExp(
+        r'\{\{blank\|(.*?)\}\}'); // Adjust regex based on your actual format
+    Iterable<RegExpMatch> matches = blankRegex.allMatches(text);
+
+    for (var match in matches) {
+      int start = match.start;
+      int end = match.end;
+      String answer = match.group(1) ?? "";
+
+      if (isEnglish) {
+        englishBlankStart = start;
+        englishBlankEnd = end;
+      } else {
+        arabicBlankStart = start;
+        arabicBlankEnd = end;
+      }
+
+      // Assuming you have a method in RichTextfield to set initial state
+      if (isEnglish) {
+        // Set initial state for English RichTextfield
+      } else {
+        // Set initial state for Arabic RichTextfield
+      }
+    }
   }
 
   void _validateForm() {
@@ -151,7 +171,9 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
         incompleteSentenceInArabicController.text !=
             originalIncompleteSentenceInArabic ||
         englishBlankStart != originalEnglishBlankStart ||
-        englishBlankEnd != originalEnglishBlankEnd;
+        englishBlankEnd != originalEnglishBlankEnd ||
+        formattedTextInEnglish != originalIncompleteSentenceInEnglish ||
+        formattedTextInArabic != originalIncompleteSentenceInArabic;
   }
 
   @override
@@ -200,6 +222,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                     height: 10.h,
                   ),
                   RichTextfield(
+                    initialAnswer: answer,
                     isRequired: true,
                     type: QuestionTextFormFieldType.both,
                     onChanged: (answer, formattedText) {
