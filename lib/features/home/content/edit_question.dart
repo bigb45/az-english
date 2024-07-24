@@ -382,6 +382,10 @@ Widget sectionDropDown({required onChanged}) {
         value: "grammar",
         child: Text("Grammar"),
       ),
+      DropdownMenuItem(
+        value: "test",
+        child: Text("Test"),
+      ),
     ],
     onChanged: (sectionSelection) {
       onChanged(sectionSelection);

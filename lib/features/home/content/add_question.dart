@@ -156,6 +156,10 @@ class _AddQuestionState extends State<AddQuestion> {
                                 value: "grammar",
                                 child: Text("Grammar"),
                               ),
+                              DropdownMenuItem(
+                                value: "test",
+                                child: Text("Test"),
+                              ),
                             ],
                             onChanged: (sectionSelection) {
                               setState(() {
