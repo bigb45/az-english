@@ -379,7 +379,7 @@ class _PassageFormState extends State<PassageForm> {
                       }
                     }
                   : null,
-              text: "Update",
+              text: widget.question == null ? "submit" : "Update",
             ),
             if (!isEnabled)
               Positioned.fill(

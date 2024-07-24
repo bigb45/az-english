@@ -494,7 +494,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                       }
                     }
                   : null,
-              text: "Update",
+              text:  widget.question == null ? "submit" :"Update",
             ),
             if (!isEnabled)
               Positioned.fill(
