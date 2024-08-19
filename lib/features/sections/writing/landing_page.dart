@@ -39,7 +39,7 @@ class _WritingSectionState extends State<WritingSection> {
         title: ListTile(
           contentPadding: EdgeInsets.only(left: 0, right: 0),
           title: Text(
-            'Writing & Listening',
+            'Writing',
             style: TextStyle(
               fontSize: 24.sp,
               color: Palette.secondary,
@@ -75,7 +75,7 @@ class _WritingSectionState extends State<WritingSection> {
                           Palette.primaryText, BlendMode.srcIn),
                     ),
                     Text(
-                      "Writing & Listening Section",
+                      "Writing Section",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 32.sp,
@@ -99,7 +99,7 @@ class _WritingSectionState extends State<WritingSection> {
               ),
               Button(
                 onPressed: () {
-                  context.push('/practice/listening');
+                  context.push('/practice/writing');
                 },
                 type: ButtonType.primary,
                 text: "continue",

@@ -16,6 +16,8 @@ import 'package:ez_english/features/sections/components/youtube_lesson.dart';
 import 'package:ez_english/features/sections/exam/test.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
 import 'package:ez_english/features/sections/grammar/practice.dart';
+import 'package:ez_english/features/sections/listening/landing_page.dart';
+import 'package:ez_english/features/sections/listening/practice.dart';
 import 'package:ez_english/features/sections/reading/landing_page.dart';
 import 'package:ez_english/features/sections/reading/practice.dart';
 import 'package:ez_english/features/sections/sections_screen.dart';
@@ -87,13 +89,16 @@ final loggedInRouter = GoRouter(
           "1" => WritingSection(
               levelId: levelId,
             ),
-          "2" => VocabularySection(
+          "2" => ListeningSection(
               levelId: levelId,
             ),
-          "3" => GrammarSection(
+          "3" => VocabularySection(
               levelId: levelId,
             ),
-          "4" => TestSection(levelId: levelId),
+          "4" => GrammarSection(
+              levelId: levelId,
+            ),
+          "5" => TestSection(levelId: levelId),
           String() => const Placeholder(),
         };
       }),
@@ -108,7 +113,8 @@ final loggedInRouter = GoRouter(
         return switch (state.pathParameters['sectionId']) {
           "reading" => ReadingPractice(),
           "grammar" => GrammarPractice(),
-          "listening" => WritingPractice(),
+          "listening" => ListeningPractice(),
+          "writing" => WritingPractice(),
           "vocabulary" => WordsListView(),
           String() || null => const Placeholder(),
         };

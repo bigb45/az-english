@@ -7,6 +7,7 @@ import 'package:ez_english/features/home/viewmodel/test_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/features/sections/grammar/grammar_section_viewmodel.dart';
+import 'package:ez_english/features/sections/listening/viewmodel/listening_section_viewmodel.dart';
 import 'package:ez_english/features/sections/reading/view_model/reading_section_viewmodel.dart';
 import 'package:ez_english/features/sections/vocabulary/viewmodel/vocabulary_section_viewmodel.dart';
 import 'package:ez_english/features/sections/writing/viewmodel/writing_section_viewmodel.dart';
@@ -132,6 +133,7 @@ class AuthViewModel extends ChangeNotifier {
       _firestoreService.reset();
       _resetAuthState();
       Provider.of<WritingSectionViewmodel>(context, listen: false).reset();
+      Provider.of<ListeningSectionViewmodel>(context, listen: false).reset();
       Provider.of<ReadingSectionViewmodel>(context, listen: false).reset();
       Provider.of<VocabularySectionViewmodel>(context, listen: false).reset();
       Provider.of<GrammarSectionViewmodel>(context, listen: false).reset();

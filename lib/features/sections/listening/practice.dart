@@ -5,6 +5,7 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/finished_questions_screen.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
+import 'package:ez_english/features/sections/listening/viewmodel/listening_section_viewmodel.dart';
 import 'package:ez_english/features/sections/util/build_question.dart';
 import 'package:ez_english/features/sections/writing/viewmodel/writing_section_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -17,26 +18,27 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class WritingPractice extends StatefulWidget {
-  const WritingPractice({super.key});
+class ListeningPractice extends StatefulWidget {
+  const ListeningPractice({super.key});
 
   @override
-  State<WritingPractice> createState() => _WritingPracticeState();
+  State<ListeningPractice> createState() => _ListeningPracticeState();
 }
 
-class _WritingPracticeState extends State<WritingPractice> {
-  late WritingSectionViewmodel viewmodel;
+class _ListeningPracticeState extends State<ListeningPractice> {
+  late ListeningSectionViewmodel viewmodel;
   late BaseQuestion currentQuestion;
   @override
   void initState() {
     super.initState();
-    viewmodel = Provider.of<WritingSectionViewmodel>(context, listen: false);
+    viewmodel = Provider.of<ListeningSectionViewmodel>(context, listen: false);
   }
 
   RadioItemData? selectedOption;
   @override
   Widget build(BuildContext context) {
-    return Consumer<WritingSectionViewmodel>(builder: (context, viewmodel, _) {
+    return Consumer<ListeningSectionViewmodel>(
+        builder: (context, viewmodel, _) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (viewmodel.error != null) {
           ScaffoldMessenger.of(context)
@@ -99,7 +101,7 @@ class _WritingPracticeState extends State<WritingPractice> {
             title: ListTile(
               contentPadding: const EdgeInsets.only(left: 0, right: 0),
               title: Text(
-                'Writing Practice',
+                'Listening Practice',
                 style: TextStyles.titleTextStyle.copyWith(
                   color: Palette.primaryText,
                 ),
