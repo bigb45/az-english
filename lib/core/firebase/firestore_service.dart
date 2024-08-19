@@ -373,6 +373,9 @@ class FirestoreService {
       Map<int, bool> interactedQuestions = _userModel!.levelsProgress![level]!
           .sectionProgress![sectionName]!.interactedQuestions;
 
+      int lastQuestionIndex = _userModel!.levelsProgress![level]!
+          .sectionProgress![sectionName]!.lastStoppedQuestionIndex;
+
       double progress = _userModel!
           .levelsProgress![level]!.sectionProgress![sectionName]!.progress;
       String tempUnitNumber = (sectionName ==
@@ -391,6 +394,7 @@ class FirestoreService {
           .collection(FirestoreConstants.unitsCollection)
           .doc(tempUnitNumber)
           .get();
+
       if (levelDoc.exists) {
         Map<String, dynamic> data = levelDoc.data() as Map<String, dynamic>;
 
@@ -423,18 +427,21 @@ class FirestoreService {
 
                 embeddedQuestions.sort((a, b) => a.key.compareTo(b.key));
 
+                var skippedEmbeddedQuestions =
+                    embeddedQuestions.skip(lastQuestionIndex).toList();
+
                 allQuestionsLength = embeddedQuestions.length + 1;
 
                 filteredQuestionsData.add(firstQuestion);
 
-                filteredQuestionsData.addAll(
-                    embeddedQuestions.map((e) => MapEntry(e.key + 1, e.value)));
+                filteredQuestionsData.addAll(skippedEmbeddedQuestions
+                    .map((e) => MapEntry(e.key + 1, e.value)));
 
                 filteredQuestionsLength = filteredQuestionsData.length;
 
                 // Convert back to Map<String, dynamic> for embedded questions
                 Map<String, dynamic> orderedEmbeddedQuestions = {
-                  for (var entry in embeddedQuestions)
+                  for (var entry in skippedEmbeddedQuestions)
                     entry.key.toString(): entry.value
                 };
 
@@ -462,7 +469,9 @@ class FirestoreService {
             filteredQuestionsLength =
                 filteredQuestionsData.length - interactedQuestions.length;
           } else {
-            filteredQuestionsData = sortedEntries;
+            filteredQuestionsData =
+                sortedEntries.skip(lastQuestionIndex).toList();
+
             filteredQuestionsLength = filteredQuestionsData.length;
           }
 
