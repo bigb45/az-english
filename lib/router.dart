@@ -11,6 +11,8 @@ import 'package:ez_english/features/home/content/add_question.dart';
 import 'package:ez_english/features/home/content/content_screen.dart';
 import 'package:ez_english/features/home/content/edit_question.dart';
 import 'package:ez_english/features/home/test/test_overview.dart';
+import 'package:ez_english/features/levels/screens/speaking/landing_page.dart';
+import 'package:ez_english/features/levels/screens/speaking/speaking_practice.dart';
 import 'package:ez_english/features/models/test_result.dart';
 import 'package:ez_english/features/sections/components/youtube_lesson.dart';
 import 'package:ez_english/features/sections/exam/test.dart';
@@ -159,6 +161,17 @@ final loggedInRouter = GoRouter(
       path: '/all_questions',
       builder: (context, state) => const ContentScreen(),
     ),
-    GoRoute(path: '/admin', builder: (context, state) => AdminScreen()),
+    GoRoute(
+      path: '/admin',
+      builder: (context, state) => AdminScreen(),
+    ),
+    GoRoute(
+      path: '/speaking_practice',
+      builder: (context, state) => SpeakingSection(),
+    ),
+    GoRoute(
+      path: '/speaking_practice/practice',
+      builder: (context, state) => SpeakingPractice(),
+    ),
   ],
 );

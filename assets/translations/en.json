@@ -48,5 +48,10 @@
 
   "requiredField": "This field is required.",
 
-  "checkAllFields": "Please check all the required fields."
+  "checkAllFields": "Please check all the required fields.",
+
+  "speakingPracticeScreenTitle": "Speaking",
+
+  "speakingSectionPageTitle": "Speaking Practice",
+  "speakingSectionOnboardingText": "In this section you will complete the assigned speaking questions."
 }
