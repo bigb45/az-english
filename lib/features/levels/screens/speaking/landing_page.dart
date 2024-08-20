@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/levels/screens/speaking/speaking_practice_viewmodel.dart';
+import 'package:ez_english/features/levels/screens/speaking/speaking_section_viewmodel.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
@@ -12,22 +12,22 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class SpeakingSection extends StatefulWidget {
-  const SpeakingSection({super.key});
+  final String levelId;
+  const SpeakingSection({super.key, required this.levelId});
 
   @override
   State<SpeakingSection> createState() => _SpeakingSectionState();
 }
 
 class _SpeakingSectionState extends State<SpeakingSection> {
-  late SpeakingPracticeViewmodel vm;
+  late SpeakingSectionViewmodel vm;
 
   @override
   void initState() {
-    vm = Provider.of<SpeakingPracticeViewmodel>(context, listen: false);
-    // vm.levelId = widget.levelId;
-    vm.init();
+    vm = Provider.of<SpeakingSectionViewmodel>(context, listen: false);
+    vm.levelId = widget.levelId;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // vm.setValuesAndInit();
+      vm.setValuesAndInit();
     });
 
     super.initState();
@@ -48,16 +48,6 @@ class _SpeakingSectionState extends State<SpeakingSection> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          // subtitle: Text(
-          //   // TODO: Change this to be dynamic from the API
-          //   "Daily Conversations",
-          //   style: TextStyle(
-          //     fontSize: 17.sp,
-          //     color: Palette.secondary,
-          //     fontFamily: 'Inter',
-          //     fontWeight: FontWeight.w400,
-          //   ),
-          // ),
         ),
       ),
       body: SafeArea(

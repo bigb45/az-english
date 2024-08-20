@@ -173,7 +173,7 @@ final loggedInRouter = GoRouter(
     ),
     GoRoute(
       path: '/speaking_practice',
-      builder: (context, state) => SpeakingSection(),
+      builder: (context, state) => SpeakingSection(levelId: "0"),
     ),
     GoRoute(
       path: '/speaking_practice/practice',
