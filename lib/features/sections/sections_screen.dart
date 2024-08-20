@@ -72,7 +72,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
             style: TextStyles.titleTextStyle,
           ),
           subtitle: Text(
-            widget.levelName,
+            "English practice",
             style: TextStyles.subtitleTextStyle,
           ),
         ),
@@ -83,7 +83,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
               child: SingleChildScrollView(
                 child: SizedBox(
                   child: Padding(
-                    padding: EdgeInsets.all(Constants.padding20),
+                    padding: EdgeInsets.all(Constants.padding8),
                     child: Center(
                       child: Column(
                         children: [
