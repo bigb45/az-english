@@ -26,6 +26,7 @@ class ListeningPractice extends StatefulWidget {
 }
 
 class _ListeningPracticeState extends State<ListeningPractice> {
+// TODO: remove viewmodel and initState
   late ListeningSectionViewmodel viewmodel;
   late BaseQuestion currentQuestion;
   @override
@@ -34,6 +35,7 @@ class _ListeningPracticeState extends State<ListeningPractice> {
     viewmodel = Provider.of<ListeningSectionViewmodel>(context, listen: false);
   }
 
+// TODO: remove selectedOption
   RadioItemData? selectedOption;
   @override
   Widget build(BuildContext context) {

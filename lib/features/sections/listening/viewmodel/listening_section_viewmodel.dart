@@ -8,15 +8,15 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
+import 'package:ez_english/utils/utils.dart';
 
 class ListeningSectionViewmodel extends BaseViewModel {
   String? levelId;
   List<BaseQuestion> _questions = [];
-
   get questions => _questions;
-  // get userAnswer => _userAnswer;
+
   final FirestoreService _firestoreService = FirestoreService();
-  // final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+
   @override
   FutureOr<void> init() {}
 
@@ -24,6 +24,7 @@ class ListeningSectionViewmodel extends BaseViewModel {
     currentIndex = 0;
     levelName = RouteConstants.getLevelName(levelId!);
     sectionName = RouteConstants.listeningSectionName;
+
     fetchQuestions();
     if (_questions.isNotEmpty &&
         _questions[currentIndex].questionType == QuestionType.youtubeLesson) {
@@ -33,9 +34,6 @@ class ListeningSectionViewmodel extends BaseViewModel {
 
   Future<void> fetchQuestions() async {
     isLoading = true;
-    // UserModel userData = (await _firestoreService.getUser(_firebaseAuthService.getUser()!.uid))!;
-    // int lastQuestionIndex = userData.levelsProgress![_levelName]!
-    //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
       Unit unit = await _firestoreService.fetchUnit(
         RouteConstants.sectionNameId[RouteConstants.listeningSectionName]!,
