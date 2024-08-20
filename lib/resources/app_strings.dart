@@ -7,8 +7,8 @@ abstract class AppStrings {
   static final speakingPracticeScreenTitle = 'speakingPracticeScreenTitle'.tr();
   static final practiceScreenText = 'practiceScreenText'.tr();
   static final readingSectionCardTitle = 'readingSectionCardTitle'.tr();
-  static final listeningAndWritingSectionCardTitle =
-      'listeningAndWritingSectionCardTitle'.tr();
+  static final writingSectionCardTitle = "writingSectionCardTitle".tr();
+  static final listeningSectionCardTitle = "listeningSectionCardTitle".tr();
   static final vocabSectionCardTitle = 'vocabSectionCardTitle'.tr();
   static final grammarSectionCardTitle = 'grammarSectionCardTitle'.tr();
   static final skillTestSectionCardTitle = 'skillTestSectionCardTitle'.tr();

@@ -9,7 +9,7 @@ import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 
-class WritingSectionViewmodel extends BaseViewModel {
+class ListeningSectionViewmodel extends BaseViewModel {
   String? levelId;
   List<BaseQuestion> _questions = [];
 
@@ -23,7 +23,7 @@ class WritingSectionViewmodel extends BaseViewModel {
   Future<void> myInit() async {
     currentIndex = 0;
     levelName = RouteConstants.getLevelName(levelId!);
-    sectionName = RouteConstants.writingSectionName;
+    sectionName = RouteConstants.listeningSectionName;
     fetchQuestions();
     if (_questions.isNotEmpty &&
         _questions[currentIndex].questionType == QuestionType.youtubeLesson) {
@@ -38,7 +38,7 @@ class WritingSectionViewmodel extends BaseViewModel {
     //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
       Unit unit = await _firestoreService.fetchUnit(
-        RouteConstants.sectionNameId[RouteConstants.writingSectionName]!,
+        RouteConstants.sectionNameId[RouteConstants.listeningSectionName]!,
         levelName!,
       );
       _questions = unit.questions.values.cast<BaseQuestion>().toList();

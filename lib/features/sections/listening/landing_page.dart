@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/sections/listening/viewmodel/listening_section_viewmodel.dart';
 import 'package:ez_english/features/sections/writing/viewmodel/writing_section_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
@@ -10,20 +11,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class WritingSection extends StatefulWidget {
+class ListeningSection extends StatefulWidget {
   final String levelId;
 
-  const WritingSection({super.key, required this.levelId});
+  const ListeningSection({super.key, required this.levelId});
 
   @override
-  State<WritingSection> createState() => _WritingSectionState();
+  State<ListeningSection> createState() => _ListeningSectionState();
 }
 
-class _WritingSectionState extends State<WritingSection> {
-  late WritingSectionViewmodel viewmodel;
+class _ListeningSectionState extends State<ListeningSection> {
+  late ListeningSectionViewmodel viewmodel;
   @override
   void initState() {
-    viewmodel = Provider.of<WritingSectionViewmodel>(context, listen: false);
+    viewmodel = Provider.of<ListeningSectionViewmodel>(context, listen: false);
     viewmodel.levelId = widget.levelId;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       viewmodel.myInit();
@@ -33,13 +34,13 @@ class _WritingSectionState extends State<WritingSection> {
 
   @override
   Widget build(BuildContext context) {
-    viewmodel = Provider.of<WritingSectionViewmodel>(context);
+    viewmodel = Provider.of<ListeningSectionViewmodel>(context);
     return Scaffold(
       appBar: AppBar(
         title: ListTile(
           contentPadding: EdgeInsets.only(left: 0, right: 0),
           title: Text(
-            'Writing & Listening',
+            'Listening',
             style: TextStyle(
               fontSize: 24.sp,
               color: Palette.secondary,
@@ -75,7 +76,7 @@ class _WritingSectionState extends State<WritingSection> {
                           Palette.primaryText, BlendMode.srcIn),
                     ),
                     Text(
-                      "Writing & Listening Section",
+                      "Listening Section",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 32.sp,
