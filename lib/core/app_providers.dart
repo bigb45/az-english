@@ -1,9 +1,9 @@
 import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
-import 'package:ez_english/features/home/viewmodel/test_viewmodel.dart';
 import 'package:ez_english/features/home/admin/users_settings_viewmodel.dart';
+import 'package:ez_english/features/home/viewmodel/test_viewmodel.dart';
 import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
-import 'package:ez_english/features/levels/screens/speaking/speaking_practice_viewmodel.dart';
+import 'package:ez_english/features/levels/screens/speaking/speaking_section_viewmodel.dart';
 import 'package:ez_english/features/sections/components/view_model/dictation_question_view.model.dart';
 import 'package:ez_english/features/sections/exam/viewmodel/test_section_viewmodel.dart';
 import 'package:ez_english/features/sections/grammar/grammar_section_viewmodel.dart';
@@ -39,7 +39,7 @@ class AppProviders extends StatelessWidget {
           create: (_) => TestViewmodel(),
         ),
         ChangeNotifierProvider(create: (_) => UsersSettingsViewmodel()),
-        ChangeNotifierProvider(create: (_) => SpeakingPracticeViewmodel())
+        ChangeNotifierProvider(create: (_) => SpeakingSectionViewmodel())
       ],
       child: child,
     );
