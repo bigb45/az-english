@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
-import 'package:ez_english/features/home/viewmodel/test_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -58,19 +57,38 @@ class _LevelSelectionState extends State<LevelSelection> {
                           runSpacing: 10.w,
                           spacing: 10.w,
                           children: [
-                            ...viewmodel.levels.map(
-                              (level) {
-                                return _buildCard(
-                                  headerText: level.name,
-                                  isAssigned: level.isAssigned,
-                                  cardText: level.description,
-                                  onTap: () {
-                                    navigateToLevel(levelId: level.id);
-                                    viewmodel.fetchSections(level);
-                                  },
-                                );
-                              },
-                            ),
+                            _buildCard(
+                                headerText: "Practice",
+                                isAssigned: true,
+                                cardText: "Practice english",
+                                onTap: () {
+                                  navigateToLevel(
+                                    levelId: viewmodel.levels[0].id,
+                                  );
+                                  viewmodel.fetchSections(
+                                    viewmodel.levels[0],
+                                  );
+                                }),
+                            _buildCard(
+                                headerText: "Speaking",
+                                isAssigned: true,
+                                cardText: "Practice Speaking",
+                                onTap: () {
+                                  context.push('/speaking_practice');
+                                })
+                            // ...viewmodel.levels.map(
+                            //   (level) {
+                            //     return _buildCard(
+                            //       headerText: level.name,
+                            //       isAssigned: level.isAssigned,
+                            //       cardText: level.description,
+                            //       onTap: () {
+                            //         navigateToLevel(levelId: level.id);
+                            //         viewmodel.fetchSections(level);
+                            //       },
+                            //     );
+                            //   },
+                            // ),
                           ],
                         ),
                       ),
@@ -79,39 +97,39 @@ class _LevelSelectionState extends State<LevelSelection> {
                 ),
     );
   }
+}
 
-  Widget _buildCard(
-      {required String headerText,
-      required String cardText,
-      required Function() onTap,
-      bool isAssigned = false}) {
-    return SelectableCard(
-      selected: isAssigned,
-      onPressed: isAssigned
-          ? () {
-              onTap();
-            }
-          : null,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          AutoSizeText(
-            headerText,
-            style: TextStyles.cardHeader,
-            textAlign: TextAlign.center,
-            maxLines: 3,
-          ),
-          Constants.gapH18,
-          AutoSizeText(
-            cardText,
-            style: TextStyles.cardText,
-            textAlign: TextAlign.center,
-            maxLines: 3,
-          ),
-        ],
-      ),
-    );
-  }
+Widget _buildCard(
+    {required String headerText,
+    required String cardText,
+    required Function() onTap,
+    bool isAssigned = false}) {
+  return SelectableCard(
+    selected: isAssigned,
+    onPressed: isAssigned
+        ? () {
+            onTap();
+          }
+        : null,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AutoSizeText(
+          headerText,
+          style: TextStyles.cardHeader.copyWith(fontSize: 18.sp),
+          textAlign: TextAlign.center,
+          maxLines: 3,
+        ),
+        Constants.gapH18,
+        AutoSizeText(
+          cardText,
+          style: TextStyles.cardText,
+          textAlign: TextAlign.center,
+          maxLines: 3,
+        ),
+      ],
+    ),
+  );
 }
 
 class ErrorWidget extends StatelessWidget {
