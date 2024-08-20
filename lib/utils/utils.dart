@@ -2,10 +2,9 @@ import 'package:ez_english/core/network/apis_constants.dart';
 import 'package:ez_english/core/network/custom_response.dart';
 import 'package:ez_english/core/network/network_helper.dart';
 import 'package:ez_english/theme/text_styles.dart';
-import 'package:ez_english/utils/AzureAudioSource.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:just_audio/just_audio.dart';
 
 class Utils {
   static final messengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -55,6 +54,12 @@ class Utils {
     } catch (e) {
       throw Exception("Error while generating audio");
     }
+  }
+}
+
+void printDebug(String message) {
+  if (kDebugMode) {
+    print(message);
   }
 }
 
