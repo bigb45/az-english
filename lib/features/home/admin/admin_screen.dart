@@ -1,8 +1,6 @@
 // ignore_for_file: avoid_print, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
-import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
@@ -10,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -31,11 +28,6 @@ class AdminScreen extends StatelessWidget {
         padding: EdgeInsets.all(Constants.padding12),
         child: Column(
           children: [
-            Text(
-              // viewmodel.totalUsers,
-              "Total users: 10",
-              style: TextStyles.bodyLarge,
-            ),
             Center(
               child: Wrap(
                 alignment: WrapAlignment.center,

@@ -5,20 +5,29 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/checkbox.dart';
 
 class UsersSettingsViewmodel extends BaseViewModel {
   List<UserModel?> _users = [];
+  List<UserModel?> _filteredUsers = [];
+
   final FirestoreService _firestoreService = FirestoreService();
   List<Level?> _levels = [];
+
   Future<void> myInit() async {
     isLoading = true;
     _users = await _firestoreService.getUsers();
+    _filteredUsers = _users;
     _levels = await firestoreService.getLevels();
     isInitialized = true;
     isLoading = false;
     notifyListeners();
   }
+
+  List<UserModel?> get users => _users;
+  List<UserModel?> get filteredUsers => _filteredUsers;
+  List<Level?> get levels => _levels;
 
   @override
   bool isLoading = false;
@@ -26,8 +35,18 @@ class UsersSettingsViewmodel extends BaseViewModel {
   @override
   FutureOr<void> init() {}
 
-  List<UserModel?> get users => _users;
-  List<Level?> get levels => _levels;
+  void filterUsers(String query) {
+    printDebug("filtering by $query");
+    _filteredUsers = _users
+        .where((user) =>
+            user?.studentName
+                ?.toLowerCase()
+                .trim()
+                .contains(query.toLowerCase().trim()) ??
+            true)
+        .toList();
+    notifyListeners();
+  }
 
   Future<void> updateName(String userId, String newStudentName) async {
     try {
@@ -45,6 +64,7 @@ class UsersSettingsViewmodel extends BaseViewModel {
       }
       notifyListeners();
     } catch (e) {
+      // TODO: set error state and show error in UI
       // Utils.showErrorSnackBar("Error updating studentName");
       print("Error updating studentName: $e");
     }

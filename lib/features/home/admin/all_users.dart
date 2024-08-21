@@ -5,6 +5,7 @@ import 'package:ez_english/features/home/admin/users_settings_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/list_item_card.dart';
+import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,7 @@ class AllUsers extends StatefulWidget {
 
 class _AllUsersState extends State<AllUsers> {
   late UsersSettingsViewmodel viewmodel;
-
+  final TextEditingController _controller = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -58,15 +59,31 @@ class _AllUsersState extends State<AllUsers> {
                       "Total users: ${viewmodel.users.length.toString()}",
                       style: TextStyles.bodyLarge,
                     ),
+                    CustomTextField(
+                      controller: _controller,
+                      hintText: "Search users",
+                      onChanged: (String query) {
+                        viewmodel.filterUsers(query);
+                      },
+                      textInputAction: TextInputAction.search,
+                      trailingIcon: IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () {
+                          viewmodel.filterUsers(_controller.text);
+                        },
+                      ),
+                    ),
                     Expanded(
                       child: ListView.builder(
-                        itemCount: viewmodel.users.length,
+                        itemCount: viewmodel.filteredUsers.length,
                         itemBuilder: (context, index) {
                           return ListItemCard(
-                            mainText: "${viewmodel.users[index]?.studentName}",
+                            mainText:
+                                "${viewmodel.filteredUsers[index]?.studentName}",
                             info: Text(
                               viewmodel.users[index]!.userType.toShortString(),
-                              style: switch (viewmodel.users[index]!.userType) {
+                              style: switch (
+                                  viewmodel.filteredUsers[index]!.userType) {
                                 UserType.admin =>
                                   const TextStyle(color: Colors.orange),
                                 UserType.developer =>
