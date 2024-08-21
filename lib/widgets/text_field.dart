@@ -12,6 +12,9 @@ class CustomTextField extends StatefulWidget {
   final bool? isPasswordField;
   final TextFieldType? fieldType;
   final Function(String)? onChanged;
+  final IconButton? trailingIcon;
+  final TextInputAction? textInputAction;
+
   const CustomTextField({
     super.key,
     required this.controller,
@@ -23,6 +26,8 @@ class CustomTextField extends StatefulWidget {
     this.validator,
     this.isPasswordField,
     this.fieldType,
+    this.trailingIcon,
+    this.textInputAction,
   });
 
   @override
@@ -49,13 +54,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
         onChanged: (value) {
           widget.onChanged != null ? widget.onChanged!(value) : null;
         },
+
         autovalidateMode: AutovalidateMode.disabled,
         validator: widget.validator,
         maxLines: widget.maxLines,
-        textInputAction: TextInputAction.next,
+        textInputAction: widget.textInputAction ?? TextInputAction.next,
         focusNode: widget.focusNode,
         obscureText: widget.fieldType == TextFieldType.password,
         controller: widget.controller,
+
+        // TODO: remove this retarded shit and use TextInputType directly
+
         keyboardType: switch (widget.fieldType) {
           null => null,
           TextFieldType.phone => TextInputType.phone,
@@ -71,6 +80,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           fontWeight: FontWeight.w700,
         ),
         decoration: InputDecoration(
+          suffixIcon: widget.trailingIcon,
           filled: _isFocused! ? false : true,
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.r),
