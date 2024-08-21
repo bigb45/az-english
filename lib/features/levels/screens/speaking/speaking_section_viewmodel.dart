@@ -2,13 +2,16 @@ import 'dart:async';
 
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
+import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
+import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/utils/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SpeakingSectionViewmodel extends BaseViewModel {
   String? levelId;
@@ -16,7 +19,7 @@ class SpeakingSectionViewmodel extends BaseViewModel {
   get questions => _questions;
 
   final FirestoreService _firestoreService = FirestoreService();
-
+  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   @override
   FutureOr<void> init() {}
 
@@ -38,12 +41,10 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     printDebug("beginning");
     try {
       printDebug("fetching questions");
-      Unit unit = await _firestoreService.fetchUnit(
-        RouteConstants.sectionNameId[RouteConstants.listeningSectionName]!,
-        levelName!,
-      );
-      _questions = unit.questions.values.cast<BaseQuestion>().toList();
-      progress = unit.progress;
+      User? user = _firebaseAuthService.getUser();
+      var unit = await _firestoreService.fetchAssignedQuestions(user!);
+      _questions = unit.values.cast<BaseQuestion>().toList();
+      progress = 20;
       error = null;
     } on CustomException catch (e) {
       error = e;
@@ -58,12 +59,22 @@ class SpeakingSectionViewmodel extends BaseViewModel {
   }
 
   void updateAnswer(BaseAnswer answer) {
-    _questions[currentIndex].userAnswer = answer;
+    BaseQuestion question = _questions[currentIndex];
+    if (question.questionType == QuestionType.passage) {
+      PassageQuestionModel passageQuestion = question as PassageQuestionModel;
+      question = passageQuestion.questions.entries.first.value!;
+    }
+    question.userAnswer = answer;
     notifyListeners();
   }
 
   void evaluateAnswer() {
-    if (_questions[currentIndex].evaluateAnswer()) {
+    BaseQuestion question = _questions[currentIndex];
+    if (question.questionType == QuestionType.passage) {
+      PassageQuestionModel passageQuestion = question as PassageQuestionModel;
+      question = passageQuestion.questions.entries.first.value!;
+    }
+    if (question.evaluateAnswer()) {
       answerState = EvaluationState.correct;
     } else {
       wrongAnswerCount += 1;

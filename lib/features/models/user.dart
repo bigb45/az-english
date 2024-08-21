@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/level_progress.dart';
 import 'package:ez_english/features/models/test_result.dart';
 
@@ -11,6 +12,7 @@ class UserModel {
   String password;
   List<String>? assignedLevels;
   Map<String, LevelProgress>? levelsProgress;
+  Map<String, BaseQuestion>? assignedQuestions;
   final Map<String, TestResult>? examResults;
   UserType userType;
 
@@ -23,6 +25,7 @@ class UserModel {
       this.assignedLevels,
       this.levelsProgress,
       this.examResults,
+      assignedQuestions,
       this.userType = UserType.student});
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
@@ -41,6 +44,14 @@ class UserModel {
           LevelProgress.fromMap(value),
         ),
       ),
+      assignedQuestions:
+          (map['assignedQuestions'] as Map<String, dynamic>?)?.map(
+        (key, value) => MapEntry<String, BaseQuestion>(
+          key,
+          BaseQuestion.fromMap(value),
+        ),
+      ),
+
       examResults: (map['examResults'] as Map<String, dynamic>?)?.map(
         (key, value) => MapEntry(key, TestResult.fromMap(value)),
       ),
@@ -56,6 +67,7 @@ class UserModel {
       'emailAddress': emailAddress,
       'password': password,
       'assignedLevels': assignedLevels,
+      'assignedQuestions': assignedQuestions,
       'levelsProgress':
           levelsProgress?.map((key, value) => MapEntry(key, value.toMap())),
       'examResults':

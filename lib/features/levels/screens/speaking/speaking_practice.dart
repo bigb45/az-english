@@ -4,9 +4,12 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/finished_questions_screen.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
+import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/features/sections/util/build_question.dart';
+import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/expandable_text.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/skip_question_button.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +29,7 @@ class _SpeakingPracticeState extends State<SpeakingPractice> {
 
   @override
   Widget build(BuildContext context) {
+    PassageQuestionModel? passageQuestion;
     return Consumer<SpeakingSectionViewmodel>(builder: (context, viewmodel, _) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (viewmodel.error != null) {
@@ -47,7 +51,6 @@ class _SpeakingPracticeState extends State<SpeakingPractice> {
             await viewmodel.updateUserProgress().then((value) {
               context.pop();
               context.pop();
-              // context.pop();
             });
           },
         );
@@ -55,6 +58,17 @@ class _SpeakingPracticeState extends State<SpeakingPractice> {
 
       currentQuestion = viewmodel.questions[viewmodel.currentIndex];
 
+      if (currentQuestion.questionType == QuestionType.passage) {
+        passageQuestion = currentQuestion as PassageQuestionModel;
+
+        if (passageQuestion!.questions.isNotEmpty &&
+            passageQuestion!.questions.containsKey(1)) {
+          currentQuestion = passageQuestion!.questions[1]!;
+        } else {
+          throw Exception(
+              "No embedded questions found or first question is missing.");
+        }
+      }
       return PopScope(
         canPop: false,
         onPopInvoked: (canPop) {
@@ -111,6 +125,20 @@ class _SpeakingPracticeState extends State<SpeakingPractice> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
+                          if (passageQuestion != null)
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 10.0,
+                                ),
+                                child: ExpandableTextBox(
+                                    paragraph:
+                                        passageQuestion!.passageInEnglish!,
+                                    paragraphTranslation:
+                                        passageQuestion!.passageInArabic,
+                                    isFocused: false,
+                                    readMoreText:
+                                        AppStrings.mcQuestionReadMoreText)),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: ProgressBar(value: viewmodel.progress!),

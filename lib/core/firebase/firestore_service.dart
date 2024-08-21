@@ -9,6 +9,7 @@ import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/section_progress.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirestoreService {
@@ -73,6 +74,77 @@ class FirestoreService {
       await userDocRef.update({'levelsProgress': userData['levelsProgress']});
 
       return levels;
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Map<int, BaseQuestion<dynamic>>> fetchAssignedQuestions(
+      User user) async {
+    _user = user;
+    try {
+      Map<int, BaseQuestion> questions = {};
+
+      _userModel = await getUser(_user!.uid);
+      DocumentReference userDocRef =
+          _db.collection(FirestoreConstants.usersCollections).doc(_user!.uid);
+      DocumentSnapshot userDoc = await userDocRef.get();
+
+      if (!userDoc.exists) {
+        throw Exception('User document does not exist');
+      }
+
+      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+      if (!userData.containsKey('assignedQuestions') ||
+          userData["assignedQuestions"] == null) {
+        userData['assignedQuestions'] = {};
+      }
+
+      Map<String, dynamic> data = userData["assignedQuestions"];
+      Map<int, dynamic> questionsData =
+          data.map((key, value) => MapEntry(int.parse(key), value));
+      var sortedEntries = questionsData.entries.toList()
+        ..sort((a, b) => a.key.compareTo(b.key));
+
+      int maxKey = sortedEntries.isEmpty ? 0 : sortedEntries.last.key;
+      int questionIndex = maxKey + 1;
+
+      for (var entry in sortedEntries) {
+        var mapData = entry.value as Map<String, dynamic>;
+        if (mapData["questionType"] == "passage" &&
+            mapData.containsKey("questions")) {
+          var embeddedQuestionsData =
+              mapData["questions"] as Map<String, dynamic>;
+          for (var embeddedEntry in embeddedQuestionsData.entries) {
+            var embeddedQuestionMap =
+                embeddedEntry.value as Map<String, dynamic>;
+            PassageQuestionModel embeddedQuestion = PassageQuestionModel(
+              passageInEnglish: mapData['passageInEnglish'],
+              passageInArabic: mapData['passageInArabic'],
+              titleInArabic: mapData['titleInArabic'],
+              titleInEnglish: mapData['titleInEnglish'],
+              questions: {1: BaseQuestion.fromMap(embeddedQuestionMap)},
+              questionTextInEnglish: mapData['questionTextInEnglish'],
+              questionTextInArabic: mapData['questionTextInArabic'],
+              imageUrl: mapData['imageUrl'],
+              voiceUrl: mapData['voiceUrl'],
+              questionType: QuestionType.passage,
+            );
+            questions[questionIndex++] =
+                embeddedQuestion; // Assign each embedded question a unique incremental key
+          }
+        } else {
+          BaseQuestion question = BaseQuestion.fromMap(mapData);
+          questions[entry.key] =
+              question; // Use the existing key for non-passage questions
+        }
+      }
+
+      await userDocRef
+          .update({'assignedQuestions': userData['assignedQuestions']});
+      return questions;
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
     } catch (e) {
@@ -313,8 +385,6 @@ class FirestoreService {
         RouteConstants.readingSectionName,
         RouteConstants.grammarSectionName,
         RouteConstants.vocabularySectionName,
-        RouteConstants.listeningSectionName,
-        RouteConstants.writingSectionName,
         RouteConstants.testSectionName,
       ],
       [
