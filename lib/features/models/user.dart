@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ez_english/features/models/assigned_questions.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/level_progress.dart';
 import 'package:ez_english/features/models/test_result.dart';
@@ -12,7 +13,7 @@ class UserModel {
   String password;
   List<String>? assignedLevels;
   Map<String, LevelProgress>? levelsProgress;
-  Map<String, BaseQuestion>? assignedQuestions;
+  Map<String, AssignedQuestions>? assignedQuestions;
   final Map<String, TestResult>? examResults;
   UserType userType;
 
@@ -27,7 +28,7 @@ class UserModel {
       this.examResults,
       assignedQuestions,
       this.userType = UserType.student});
-
+// TODO: Fetch the assigned questions when needed only
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       id: map['id'],
@@ -46,9 +47,9 @@ class UserModel {
       ),
       assignedQuestions:
           (map['assignedQuestions'] as Map<String, dynamic>?)?.map(
-        (key, value) => MapEntry<String, BaseQuestion>(
+        (key, value) => MapEntry<String, AssignedQuestions>(
           key,
-          BaseQuestion.fromMap(value),
+          AssignedQuestions.fromMap(value),
         ),
       ),
 

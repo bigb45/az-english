@@ -26,8 +26,7 @@ class SpeakingSectionViewmodel extends BaseViewModel {
   Future<void> setValuesAndInit() async {
     currentIndex = 0;
     levelName = RouteConstants.getLevelName(levelId!);
-    // TODO: change this to speakingSectionName
-    sectionName = RouteConstants.listeningSectionName;
+    sectionName = RouteConstants.speakingSectionName;
 
     fetchQuestions();
     if (_questions.isNotEmpty &&
@@ -42,9 +41,10 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     try {
       printDebug("fetching questions");
       User? user = _firebaseAuthService.getUser();
-      var unit = await _firestoreService.fetchAssignedQuestions(user!);
-      _questions = unit.values.cast<BaseQuestion>().toList();
-      progress = 20;
+      var questions = await _firestoreService.fetchAssignedQuestions(
+          user!, RouteConstants.speakingSectionName);
+      _questions = questions.questions.values.cast<BaseQuestion>().toList();
+      progress = questions.progress;
       error = null;
     } on CustomException catch (e) {
       error = e;
@@ -94,6 +94,12 @@ class SpeakingSectionViewmodel extends BaseViewModel {
         answerState = EvaluationState.empty;
       }
     }
+  }
+
+  @override
+  Future<void> updateSectionProgress() async {
+    _firestoreService.updateCurrentSectionQuestionIndexForAssignedQuestions(
+        currentIndex, sectionName!);
   }
 
   void reset() {
