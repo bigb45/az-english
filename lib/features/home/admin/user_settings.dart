@@ -4,6 +4,7 @@ import 'package:ez_english/features/home/admin/users_settings_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/checkbox.dart';
 import 'package:ez_english/widgets/info_card.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +61,12 @@ class UserSettings extends StatelessWidget {
                       size: 200,
                       color: Palette.primaryText,
                     ),
+                    Button(
+                        text: "assign questions",
+                        onPressed: () {
+                          context.push(
+                              '/user_settings/$userId/question_assignment');
+                        }),
                     InfoCard(
                       title: AppStrings.username,
                       subtitle: user!.studentName!,

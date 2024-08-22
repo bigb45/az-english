@@ -6,6 +6,7 @@ import 'package:ez_english/features/auth/screens/sign_in.dart';
 import 'package:ez_english/features/auth/screens/sign_up.dart';
 import 'package:ez_english/features/home/admin/admin_screen.dart';
 import 'package:ez_english/features/home/admin/all_users.dart';
+import 'package:ez_english/features/home/admin/question_assignment/question_assignment.dart';
 import 'package:ez_english/features/home/admin/user_settings.dart';
 import 'package:ez_english/features/home/content/add_question.dart';
 import 'package:ez_english/features/home/content/content_screen.dart';
@@ -151,6 +152,13 @@ final loggedInRouter = GoRouter(
       },
     ),
 
+    GoRoute(
+      path: '/user_settings/:userId/question_assignment',
+      builder: (context, state) {
+        final userId = state.pathParameters['userId'] ?? "-1";
+        return QuestionAssignment(userId: userId);
+      },
+    ),
     // ADMIN ROUTES
     GoRoute(
       path: '/edit_question/:questionId',
