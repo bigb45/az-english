@@ -5,9 +5,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/passage_questi
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/edit_question_viewmodel.dart';
-import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
-import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
@@ -180,47 +178,47 @@ class _EditQuestionState extends State<EditQuestion> {
                     ),
                     const SizedBox(height: 16),
                     Expanded(
-                        child: viewmodel.isLoading
-                            ? const Center(child: CircularProgressIndicator())
-                            : viewmodel.questions.isNotEmpty
-                                ? ListView.builder(
-                                    itemCount: viewmodel.questions.length,
-                                    itemBuilder: (context, index) {
-                                      return VerticalListItemCard(
-                                        mainText:
-                                            "${index + 1}. ${viewmodel.questions[index].questionTextInEnglish ?? "No question text"}",
-                                        info: Text(viewmodel.questions[index]
-                                                .titleInEnglish ??
-                                            ""),
-                                        subText: viewmodel
-                                            .questions[index].questionType
-                                            .toShortString(),
-                                        actionIcon: Icons.arrow_forward_ios,
-                                        onTap: () {
-                                          showEditQuestionDialog(
-                                            context,
-                                            viewmodel.questions[index],
-                                            selectedLevel,
-                                            selectedSection,
-                                            updateQuestionCallback:
-                                                (updatedQuestion) {
-                                              viewmodel.updateQuestion(
-                                                  updatedQuestion);
-                                            },
-                                            selectedUnit!.name.split("t")[1],
-                                          );
-                                        },
-                                        isEditMode: true,
-                                        onDeletionPressed: () {
-                                          viewmodel.deleteQuestion(
-                                              viewmodel.questions[index],
-                                              index);
-                                        },
-                                      );
-                                    },
-                                  )
-                                : const Text(
-                                    "No questions found for the selected day."))
+                      child: viewmodel.isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : viewmodel.questions.isNotEmpty
+                              ? ListView.builder(
+                                  itemCount: viewmodel.questions.length,
+                                  itemBuilder: (context, index) {
+                                    return VerticalListItemCard(
+                                      mainText:
+                                          "${index + 1}. ${viewmodel.questions[index].questionTextInEnglish ?? "No question text"}",
+                                      info: Text(viewmodel.questions[index]
+                                              .titleInEnglish ??
+                                          ""),
+                                      subText: viewmodel
+                                          .questions[index].questionType
+                                          .toShortString(),
+                                      actionIcon: Icons.arrow_forward_ios,
+                                      onTap: () {
+                                        showEditQuestionDialog(
+                                          context,
+                                          viewmodel.questions[index],
+                                          selectedLevel,
+                                          selectedSection,
+                                          updateQuestionCallback:
+                                              (updatedQuestion) {
+                                            viewmodel.updateQuestion(
+                                                updatedQuestion);
+                                          },
+                                          selectedUnit!.name.split("t")[1],
+                                        );
+                                      },
+                                      onDeletionPressed: () {
+                                        viewmodel.deleteQuestion(
+                                            viewmodel.questions[index], index);
+                                      },
+                                    );
+                                  },
+                                )
+                              : const Text(
+                                  "No questions found for the selected day.",
+                                ),
+                    ),
                   ],
                 ),
               ),

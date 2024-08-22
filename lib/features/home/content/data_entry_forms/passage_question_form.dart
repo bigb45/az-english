@@ -254,7 +254,6 @@ class _PassageFormState extends State<PassageForm> {
                               widget.level, widget.section, widget.day,
                               updateQuestionCallback: viewmodel.updateQuestion,
                               onChangesCallBack: _checkForChanges),
-                          isEditMode: true,
                           onDeletionPressed: () {
                             viewmodel.deleteQuestion(question);
                             setState(() {
@@ -390,8 +389,7 @@ class _PassageFormState extends State<PassageForm> {
                         ? null
                         : () {
                             setState(() {
-                              updateMessage =
-                                AppStrings.checkAllFields;
+                              updateMessage = AppStrings.checkAllFields;
                             });
                           },
                   ),

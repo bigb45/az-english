@@ -9,7 +9,6 @@ class VerticalListItemCard extends StatelessWidget {
   final String? subText;
   final Widget? info;
   final IconData? actionIcon;
-  final bool isEditMode;
 
   final VoidCallback? onTap;
   final VoidCallback? onDeletionPressed;
@@ -20,7 +19,6 @@ class VerticalListItemCard extends StatelessWidget {
     this.info,
     this.onTap,
     this.actionIcon,
-    required this.isEditMode,
     this.onDeletionPressed,
   });
 
