@@ -3,12 +3,14 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/models/fetch_assigned_section_question_result.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/level_progress.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/section_progress.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirestoreService {
@@ -77,6 +79,135 @@ class FirestoreService {
       throw CustomException.fromFirebaseFirestoreException(e);
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<SectionFetchResult> fetchAssignedQuestions(
+      User user, String sectionName) async {
+    _user = user;
+    try {
+      Map<int, BaseQuestion> questions = {};
+      List<MapEntry<int, dynamic>> filteredQuestionsData = [];
+
+      _userModel = await getUser(_user!.uid);
+
+      DocumentReference userDocRef =
+          _db.collection(FirestoreConstants.usersCollections).doc(_user!.uid);
+      DocumentSnapshot userDoc = await userDocRef.get();
+
+      if (!userDoc.exists) {
+        throw Exception('User document does not exist');
+      }
+
+      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+      if (!userData.containsKey('assignedQuestions') ||
+          userData["assignedQuestions"] == null) {
+        userData['assignedQuestions'] = {};
+      }
+      if (!userData['assignedQuestions']
+              .containsKey(RouteConstants.sectionNameId[sectionName]!) ||
+          userData["assignedQuestions"]
+                  [RouteConstants.sectionNameId[sectionName]!] ==
+              null) {
+        userData['assignedQuestions']
+            [RouteConstants.sectionNameId[sectionName]!] = {
+          'questions': {},
+          'sectionName': sectionName,
+          'progress': 0.0,
+          'lastStoppedQuestionIndex': 0,
+        };
+      }
+      double progress = userData['assignedQuestions']
+          [RouteConstants.sectionNameId[sectionName]!]['progress'] as double;
+      Map<String, dynamic> sectionData = userData['assignedQuestions']
+          [RouteConstants.sectionNameId[sectionName]!];
+      Map<String, dynamic> questionData =
+          Map<String, dynamic>.from(sectionData['questions'] as Map);
+      Map<int, dynamic> questionsData =
+          questionData.map((key, value) => MapEntry(int.parse(key), value));
+      int lastQuestionIndex = sectionData['lastStoppedQuestionIndex'];
+
+      allQuestionsLength = questionsData.length;
+      var sortedEntries = questionsData.entries.toList()
+        ..sort((a, b) => a.key.compareTo(b.key));
+      filteredQuestionsData = sortedEntries.skip(lastQuestionIndex).toList();
+      filteredQuestionsLength = filteredQuestionsData.length;
+
+      int maxKey = sortedEntries.isEmpty ? 0 : sortedEntries.last.key;
+      int questionIndex = maxKey + 1;
+
+      for (var entry in filteredQuestionsData) {
+        var mapData = entry.value as Map<String, dynamic>;
+        if (mapData["questionType"] == "passage" &&
+            mapData.containsKey("questions")) {
+          var embeddedQuestionsData =
+              mapData["questions"] as Map<String, dynamic>;
+          for (var embeddedEntry in embeddedQuestionsData.entries) {
+            var embeddedQuestionMap =
+                embeddedEntry.value as Map<String, dynamic>;
+            PassageQuestionModel embeddedQuestion = PassageQuestionModel(
+              passageInEnglish: mapData['passageInEnglish'],
+              passageInArabic: mapData['passageInArabic'],
+              titleInArabic: mapData['titleInArabic'],
+              titleInEnglish: mapData['titleInEnglish'],
+              questions: {1: BaseQuestion.fromMap(embeddedQuestionMap)},
+              questionTextInEnglish: mapData['questionTextInEnglish'],
+              questionTextInArabic: mapData['questionTextInArabic'],
+              imageUrl: mapData['imageUrl'],
+              voiceUrl: mapData['voiceUrl'],
+              questionType: QuestionType.passage,
+            );
+            questions[questionIndex++] =
+                embeddedQuestion; // Assign each embedded question a unique incremental key
+          }
+        } else {
+          BaseQuestion question = BaseQuestion.fromMap(mapData);
+          questions[entry.key] = question;
+        }
+      }
+
+      await userDocRef
+          .update({'assignedQuestions': userData['assignedQuestions']});
+      return SectionFetchResult(questions: questions, progress: progress);
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> updateCurrentSectionQuestionIndexForAssignedQuestions(
+      int newQuestionIndex, String sectionName) async {
+    try {
+      DocumentReference userDocRef = FirebaseFirestore.instance
+          .collection(FirestoreConstants.usersCollections)
+          .doc(_user!.uid);
+
+      FieldPath lastStoppedQuestionIndexPath = FieldPath([
+        'assignedQuestions',
+        RouteConstants.sectionNameId[sectionName]!,
+        "lastStoppedQuestionIndex"
+      ]);
+      FieldPath sectionProgressIndex = FieldPath([
+        'assignedQuestions',
+        RouteConstants.sectionNameId[sectionName]!,
+        "progress"
+      ]);
+      int lastStoppedQuestionIndex =
+          (allQuestionsLength - filteredQuestionsLength) + newQuestionIndex;
+      double sectionProgress =
+          (((lastStoppedQuestionIndex + 1) / allQuestionsLength) * 100);
+
+      await updateQuestionUsingFieldPath<int>(
+          docPath: userDocRef,
+          fieldPath: lastStoppedQuestionIndexPath,
+          newValue: lastStoppedQuestionIndex);
+      await updateQuestionUsingFieldPath<double>(
+          docPath: userDocRef,
+          fieldPath: sectionProgressIndex,
+          newValue: sectionProgress);
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
     }
   }
 
@@ -313,8 +444,6 @@ class FirestoreService {
         RouteConstants.readingSectionName,
         RouteConstants.grammarSectionName,
         RouteConstants.vocabularySectionName,
-        RouteConstants.listeningSectionName,
-        RouteConstants.writingSectionName,
         RouteConstants.testSectionName,
       ],
       [
