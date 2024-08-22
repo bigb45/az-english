@@ -123,7 +123,7 @@ class ButtonState extends State<Button> {
                 child: Center(
                   child: widget.child ??
                       Text(
-                        widget.text!.toUpperCase(),
+                        (widget.text ?? "placeholder").toUpperCase(),
                         style: TextStyles.buttonTextStyle.copyWith(
                           color: textColor,
                         ),
