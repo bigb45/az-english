@@ -83,16 +83,21 @@ class FirestoreService {
   }
 
   Future<SectionFetchResult> fetchAssignedQuestions(
-      User user, String sectionName) async {
-    _user = user;
+      {User? user, String? userId, required String sectionName}) async {
     try {
       Map<int, BaseQuestion> questions = {};
       List<MapEntry<int, dynamic>> filteredQuestionsData = [];
+      if (userId == null) {
+        _user = user;
+        _userModel = await getUser(_user!.uid);
+        // TODO: refactor this ^^^^
+      } else {
+        _userModel = await getUser(userId);
+      }
 
-      _userModel = await getUser(_user!.uid);
-
-      DocumentReference userDocRef =
-          _db.collection(FirestoreConstants.usersCollections).doc(_user!.uid);
+      DocumentReference userDocRef = _db
+          .collection(FirestoreConstants.usersCollections)
+          .doc(_userModel!.id);
       DocumentSnapshot userDoc = await userDocRef.get();
 
       if (!userDoc.exists) {
@@ -628,6 +633,82 @@ class FirestoreService {
       } else {
         throw Exception('Level document does not exist');
       }
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
+    }
+  }
+
+  Future<List<BaseQuestion<dynamic>>> fetchAllQuestions() async {
+    // TODO: test
+    List<BaseQuestion<dynamic>> allQuestions = [];
+
+    try {
+      // Fetch all levels
+      QuerySnapshot levelsSnapshot =
+          await _db.collection(FirestoreConstants.levelsCollection).get();
+
+      for (var levelDoc in levelsSnapshot.docs) {
+        String level = levelDoc.id;
+
+        // Fetch all sections within the level
+        QuerySnapshot sectionsSnapshot = await _db
+            .collection(FirestoreConstants.levelsCollection)
+            .doc(level)
+            .collection(FirestoreConstants.sectionsCollection)
+            .get();
+
+        for (var sectionDoc in sectionsSnapshot.docs) {
+          String section = sectionDoc.id;
+
+          // Fetch all units within the section
+          QuerySnapshot unitsSnapshot = await _db
+              .collection(FirestoreConstants.levelsCollection)
+              .doc(level)
+              .collection(FirestoreConstants.sectionsCollection)
+              .doc(section)
+              .collection(FirestoreConstants.unitsCollection)
+              .get();
+
+          for (var unitDoc in unitsSnapshot.docs) {
+            String unit = unitDoc.id;
+
+            // Fetch questions in the unit
+            DocumentSnapshot unitSnapshot = await _db
+                .collection(FirestoreConstants.levelsCollection)
+                .doc(level)
+                .collection(FirestoreConstants.sectionsCollection)
+                .doc(section)
+                .collection(FirestoreConstants.unitsCollection)
+                .doc(unit)
+                .get();
+
+            if (unitSnapshot.exists) {
+              Map<String, dynamic> data =
+                  unitSnapshot.data() as Map<String, dynamic>;
+              if (data[FirestoreConstants.questionsField] != null) {
+                Map<int, dynamic> questionsData =
+                    (data[FirestoreConstants.questionsField]
+                            as Map<String, dynamic>)
+                        .map((key, value) => MapEntry(int.parse(key), value));
+
+                var sortedEntries = questionsData.entries.toList()
+                  ..sort((a, b) => a.key.compareTo(b.key));
+
+                for (var entry in sortedEntries) {
+                  final question = BaseQuestion.fromMap(entry.value);
+                  question.path =
+                      "${FirestoreConstants.levelsCollection}/$level/"
+                      "${FirestoreConstants.sectionsCollection}/$section/"
+                      "${FirestoreConstants.unitsCollection}/$unit/"
+                      "${FirestoreConstants.questionsField}/${entry.key}";
+                  allQuestions.add(question);
+                }
+              }
+            }
+          }
+        }
+      }
+      return allQuestions;
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
     }
