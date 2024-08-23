@@ -193,7 +193,7 @@ class _EditQuestionState extends State<EditQuestion> {
                                       subText: viewmodel
                                           .questions[index].questionType
                                           .toShortString(),
-                                      actionIcon: Icons.arrow_forward_ios,
+                                      action: Icons.arrow_forward_ios,
                                       onTap: () {
                                         showEditQuestionDialog(
                                           context,
@@ -208,7 +208,7 @@ class _EditQuestionState extends State<EditQuestion> {
                                           selectedUnit!.name.split("t")[1],
                                         );
                                       },
-                                      onDeletionPressed: () {
+                                      onIconPressed: () {
                                         viewmodel.deleteQuestion(
                                             viewmodel.questions[index], index);
                                       },
