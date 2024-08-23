@@ -20,6 +20,7 @@ class SpeakingSectionViewmodel extends BaseViewModel {
 
   final FirestoreService _firestoreService = FirestoreService();
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+
   @override
   FutureOr<void> init() {}
 
@@ -42,7 +43,7 @@ class SpeakingSectionViewmodel extends BaseViewModel {
       printDebug("fetching questions");
       User? user = _firebaseAuthService.getUser();
       var questions = await _firestoreService.fetchAssignedQuestions(
-          user!, RouteConstants.speakingSectionName);
+          user: user!, sectionName: RouteConstants.speakingSectionName);
       _questions = questions.questions.values.cast<BaseQuestion>().toList();
       progress = questions.progress;
       error = null;
