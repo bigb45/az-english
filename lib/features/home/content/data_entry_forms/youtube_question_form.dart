@@ -172,7 +172,7 @@ class _YoutubeLessonFormState extends State<YoutubeLessonForm> {
                               Utils.showSnackbar(
                                   text: "Question updated successfully");
                             } else {
-                              showConfirmSubmitModalSheet(
+                              showPreviewModalSheet(
                                   context: context,
                                   onSubmit: () {
                                     viewmodel

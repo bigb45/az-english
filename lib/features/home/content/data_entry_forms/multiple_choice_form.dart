@@ -476,7 +476,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                               Utils.showSnackbar(
                                   text: "Question updated successfully");
                             } else {
-                              showConfirmSubmitModalSheet(
+                              showPreviewModalSheet(
                                   context: context,
                                   onSubmit: () {
                                     viewmodel

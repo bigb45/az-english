@@ -224,7 +224,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                               Utils.showSnackbar(
                                   text: "Question updated successfully");
                             } else {
-                              showConfirmSubmitModalSheet(
+                              showPreviewModalSheet(
                                   context: context,
                                   onSubmit: () {
                                     viewmodel
@@ -299,8 +299,13 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
   }
 }
 
-void showConfirmSubmitModalSheet<BaseQuestion>(
-    {required context, required onSubmit, question}) {
+void showPreviewModalSheet<BaseQuestion>({
+  required context,
+  required onSubmit,
+  String? title,
+  bool showSubmitButton = true,
+  question,
+}) {
   showModalBottomSheet(
       enableDrag: true,
       elevation: 10,
@@ -315,24 +320,26 @@ void showConfirmSubmitModalSheet<BaseQuestion>(
                 child: Column(
                   children: [
                     Text(
-                      "Are you sure you want to submit this question?",
+                      title ?? "Are you sure you want to submit this question?",
                       style: TextStyles.bodyMedium,
                     ),
                     buildQuestion(
                         question: question,
                         onChanged: (value) {},
                         answerState: EvaluationState.empty),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    Button(
-                      onPressed: () {
-                        onSubmit();
-                        print("submitting question");
-                        Navigator.pop(context);
-                      },
-                      text: "Submit",
-                    )
+                    if (showSubmitButton) ...[
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Button(
+                        onPressed: () {
+                          onSubmit();
+                          print("submitting question");
+                          Navigator.pop(context);
+                        },
+                        text: "Submit",
+                      )
+                    ]
                   ],
                 ),
               ),

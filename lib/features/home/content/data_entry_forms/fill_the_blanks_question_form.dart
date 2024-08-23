@@ -285,7 +285,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                               Utils.showSnackbar(
                                   text: "Question updated successfully");
                             } else {
-                              showConfirmSubmitModalSheet(
+                              showPreviewModalSheet(
                                   context: context,
                                   onSubmit: () {
                                     viewmodel
