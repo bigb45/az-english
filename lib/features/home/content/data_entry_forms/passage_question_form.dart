@@ -249,12 +249,12 @@ class _PassageFormState extends State<PassageForm> {
                               "${index + 1}. ${question?.questionTextInEnglish.toString() ?? "No question text"}",
                           info: Text(question!.titleInEnglish ?? ""),
                           subText: question.questionType.toShortString(),
-                          actionIcon: Icons.arrow_forward_ios,
+                          action: Icons.arrow_forward_ios,
                           onTap: () => showEditQuestionDialog(context, question,
                               widget.level, widget.section, widget.day,
                               updateQuestionCallback: viewmodel.updateQuestion,
                               onChangesCallBack: _checkForChanges),
-                          onDeletionPressed: () {
+                          onIconPressed: () {
                             viewmodel.deleteQuestion(question);
                             setState(() {
                               questions.remove(key);

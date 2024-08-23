@@ -8,18 +8,19 @@ class VerticalListItemCard extends StatelessWidget {
   final String mainText;
   final String? subText;
   final Widget? info;
-  final IconData? actionIcon;
-
+  final IconData? action;
+  bool showDeleteIcon;
   final VoidCallback? onTap;
-  final VoidCallback? onDeletionPressed;
-  const VerticalListItemCard({
+  final VoidCallback? onIconPressed;
+  VerticalListItemCard({
     super.key,
     required this.mainText,
     this.subText,
     this.info,
     this.onTap,
-    this.actionIcon,
-    this.onDeletionPressed,
+    this.action,
+    this.onIconPressed,
+    this.showDeleteIcon = true,
   });
 
   @override
@@ -27,7 +28,7 @@ class VerticalListItemCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: Constants.padding8),
       child: GestureDetector(
-        onTap: actionIcon != null ? onTap : null,
+        onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(color: Palette.secondaryStroke),
@@ -68,20 +69,27 @@ class VerticalListItemCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Column(
+                Row(
                   children: [
-                    // if (actionIcon != null)
-                    //   Icon(
-                    //     actionIcon,
-                    //     color: Palette.primaryText,
-                    //   ),
-                    // SizedBox(height: 5.h),
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      color: Colors.red,
-                      onPressed: onDeletionPressed,
-                      iconSize: 25.w,
-                    )
+                    Container(
+                      width: 2,
+                      height: 50.h,
+                      color: Palette.secondaryStroke,
+                    ),
+                    if (showDeleteIcon)
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        color: Colors.red,
+                        onPressed: onIconPressed,
+                        iconSize: 25.w,
+                      )
+                    else if (action != null)
+                      IconButton(
+                        onPressed: onIconPressed,
+                        icon: Icon(
+                          action!,
+                        ),
+                      ),
                   ],
                 )
               ],
