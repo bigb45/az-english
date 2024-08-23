@@ -117,8 +117,7 @@ class WordDefinition extends BaseQuestion {
         listEquals(other.exampleUsageInEnglish, exampleUsageInEnglish) &&
         listEquals(other.exampleUsageInArabic, exampleUsageInArabic) &&
         other.tenses == tenses &&
-        other.isNew == isNew &&
-        super == other;
+        other.isNew == isNew;
   }
 
   @override

@@ -2,7 +2,9 @@
 
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/radio_button.dart';
+import 'package:flutter/foundation.dart';
 
 class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
   List<RadioItemData> options;
@@ -60,7 +62,7 @@ class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
     if (other is! MultipleChoiceQuestionModel) return false;
 
     return other.runtimeType == runtimeType &&
-        other.options == options &&
+        listEquals(options, other.options) &&
         other.paragraph == paragraph &&
         other.questionSentenceInEnglish == questionSentenceInEnglish &&
         other.questionSentenceInArabic == questionSentenceInArabic &&
