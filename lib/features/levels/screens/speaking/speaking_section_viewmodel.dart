@@ -7,10 +7,8 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
-import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
-import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SpeakingSectionViewmodel extends BaseViewModel {
@@ -38,9 +36,7 @@ class SpeakingSectionViewmodel extends BaseViewModel {
 
   Future<void> fetchQuestions() async {
     isLoading = true;
-    printDebug("beginning");
     try {
-      printDebug("fetching questions");
       User? user = _firebaseAuthService.getUser();
       var questions = await _firestoreService.fetchAssignedQuestions(
           user: user!, sectionName: RouteConstants.speakingSectionName);
@@ -50,10 +46,8 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     } on CustomException catch (e) {
       error = e;
     } catch (e) {
-      printDebug("caught exception: $e");
       error = CustomException(e.toString());
     } finally {
-      printDebug("finally");
       isLoading = false;
       notifyListeners();
     }

@@ -350,10 +350,14 @@ class FirestoreService {
       WriteBatch batch = FirebaseFirestore.instance.batch();
 
       // Update the completed units for each section and check if they are completed
+      // TODO: change firebase and add speaking section to fix this error
       String sectionId = RouteConstants.getSectionIds(sectionName);
+
+      // no section progress at home screen, must change sectionProgress
 
       SectionProgress sectionProgress =
           levelProgress.sectionProgress![sectionId]!;
+
       String tempUnitNumber = (sectionId ==
                   RouteConstants.getSectionIds(
                       RouteConstants.testSectionName) ||
@@ -367,7 +371,7 @@ class FirestoreService {
       }
 
       // Update isCompleted status if all units are completed
-      if (sectionProgress.isSectionCompleted(tempUnitNumber!)) {
+      if (sectionProgress.isSectionCompleted(tempUnitNumber)) {
         sectionProgress.isCompleted = true;
         sectionProgress.lastStoppedQuestionIndex = 0;
       }

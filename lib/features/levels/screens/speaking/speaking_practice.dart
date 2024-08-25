@@ -33,6 +33,7 @@ class _SpeakingPracticeState extends State<SpeakingPractice> {
     return Consumer<SpeakingSectionViewmodel>(builder: (context, viewmodel, _) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (viewmodel.error != null) {
+          print("showing error");
           ScaffoldMessenger.of(context)
               .showSnackBar(
                 SnackBar(
