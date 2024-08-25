@@ -3,6 +3,7 @@ import 'package:ez_english/features/home/admin/question_assignment/question_assi
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:ez_english/widgets/vertical_list_item_card.dart';
 import 'package:flutter/material.dart';
@@ -82,17 +83,20 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                   Expanded(
                     child: DropdownButton<String>(
                       value: viewmodel.selectedQuestionType,
-                      items: const [
+                      items: [
                         DropdownMenuItem(
                           value: "mcq",
-                          child: Text("mcq"),
+                          child:
+                              Text("mcq", style: TextStyles.wordChipTextStyle),
                         ),
                         DropdownMenuItem(
                           value: "child",
-                          child: Text("child"),
+                          child: Text("child",
+                              style: TextStyles.wordChipTextStyle),
                         )
                       ],
-                      hint: const Text("Question type"),
+                      hint: Text("Question type",
+                          style: TextStyles.wordChipTextStyle),
                       onChanged: (value) {
                         viewmodel.updateAndFilter(selectedQuestionType: value);
                       },
@@ -103,25 +107,32 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                   Expanded(
                     child: DropdownButton<String>(
                       value: viewmodel.selectedSection,
-                      items: const [
+                      items: [
                         DropdownMenuItem(
                           value: "reading",
-                          child: Text("reading"),
+                          child: Text("reading",
+                              style: TextStyles.wordChipTextStyle),
                         ),
                         DropdownMenuItem(
                           value: "writing",
-                          child: Text("writing"),
+                          child: Text("writing",
+                              style: TextStyles.wordChipTextStyle),
                         ),
                         DropdownMenuItem(
                           value: "listening",
-                          child: Text("listening"),
+                          child: Text("listening",
+                              style: TextStyles.wordChipTextStyle),
                         ),
                         DropdownMenuItem(
                           value: "speaking",
-                          child: Text("speaking"),
+                          child: Text("speaking",
+                              style: TextStyles.wordChipTextStyle),
                         ),
                       ],
-                      hint: const Text("Question section"),
+                      hint: Text(
+                        "Question section",
+                        style: TextStyles.wordChipTextStyle,
+                      ),
                       onChanged: (value) {
                         viewmodel.updateAndFilter(selectedSection: value);
                       },
