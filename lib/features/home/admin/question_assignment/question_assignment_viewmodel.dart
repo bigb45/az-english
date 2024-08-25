@@ -131,7 +131,12 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
   }
 
   Future<void> assignQuestion(BaseQuestion question) async {
-    // TODO: implement method to assign questions and update them
+    _firestoreService.assignQuestion(
+        questionMap: question.toMap(),
+        sectionName: RouteConstants.speakingSectionName,
+        userId: userId);
+    _assignedQuestions.add(question);
+    notifyListeners();
     printDebug("assigning quesiont ${question.titleInEnglish}");
   }
 

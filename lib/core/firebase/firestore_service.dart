@@ -120,6 +120,8 @@ class FirestoreService {
           'sectionName': sectionName,
           'progress': 0.0,
           'lastStoppedQuestionIndex': 0,
+          "numberOfQuestionsWithDeletion": 0,
+          "numberOfQuestionWithoutDeletion": 0,
         };
       }
       double progress = (userData['assignedQuestions']
@@ -982,6 +984,80 @@ class FirestoreService {
     } catch (e) {
       print('Error checking document existence: $e');
       return false;
+    }
+  }
+
+  Future<void> assignQuestion({
+    required String userId,
+    required String sectionName,
+    required Map<String, dynamic> questionMap,
+  }) async {
+    try {
+      DocumentReference userDocRef = _db
+          .collection(FirestoreConstants.usersCollections)
+          .doc(_userModel!.id);
+      DocumentSnapshot userDoc = await userDocRef.get();
+
+      if (!userDoc.exists) {
+        throw Exception('User document does not exist');
+      }
+
+      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+      if (!userData.containsKey('assignedQuestions') ||
+          userData["assignedQuestions"] == null) {
+        userData['assignedQuestions'] = {};
+      }
+      if (!userData['assignedQuestions']
+              .containsKey(RouteConstants.sectionNameId[sectionName]!) ||
+          userData["assignedQuestions"]
+                  [RouteConstants.sectionNameId[sectionName]!] ==
+              null) {
+        userData['assignedQuestions']
+            [RouteConstants.sectionNameId[sectionName]!] = {
+          'questions': {},
+          'sectionName': sectionName,
+          'progress': 0.0,
+          'lastStoppedQuestionIndex': 0,
+          "numberOfQuestionWithoutDeletion": 0,
+          "numberOfQuestionsWithDeletion": 0
+        };
+      }
+
+      await _db.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(userDocRef);
+
+        if (!snapshot.exists) {
+          throw Exception("User document does not exist!");
+        }
+
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+
+        Map<String, dynamic> sectionData = data['assignedQuestions']
+                [RouteConstants.sectionNameId[sectionName]!]
+            as Map<String, dynamic>;
+
+        int numberOfQuestions =
+            sectionData['numberOfQuestionWithoutDeletion'] ?? 0;
+        String questionId = (numberOfQuestions + 1).toString();
+
+        sectionData['questions'][questionId] = questionMap;
+
+        sectionData['numberOfQuestionsWithDeletion'] = FieldValue.increment(1);
+        sectionData['numberOfQuestionWithoutDeletion'] =
+            FieldValue.increment(1);
+
+        transaction.set(
+          userDocRef,
+          {
+            'assignedQuestions': {
+              RouteConstants.sectionNameId[sectionName]!: sectionData
+            }
+          },
+          SetOptions(merge: true),
+        );
+      });
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
     }
   }
 
