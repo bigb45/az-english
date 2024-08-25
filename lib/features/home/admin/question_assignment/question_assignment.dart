@@ -155,12 +155,20 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                                     viewmodel.questions[index];
                                 bool isAssigned = viewmodel.assignedQuestions
                                     .contains(question);
+                                BaseQuestion displayedQuestion = isAssigned
+                                    ? viewmodel.assignedQuestions.firstWhere(
+                                        (assignedQuestion) =>
+                                            assignedQuestion == question)
+                                    : question;
+
                                 return VerticalListItemCard(
                                   action: isAssigned ? Icons.delete : Icons.add,
                                   onIconPressed: () {
                                     isAssigned
-                                        ? viewmodel.removeQuestion(question)
-                                        : viewmodel.assignQuestion(question);
+                                        ? viewmodel.removeQuestion(
+                                            displayedQuestion, index)
+                                        : viewmodel
+                                            .assignQuestion(displayedQuestion);
                                   },
                                   onTap: () {
                                     showPreviewModalSheet(

@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
@@ -131,17 +133,32 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
   }
 
   Future<void> assignQuestion(BaseQuestion question) async {
-    _firestoreService.assignQuestion(
+    String? questionIndex = await _firestoreService.assignQuestion(
         questionMap: question.toMap(),
         sectionName: RouteConstants.speakingSectionName,
         userId: userId);
+    question.path = "${FirestoreConstants.usersCollections}/${userId}/"
+        "assignedQuestions/"
+        "${RouteConstants.getSectionIds(RouteConstants.speakingSectionName)}/"
+        "${FirestoreConstants.questionsField}/$questionIndex";
     _assignedQuestions.add(question);
     notifyListeners();
     printDebug("assigning quesiont ${question.titleInEnglish}");
   }
 
-  Future<void> removeQuestion(BaseQuestion question) async {
-    // TODO: implement method to remove assigned questions
+  Future<void> removeQuestion(BaseQuestion question, int index) async {
     printDebug("removing question ${question.titleInEnglish}");
+    List<String> pathSegments = question.path!.split('/');
+    String docPath = pathSegments.sublist(0, pathSegments.length - 4).join('/');
+    String sectionName = pathSegments[pathSegments.length - 3];
+    String questionField = pathSegments[pathSegments.length - 2];
+    String fieldIndex = pathSegments[pathSegments.length - 1]; //
+    String fieldPath =
+        "assignedQuestions.$sectionName.$questionField.$fieldIndex";
+    DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
+    await _firestoreService.deleteQuestionUsingFieldPath(
+        docRef: docRef, questionFieldPath: fieldPath, deletionRef: true);
+    questions.removeAt(index);
+    notifyListeners();
   }
 }

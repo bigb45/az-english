@@ -171,6 +171,11 @@ class FirestoreService {
         } else {
           BaseQuestion question = BaseQuestion.fromMap(mapData);
           questions[entry.key] = question;
+          question.path =
+              "${FirestoreConstants.usersCollections}/${_userModel!.id}/"
+              "assignedQuestions/"
+              "${RouteConstants.getSectionIds(sectionName)}/"
+              "${FirestoreConstants.questionsField}/${entry.key}";
         }
       }
 
@@ -885,13 +890,21 @@ class FirestoreService {
 
   Future<void> deleteQuestionUsingFieldPath({
     required DocumentReference docRef,
+    bool? deletionRef,
     required String questionFieldPath,
   }) async {
     try {
       WriteBatch batch = FirebaseFirestore.instance.batch();
       batch.update(docRef, {questionFieldPath: FieldValue.delete()});
-      batch.update(
-          docRef, {'numberOfQuestionsWithDeletion': FieldValue.increment(-1)});
+      if (deletionRef == null) {
+        batch.update(docRef,
+            {'numberOfQuestionsWithDeletion': FieldValue.increment(-1)});
+      } else {
+        String numberOfQuestionsPath = questionFieldPath.replaceFirst(
+            RegExp(r'\.questions\.\d+$'), '.numberOfQuestionsWithDeletion');
+
+        batch.update(docRef, {numberOfQuestionsPath: FieldValue.increment(-1)});
+      }
       await batch.commit();
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
@@ -987,11 +1000,12 @@ class FirestoreService {
     }
   }
 
-  Future<void> assignQuestion({
+  Future<String?> assignQuestion({
     required String userId,
     required String sectionName,
     required Map<String, dynamic> questionMap,
   }) async {
+    String? questionId;
     try {
       DocumentReference userDocRef = _db
           .collection(FirestoreConstants.usersCollections)
@@ -1038,7 +1052,7 @@ class FirestoreService {
 
         int numberOfQuestions =
             sectionData['numberOfQuestionWithoutDeletion'] ?? 0;
-        String questionId = (numberOfQuestions + 1).toString();
+        questionId = (numberOfQuestions + 1).toString();
 
         sectionData['questions'][questionId] = questionMap;
 
@@ -1056,6 +1070,7 @@ class FirestoreService {
           SetOptions(merge: true),
         );
       });
+      return questionId;
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
     }
