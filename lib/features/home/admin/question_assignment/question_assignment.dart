@@ -1,5 +1,6 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/admin/question_assignment/question_assignment_viewmodel.dart';
+import 'package:ez_english/features/home/admin/users_settings_viewmodel.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -28,8 +29,11 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final viewmodel =
           Provider.of<QuestionAssignmentViewmodel>(context, listen: false);
+      final allUsersViewmodel =
+          Provider.of<UsersSettingsViewmodel>(context, listen: false);
       viewmodel.setValuesAndInit(
-        userId: widget.userId,
+        userId:
+            allUsersViewmodel.filteredUsers[int.tryParse(widget.userId)!]!.id!,
       );
     });
     super.initState();

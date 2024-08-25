@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
+import 'package:ez_english/features/models/fetch_assigned_section_question_result.dart';
 import 'package:ez_english/utils/utils.dart';
 
 class QuestionAssignmentViewmodel extends BaseViewModel {
@@ -100,24 +102,24 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
   }
 
   Future<void> _fetchAssignedQuestions() async {
-    _assignedQuestions = _questions.sublist(0, 20);
-    // isLoading = true;
-    // try {
-    //   SectionFetchResult fetchResult =
-    //       await _firestoreService.fetchAssignedQuestions(
-    //           userId: userId, sectionName: RouteConstants.speakingSectionName);
+    isLoading = true;
+    try {
+      SectionFetchResult fetchResult =
+          await _firestoreService.fetchAssignedQuestions(
+              userId: userId, sectionName: RouteConstants.speakingSectionName);
 
-    //   _questions = fetchResult.questions.values.cast<BaseQuestion>().toList();
-    //   error = null;
-    // } on CustomException catch (e) {
-    //   error = e;
-    //   printDebug(error!.message);
-    // } catch (e) {
-    //   error = CustomException(e.toString());
-    // } finally {
-    //   isLoading = false;
-    //   notifyListeners();
-    // }
+      _assignedQuestions =
+          fetchResult.questions.values.cast<BaseQuestion>().toList();
+      error = null;
+    } on CustomException catch (e) {
+      error = e;
+      printDebug(error!.message);
+    } catch (e) {
+      error = CustomException(e.toString());
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
   // TODO: add dispose method

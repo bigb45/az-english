@@ -122,8 +122,9 @@ class FirestoreService {
           'lastStoppedQuestionIndex': 0,
         };
       }
-      double progress = userData['assignedQuestions']
-          [RouteConstants.sectionNameId[sectionName]!]['progress'] as double;
+      double progress = (userData['assignedQuestions']
+              [RouteConstants.sectionNameId[sectionName]!]['progress'] as num)
+          .toDouble();
       Map<String, dynamic> sectionData = userData['assignedQuestions']
           [RouteConstants.sectionNameId[sectionName]!];
       Map<String, dynamic> questionData =

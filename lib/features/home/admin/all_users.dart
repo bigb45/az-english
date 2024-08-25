@@ -77,13 +77,12 @@ class _AllUsersState extends State<AllUsers> {
                       child: ListView.builder(
                         itemCount: viewmodel.filteredUsers.length,
                         itemBuilder: (context, index) {
+                          UserModel user = viewmodel.filteredUsers[index]!;
                           return ListItemCard(
-                            mainText:
-                                "${viewmodel.filteredUsers[index]?.studentName}",
+                            mainText: "${user.studentName}",
                             info: Text(
-                              viewmodel.users[index]!.userType.toShortString(),
-                              style: switch (
-                                  viewmodel.filteredUsers[index]!.userType) {
+                              user.userType.toShortString(),
+                              style: switch (user.userType) {
                                 UserType.admin =>
                                   const TextStyle(color: Colors.orange),
                                 UserType.developer =>
