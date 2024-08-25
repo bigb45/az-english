@@ -16,7 +16,7 @@ class UserModel {
   Map<String, AssignedQuestions>? assignedQuestions;
   final Map<String, TestResult>? examResults;
   UserType userType;
-
+  bool? isSpeakingAssigned;
   UserModel(
       {this.id,
       this.studentName,
@@ -27,6 +27,7 @@ class UserModel {
       this.levelsProgress,
       this.examResults,
       assignedQuestions,
+      this.isSpeakingAssigned,
       this.userType = UserType.student});
 // TODO: Fetch the assigned questions when needed only
   factory UserModel.fromMap(Map<String, dynamic> map) {
@@ -52,6 +53,7 @@ class UserModel {
           AssignedQuestions.fromMap(value),
         ),
       ),
+      isSpeakingAssigned: map["isSpeakingAssigned"],
 
       examResults: (map['examResults'] as Map<String, dynamic>?)?.map(
         (key, value) => MapEntry(key, TestResult.fromMap(value)),
@@ -73,6 +75,7 @@ class UserModel {
           levelsProgress?.map((key, value) => MapEntry(key, value.toMap())),
       'examResults':
           examResults?.map((key, value) => MapEntry(key, value.toMap())),
+      "isSpeakingAssigned": isSpeakingAssigned
     };
   }
 

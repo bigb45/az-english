@@ -117,7 +117,10 @@ enum CheckboxState { checked, unchecked, incorrect, neutral }
 class CheckboxData {
   final String title;
   bool? value;
-  CheckboxData({required this.title, this.value = false});
+  bool isSelected;
+
+  CheckboxData(
+      {required this.title, this.value = false, this.isSelected = false});
   Map<String, dynamic> toMap() {
     return {
       'value': value,
