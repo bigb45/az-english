@@ -34,11 +34,11 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
 
   FirestoreService _firestoreService = FirestoreService();
 
-  void setValuesAndInit({required String userId}) {
+  void setValuesAndInit({required String userId}) async {
     this.userId = userId;
     printDebug("got user id $userId");
-    _fetchQuestions();
-    _fetchAssignedQuestions();
+    await _fetchQuestions();
+    await _fetchAssignedQuestions();
     _filteredQuestions = _questions;
   }
 
@@ -73,11 +73,11 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
     String? query,
     String? selectedQuestionType,
     String? selectedSection,
-  }) {
+  }) async {
     _query = query ?? _query;
     _selectedQuestionType = selectedQuestionType ?? _selectedQuestionType;
     _selectedSection = selectedSection ?? _selectedSection;
-    _fetchQuestions();
+    await _fetchQuestions();
     notifyListeners();
   }
 
