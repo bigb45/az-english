@@ -26,8 +26,8 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     currentIndex = 0;
     levelName = RouteConstants.getLevelName(levelId!);
     sectionName = RouteConstants.speakingSectionName;
-
-    fetchQuestions();
+// this is why, no await
+    await fetchQuestions();
     if (_questions.isNotEmpty &&
         _questions[currentIndex].questionType == QuestionType.youtubeLesson) {
       answerState = EvaluationState.noState;
@@ -81,9 +81,11 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     if (currentIndex < _questions.length) {
       currentIndex = currentIndex + 1;
       progress = _firestoreService.calculateNewProgress(currentIndex);
-      if (_questions[currentIndex].questionType == QuestionType.youtubeLesson ||
-          _questions[currentIndex].questionType ==
-              QuestionType.vocabularyWithListening) {
+      if (currentIndex < _questions.length &&
+          (_questions[currentIndex].questionType ==
+                  QuestionType.youtubeLesson ||
+              _questions[currentIndex].questionType ==
+                  QuestionType.vocabularyWithListening)) {
         answerState = EvaluationState.noState;
       } else {
         answerState = EvaluationState.empty;
