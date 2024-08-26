@@ -15,7 +15,7 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
   bool _isQuestionLoading = false;
   bool get isQuestionLoading => _isQuestionLoading;
   final List<int> _loadingIndices = [];
-
+  List<String> _levels = [];
   List<int> get loadingIndices => _loadingIndices;
 
   final List<BaseQuestion> _questions = [];
@@ -39,6 +39,7 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
   void setValuesAndInit({required String userId}) async {
     isLoading = true;
     this.userId = userId;
+    await _fetchLevelNames();
     await _fetchQuestions();
     await _fetchAssignedQuestions();
     _filteredQuestions = _questions;
@@ -104,9 +105,12 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
         if (sectionName == "other") {
           continue;
         }
-        var sectionQuestions = await _firestoreService.fetchQuestions(
-            level: "A1", section: sectionName, day: "1");
-        _questions.addAll(sectionQuestions);
+        for (var level in _levels) {
+          printDebug("fetching questions for $sectionName, $level");
+          var sectionQuestions = await _firestoreService.fetchQuestions(
+              level: level, section: sectionName, day: "1");
+          _questions.addAll(sectionQuestions);
+        }
       }
 
       error = null;
@@ -120,6 +124,14 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
       print("questions: ${_questions.length}");
       notifyListeners();
     }
+  }
+
+  Future<void> _fetchLevelNames() async {
+    _levels = (await firestoreService.getLevels())
+        .map((level) => level?.name ?? "")
+        .toList();
+    notifyListeners();
+    print("levels: $_levels");
   }
 
   Future<void> _fetchAssignedQuestions() async {
@@ -143,11 +155,16 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
     }
   }
 
-  // TODO: add dispose method
   void reset() {
     _query = null;
     _selectedQuestionType = null;
     _selectedSection = null;
+    _questions.clear();
+    _assignedQuestions.clear();
+    _filteredQuestions.clear();
+    _selectedQuestions.clear();
+    _loadingIndices.clear();
+    _isQuestionLoading = false;
     _filterQuestions();
   }
 
