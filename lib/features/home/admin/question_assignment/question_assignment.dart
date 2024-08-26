@@ -65,218 +65,190 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
           },
           child: Padding(
             padding: EdgeInsets.all(Constants.padding12),
-            child: Column(
-              children: [
-                CustomTextField(
-                  controller: _searchController,
-                  hintText: "Search questions",
-                  onChanged: (String query) {
-                    viewmodel.updateAndFilter(query: query);
-                  },
-                  textInputAction: TextInputAction.search,
-                  trailingIcon: IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () {
-                      viewmodel.updateAndFilter(query: _searchController.text);
-                    },
+            child: viewmodel.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : Column(
+                    children: [
+                      CustomTextField(
+                        controller: _searchController,
+                        hintText: "Search questions",
+                        onChanged: (String query) {
+                          viewmodel.updateAndFilter(query: query);
+                        },
+                        textInputAction: TextInputAction.search,
+                        trailingIcon: IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () {
+                            viewmodel.updateAndFilter(
+                                query: _searchController.text);
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: DropdownButton<QuestionType>(
+                              value: viewmodel.selectedQuestionType,
+                              items: const [
+                                DropdownMenuItem(
+                                  value: QuestionType.multipleChoice,
+                                  child: Text("Multiple Choice"),
+                                ),
+                                DropdownMenuItem(
+                                  value: QuestionType.dictation,
+                                  child: Text("Dictation"),
+                                ),
+                                DropdownMenuItem(
+                                  value: QuestionType.passage,
+                                  child: Text("Passage"),
+                                ),
+                                DropdownMenuItem(
+                                  value: QuestionType.youtubeLesson,
+                                  child: Text("Youtube video"),
+                                ),
+                                DropdownMenuItem(
+                                  value: QuestionType.vocabulary,
+                                  child: Text("Vocabulary"),
+                                ),
+                                DropdownMenuItem(
+                                  value: QuestionType.fillTheBlanks,
+                                  child: Text("Fill in the blank"),
+                                ),
+                              ],
+                              hint: Text("Question type",
+                                  style: TextStyles.wordChipTextStyle),
+                              onChanged: (value) {
+                                viewmodel.updateAndFilter(
+                                    selectedQuestionType: value);
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: DropdownButton<SectionName>(
+                              value: viewmodel.selectedSection,
+                              items: const [
+                                DropdownMenuItem(
+                                  value: SectionName.reading,
+                                  child: Text("Reading"),
+                                ),
+                                DropdownMenuItem(
+                                  value: SectionName.listening,
+                                  child: Text("Listening"),
+                                ),
+                                DropdownMenuItem(
+                                  value: SectionName.writing,
+                                  child: Text("Writing"),
+                                ),
+                                DropdownMenuItem(
+                                  value: SectionName.vocabulary,
+                                  child: Text("Vocabulary"),
+                                ),
+                                DropdownMenuItem(
+                                  value: SectionName.grammar,
+                                  child: Text("Grammar"),
+                                ),
+                                DropdownMenuItem(
+                                  value: SectionName.speaking,
+                                  child: Text("Speaking"),
+                                ),
+                                DropdownMenuItem(
+                                  value: SectionName.test,
+                                  child: Text("Test"),
+                                ),
+                              ],
+                              hint: Text("Question section",
+                                  style: TextStyles.wordChipTextStyle),
+                              onChanged: (value) {
+                                viewmodel.updateAndFilter(
+                                    selectedSection: value);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                // Clear filters and search query
+                                _searchController.clear();
+                                viewmodel.clearFilters();
+                              },
+                              child: const Text("Clear Filters"),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: viewmodel.filteredQuestions.isEmpty
+                            ? const Center(child: Text("No questions found."))
+                            : viewmodel.questions.isNotEmpty
+                                ? ListView.builder(
+                                    itemCount:
+                                        viewmodel.filteredQuestions.length,
+                                    itemBuilder: (context, index) {
+                                      BaseQuestion question =
+                                          viewmodel.filteredQuestions[index];
+                                      bool isAssigned = viewmodel
+                                          .assignedQuestions
+                                          .contains(question);
+
+                                      BaseQuestion displayedQuestion =
+                                          isAssigned
+                                              ? viewmodel.assignedQuestions
+                                                  .firstWhere(
+                                                      (assignedQuestion) =>
+                                                          assignedQuestion ==
+                                                          question)
+                                              : question;
+
+                                      return VerticalListItemCard(
+                                        isLoading: (viewmodel.loadingIndices
+                                                .contains(index) &&
+                                            viewmodel.isQuestionLoading),
+                                        action: isAssigned
+                                            ? Icons.delete
+                                            : Icons.add,
+                                        onIconPressed: () {
+                                          isAssigned
+                                              ? viewmodel.removeQuestion(
+                                                  displayedQuestion, index)
+                                              : viewmodel.assignQuestion(
+                                                  displayedQuestion, index);
+                                        },
+                                        onTap: () {
+                                          showPreviewModalSheet(
+                                              title: "Question Preview",
+                                              context: context,
+                                              question: viewmodel
+                                                  .filteredQuestions[index],
+                                              onSubmit: null,
+                                              showSubmitButton: false);
+                                        },
+                                        showDeleteIcon: false,
+                                        mainText:
+                                            "${index + 1}. ${viewmodel.filteredQuestions[index].questionTextInEnglish ?? "No question text"}",
+                                        info: Text(viewmodel
+                                                .filteredQuestions[index]
+                                                .titleInEnglish ??
+                                            ""),
+                                        subText: viewmodel
+                                            .filteredQuestions[index]
+                                            .questionType
+                                            .toShortString(),
+                                      );
+                                    },
+                                  )
+                                : const Text("No questions found."),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: DropdownButton<QuestionType>(
-                        value: viewmodel.selectedQuestionType,
-                        items: const [
-                          DropdownMenuItem(
-                            value: QuestionType.multipleChoice,
-                            child: Text("Multiple Choice"),
-                          ),
-                          DropdownMenuItem(
-                            value: QuestionType.dictation,
-                            child: Text("Dictation"),
-                          ),
-                          DropdownMenuItem(
-                            value: QuestionType.passage,
-                            child: Text("Passage"),
-                          ),
-                          DropdownMenuItem(
-                            value: QuestionType.youtubeLesson,
-                            child: Text("Youtube video"),
-                          ),
-                          DropdownMenuItem(
-                            value: QuestionType.vocabulary,
-                            child: Text("Vocabulary"),
-                          ),
-                          DropdownMenuItem(
-                            value: QuestionType.fillTheBlanks,
-                            child: Text("Fill in the blank"),
-                          ),
-                        ],
-                        hint: Text("Question type",
-                            style: TextStyles.wordChipTextStyle),
-                        onChanged: (value) {
-                          viewmodel.updateAndFilter(
-                              selectedQuestionType: value);
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: DropdownButton<SectionName>(
-                        value: viewmodel.selectedSection,
-                        items: const [
-                          DropdownMenuItem(
-                            value: SectionName.reading,
-                            child: Text("Reading"),
-                          ),
-                          DropdownMenuItem(
-                            value: SectionName.listening,
-                            child: Text("Listening"),
-                          ),
-                          DropdownMenuItem(
-                            value: SectionName.writing,
-                            child: Text("Writing"),
-                          ),
-                          DropdownMenuItem(
-                            value: SectionName.vocabulary,
-                            child: Text("Vocabulary"),
-                          ),
-                          DropdownMenuItem(
-                            value: SectionName.grammar,
-                            child: Text("Grammar"),
-                          ),
-                          DropdownMenuItem(
-                            value: SectionName.speaking,
-                            child: Text("Speaking"),
-                          ),
-                          DropdownMenuItem(
-                            value: SectionName.test,
-                            child: Text("Test"),
-                          ),
-                        ],
-                        hint: Text("Question section",
-                            style: TextStyles.wordChipTextStyle),
-                        onChanged: (value) {
-                          viewmodel.updateAndFilter(selectedSection: value);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Expanded(
-                    //   // TODO: fetch levels from firestore
-                    //   child: DropdownButton<LevelName>(
-                    //     value: viewmodel.selectedLevel ?? LevelName.A1,
-                    //     items: const [
-                    //       DropdownMenuItem(
-                    //         value: LevelName.A1,
-                    //         child: Text("A1"),
-                    //       ),
-                    //       DropdownMenuItem(
-                    //         value: LevelName.A2,
-                    //         child: Text("A2"),
-                    //       ),
-                    //       DropdownMenuItem(
-                    //         value: LevelName.B1,
-                    //         child: Text("B1"),
-                    //       ),
-                    //       DropdownMenuItem(
-                    //         value: LevelName.B2,
-                    //         child: Text("B2"),
-                    //       ),
-                    //       DropdownMenuItem(
-                    //         value: LevelName.C1,
-                    //         child: Text("C1"),
-                    //       ),
-                    //       DropdownMenuItem(
-                    //         value: LevelName.C2,
-                    //         child: Text("C2"),
-                    //       ),
-                    //     ],
-                    //     hint: Text("Level", style: TextStyles.wordChipTextStyle),
-                    //     onChanged: (value) {
-                    //       viewmodel.selectedLevel = value;
-                    //     },
-                    //   ),
-                    // ),
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () {
-                          // Clear filters and search query
-                          _searchController.clear();
-                          viewmodel.clearFilters();
-                        },
-                        child: const Text("Clear Filters"),
-                      ),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: viewmodel.isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : viewmodel.filteredQuestions.isEmpty
-                          ? const Center(child: Text("No questions found."))
-                          : viewmodel.questions.isNotEmpty
-                              ? ListView.builder(
-                                  itemCount: viewmodel.filteredQuestions.length,
-                                  itemBuilder: (context, index) {
-                                    BaseQuestion question =
-                                        viewmodel.filteredQuestions[index];
-                                    bool isAssigned = viewmodel
-                                        .assignedQuestions
-                                        .contains(question);
-
-                                    BaseQuestion displayedQuestion = isAssigned
-                                        ? viewmodel.assignedQuestions
-                                            .firstWhere((assignedQuestion) =>
-                                                assignedQuestion == question)
-                                        : question;
-
-                                    return VerticalListItemCard(
-                                      isLoading: (viewmodel.loadingIndices
-                                              .contains(index) &&
-                                          viewmodel.isQuestionLoading),
-                                      action:
-                                          isAssigned ? Icons.delete : Icons.add,
-                                      onIconPressed: () {
-                                        isAssigned
-                                            ? viewmodel.removeQuestion(
-                                                displayedQuestion, index)
-                                            : viewmodel.assignQuestion(
-                                                displayedQuestion, index);
-                                      },
-                                      onTap: () {
-                                        showPreviewModalSheet(
-                                            title: "Question Preview",
-                                            context: context,
-                                            question: viewmodel
-                                                .filteredQuestions[index],
-                                            onSubmit: null,
-                                            showSubmitButton: false);
-                                      },
-                                      showDeleteIcon: false,
-                                      mainText:
-                                          "${index + 1}. ${viewmodel.filteredQuestions[index].questionTextInEnglish ?? "No question text"}",
-                                      info: Text(viewmodel
-                                              .filteredQuestions[index]
-                                              .titleInEnglish ??
-                                          ""),
-                                      subText: viewmodel
-                                          .filteredQuestions[index].questionType
-                                          .toShortString(),
-                                    );
-                                  },
-                                )
-                              : const Text("No questions found."),
-                ),
-              ],
-            ),
           ),
         ),
       ),
