@@ -8,7 +8,6 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
-import 'package:ez_english/utils/utils.dart';
 
 class ListeningSectionViewmodel extends BaseViewModel {
   String? levelId;
@@ -25,7 +24,7 @@ class ListeningSectionViewmodel extends BaseViewModel {
     levelName = RouteConstants.getLevelName(levelId!);
     sectionName = RouteConstants.listeningSectionName;
 
-    fetchQuestions();
+    await fetchQuestions();
     if (_questions.isNotEmpty &&
         _questions[currentIndex].questionType == QuestionType.youtubeLesson) {
       answerState = EvaluationState.noState;
@@ -85,9 +84,11 @@ class ListeningSectionViewmodel extends BaseViewModel {
     if (currentIndex < _questions.length) {
       currentIndex = currentIndex + 1;
       progress = _firestoreService.calculateNewProgress(currentIndex);
-      if (_questions[currentIndex].questionType == QuestionType.youtubeLesson ||
-          _questions[currentIndex].questionType ==
-              QuestionType.vocabularyWithListening) {
+      if (currentIndex < _questions.length &&
+          (_questions[currentIndex].questionType ==
+                  QuestionType.youtubeLesson ||
+              _questions[currentIndex].questionType ==
+                  QuestionType.vocabularyWithListening)) {
         answerState = EvaluationState.noState;
       } else {
         answerState = EvaluationState.empty;

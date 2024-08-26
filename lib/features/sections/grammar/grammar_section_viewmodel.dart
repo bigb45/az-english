@@ -82,16 +82,18 @@ class GrammarSectionViewmodel extends BaseViewModel {
   }
 
   void incrementIndex() {
-    if (currentIndex < questions.length) {
+    if (currentIndex < _questions.length) {
       currentIndex = currentIndex + 1;
       progress = _firestoreService.calculateNewProgress(currentIndex);
-    }
-    if (_questions[currentIndex].questionType == QuestionType.youtubeLesson ||
-        _questions[currentIndex].questionType ==
-            QuestionType.vocabularyWithListening) {
-      answerState = EvaluationState.noState;
-    } else {
-      answerState = EvaluationState.empty;
+      if (currentIndex < _questions.length &&
+          (_questions[currentIndex].questionType ==
+                  QuestionType.youtubeLesson ||
+              _questions[currentIndex].questionType ==
+                  QuestionType.vocabularyWithListening)) {
+        answerState = EvaluationState.noState;
+      } else {
+        answerState = EvaluationState.empty;
+      }
     }
   }
 }

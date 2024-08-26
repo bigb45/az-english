@@ -65,7 +65,15 @@ class ReadingSectionViewmodel extends BaseViewModel {
     if (currentIndex < questions.length) {
       currentIndex = currentIndex + 1;
       progress = _firestoreService.calculateNewProgress(currentIndex);
-      answerState = EvaluationState.empty;
+      if (currentIndex < _questions.length &&
+          (_questions[currentIndex]?.questionType ==
+                  QuestionType.youtubeLesson ||
+              _questions[currentIndex]?.questionType ==
+                  QuestionType.vocabularyWithListening)) {
+        answerState = EvaluationState.noState;
+      } else {
+        answerState = EvaluationState.empty;
+      }
     }
   }
 
