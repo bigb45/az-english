@@ -12,8 +12,13 @@ import 'package:ez_english/utils/utils.dart';
 
 class QuestionAssignmentViewmodel extends BaseViewModel {
   late String userId;
+  bool _isQuestionLoading = false;
+  bool get isQuestionLoading => _isQuestionLoading;
+  final List<int> _loadingIndices = [];
 
-  List<BaseQuestion> _questions = [];
+  List<int> get loadingIndices => _loadingIndices;
+
+  final List<BaseQuestion> _questions = [];
   List<BaseQuestion> _assignedQuestions = [];
   List<BaseQuestion> _filteredQuestions = [];
   final List<BaseQuestion> _selectedQuestions = [];
@@ -82,6 +87,7 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
     String? query,
     QuestionType? selectedQuestionType,
     SectionName? selectedSection,
+    LevelName? selectedLevel,
   }) async {
     _query = query ?? _query;
     _selectedQuestionType = selectedQuestionType ?? _selectedQuestionType;
@@ -90,17 +96,8 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
     notifyListeners();
   }
 
-  set query(String? value) => updateAndFilter(query: value);
-
-  set selectedQuestionType(QuestionType? value) =>
-      updateAndFilter(selectedQuestionType: value);
-
-  set selectedSection(SectionName? value) =>
-      updateAndFilter(selectedSection: value);
-
   Future<void> _fetchQuestions() async {
     isLoading = true;
-
     try {
       for (var section in SectionName.values) {
         String sectionName = section.toShortString();
@@ -154,7 +151,10 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
     _filterQuestions();
   }
 
-  Future<void> assignQuestion(BaseQuestion question) async {
+  Future<void> assignQuestion(BaseQuestion question, int index) async {
+    _loadingIndices.add(index);
+    _isQuestionLoading = true;
+    notifyListeners();
     String? questionIndex = await _firestoreService.assignQuestion(
         questionMap: question.toMap(),
         sectionName: RouteConstants.speakingSectionName,
@@ -164,11 +164,17 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
         "${RouteConstants.getSectionIds(RouteConstants.speakingSectionName)}/"
         "${FirestoreConstants.questionsField}/$questionIndex";
     _assignedQuestions.add(question);
+    _isQuestionLoading = false;
+    _loadingIndices.remove(index);
+
     notifyListeners();
-    printDebug("assigning quesiont ${question.titleInEnglish}");
   }
 
   Future<void> removeQuestion(BaseQuestion question, int index) async {
+    _isQuestionLoading = true;
+    _loadingIndices.add(index);
+// ⚠️ زنا ⚠️
+    notifyListeners();
     printDebug("removing question ${question.titleInEnglish}");
     List<String> pathSegments = question.path!.split('/');
     String docPath = pathSegments.sublist(0, pathSegments.length - 4).join('/');
@@ -180,7 +186,9 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
     DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
     await _firestoreService.deleteQuestionUsingFieldPath(
         docRef: docRef, questionFieldPath: fieldPath, deletionRef: true);
-    questions.removeAt(index);
+    _assignedQuestions.remove(question);
+    _isQuestionLoading = false;
+    _loadingIndices.remove(index);
     notifyListeners();
   }
 }

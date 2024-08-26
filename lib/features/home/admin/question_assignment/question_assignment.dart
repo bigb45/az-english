@@ -71,7 +71,7 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                 },
                 textInputAction: TextInputAction.search,
                 trailingIcon: IconButton(
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                   onPressed: () {
                     viewmodel.updateAndFilter(query: _searchController.text);
                   },
@@ -161,19 +161,62 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                   ),
                 ],
               ),
-              ElevatedButton(
-                onPressed: () {
-                  // Clear filters and search query
-                  _searchController.clear();
-                  viewmodel.clearFilters();
-                },
-                child: const Text("Clear Filters"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Expanded(
+                  //   // TODO: fetch levels from firestore
+                  //   child: DropdownButton<LevelName>(
+                  //     value: viewmodel.selectedLevel ?? LevelName.A1,
+                  //     items: const [
+                  //       DropdownMenuItem(
+                  //         value: LevelName.A1,
+                  //         child: Text("A1"),
+                  //       ),
+                  //       DropdownMenuItem(
+                  //         value: LevelName.A2,
+                  //         child: Text("A2"),
+                  //       ),
+                  //       DropdownMenuItem(
+                  //         value: LevelName.B1,
+                  //         child: Text("B1"),
+                  //       ),
+                  //       DropdownMenuItem(
+                  //         value: LevelName.B2,
+                  //         child: Text("B2"),
+                  //       ),
+                  //       DropdownMenuItem(
+                  //         value: LevelName.C1,
+                  //         child: Text("C1"),
+                  //       ),
+                  //       DropdownMenuItem(
+                  //         value: LevelName.C2,
+                  //         child: Text("C2"),
+                  //       ),
+                  //     ],
+                  //     hint: Text("Level", style: TextStyles.wordChipTextStyle),
+                  //     onChanged: (value) {
+                  //       viewmodel.selectedLevel = value;
+                  //     },
+                  //   ),
+                  // ),
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        // Clear filters and search query
+                        _searchController.clear();
+                        viewmodel.clearFilters();
+                      },
+                      child: const Text("Clear Filters"),
+                    ),
+                  ),
+                ],
               ),
               Expanded(
                 child: viewmodel.isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : viewmodel.filteredQuestions.isEmpty
-                        ? const Text("No questions found.")
+                        ? const Center(child: Text("No questions found."))
                         : viewmodel.questions.isNotEmpty
                             ? ListView.builder(
                                 itemCount: viewmodel.filteredQuestions.length,
@@ -182,6 +225,8 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                                       viewmodel.filteredQuestions[index];
                                   bool isAssigned = viewmodel.assignedQuestions
                                       .contains(question);
+                                  print(
+                                      "isAssigned: ${question.titleInEnglish} $isAssigned");
                                   BaseQuestion displayedQuestion = isAssigned
                                       ? viewmodel.assignedQuestions.firstWhere(
                                           (assignedQuestion) =>
@@ -189,6 +234,9 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                                       : question;
 
                                   return VerticalListItemCard(
+                                    isLoading: (viewmodel.loadingIndices
+                                            .contains(index) &&
+                                        viewmodel.isQuestionLoading),
                                     action:
                                         isAssigned ? Icons.delete : Icons.add,
                                     onIconPressed: () {
@@ -196,7 +244,7 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                                           ? viewmodel.removeQuestion(
                                               displayedQuestion, index)
                                           : viewmodel.assignQuestion(
-                                              displayedQuestion);
+                                              displayedQuestion, index);
                                     },
                                     onTap: () {
                                       showPreviewModalSheet(
