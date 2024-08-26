@@ -81,13 +81,12 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                 height: 10.h,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // question type selector
                   Expanded(
                     child: DropdownButton<QuestionType>(
                       value: viewmodel.selectedQuestionType,
-                      items: [
+                      items: const [
                         DropdownMenuItem(
                           value: QuestionType.multipleChoice,
                           child: Text("Multiple Choice"),
@@ -120,101 +119,109 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                       },
                     ),
                   ),
-
-                  // question section selector
                   Expanded(
-                    child: DropdownButton<String>(
+                    child: DropdownButton<SectionName>(
                       value: viewmodel.selectedSection,
-                      items: [
+                      items: const [
                         DropdownMenuItem(
-                          value: "reading",
+                          value: SectionName.reading,
                           child: Text("Reading"),
                         ),
                         DropdownMenuItem(
-                          value: "listening",
+                          value: SectionName.listening,
                           child: Text("Listening"),
                         ),
                         DropdownMenuItem(
-                          value: "writing",
+                          value: SectionName.writing,
                           child: Text("Writing"),
                         ),
                         DropdownMenuItem(
-                          value: "vocabulary",
+                          value: SectionName.vocabulary,
                           child: Text("Vocabulary"),
                         ),
                         DropdownMenuItem(
-                          value: "grammar",
+                          value: SectionName.grammar,
                           child: Text("Grammar"),
                         ),
                         DropdownMenuItem(
-                          value: "speaking",
+                          value: SectionName.speaking,
                           child: Text("Speaking"),
                         ),
                         DropdownMenuItem(
-                          value: "test",
+                          value: SectionName.test,
                           child: Text("Test"),
                         ),
                       ],
-                      hint: Text(
-                        "Question section",
-                        style: TextStyles.wordChipTextStyle,
-                      ),
+                      hint: Text("Question section",
+                          style: TextStyles.wordChipTextStyle),
                       onChanged: (value) {
                         viewmodel.updateAndFilter(selectedSection: value);
                       },
                     ),
-                  )
+                  ),
                 ],
               ),
+              ElevatedButton(
+                onPressed: () {
+                  // Clear filters and search query
+                  _searchController.clear();
+                  viewmodel.clearFilters();
+                },
+                child: const Text("Clear Filters"),
+              ),
               Expanded(
-                  child: viewmodel.isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : viewmodel.questions.isNotEmpty
-                          ? ListView.builder(
-                              itemCount: viewmodel.filteredQuestions.length,
-                              itemBuilder: (context, index) {
-                                BaseQuestion question =
-                                    viewmodel.filteredQuestions[index];
-                                bool isAssigned = viewmodel.assignedQuestions
-                                    .contains(question);
-                                BaseQuestion displayedQuestion = isAssigned
-                                    ? viewmodel.assignedQuestions.firstWhere(
-                                        (assignedQuestion) =>
-                                            assignedQuestion == question)
-                                    : question;
+                child: viewmodel.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : viewmodel.filteredQuestions.isEmpty
+                        ? const Text("No questions found.")
+                        : viewmodel.questions.isNotEmpty
+                            ? ListView.builder(
+                                itemCount: viewmodel.filteredQuestions.length,
+                                itemBuilder: (context, index) {
+                                  BaseQuestion question =
+                                      viewmodel.filteredQuestions[index];
+                                  bool isAssigned = viewmodel.assignedQuestions
+                                      .contains(question);
+                                  BaseQuestion displayedQuestion = isAssigned
+                                      ? viewmodel.assignedQuestions.firstWhere(
+                                          (assignedQuestion) =>
+                                              assignedQuestion == question)
+                                      : question;
 
-                                return VerticalListItemCard(
-                                  action: isAssigned ? Icons.delete : Icons.add,
-                                  onIconPressed: () {
-                                    isAssigned
-                                        ? viewmodel.removeQuestion(
-                                            displayedQuestion, index)
-                                        : viewmodel
-                                            .assignQuestion(displayedQuestion);
-                                  },
-                                  onTap: () {
-                                    showPreviewModalSheet(
-                                        title: "Question Preview",
-                                        context: context,
-                                        question:
-                                            viewmodel.filteredQuestions[index],
-                                        onSubmit: null,
-                                        showSubmitButton: false);
-                                  },
-                                  showDeleteIcon: false,
-                                  mainText:
-                                      "${index + 1}. ${viewmodel.filteredQuestions[index].questionTextInEnglish ?? "No question text"}",
-                                  info: Text(viewmodel.filteredQuestions[index]
-                                          .titleInEnglish ??
-                                      ""),
-                                  subText: viewmodel
-                                      .filteredQuestions[index].questionType
-                                      .toShortString(),
-                                );
-                              },
-                            )
-                          : const Text(
-                              "No questions found for the selected day."))
+                                  return VerticalListItemCard(
+                                    action:
+                                        isAssigned ? Icons.delete : Icons.add,
+                                    onIconPressed: () {
+                                      isAssigned
+                                          ? viewmodel.removeQuestion(
+                                              displayedQuestion, index)
+                                          : viewmodel.assignQuestion(
+                                              displayedQuestion);
+                                    },
+                                    onTap: () {
+                                      showPreviewModalSheet(
+                                          title: "Question Preview",
+                                          context: context,
+                                          question: viewmodel
+                                              .filteredQuestions[index],
+                                          onSubmit: null,
+                                          showSubmitButton: false);
+                                    },
+                                    showDeleteIcon: false,
+                                    mainText:
+                                        "${index + 1}. ${viewmodel.filteredQuestions[index].questionTextInEnglish ?? "No question text"}",
+                                    info: Text(viewmodel
+                                            .filteredQuestions[index]
+                                            .titleInEnglish ??
+                                        ""),
+                                    subText: viewmodel
+                                        .filteredQuestions[index].questionType
+                                        .toShortString(),
+                                  );
+                                },
+                              )
+                            : const Text("No questions found."),
+              ),
             ],
           ),
         ),
