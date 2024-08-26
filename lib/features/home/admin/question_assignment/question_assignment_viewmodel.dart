@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -12,11 +14,11 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
   late String userId;
 
   List<BaseQuestion> _questions = [];
-  final List<BaseQuestion> _assignedQuestions = [];
+  List<BaseQuestion> _assignedQuestions = [];
   List<BaseQuestion> _filteredQuestions = [];
   final List<BaseQuestion> _selectedQuestions = [];
   QuestionType? _selectedQuestionType;
-  String? _selectedSection;
+  SectionName? _selectedSection;
   String? _query;
 
   List<BaseQuestion> get questions => _questions;
@@ -24,16 +26,18 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
   List<BaseQuestion> get filteredQuestions => _filteredQuestions;
   List<BaseQuestion> get selectedQuestions => _selectedQuestions;
   QuestionType? get selectedQuestionType => _selectedQuestionType;
-  String? get selectedSection => _selectedSection;
+  SectionName? get selectedSection => _selectedSection;
   String? get query => _query;
 
   final FirestoreService _firestoreService = FirestoreService();
 
   void setValuesAndInit({required String userId}) async {
+    isLoading = true;
     this.userId = userId;
     await _fetchQuestions();
     await _fetchAssignedQuestions();
     _filteredQuestions = _questions;
+    notifyListeners();
   }
 
   @override
@@ -44,7 +48,6 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
         "filtering by $_query, $_selectedQuestionType, $selectedSection");
 
     _filteredQuestions = _questions.where((question) {
-      print("section: $selectedSection");
       return (((question.titleInEnglish
                       ?.toLowerCase()
                       .trim()
@@ -60,22 +63,29 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
                       .trim()
                       .contains((_query ?? "").toLowerCase().trim()) ??
                   false)) &&
-          (question.questionType == selectedQuestionType) &&
-          (selectedSection == "writing"));
+          (question.questionType ==
+              (_selectedQuestionType ?? question.questionType)) &&
+          (question.sectionName == (_selectedSection ?? question.sectionName)));
     }).toList();
 
     notifyListeners();
   }
 
+  void clearFilters() {
+    _query = null;
+    _selectedQuestionType = null;
+    _selectedSection = null;
+    updateAndFilter(); // Trigger filtering with cleared filters
+  }
+
   void updateAndFilter({
     String? query,
     QuestionType? selectedQuestionType,
-    String? selectedSection,
+    SectionName? selectedSection,
   }) async {
     _query = query ?? _query;
     _selectedQuestionType = selectedQuestionType ?? _selectedQuestionType;
     _selectedSection = selectedSection ?? _selectedSection;
-    // await _fetchQuestions();
     _filterQuestions();
     notifyListeners();
   }
@@ -85,14 +95,23 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
   set selectedQuestionType(QuestionType? value) =>
       updateAndFilter(selectedQuestionType: value);
 
-  set selectedSection(String? value) => updateAndFilter(selectedSection: value);
+  set selectedSection(SectionName? value) =>
+      updateAndFilter(selectedSection: value);
 
   Future<void> _fetchQuestions() async {
     isLoading = true;
+
     try {
-      // TODO: change section to speaking
-      _questions = await _firestoreService.fetchQuestions(
-          level: "A1", section: "writing", day: "1");
+      for (var section in SectionName.values) {
+        String sectionName = section.toShortString();
+        if (sectionName == "other") {
+          continue;
+        }
+        var sectionQuestions = await _firestoreService.fetchQuestions(
+            level: "A1", section: sectionName, day: "1");
+        _questions.addAll(sectionQuestions);
+      }
+
       error = null;
     } on CustomException catch (e) {
       error = e;
@@ -101,6 +120,7 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
       error = CustomException(e.toString());
     } finally {
       isLoading = false;
+      print("questions: ${_questions.length}");
       notifyListeners();
     }
   }
