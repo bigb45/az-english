@@ -43,7 +43,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
     authViewModel = Provider.of<AuthViewModel>(context, listen: false);
     //TODO delete this if you want to stop auto login for test purposes
-    authViewModel.signInDev();
+    // authViewModel.signInDev();
 
     super.initState();
   }

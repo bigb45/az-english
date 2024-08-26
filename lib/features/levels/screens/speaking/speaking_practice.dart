@@ -49,7 +49,7 @@ class _SpeakingPracticeState extends State<SpeakingPractice> {
       if (viewmodel.currentIndex == viewmodel.questions.length) {
         return FinishedQuestionsScreen(
           onFinished: () async {
-            await viewmodel.updateUserProgress().then((value) {
+            await viewmodel.updateSectionProgress().then((value) {
               context.pop();
               context.pop();
             });

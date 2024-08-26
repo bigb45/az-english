@@ -99,6 +99,8 @@ class AuthViewModel extends ChangeNotifier {
       if (userCredential.user != null) {
         user.id = userCredential.user!.uid;
         user.assignedLevels = [];
+        user.assignedQuestions = {};
+        user.isSpeakingAssigned = false;
         await _firestoreService.addUser(user);
         _subscribeToAuthChanges();
       }
