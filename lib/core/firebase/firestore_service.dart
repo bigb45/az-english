@@ -365,6 +365,7 @@ class FirestoreService {
                   RouteConstants.getSectionIds(
                       RouteConstants.vocabularySectionName))
           ? "unit${currentDayString!}"
+          // TODO: unitNumber is null
           : unitNumber!;
       if (!sectionProgress.unitsCompleted.contains(tempUnitNumber)) {
         sectionProgress.unitsCompleted.add(tempUnitNumber);

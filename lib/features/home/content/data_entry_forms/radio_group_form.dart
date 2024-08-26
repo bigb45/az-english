@@ -40,11 +40,9 @@ class _RadioGroupFormState extends State<RadioGroupForm> {
 
   @override
   Widget build(BuildContext context) {
-    print("selected options: ${selectedOption?.value}");
     return Form(
       key: _formKey,
       onChanged: () {
-        print("validating subform, form: ${_formKey.currentState!.validate()}");
         widget.onFormChanged(_formKey.currentState!.validate());
       },
       autovalidateMode: AutovalidateMode.always,

@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 class QuestionAssignment extends StatefulWidget {
   final String userId;
 
-  QuestionAssignment({super.key, required this.userId});
+  const QuestionAssignment({super.key, required this.userId});
 
   @override
   State<QuestionAssignment> createState() => _QuestionAssignmentState();
@@ -80,17 +80,33 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                 children: [
                   // question type selector
                   Expanded(
-                    child: DropdownButton<String>(
+                    child: DropdownButton<QuestionType>(
                       value: viewmodel.selectedQuestionType,
                       items: const [
                         DropdownMenuItem(
-                          value: "mcq",
-                          child: Text("mcq"),
+                          value: QuestionType.multipleChoice,
+                          child: Text("Multiple Choice"),
                         ),
                         DropdownMenuItem(
-                          value: "child",
-                          child: Text("child"),
-                        )
+                          value: QuestionType.dictation,
+                          child: Text("Dictation"),
+                        ),
+                        DropdownMenuItem(
+                          value: QuestionType.passage,
+                          child: Text("Passage"),
+                        ),
+                        DropdownMenuItem(
+                          value: QuestionType.youtubeLesson,
+                          child: Text("Youtube video"),
+                        ),
+                        DropdownMenuItem(
+                          value: QuestionType.vocabulary,
+                          child: Text("Vocabulary"),
+                        ),
+                        DropdownMenuItem(
+                          value: QuestionType.fillTheBlanks,
+                          child: Text("Fill in the blank"),
+                        ),
                       ],
                       hint: const Text("Question type"),
                       onChanged: (value) {
@@ -106,19 +122,31 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                       items: const [
                         DropdownMenuItem(
                           value: "reading",
-                          child: Text("reading"),
-                        ),
-                        DropdownMenuItem(
-                          value: "writing",
-                          child: Text("writing"),
+                          child: Text("Reading"),
                         ),
                         DropdownMenuItem(
                           value: "listening",
-                          child: Text("listening"),
+                          child: Text("Listening"),
+                        ),
+                        DropdownMenuItem(
+                          value: "writing",
+                          child: Text("Writing"),
+                        ),
+                        DropdownMenuItem(
+                          value: "vocabulary",
+                          child: Text("Vocabulary"),
+                        ),
+                        DropdownMenuItem(
+                          value: "grammar",
+                          child: Text("Grammar"),
                         ),
                         DropdownMenuItem(
                           value: "speaking",
-                          child: Text("speaking"),
+                          child: Text("Speaking"),
+                        ),
+                        DropdownMenuItem(
+                          value: "test",
+                          child: Text("Test"),
                         ),
                       ],
                       hint: const Text("Question section"),
@@ -137,7 +165,7 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                               itemCount: viewmodel.filteredQuestions.length,
                               itemBuilder: (context, index) {
                                 BaseQuestion question =
-                                    viewmodel.questions[index];
+                                    viewmodel.filteredQuestions[index];
                                 bool isAssigned = viewmodel.assignedQuestions
                                     .contains(question);
                                 return VerticalListItemCard(
@@ -151,18 +179,19 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                                     showPreviewModalSheet(
                                         title: "Question Preview",
                                         context: context,
-                                        question: viewmodel.questions[index],
+                                        question:
+                                            viewmodel.filteredQuestions[index],
                                         onSubmit: null,
                                         showSubmitButton: false);
                                   },
                                   showDeleteIcon: false,
                                   mainText:
-                                      "${index + 1}. ${viewmodel.questions[index].questionTextInEnglish ?? "No question text"}",
-                                  info: Text(viewmodel
-                                          .questions[index].titleInEnglish ??
+                                      "${index + 1}. ${viewmodel.filteredQuestions[index].questionTextInEnglish ?? "No question text"}",
+                                  info: Text(viewmodel.filteredQuestions[index]
+                                          .titleInEnglish ??
                                       ""),
                                   subText: viewmodel
-                                      .questions[index].questionType
+                                      .filteredQuestions[index].questionType
                                       .toShortString(),
                                 );
                               },

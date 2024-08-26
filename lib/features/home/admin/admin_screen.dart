@@ -39,8 +39,6 @@ class AdminScreen extends StatelessWidget {
                       context.push(
                         "/all_users", // navigate user settings
                       );
-
-                      print("selected");
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -62,8 +60,6 @@ class AdminScreen extends StatelessWidget {
                       context.push(
                         "/all_questions",
                       );
-
-                      print("selected");
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
