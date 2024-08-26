@@ -226,8 +226,13 @@ class FirestoreService {
       ]);
       int lastStoppedQuestionIndex =
           (allQuestionsLength - filteredQuestionsLength) + newQuestionIndex;
-      double sectionProgress =
-          (((lastStoppedQuestionIndex + 1) / allQuestionsLength) * 100);
+      double sectionProgress = 0;
+      if (allQuestionsLength == 0) {
+        sectionProgress = 0;
+      } else {
+        sectionProgress =
+            (((lastStoppedQuestionIndex + 1) / allQuestionsLength) * 100);
+      }
 
       await updateQuestionUsingFieldPath<int>(
           docPath: userDocRef,
@@ -376,14 +381,10 @@ class FirestoreService {
       WriteBatch batch = FirebaseFirestore.instance.batch();
 
       // Update the completed units for each section and check if they are completed
-
       String sectionId = RouteConstants.getSectionIds(sectionName);
 
-      // no section progress at home screen, must change sectionProgress
-// problem here
       SectionProgress sectionProgress =
           levelProgress.sectionProgress![sectionId]!;
-
       String tempUnitNumber = (sectionId ==
                   RouteConstants.getSectionIds(
                       RouteConstants.testSectionName) ||
@@ -391,14 +392,13 @@ class FirestoreService {
                   RouteConstants.getSectionIds(
                       RouteConstants.vocabularySectionName))
           ? "unit${currentDayString!}"
-          // TODO: unitNumber is null
           : unitNumber!;
       if (!sectionProgress.unitsCompleted.contains(tempUnitNumber)) {
         sectionProgress.unitsCompleted.add(tempUnitNumber);
       }
 
       // Update isCompleted status if all units are completed
-      if (sectionProgress.isSectionCompleted(tempUnitNumber)) {
+      if (sectionProgress.isSectionCompleted(tempUnitNumber!)) {
         sectionProgress.isCompleted = true;
         sectionProgress.lastStoppedQuestionIndex = 0;
       }
