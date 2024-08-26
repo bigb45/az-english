@@ -123,9 +123,9 @@ abstract class BaseViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      await _firestoreService.updateUserProgress("A1", "speaking");
+      await _firestoreService.updateUserProgress("A1", sectionName!);
     } catch (e) {
-      print(e.toString());
+      // this causes speaking section error
       error = CustomException("An undefined error ocurred ${e.toString()}");
     } finally {
       isLoading = false;
