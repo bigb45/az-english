@@ -8,6 +8,7 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/fetch_assigned_section_question_result.dart';
+import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/utils/utils.dart';
 
@@ -98,6 +99,19 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<List<Unit?>?> fetchDays(
+      {required String level, required String section, d}) async {
+    try {
+      return await _firestoreService.getDays(
+        level,
+        section,
+      );
+    } catch (e) {
+      print('Error fetching questions: $e');
+      notifyListeners();
+    }
+  }
+
   Future<void> _fetchQuestions() async {
     isLoading = true;
     try {
@@ -109,41 +123,48 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
           continue;
         }
         for (var level in _levels) {
-          var sectionQuestions = await _firestoreService.fetchQuestions(
-              level: level, section: sectionName, day: "1");
-          for (var entry in sectionQuestions) {
-            if (entry.questionType == QuestionType.passage) {
-              PassageQuestionModel? passageQuestion =
-                  entry as PassageQuestionModel;
+          List<Unit?>? units =
+              await fetchDays(level: level, section: sectionName);
+          for (var unit in units!) {
+            var sectionQuestions = await _firestoreService.fetchQuestions(
+                level: level,
+                section: sectionName,
+                day: unit!.name.substring(unit!.name.length - 1));
+            for (var entry in sectionQuestions) {
+              if (entry.questionType == QuestionType.passage) {
+                PassageQuestionModel? passageQuestion =
+                    entry as PassageQuestionModel;
 
-              var embeddedQuestionsData = passageQuestion.questions;
-              var parentQuestionPath = entry.path;
-              for (var embeddedEntry in embeddedQuestionsData.entries) {
-                var embeddedQuestionMap = embeddedEntry.value as BaseQuestion;
-                ;
-                PassageQuestionModel embeddedQuestion = PassageQuestionModel(
-                    passageInEnglish: entry.passageInEnglish,
-                    passageInArabic: entry.passageInArabic,
-                    titleInArabic: entry.titleInArabic,
-                    titleInEnglish: entry.titleInEnglish,
-                    questions: {1: embeddedQuestionMap},
-                    questionTextInEnglish: entry.questionTextInEnglish,
-                    questionTextInArabic: entry.questionTextInArabic,
-                    imageUrl: entry.imageUrl,
-                    voiceUrl: entry.voiceUrl,
-                    questionType: QuestionType.passage,
-                    sectionName: SectionNameExtension.fromString(sectionName));
-                embeddedQuestion.path =
-                    "$parentQuestionPath/embeddedQuestions/${embeddedEntry.key}";
-                embeddedPassageQuestions.add(embeddedQuestion);
+                var embeddedQuestionsData = passageQuestion.questions;
+                var parentQuestionPath = entry.path;
+                for (var embeddedEntry in embeddedQuestionsData.entries) {
+                  var embeddedQuestionMap = embeddedEntry.value as BaseQuestion;
+                  ;
+                  PassageQuestionModel embeddedQuestion = PassageQuestionModel(
+                      passageInEnglish: entry.passageInEnglish,
+                      passageInArabic: entry.passageInArabic,
+                      titleInArabic: entry.titleInArabic,
+                      titleInEnglish: entry.titleInEnglish,
+                      questions: {1: embeddedQuestionMap},
+                      questionTextInEnglish: entry.questionTextInEnglish,
+                      questionTextInArabic: entry.questionTextInArabic,
+                      imageUrl: entry.imageUrl,
+                      voiceUrl: entry.voiceUrl,
+                      questionType: QuestionType.passage,
+                      sectionName:
+                          SectionNameExtension.fromString(sectionName));
+                  embeddedQuestion.path =
+                      "$parentQuestionPath/embeddedQuestions/${embeddedEntry.key}";
+                  embeddedPassageQuestions.add(embeddedQuestion);
+                }
+                sectionQuestions = embeddedPassageQuestions;
               }
-              sectionQuestions = embeddedPassageQuestions;
             }
-          }
 
-          _questions.addAll(sectionQuestions);
-          sectionQuestions = [];
-          embeddedPassageQuestions = [];
+            _questions.addAll(sectionQuestions);
+            sectionQuestions = [];
+            embeddedPassageQuestions = [];
+          }
         }
       }
 
