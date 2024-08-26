@@ -2,7 +2,6 @@
 
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
-import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/foundation.dart';
 
@@ -13,19 +12,21 @@ class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
   String? questionSentenceInEnglish;
   String? questionSentenceInArabic;
   @override
-  MultipleChoiceQuestionModel(
-      {required this.options,
-      this.paragraphTranslation,
-      this.questionSentenceInEnglish,
-      required this.questionSentenceInArabic,
-      this.paragraph,
-      required super.answer,
-      required super.questionTextInArabic,
-      required super.questionTextInEnglish,
-      required super.imageUrl,
-      super.voiceUrl,
-      super.questionType = QuestionType.multipleChoice,
-      required super.titleInEnglish});
+  MultipleChoiceQuestionModel({
+    required this.options,
+    this.paragraphTranslation,
+    this.questionSentenceInEnglish,
+    required this.questionSentenceInArabic,
+    this.paragraph,
+    required super.answer,
+    required super.questionTextInArabic,
+    required super.questionTextInEnglish,
+    required super.imageUrl,
+    super.voiceUrl,
+    super.questionType = QuestionType.multipleChoice,
+    required super.titleInEnglish,
+    super.sectionName,
+  });
   @override
   MultipleChoiceQuestionModel copy() {
     return MultipleChoiceQuestionModel(
@@ -42,6 +43,7 @@ class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
       voiceUrl: voiceUrl,
       questionType: questionType,
       titleInEnglish: titleInEnglish,
+      sectionName: sectionName,
     );
   }
 
@@ -105,6 +107,7 @@ class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
       questionSentenceInEnglish: map['questionSentenceInEnglish'],
       questionSentenceInArabic: map['questionSentenceInArabic'],
       titleInEnglish: map["titleInEnglish"],
+      sectionName: SectionNameExtension.fromString(map['sectionName']),
     );
   }
 

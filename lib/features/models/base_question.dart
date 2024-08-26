@@ -14,7 +14,7 @@ abstract class BaseQuestion<T> {
   String? voiceUrl;
   String? path; // Firestore document path
   String? titleInEnglish;
-
+  SectionName? sectionName;
   // correct answer
   BaseAnswer<T>? answer;
   BaseAnswer<T>? userAnswer;
@@ -24,10 +24,11 @@ abstract class BaseQuestion<T> {
     required this.questionTextInArabic,
     required this.imageUrl,
     required this.voiceUrl,
-    this.answer,
-    this.path,
     required this.questionType,
     required this.titleInEnglish,
+    this.sectionName,
+    this.path,
+    this.answer,
   });
   BaseQuestion<T> copy();
 
@@ -45,6 +46,7 @@ abstract class BaseQuestion<T> {
       'answer': answer?.toMap(),
       "titleInEnglish": titleInEnglish,
       "questionType": questionType.toShortString(),
+      'sectionName': sectionName?.toString().split('.').last,
     };
   }
 
@@ -117,6 +119,30 @@ enum QuestionType {
   checkbox,
   //other
   other,
+}
+
+enum SectionName {
+  reading,
+  writing,
+  speaking,
+  grammar,
+  vocabulary,
+  listening,
+  test,
+  other
+}
+
+extension SectionNameExtension on SectionName {
+  String toShortString() {
+    return toString().split('.').last;
+  }
+
+  static SectionName fromString(String str) {
+    return SectionName.values.firstWhere(
+      (e) => e.toString().split('.').last == str,
+      orElse: () => SectionName.other,
+    );
+  }
 }
 
 extension QuestionTypeExtension on QuestionType {

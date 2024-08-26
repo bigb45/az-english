@@ -16,6 +16,7 @@ class FillTheBlanksQuestionModel extends BaseQuestion<String> {
     super.imageUrl,
     super.voiceUrl,
     super.titleInEnglish,
+    super.sectionName,
   });
 
   @override
@@ -44,17 +45,18 @@ class FillTheBlanksQuestionModel extends BaseQuestion<String> {
     };
   }
 
-  factory FillTheBlanksQuestionModel.fromMap(Map<String, dynamic> json) {
+  factory FillTheBlanksQuestionModel.fromMap(Map<String, dynamic> map) {
     return FillTheBlanksQuestionModel(
-      answer: StringAnswer(answer: json['answer']['answer']),
-      questionTextInEnglish: json['questionTextInEnglish'],
-      questionTextInArabic: json['questionTextInArabic'],
-      imageUrl: json['imageUrl'],
-      voiceUrl: json['voiceUrl'],
-      incompleteSentenceInEnglish: json['incompleteSentenceInEnglish'],
-      incompleteSentenceInArabic: json['incompleteSentenceInArabic'],
+      answer: StringAnswer(answer: map['answer']['answer']),
+      questionTextInEnglish: map['questionTextInEnglish'],
+      questionTextInArabic: map['questionTextInArabic'],
+      imageUrl: map['imageUrl'],
+      voiceUrl: map['voiceUrl'],
+      incompleteSentenceInEnglish: map['incompleteSentenceInEnglish'],
+      incompleteSentenceInArabic: map['incompleteSentenceInArabic'],
       questionType: QuestionType.fillTheBlanks,
-      titleInEnglish: json["titleInEnglish"],
+      titleInEnglish: map["titleInEnglish"],
+      sectionName: SectionNameExtension.fromString(map['sectionName']),
     );
   }
 

@@ -10,7 +10,8 @@ class YoutubeLessonModel extends BaseQuestion {
       super.questionTextInEnglish,
       super.questionTextInArabic,
       super.imageUrl,
-      required super.titleInEnglish});
+      required super.titleInEnglish,
+      super.sectionName});
   @override
   YoutubeLessonModel copy() {
     return YoutubeLessonModel(
@@ -41,6 +42,10 @@ class YoutubeLessonModel extends BaseQuestion {
       imageUrl: map['imageUrl'],
       questionType: QuestionType.youtubeLesson,
       titleInEnglish: map["titleInEnglish"],
+      // this causes exception
+      sectionName: SectionNameExtension.fromString(
+        map['sectionName'],
+      ),
     );
   }
   @override

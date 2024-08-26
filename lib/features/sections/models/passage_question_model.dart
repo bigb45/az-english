@@ -17,6 +17,7 @@ class PassageQuestionModel extends BaseQuestion {
       required super.questionTextInArabic,
       required super.imageUrl,
       required super.voiceUrl,
+      super.sectionName,
       super.questionType = QuestionType.passage});
 
   @override
@@ -51,6 +52,7 @@ class PassageQuestionModel extends BaseQuestion {
       imageUrl: map['imageUrl'],
       voiceUrl: map['voiceUrl'],
       questionType: QuestionType.passage,
+      sectionName: SectionNameExtension.fromString(map['sectionName']),
     );
   }
 

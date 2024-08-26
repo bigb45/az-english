@@ -17,6 +17,7 @@ class DictationQuestionModel extends BaseQuestion<String> {
     required super.imageUrl,
     required super.titleInEnglish,
     super.questionType = QuestionType.dictation,
+    super.sectionName,
   });
   @override
   DictationQuestionModel copy() {
@@ -41,15 +42,16 @@ class DictationQuestionModel extends BaseQuestion<String> {
     };
   }
 
-  factory DictationQuestionModel.fromMap(Map<String, dynamic> json) {
+  factory DictationQuestionModel.fromMap(Map<String, dynamic> map) {
     return DictationQuestionModel(
-      speakableText: json['speakableText'],
-      answer: StringAnswer(answer: json['answer']['answer']),
-      questionTextInEnglish: json['questionTextInEnglish'],
-      questionTextInArabic: json['questionTextInArabic'],
-      imageUrl: json['imageUrl'],
-      voiceUrl: json['voiceUrl'],
-      titleInEnglish: json["titleInEnglish"],
+      speakableText: map['speakableText'],
+      answer: StringAnswer(answer: map['answer']['answer']),
+      questionTextInEnglish: map['questionTextInEnglish'],
+      questionTextInArabic: map['questionTextInArabic'],
+      imageUrl: map['imageUrl'],
+      voiceUrl: map['voiceUrl'],
+      titleInEnglish: map["titleInEnglish"],
+      sectionName: SectionNameExtension.fromString(map['sectionName']),
     );
   }
   @override

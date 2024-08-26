@@ -13,21 +13,23 @@ class WordDefinition extends BaseQuestion {
 
   final String? tenses;
   bool isNew;
-  WordDefinition(
-      {required this.englishWord,
-      super.titleInEnglish,
-      required this.arabicWord,
-      required this.type,
-      this.isNew = true,
-      this.definition,
-      this.exampleUsageInEnglish,
-      this.exampleUsageInArabic,
-      this.tenses,
-      super.questionTextInEnglish,
-      super.questionTextInArabic,
-      required super.questionType,
-      super.imageUrl,
-      super.voiceUrl});
+  WordDefinition({
+    required this.englishWord,
+    super.titleInEnglish,
+    required this.arabicWord,
+    required this.type,
+    this.isNew = true,
+    this.definition,
+    this.exampleUsageInEnglish,
+    this.exampleUsageInArabic,
+    this.tenses,
+    super.questionTextInEnglish,
+    super.questionTextInArabic,
+    required super.questionType,
+    super.imageUrl,
+    super.voiceUrl,
+    super.sectionName,
+  });
   @override
   WordDefinition copy() {
     return WordDefinition(
@@ -64,6 +66,7 @@ class WordDefinition extends BaseQuestion {
       'exampleUsageInEnglish': exampleUsageInEnglish,
       'exampleUsageInArabic': exampleUsageInArabic,
       'isNew': isNew,
+
       // TODO implement exampleUsage and tenses attributes if needed
     };
   }
@@ -71,29 +74,33 @@ class WordDefinition extends BaseQuestion {
   @override
   factory WordDefinition.fromMap(Map<String, dynamic> map) {
     return WordDefinition(
-        titleInEnglish: map["titleInEnglish"],
-        englishWord: map['englishWord'],
-        arabicWord: map['arabicWord'],
-        isNew: map['isNew'],
-        type: switch (map['type']) {
-          'verb' => WordType.verb,
-          'word' => WordType.word,
-          'sentence' => WordType.sentence,
-          null => WordType.sentence,
-          Object() => throw UnimplementedError(),
-        },
-        definition: map['definition'],
-        questionTextInEnglish: map['questionTextInEnglish'],
-        questionTextInArabic: map['questionTextInArabic'],
-        imageUrl: map['imageUrl'],
-        voiceUrl: map['voiceUrl'],
-        exampleUsageInEnglish: map['exampleUsageInEnglish'] != null
-            ? List<String>.from(map['exampleUsageInEnglish'])
-            : null,
-        exampleUsageInArabic: map['exampleUsageInArabic'] != null
-            ? List<String>.from(map['exampleUsageInArabic'])
-            : null,
-        questionType: QuestionTypeExtension.fromString(map['questionType']));
+      titleInEnglish: map["titleInEnglish"],
+      englishWord: map['englishWord'],
+      arabicWord: map['arabicWord'],
+      isNew: map['isNew'],
+      type: switch (map['type']) {
+        'verb' => WordType.verb,
+        'word' => WordType.word,
+        'sentence' => WordType.sentence,
+        null => WordType.sentence,
+        Object() => throw UnimplementedError(),
+      },
+      definition: map['definition'],
+      questionTextInEnglish: map['questionTextInEnglish'],
+      questionTextInArabic: map['questionTextInArabic'],
+      imageUrl: map['imageUrl'],
+      voiceUrl: map['voiceUrl'],
+      exampleUsageInEnglish: map['exampleUsageInEnglish'] != null
+          ? List<String>.from(map['exampleUsageInEnglish'])
+          : null,
+      exampleUsageInArabic: map['exampleUsageInArabic'] != null
+          ? List<String>.from(map['exampleUsageInArabic'])
+          : null,
+      questionType: QuestionTypeExtension.fromString(
+        map['questionType'],
+      ),
+      sectionName: SectionNameExtension.fromString(map['sectionName']),
+    );
   }
 
   factory WordDefinition.fromJson(String data) {
