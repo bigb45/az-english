@@ -376,11 +376,11 @@ class FirestoreService {
       WriteBatch batch = FirebaseFirestore.instance.batch();
 
       // Update the completed units for each section and check if they are completed
-      // TODO: change firebase and add speaking section to fix this error
+
       String sectionId = RouteConstants.getSectionIds(sectionName);
 
       // no section progress at home screen, must change sectionProgress
-
+// problem here
       SectionProgress sectionProgress =
           levelProgress.sectionProgress![sectionId]!;
 
