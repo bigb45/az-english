@@ -138,19 +138,27 @@ class FirestoreService {
       allQuestionsLength = questionsData.length;
       var sortedEntries = questionsData.entries.toList()
         ..sort((a, b) => a.key.compareTo(b.key));
-      filteredQuestionsData = sortedEntries.skip(lastQuestionIndex).toList();
-      filteredQuestionsLength = filteredQuestionsData.length;
 
       int maxKey = sortedEntries.isEmpty ? 0 : sortedEntries.last.key;
       int questionIndex = maxKey + 1;
 
-      for (var entry in filteredQuestionsData) {
+      for (var entry in sortedEntries) {
         var mapData = entry.value as Map<String, dynamic>;
         if (mapData["questionType"] == "passage" &&
             mapData.containsKey("questions")) {
           var embeddedQuestionsData =
               mapData["questions"] as Map<String, dynamic>;
-          for (var embeddedEntry in embeddedQuestionsData.entries) {
+          var sortedEntries = embeddedQuestionsData.entries.toList()
+            ..sort((a, b) => int.parse(a.key).compareTo(int.parse(b.key)));
+          var sortedEmbeddedQuestionsData =
+              Map<String, dynamic>.fromEntries(sortedEntries);
+          allQuestionsLength = sortedEmbeddedQuestionsData.length + 1;
+          var parentQuestionPath =
+              "${FirestoreConstants.usersCollections}/${_userModel!.id}/"
+              "assignedQuestions/"
+              "${RouteConstants.getSectionIds(sectionName)}/"
+              "${FirestoreConstants.questionsField}/${entry.key}";
+          for (var embeddedEntry in sortedEmbeddedQuestionsData.entries) {
             var embeddedQuestionMap =
                 embeddedEntry.value as Map<String, dynamic>;
             PassageQuestionModel embeddedQuestion = PassageQuestionModel(
@@ -165,6 +173,9 @@ class FirestoreService {
               voiceUrl: mapData['voiceUrl'],
               questionType: QuestionType.passage,
             );
+            embeddedQuestion.path =
+                "$parentQuestionPath/embeddedQuestions/${embeddedEntry.key}";
+
             questions[questionIndex++] =
                 embeddedQuestion; // Assign each embedded question a unique incremental key
           }
@@ -177,7 +188,14 @@ class FirestoreService {
               "${RouteConstants.getSectionIds(sectionName)}/"
               "${FirestoreConstants.questionsField}/${entry.key}";
         }
+        filteredQuestionsData =
+            questions.entries.skip(lastQuestionIndex).toList();
+        filteredQuestionsLength = filteredQuestionsData.length;
       }
+      Map<int, BaseQuestion<dynamic>> filteredQuestionsMap = {
+        for (var entry in filteredQuestionsData) entry.key: entry.value,
+      };
+      questions = filteredQuestionsMap;
 
       await userDocRef
           .update({'assignedQuestions': userData['assignedQuestions']});
