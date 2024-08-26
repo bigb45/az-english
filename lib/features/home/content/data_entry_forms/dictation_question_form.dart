@@ -3,11 +3,13 @@ import 'package:ez_english/features/home/content/viewmodels/dictation_question_v
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
+import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/features/sections/util/build_question.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
+import 'package:ez_english/widgets/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -306,6 +308,18 @@ void showPreviewModalSheet<BaseQuestion>({
   bool showSubmitButton = true,
   question,
 }) {
+  PassageQuestionModel? passageQuestion;
+  if (question.questionType == QuestionType.passage) {
+    passageQuestion = question as PassageQuestionModel;
+
+    if (passageQuestion.questions.isNotEmpty &&
+        passageQuestion.questions.containsKey(1)) {
+      question = passageQuestion.questions[1]!;
+    } else {
+      throw Exception(
+          "No embedded questions found or first question is missing.");
+    }
+  }
   showModalBottomSheet(
       enableDrag: true,
       elevation: 10,
@@ -323,6 +337,18 @@ void showPreviewModalSheet<BaseQuestion>({
                       title ?? "Are you sure you want to submit this question?",
                       style: TextStyles.bodyMedium,
                     ),
+                    if (passageQuestion != null)
+                      Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 10.0,
+                          ),
+                          child: ExpandableTextBox(
+                              paragraph: passageQuestion!.passageInEnglish!,
+                              paragraphTranslation:
+                                  passageQuestion!.passageInArabic,
+                              isFocused: false,
+                              readMoreText: AppStrings.mcQuestionReadMoreText)),
                     buildQuestion(
                         question: question,
                         onChanged: (value) {},

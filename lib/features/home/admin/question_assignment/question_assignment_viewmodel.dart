@@ -8,6 +8,7 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/fetch_assigned_section_question_result.dart';
+import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:ez_english/utils/utils.dart';
 
 class QuestionAssignmentViewmodel extends BaseViewModel {
@@ -102,6 +103,8 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
     isLoading = true;
 
     try {
+      List<BaseQuestion> embeddedPassageQuestions = [];
+
       for (var section in SectionName.values) {
         String sectionName = section.toShortString();
         if (sectionName == "other") {
@@ -109,6 +112,37 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
         }
         var sectionQuestions = await _firestoreService.fetchQuestions(
             level: "A1", section: sectionName, day: "1");
+        if (sectionName == "reading") {
+          for (var entry in sectionQuestions) {
+            if (entry.questionType == QuestionType.passage) {
+              PassageQuestionModel? passageQuestion =
+                  entry as PassageQuestionModel;
+
+              var embeddedQuestionsData = passageQuestion.questions;
+              var parentQuestionPath = entry.path;
+              for (var embeddedEntry in embeddedQuestionsData.entries) {
+                var embeddedQuestionMap = embeddedEntry.value as BaseQuestion;
+                ;
+                PassageQuestionModel embeddedQuestion = PassageQuestionModel(
+                    passageInEnglish: entry.passageInEnglish,
+                    passageInArabic: entry.passageInArabic,
+                    titleInArabic: entry.titleInArabic,
+                    titleInEnglish: entry.titleInEnglish,
+                    questions: {1: embeddedQuestionMap},
+                    questionTextInEnglish: entry.questionTextInEnglish,
+                    questionTextInArabic: entry.questionTextInArabic,
+                    imageUrl: entry.imageUrl,
+                    voiceUrl: entry.voiceUrl,
+                    questionType: QuestionType.passage,
+                    sectionName: SectionName.reading);
+                embeddedQuestion.path =
+                    "$parentQuestionPath/embeddedQuestions/${embeddedEntry.key}";
+                embeddedPassageQuestions.add(embeddedQuestion);
+              }
+              sectionQuestions = embeddedPassageQuestions;
+            }
+          }
+        }
         _questions.addAll(sectionQuestions);
       }
 
