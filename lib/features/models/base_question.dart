@@ -132,6 +132,21 @@ enum SectionName {
   other
 }
 
+enum LevelName { A1, A2, B1, B2, C1, C2, other }
+
+extension LevelNameExtension on LevelName {
+  String toShortString() {
+    return toString().split('.').last;
+  }
+
+  static LevelName fromString(String str) {
+    return LevelName.values.firstWhere(
+      (e) => e.toString().split('.').last == str,
+      orElse: () => LevelName.other,
+    );
+  }
+}
+
 extension SectionNameExtension on SectionName {
   String toShortString() {
     return toString().split('.').last;
