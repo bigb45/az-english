@@ -12,6 +12,7 @@ class VerticalListItemCard extends StatelessWidget {
   bool showDeleteIcon;
   final VoidCallback? onTap;
   final VoidCallback? onIconPressed;
+  bool isLoading;
   VerticalListItemCard({
     super.key,
     required this.mainText,
@@ -21,6 +22,7 @@ class VerticalListItemCard extends StatelessWidget {
     this.action,
     this.onIconPressed,
     this.showDeleteIcon = true,
+    this.isLoading = false,
   });
 
   @override
@@ -63,7 +65,7 @@ class VerticalListItemCard extends StatelessWidget {
                             ),
                           ],
                           SizedBox(height: 5.h),
-                          info!,
+                          info ?? const SizedBox(),
                         ],
                       ),
                     ],
@@ -72,6 +74,7 @@ class VerticalListItemCard extends StatelessWidget {
                 Row(
                   children: [
                     Container(
+                      margin: EdgeInsets.only(right: Constants.padding8),
                       width: 2,
                       height: 50.h,
                       color: Palette.secondaryStroke,
@@ -84,12 +87,14 @@ class VerticalListItemCard extends StatelessWidget {
                         iconSize: 25.w,
                       )
                     else if (action != null)
-                      IconButton(
-                        onPressed: onIconPressed,
-                        icon: Icon(
-                          action!,
-                        ),
-                      ),
+                      isLoading
+                          ? const CircularProgressIndicator()
+                          : IconButton(
+                              onPressed: onIconPressed,
+                              icon: Icon(
+                                action!,
+                              ),
+                            ),
                   ],
                 )
               ],
