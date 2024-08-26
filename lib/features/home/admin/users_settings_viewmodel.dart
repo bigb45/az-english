@@ -117,16 +117,38 @@ class UsersSettingsViewmodel extends BaseViewModel {
     try {
       DocumentReference userDocRef =
           FirebaseFirestore.instance.collection("users").doc(userId);
+
+      List<String> speakingLevels =
+          assignedLevels.where((level) => level == "Speaking").toList();
+      List<String> otherLevels =
+          assignedLevels.where((level) => level != "Speaking").toList();
+
+      if (speakingLevels.isNotEmpty) {
+        await _firestoreService.updateQuestionUsingFieldPath(
+          docPath: userDocRef,
+          fieldPath: FieldPath(const ['isSpeakingAssigned']),
+          newValue: true,
+        );
+      } else {
+        await _firestoreService.updateQuestionUsingFieldPath(
+          docPath: userDocRef,
+          fieldPath: FieldPath(const ['isSpeakingAssigned']),
+          newValue: false,
+        );
+      }
       await _firestoreService.updateQuestionUsingFieldPath(
         docPath: userDocRef,
         fieldPath: FieldPath(const ['assignedLevels']),
-        newValue: assignedLevels,
+        newValue: otherLevels,
       );
+
       // Update the local user model
       UserModel? user = _users.firstWhere((user) => user?.id == userId);
       if (user != null) {
-        user.assignedLevels = assignedLevels;
+        user.assignedLevels = otherLevels;
+        user.isSpeakingAssigned = speakingLevels.isNotEmpty;
       }
+
       notifyListeners();
     } catch (e) {
       print("Error updating assigned levels: $e");

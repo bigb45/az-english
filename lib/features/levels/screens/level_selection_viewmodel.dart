@@ -9,6 +9,7 @@ import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/section.dart';
+import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -17,15 +18,23 @@ class LevelSelectionViewmodel extends BaseViewModel {
   late AuthViewModel _authProvider;
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   List<Level> _levels = [];
+  bool _isSpeakingAssigned = false;
 
   int get selectedLevel => _selectedLevelId;
   List<Level> get levels => _levels;
+  bool get isSpeakingAssigned => _isSpeakingAssigned;
 
-  void update(AuthViewModel authViewModel) {
+  void update(AuthViewModel authViewModel) async {
     _authProvider = authViewModel;
     if (_authProvider.isSignedIn) {
-      fetchLevels();
+      await fetchLevels();
+      await fetchUserData(_authProvider.user!.uid);
     }
+  }
+
+  Future<void> fetchUserData(String userId) async {
+    UserModel? userModel = await firestoreService.getUser(userId);
+    _isSpeakingAssigned = userModel!.isSpeakingAssigned!;
   }
 
   Future<void> fetchLevels() async {

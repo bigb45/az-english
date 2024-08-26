@@ -29,10 +29,10 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
 
   final FirestoreService _firestoreService = FirestoreService();
 
-  void setValuesAndInit({required String userId}) {
+  void setValuesAndInit({required String userId}) async {
     this.userId = userId;
-    _fetchQuestions();
-    _fetchAssignedQuestions();
+    await _fetchQuestions();
+    await _fetchAssignedQuestions();
     _filteredQuestions = _questions;
   }
 
@@ -71,11 +71,11 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
     String? query,
     QuestionType? selectedQuestionType,
     String? selectedSection,
-  }) {
+  }) async {
     _query = query ?? _query;
     _selectedQuestionType = selectedQuestionType ?? _selectedQuestionType;
     _selectedSection = selectedSection ?? _selectedSection;
-    // _fetchQuestions();
+    // await _fetchQuestions();
     _filterQuestions();
     notifyListeners();
   }
@@ -106,14 +106,14 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
   }
 
   Future<void> _fetchAssignedQuestions() async {
-    // _assignedQuestions = _questions.sublist(0, 20);
     isLoading = true;
     try {
       SectionFetchResult fetchResult =
           await _firestoreService.fetchAssignedQuestions(
               userId: userId, sectionName: RouteConstants.speakingSectionName);
 
-      _questions = fetchResult.questions.values.cast<BaseQuestion>().toList();
+      _assignedQuestions =
+          fetchResult.questions.values.cast<BaseQuestion>().toList();
       error = null;
     } on CustomException catch (e) {
       error = e;
@@ -135,12 +135,32 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
   }
 
   Future<void> assignQuestion(BaseQuestion question) async {
-    // TODO: implement method to assign questions and update them
+    String? questionIndex = await _firestoreService.assignQuestion(
+        questionMap: question.toMap(),
+        sectionName: RouteConstants.speakingSectionName,
+        userId: userId);
+    question.path = "${FirestoreConstants.usersCollections}/${userId}/"
+        "assignedQuestions/"
+        "${RouteConstants.getSectionIds(RouteConstants.speakingSectionName)}/"
+        "${FirestoreConstants.questionsField}/$questionIndex";
+    _assignedQuestions.add(question);
+    notifyListeners();
     printDebug("assigning quesiont ${question.titleInEnglish}");
   }
 
-  Future<void> removeQuestion(BaseQuestion question) async {
-    // TODO: implement method to remove assigned questions
+  Future<void> removeQuestion(BaseQuestion question, int index) async {
     printDebug("removing question ${question.titleInEnglish}");
+    List<String> pathSegments = question.path!.split('/');
+    String docPath = pathSegments.sublist(0, pathSegments.length - 4).join('/');
+    String sectionName = pathSegments[pathSegments.length - 3];
+    String questionField = pathSegments[pathSegments.length - 2];
+    String fieldIndex = pathSegments[pathSegments.length - 1]; //
+    String fieldPath =
+        "assignedQuestions.$sectionName.$questionField.$fieldIndex";
+    DocumentReference docRef = FirebaseFirestore.instance.doc(docPath);
+    await _firestoreService.deleteQuestionUsingFieldPath(
+        docRef: docRef, questionFieldPath: fieldPath, deletionRef: true);
+    questions.removeAt(index);
+    notifyListeners();
   }
 }

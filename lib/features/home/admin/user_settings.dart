@@ -8,6 +8,7 @@ import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/checkbox.dart';
 import 'package:ez_english/widgets/info_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -119,15 +120,19 @@ class UserSettings extends StatelessWidget {
                       },
                     ),
                     InfoCard(
-                      title: "Assigned levels",
-                      subtitle: user.assignedLevels!.isNotEmpty
-                          ? user.assignedLevels!.join(", ")
-                          : "No Assigned Levels yet",
+                      title: "Section Assignment",
+                      subtitle: (user.assignedLevels!.isNotEmpty ||
+                              user.isSpeakingAssigned!)
+                          ? [
+                              ...user.assignedLevels!,
+                              if (user.isSpeakingAssigned!) "Speaking"
+                            ].join(", ")
+                          : "No Assigned Sections yet",
                       actionIcon: Icons.edit,
                       onTap: () {
                         showAssignedLevelsDialog(
                           context,
-                          title: "Assigned levels",
+                          title: "Section Assignment",
                           allLevels: viewmodel.levels
                               .map(
                                 (level) => CheckboxData(title: level!.name),
@@ -138,9 +143,17 @@ class UserSettings extends StatelessWidget {
                                 (name) => CheckboxData(title: name),
                               )
                               .toList(),
-                          onSubmitted: (value) {
-                            viewmodel.updateAssignedLevels(user.id!, value);
+                          onSubmitted: (List<String> selectedTitles) {
+                            List<CheckboxData> selectedCheckboxData =
+                                selectedTitles
+                                    .map((title) => CheckboxData(
+                                        title: title, isSelected: true))
+                                    .toList();
+
+                            viewmodel.updateAssignedLevels(
+                                user.id!, selectedCheckboxData);
                           },
+                          isSpeakingAssigned: user.isSpeakingAssigned!,
                         );
                       },
                     ),
@@ -155,53 +168,94 @@ class UserSettings extends StatelessWidget {
   }
 }
 
-void showAssignedLevelsDialog(
-  BuildContext context, {
-  required String title,
-  required List<CheckboxData> allLevels,
-  required List<CheckboxData>? assignedLevels,
-  required Function(List<CheckboxData>?) onSubmitted,
-}) {
-  List<CheckboxState> states = [];
-
-  allLevels.forEach((element) {
-    if (assignedLevels != null &&
-        assignedLevels!.any((assigned) => assigned.title == element.title)) {
-      states.add(CheckboxState.checked);
-      element.value = true;
-    } else {
-      states.add(CheckboxState.unchecked);
-      element.value = false;
-    }
+void showAssignedLevelsDialog(BuildContext context,
+    {required String title,
+    required List<CheckboxData> allLevels,
+    required List<CheckboxData>? assignedLevels,
+    required Function(List<String>) onSubmitted,
+    required bool isSpeakingAssigned // Expecting List<String> here
+    }) {
+  // Initialize selected state from assigned levels
+  allLevels.forEach((level) {
+    level.isSelected =
+        assignedLevels?.any((assigned) => assigned.title == level.title) ??
+            false;
   });
 
   showDialog(
     context: context,
-    builder: (BuildContext dialogContext) => AlertDialog(
-      title: Text(title),
-      content: SingleChildScrollView(
-        child: CheckboxGroup(
-          states: states,
-          onChanged: (value) {
-            assignedLevels = value;
+    builder: (context) {
+      return AlertDialog(
+        title: Text(
+          title,
+          style: TextStyle(fontSize: 25.sp),
+        ),
+        content: StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CheckboxListTile(
+                  title: const Text("Speaking"),
+                  value: isSpeakingAssigned,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value != null) {
+                        isSpeakingAssigned = value;
+                      }
+                    });
+                  },
+                ),
+                ...allLevels.map((level) {
+                  return CheckboxListTile(
+                    title: Text(level.title),
+                    value: level.isSelected,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        if (value != null) {
+                          if (value) {
+                            for (var l in allLevels
+                                .where((l) => l.title != level.title)) {
+                              l.isSelected = false;
+                            }
+                          }
+                          level.isSelected = value;
+                        }
+                      });
+                    },
+                  );
+                }).toList(),
+              ],
+            );
           },
-          options: allLevels,
         ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            onSubmitted(assignedLevels);
-            Navigator.pop(dialogContext);
-          },
-          child: const Text("Submit"),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(dialogContext),
-          child: const Text("Cancel"),
-        ),
-      ],
-    ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              // Convert the selected CheckboxData to List<String>
+              List<String> selectedTitles = allLevels
+                  .where((level) => level.isSelected)
+                  .map((level) => level.title)
+                  .toList();
+              if (isSpeakingAssigned) {
+                selectedTitles.add("Speaking");
+              }
+
+              Navigator.pop(context);
+              onSubmitted(
+                  selectedTitles); // Pass the List<String> to onSubmitted
+            },
+            child: Text('Submit'),
+          ),
+        ],
+      );
+    },
   );
 }
 

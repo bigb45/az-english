@@ -26,75 +26,82 @@ class _LevelSelectionState extends State<LevelSelection> {
 
   @override
   Widget build(BuildContext context) {
-    LevelSelectionViewmodel viewmodel =
-        Provider.of<LevelSelectionViewmodel>(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
-        title: const Text(
-          'Assigned Levels',
-          style: TextStyle(color: Palette.primaryText),
+    return Consumer<LevelSelectionViewmodel>(
+      builder: (context, viewmodel, _) => Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          title: const Text(
+            'Assigned Levels',
+            style: TextStyle(color: Palette.primaryText),
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: viewmodel.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : viewmodel.error != null
-              ? ErrorWidget(
-                  error: viewmodel.error ??
-                      CustomException(
-                        "",
-                      ))
-              : SingleChildScrollView(
-                  child: SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Center(
-                        child: Wrap(
-                          alignment: WrapAlignment.center,
-                          runSpacing: 10.w,
-                          spacing: 10.w,
-                          children: [
-                            _buildCard(
-                                headerText: "Practice",
-                                isAssigned: true,
-                                cardText: "Practice english",
-                                onTap: () {
-                                  navigateToLevel(
-                                    levelId: viewmodel.levels[0].id,
-                                  );
-                                  viewmodel.fetchSections(
-                                    viewmodel.levels[0],
-                                  );
-                                }),
-                            _buildCard(
-                                headerText: "Speaking",
-                                isAssigned: true,
-                                cardText: "Practice Speaking",
-                                onTap: () {
-                                  context.push('/speaking_practice');
-                                })
-                            // ...viewmodel.levels.map(
-                            //   (level) {
-                            //     return _buildCard(
-                            //       headerText: level.name,
-                            //       isAssigned: level.isAssigned,
-                            //       cardText: level.description,
-                            //       onTap: () {
-                            //         navigateToLevel(levelId: level.id);
-                            //         viewmodel.fetchSections(level);
-                            //       },
-                            //     );
-                            //   },
-                            // ),
-                          ],
+        body: viewmodel.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : !viewmodel.isSpeakingAssigned &&
+                    (viewmodel.levels.isNotEmpty &&
+                        !viewmodel.levels[0].isAssigned)
+                ? Center(
+                    child: Text(
+                      'No Assigned Sections yet.',
+                      style: TextStyles.bodyLarge,
+                    ),
+                  )
+                : SingleChildScrollView(
+                    child: SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Center(
+                          child: Wrap(
+                            alignment: WrapAlignment.center,
+                            runSpacing: 10.w,
+                            spacing: 10.w,
+                            children: [
+                              if (viewmodel.levels.isNotEmpty)
+                                viewmodel.levels[0].isAssigned
+                                    ? _buildCard(
+                                        headerText: "Practice",
+                                        isAssigned: true,
+                                        cardText: "Practice english",
+                                        onTap: () {
+                                          navigateToLevel(
+                                            levelId: viewmodel.levels[0].id,
+                                          );
+                                          viewmodel.fetchSections(
+                                            viewmodel.levels[0],
+                                          );
+                                        })
+                                    : const SizedBox(),
+                              viewmodel.isSpeakingAssigned
+                                  ? _buildCard(
+                                      headerText: "Speaking",
+                                      isAssigned: true,
+                                      cardText: "Practice Speaking",
+                                      onTap: () {
+                                        context.push('/speaking_practice');
+                                      })
+                                  : const SizedBox(),
+                              // ...viewmodel.levels.map(
+                              //   (level) {
+                              //     return _buildCard(
+                              //       headerText: level.name,
+                              //       isAssigned: level.isAssigned,
+                              //       cardText: level.description,
+                              //       onTap: () {
+                              //         navigateToLevel(levelId: level.id);
+                              //         viewmodel.fetchSections(level);
+                              //       },
+                              //     );
+                              //   },
+                              // ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
+      ),
     );
   }
 }

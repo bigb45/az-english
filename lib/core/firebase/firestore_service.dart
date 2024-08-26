@@ -120,10 +120,13 @@ class FirestoreService {
           'sectionName': sectionName,
           'progress': 0.0,
           'lastStoppedQuestionIndex': 0,
+          "numberOfQuestionsWithDeletion": 0,
+          "numberOfQuestionWithoutDeletion": 0,
         };
       }
-      double progress = userData['assignedQuestions']
-          [RouteConstants.sectionNameId[sectionName]!]['progress'] as double;
+      double progress = (userData['assignedQuestions']
+              [RouteConstants.sectionNameId[sectionName]!]['progress'] as num)
+          .toDouble();
       Map<String, dynamic> sectionData = userData['assignedQuestions']
           [RouteConstants.sectionNameId[sectionName]!];
       Map<String, dynamic> questionData =
@@ -135,19 +138,27 @@ class FirestoreService {
       allQuestionsLength = questionsData.length;
       var sortedEntries = questionsData.entries.toList()
         ..sort((a, b) => a.key.compareTo(b.key));
-      filteredQuestionsData = sortedEntries.skip(lastQuestionIndex).toList();
-      filteredQuestionsLength = filteredQuestionsData.length;
 
       int maxKey = sortedEntries.isEmpty ? 0 : sortedEntries.last.key;
       int questionIndex = maxKey + 1;
 
-      for (var entry in filteredQuestionsData) {
+      for (var entry in sortedEntries) {
         var mapData = entry.value as Map<String, dynamic>;
         if (mapData["questionType"] == "passage" &&
             mapData.containsKey("questions")) {
           var embeddedQuestionsData =
               mapData["questions"] as Map<String, dynamic>;
-          for (var embeddedEntry in embeddedQuestionsData.entries) {
+          var sortedEntries = embeddedQuestionsData.entries.toList()
+            ..sort((a, b) => int.parse(a.key).compareTo(int.parse(b.key)));
+          var sortedEmbeddedQuestionsData =
+              Map<String, dynamic>.fromEntries(sortedEntries);
+          allQuestionsLength = sortedEmbeddedQuestionsData.length + 1;
+          var parentQuestionPath =
+              "${FirestoreConstants.usersCollections}/${_userModel!.id}/"
+              "assignedQuestions/"
+              "${RouteConstants.getSectionIds(sectionName)}/"
+              "${FirestoreConstants.questionsField}/${entry.key}";
+          for (var embeddedEntry in sortedEmbeddedQuestionsData.entries) {
             var embeddedQuestionMap =
                 embeddedEntry.value as Map<String, dynamic>;
             PassageQuestionModel embeddedQuestion = PassageQuestionModel(
@@ -162,14 +173,29 @@ class FirestoreService {
               voiceUrl: mapData['voiceUrl'],
               questionType: QuestionType.passage,
             );
+            embeddedQuestion.path =
+                "$parentQuestionPath/embeddedQuestions/${embeddedEntry.key}";
+
             questions[questionIndex++] =
                 embeddedQuestion; // Assign each embedded question a unique incremental key
           }
         } else {
           BaseQuestion question = BaseQuestion.fromMap(mapData);
           questions[entry.key] = question;
+          question.path =
+              "${FirestoreConstants.usersCollections}/${_userModel!.id}/"
+              "assignedQuestions/"
+              "${RouteConstants.getSectionIds(sectionName)}/"
+              "${FirestoreConstants.questionsField}/${entry.key}";
         }
+        filteredQuestionsData =
+            questions.entries.skip(lastQuestionIndex).toList();
+        filteredQuestionsLength = filteredQuestionsData.length;
       }
+      Map<int, BaseQuestion<dynamic>> filteredQuestionsMap = {
+        for (var entry in filteredQuestionsData) entry.key: entry.value,
+      };
+      questions = filteredQuestionsMap;
 
       await userDocRef
           .update({'assignedQuestions': userData['assignedQuestions']});
@@ -887,13 +913,21 @@ class FirestoreService {
 
   Future<void> deleteQuestionUsingFieldPath({
     required DocumentReference docRef,
+    bool? deletionRef,
     required String questionFieldPath,
   }) async {
     try {
       WriteBatch batch = FirebaseFirestore.instance.batch();
       batch.update(docRef, {questionFieldPath: FieldValue.delete()});
-      batch.update(
-          docRef, {'numberOfQuestionsWithDeletion': FieldValue.increment(-1)});
+      if (deletionRef == null) {
+        batch.update(docRef,
+            {'numberOfQuestionsWithDeletion': FieldValue.increment(-1)});
+      } else {
+        String numberOfQuestionsPath = questionFieldPath.replaceFirst(
+            RegExp(r'\.questions\.\d+$'), '.numberOfQuestionsWithDeletion');
+
+        batch.update(docRef, {numberOfQuestionsPath: FieldValue.increment(-1)});
+      }
       await batch.commit();
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
@@ -986,6 +1020,82 @@ class FirestoreService {
     } catch (e) {
       print('Error checking document existence: $e');
       return false;
+    }
+  }
+
+  Future<String?> assignQuestion({
+    required String userId,
+    required String sectionName,
+    required Map<String, dynamic> questionMap,
+  }) async {
+    String? questionId;
+    try {
+      DocumentReference userDocRef = _db
+          .collection(FirestoreConstants.usersCollections)
+          .doc(_userModel!.id);
+      DocumentSnapshot userDoc = await userDocRef.get();
+
+      if (!userDoc.exists) {
+        throw Exception('User document does not exist');
+      }
+
+      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+      if (!userData.containsKey('assignedQuestions') ||
+          userData["assignedQuestions"] == null) {
+        userData['assignedQuestions'] = {};
+      }
+      if (!userData['assignedQuestions']
+              .containsKey(RouteConstants.sectionNameId[sectionName]!) ||
+          userData["assignedQuestions"]
+                  [RouteConstants.sectionNameId[sectionName]!] ==
+              null) {
+        userData['assignedQuestions']
+            [RouteConstants.sectionNameId[sectionName]!] = {
+          'questions': {},
+          'sectionName': sectionName,
+          'progress': 0.0,
+          'lastStoppedQuestionIndex': 0,
+          "numberOfQuestionWithoutDeletion": 0,
+          "numberOfQuestionsWithDeletion": 0
+        };
+      }
+
+      await _db.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(userDocRef);
+
+        if (!snapshot.exists) {
+          throw Exception("User document does not exist!");
+        }
+
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+
+        Map<String, dynamic> sectionData = data['assignedQuestions']
+                [RouteConstants.sectionNameId[sectionName]!]
+            as Map<String, dynamic>;
+
+        int numberOfQuestions =
+            sectionData['numberOfQuestionWithoutDeletion'] ?? 0;
+        questionId = (numberOfQuestions + 1).toString();
+
+        sectionData['questions'][questionId] = questionMap;
+
+        sectionData['numberOfQuestionsWithDeletion'] = FieldValue.increment(1);
+        sectionData['numberOfQuestionWithoutDeletion'] =
+            FieldValue.increment(1);
+
+        transaction.set(
+          userDocRef,
+          {
+            'assignedQuestions': {
+              RouteConstants.sectionNameId[sectionName]!: sectionData
+            }
+          },
+          SetOptions(merge: true),
+        );
+      });
+      return questionId;
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
     }
   }
 

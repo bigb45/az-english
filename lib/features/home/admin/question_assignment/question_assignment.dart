@@ -1,8 +1,10 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/admin/question_assignment/question_assignment_viewmodel.dart';
+import 'package:ez_english/features/home/admin/users_settings_viewmodel.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:ez_english/widgets/vertical_list_item_card.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +29,11 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final viewmodel =
           Provider.of<QuestionAssignmentViewmodel>(context, listen: false);
+      final allUsersViewmodel =
+          Provider.of<UsersSettingsViewmodel>(context, listen: false);
       viewmodel.setValuesAndInit(
-        userId: widget.userId,
+        userId:
+            allUsersViewmodel.filteredUsers[int.tryParse(widget.userId)!]!.id!,
       );
     });
     super.initState();
@@ -82,7 +87,7 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                   Expanded(
                     child: DropdownButton<QuestionType>(
                       value: viewmodel.selectedQuestionType,
-                      items: const [
+                      items: [
                         DropdownMenuItem(
                           value: QuestionType.multipleChoice,
                           child: Text("Multiple Choice"),
@@ -108,7 +113,8 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                           child: Text("Fill in the blank"),
                         ),
                       ],
-                      hint: const Text("Question type"),
+                      hint: Text("Question type",
+                          style: TextStyles.wordChipTextStyle),
                       onChanged: (value) {
                         viewmodel.updateAndFilter(selectedQuestionType: value);
                       },
@@ -119,7 +125,7 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                   Expanded(
                     child: DropdownButton<String>(
                       value: viewmodel.selectedSection,
-                      items: const [
+                      items: [
                         DropdownMenuItem(
                           value: "reading",
                           child: Text("Reading"),
@@ -149,7 +155,10 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                           child: Text("Test"),
                         ),
                       ],
-                      hint: const Text("Question section"),
+                      hint: Text(
+                        "Question section",
+                        style: TextStyles.wordChipTextStyle,
+                      ),
                       onChanged: (value) {
                         viewmodel.updateAndFilter(selectedSection: value);
                       },
@@ -168,12 +177,20 @@ class _QuestionAssignmentState extends State<QuestionAssignment> {
                                     viewmodel.filteredQuestions[index];
                                 bool isAssigned = viewmodel.assignedQuestions
                                     .contains(question);
+                                BaseQuestion displayedQuestion = isAssigned
+                                    ? viewmodel.assignedQuestions.firstWhere(
+                                        (assignedQuestion) =>
+                                            assignedQuestion == question)
+                                    : question;
+
                                 return VerticalListItemCard(
                                   action: isAssigned ? Icons.delete : Icons.add,
                                   onIconPressed: () {
                                     isAssigned
-                                        ? viewmodel.removeQuestion(question)
-                                        : viewmodel.assignQuestion(question);
+                                        ? viewmodel.removeQuestion(
+                                            displayedQuestion, index)
+                                        : viewmodel
+                                            .assignQuestion(displayedQuestion);
                                   },
                                   onTap: () {
                                     showPreviewModalSheet(
