@@ -75,7 +75,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
             style: TextStyles.titleTextStyle,
           ),
           subtitle: Text(
-            "English practice",
+            "Speaking Practice",
             style: TextStyles.subtitleTextStyle,
           ),
         ),

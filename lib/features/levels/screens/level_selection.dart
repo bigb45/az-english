@@ -61,9 +61,9 @@ class _LevelSelectionState extends State<LevelSelection> {
                               if (viewmodel.levels.isNotEmpty)
                                 viewmodel.levels[0].isAssigned
                                     ? _buildCard(
-                                        headerText: "Practice",
+                                        headerText: "Speaking",
                                         isAssigned: true,
-                                        cardText: "Practice english",
+                                        cardText: "Practice Speaking",
                                         onTap: () {
                                           navigateToLevel(
                                             levelId: viewmodel.levels[0].id,
@@ -75,9 +75,9 @@ class _LevelSelectionState extends State<LevelSelection> {
                                     : const SizedBox(),
                               viewmodel.isSpeakingAssigned
                                   ? _buildCard(
-                                      headerText: "Speaking",
+                                      headerText: "Practice",
                                       isAssigned: true,
-                                      cardText: "Practice Speaking",
+                                      cardText: "Practice English",
                                       onTap: () {
                                         context.push('/speaking_practice');
                                       })
