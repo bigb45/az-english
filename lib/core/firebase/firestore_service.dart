@@ -374,9 +374,9 @@ class FirestoreService {
       Map<String, dynamic> levelProgressData =
           userData['levelsProgress'][levelName];
       LevelProgress levelProgress = LevelProgress.fromMap(levelProgressData);
-
+      bool isFirstWeek = ((levelProgress.currentDay - 1) ~/ 5) % 2 == 0;
       List<String> daySections =
-          getSectionsForDay(levelProgress.currentDay, true);
+          getSectionsForDay(levelProgress.currentDay, isFirstWeek);
 
       WriteBatch batch = FirebaseFirestore.instance.batch();
 
