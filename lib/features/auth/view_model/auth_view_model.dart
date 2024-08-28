@@ -111,6 +111,7 @@ class AuthViewModel extends ChangeNotifier {
           progress: 0.0,
           lastStoppedQuestionIndex: 0,
           assignedLevels: [],
+          currentDay: 1,
         );
         await _firestoreService.addUser(user);
         _subscribeToAuthChanges();

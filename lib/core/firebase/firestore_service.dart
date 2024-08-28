@@ -207,6 +207,14 @@ class FirestoreService {
     }
   }
 
+  void updateQuestionsLength(
+    int allQuestionsLengthTemp,
+    int filteredQuestionLengthTemp,
+  ) {
+    allQuestionsLength = allQuestionsLengthTemp;
+    filteredQuestionsLength = filteredQuestionLengthTemp;
+  }
+
   Future<void> updateCurrentSectionQuestionIndexForAssignedQuestions(
       int newQuestionIndex, String sectionName) async {
     try {

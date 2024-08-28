@@ -25,7 +25,7 @@ class SpeakingPractice extends StatefulWidget {
 }
 
 class _SpeakingPracticeState extends State<SpeakingPractice> {
-  late BaseQuestion currentQuestion;
+  BaseQuestion? currentQuestion;
 
   @override
   Widget build(BuildContext context) {
@@ -46,28 +46,30 @@ class _SpeakingPracticeState extends State<SpeakingPractice> {
               .then((reason) => viewmodel.resetError());
         }
       });
-      if (viewmodel.currentIndex == viewmodel.questions.length) {
+      if (viewmodel.currentIndex == viewmodel.questions.length &&
+          viewmodel.isLoading == false) {
         return FinishedQuestionsScreen(
           onFinished: () async {
-            await viewmodel.updateSectionProgress().then((value) {
+            await viewmodel.updateUserProgress().then((value) {
               context.pop();
               context.pop();
             });
           },
         );
       }
+      if (viewmodel.isLoading == false) {
+        currentQuestion = viewmodel.questions[viewmodel.currentIndex];
 
-      currentQuestion = viewmodel.questions[viewmodel.currentIndex];
+        if (currentQuestion?.questionType == QuestionType.passage) {
+          passageQuestion = currentQuestion as PassageQuestionModel;
 
-      if (currentQuestion.questionType == QuestionType.passage) {
-        passageQuestion = currentQuestion as PassageQuestionModel;
-
-        if (passageQuestion!.questions.isNotEmpty &&
-            passageQuestion!.questions.containsKey(1)) {
-          currentQuestion = passageQuestion!.questions[1]!;
-        } else {
-          throw Exception(
-              "No embedded questions found or first question is missing.");
+          if (passageQuestion!.questions.isNotEmpty &&
+              passageQuestion!.questions.containsKey(1)) {
+            currentQuestion = passageQuestion!.questions[1]!;
+          } else {
+            throw Exception(
+                "No embedded questions found or first question is missing.");
+          }
         }
       }
       return PopScope(
@@ -110,77 +112,92 @@ class _SpeakingPracticeState extends State<SpeakingPractice> {
                 ),
               ),
               subtitle: Text(
-                currentQuestion.titleInEnglish ?? "Daily Conversations",
+                currentQuestion?.titleInEnglish ?? "Daily Conversations",
                 style: TextStyles.subtitleTextStyle.copyWith(
                   color: Palette.primaryText,
                 ),
               ),
             ),
           ),
-          body: SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          if (passageQuestion != null)
-                            Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 10.0,
-                                ),
-                                child: ExpandableTextBox(
-                                    paragraph:
-                                        passageQuestion!.passageInEnglish!,
-                                    paragraphTranslation:
-                                        passageQuestion!.passageInArabic,
-                                    isFocused: false,
-                                    readMoreText:
-                                        AppStrings.mcQuestionReadMoreText)),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: ProgressBar(value: viewmodel.progress!),
-                          ),
-                          buildQuestion(
-                            answerState: viewmodel.answerState,
-                            onChanged: viewmodel.updateAnswer,
-                            question: currentQuestion,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                AnimatedOpacity(
-                  opacity: viewmodel.isSkipVisible ? 1 : 0,
-                  duration: const Duration(milliseconds: 200),
-                  child: Visibility(
-                    visible: viewmodel.isSkipVisible,
-                    child: Padding(
-                      padding: EdgeInsets.all(Constants.padding8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          SkipQuestionButton(
-                            onPressed: viewmodel.incrementIndex,
-                            // size: ,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                EvaluationSection(
-                  state: viewmodel.answerState,
-                  onContinue: viewmodel.incrementIndex,
-                  onPressed: viewmodel.evaluateAnswer,
+          body: viewmodel.isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
                 )
-              ],
-            ),
-          ),
+              : SafeArea(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                if (passageQuestion != null)
+                                  Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 10.0,
+                                      ),
+                                      child: ExpandableTextBox(
+                                          paragraph: passageQuestion!
+                                              .passageInEnglish!,
+                                          paragraphTranslation:
+                                              passageQuestion!.passageInArabic,
+                                          isFocused: false,
+                                          readMoreText: AppStrings
+                                              .mcQuestionReadMoreText)),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child:
+                                      ProgressBar(value: viewmodel.progress!),
+                                ),
+                                buildQuestion(
+                                  answerState: viewmodel.answerState,
+                                  onChanged: viewmodel.updateAnswer,
+                                  question: currentQuestion!,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      AnimatedOpacity(
+                        opacity: viewmodel.isSkipVisible ? 1 : 0,
+                        duration: const Duration(milliseconds: 200),
+                        child: Visibility(
+                          visible: viewmodel.isSkipVisible,
+                          child: Padding(
+                            padding: EdgeInsets.all(Constants.padding8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                SkipQuestionButton(
+                                  onPressed: () {
+                                    passageQuestion = null;
+                                    viewmodel.incrementIndex();
+                                  },
+                                  // size: ,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      EvaluationSection(
+                        state: viewmodel.answerState,
+                        onContinue: () {
+                          passageQuestion = null;
+                          viewmodel.incrementIndex();
+                        },
+                        onPressed: () {
+                          passageQuestion = null;
+                          viewmodel.evaluateAnswer();
+                        },
+                      )
+                    ],
+                  ),
+                ),
         ),
       );
     });

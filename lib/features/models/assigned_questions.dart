@@ -8,6 +8,7 @@ class AssignedQuestions {
   int numberOfQuestionWithoutDeletion;
   int lastStoppedQuestionIndex;
   List<String?>? assignedLevels;
+  int currentDay;
   AssignedQuestions({
     required this.questions,
     required this.sectionName,
@@ -15,6 +16,7 @@ class AssignedQuestions {
     this.assignedLevels,
     this.numberOfQuestionsWithDeletion = 0,
     this.numberOfQuestionWithoutDeletion = 0,
+    this.currentDay = 0,
     required this.lastStoppedQuestionIndex,
   });
 
@@ -26,6 +28,7 @@ class AssignedQuestions {
       progress: map['progress'].toDouble(),
       numberOfQuestionsWithDeletion: map["numberOfQuestionsWithDeletion"],
       numberOfQuestionWithoutDeletion: map["numberOfQuestionWithoutDeletion"],
+      currentDay: map["currentDay"],
       lastStoppedQuestionIndex: map['lastStoppedQuestionIndex'],
       assignedLevels: List<String?>.from(map["assignedLevels"] ?? []),
     );
@@ -40,6 +43,7 @@ class AssignedQuestions {
       "numberOfQuestionWithoutDeletion": numberOfQuestionWithoutDeletion,
       'lastStoppedQuestionIndex': lastStoppedQuestionIndex,
       "assignedLevels": assignedLevels,
+      'currentDay': currentDay,
     };
   }
 }

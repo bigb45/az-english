@@ -1,12 +1,16 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/features/models/assigned_questions.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
+import 'package:ez_english/features/models/unit.dart';
+import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,8 +30,8 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     currentIndex = 0;
     levelName = RouteConstants.getLevelName(levelId!);
     sectionName = RouteConstants.speakingSectionName;
-// this is why, no await
     await fetchQuestions();
+    await _fetchQuestions();
     if (_questions.isNotEmpty &&
         _questions[currentIndex].questionType == QuestionType.youtubeLesson) {
       answerState = EvaluationState.noState;
@@ -36,6 +40,7 @@ class SpeakingSectionViewmodel extends BaseViewModel {
 
   Future<void> fetchQuestions() async {
     isLoading = true;
+    notifyListeners();
     try {
       User? user = _firebaseAuthService.getUser();
       var questions = await _firestoreService.fetchAssignedQuestions(
@@ -49,6 +54,100 @@ class SpeakingSectionViewmodel extends BaseViewModel {
       error = CustomException(e.toString());
     } finally {
       isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> _fetchQuestions() async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      List<BaseQuestion> embeddedPassageQuestions = [];
+      User? user = _firebaseAuthService.getUser();
+      UserModel? _userModel = await _firestoreService.getUser(user!.uid);
+      AssignedQuestions assignedQuestions = _userModel!.assignedQuestions![
+          RouteConstants.sectionNameId[RouteConstants.speakingSectionName]]!;
+      int currentDay = assignedQuestions.currentDay;
+      bool isFirstWeek = ((currentDay - 1) ~/ 5) % 2 == 0;
+      List<String> daySections =
+          _firestoreService.getSectionsForDay(currentDay, isFirstWeek);
+      int unitIndex;
+      int tempAllQuestionsLength = 0;
+      int tempFilterQuestionsLength = 0;
+
+      if (isFirstWeek) {
+        // First week pattern
+        unitIndex = (currentDay - 1) ~/ 2 + 1;
+      } else {
+        // Second week pattern
+        unitIndex = (currentDay - 2) ~/ 2 + 1;
+      }
+      for (var section in daySections) {
+        String tempUnitNumber = (section == RouteConstants.testSectionName ||
+                section == RouteConstants.vocabularySectionName)
+            ? "$currentDay"
+            : "$unitIndex";
+        if (assignedQuestions.assignedLevels!.isNotEmpty) {
+          for (var level in assignedQuestions.assignedLevels!) {
+            var sectionQuestions = await _firestoreService.fetchQuestions(
+                level: level!, section: section!, day: tempUnitNumber);
+            tempAllQuestionsLength = sectionQuestions.length;
+            List<BaseQuestion<dynamic>> finalSectionQuestions = [];
+
+            for (var entry in sectionQuestions) {
+              if (entry.questionType == QuestionType.passage) {
+                PassageQuestionModel? passageQuestion =
+                    entry as PassageQuestionModel;
+                var embeddedQuestionsData = passageQuestion.questions;
+                var parentQuestionPath = entry.path;
+                for (var embeddedEntry in embeddedQuestionsData.entries) {
+                  var embeddedQuestionMap = embeddedEntry.value as BaseQuestion;
+                  ;
+                  PassageQuestionModel embeddedQuestion = PassageQuestionModel(
+                      passageInEnglish: entry.passageInEnglish,
+                      passageInArabic: entry.passageInArabic,
+                      titleInArabic: entry.titleInArabic,
+                      titleInEnglish: entry.titleInEnglish,
+                      questions: {1: embeddedQuestionMap},
+                      questionTextInEnglish: entry.questionTextInEnglish,
+                      questionTextInArabic: entry.questionTextInArabic,
+                      imageUrl: entry.imageUrl,
+                      voiceUrl: entry.voiceUrl,
+                      questionType: QuestionType.passage,
+                      sectionName: SectionNameExtension.fromString(section!));
+                  embeddedQuestion.path =
+                      "$parentQuestionPath/embeddedQuestions/${embeddedEntry.key}";
+                  embeddedPassageQuestions.add(embeddedQuestion);
+                  // finalSectionQuestions.add(embeddedQuestion);
+                }
+                finalSectionQuestions.addAll(embeddedPassageQuestions);
+                sectionQuestions = (embeddedPassageQuestions);
+              } else {
+                finalSectionQuestions.add(entry);
+              }
+            }
+
+            _questions.addAll(finalSectionQuestions);
+            sectionQuestions = [];
+            embeddedPassageQuestions = [];
+          }
+        }
+      }
+      tempAllQuestionsLength = _questions.length;
+      _questions =
+          _questions.skip(assignedQuestions.lastStoppedQuestionIndex).toList();
+      tempFilterQuestionsLength = _questions.length;
+
+      _firestoreService.updateQuestionsLength(
+          tempAllQuestionsLength, tempFilterQuestionsLength);
+      error = null;
+    } on CustomException catch (e) {
+      error = e;
+    } catch (e) {
+      error = CustomException(e.toString());
+    } finally {
+      isLoading = false;
+      print("questions: ${_questions.length}");
       notifyListeners();
     }
   }
@@ -95,8 +194,64 @@ class SpeakingSectionViewmodel extends BaseViewModel {
 
   @override
   Future<void> updateSectionProgress() async {
-    _firestoreService.updateCurrentSectionQuestionIndexForAssignedQuestions(
-        currentIndex, sectionName!);
+    isLoading = true;
+    notifyListeners();
+    try {
+      await _firestoreService
+          .updateCurrentSectionQuestionIndexForAssignedQuestions(
+              currentIndex, sectionName!);
+    } catch (e) {
+      error = CustomException("An undefined error ocurred ${e.toString()}");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  @override
+  Future<void> updateUserProgress() async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      User? user = _firebaseAuthService.getUser();
+      UserModel? _userModel = await _firestoreService.getUser(user!.uid);
+      AssignedQuestions assignedQuestions = _userModel!.assignedQuestions![
+          RouteConstants.sectionNameId[RouteConstants.speakingSectionName]]!;
+      int currentDay = assignedQuestions.currentDay;
+      currentDay = currentDay + 1;
+      DocumentReference userDocRef =
+          FirebaseFirestore.instance.collection("users").doc(_userModel.id);
+      await _firestoreService.updateQuestionUsingFieldPath(
+          docPath: userDocRef,
+          fieldPath: FieldPath([
+            'assignedQuestions',
+            RouteConstants.sectionNameId[RouteConstants.speakingSectionName]!,
+            "currentDay"
+          ]),
+          newValue: currentDay);
+      await _firestoreService.updateQuestionUsingFieldPath(
+          docPath: userDocRef,
+          fieldPath: FieldPath([
+            'assignedQuestions',
+            RouteConstants.sectionNameId[RouteConstants.speakingSectionName]!,
+            "lastStoppedQuestionIndex"
+          ]),
+          newValue: 0);
+      await _firestoreService.updateQuestionUsingFieldPath(
+          docPath: userDocRef,
+          fieldPath: FieldPath([
+            'assignedQuestions',
+            RouteConstants.sectionNameId[RouteConstants.speakingSectionName]!,
+            "progress"
+          ]),
+          newValue: 0);
+    } catch (e) {
+      // this causes speaking section error
+      error = CustomException("An undefined error ocurred ${e.toString()}");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
   void reset() {
