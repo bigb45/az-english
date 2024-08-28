@@ -1,12 +1,15 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/features/models/assigned_questions.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/checkbox.dart';
+import 'package:flutter/material.dart';
 
 class UsersSettingsViewmodel extends BaseViewModel {
   List<UserModel?> _users = [];
@@ -111,44 +114,58 @@ class UsersSettingsViewmodel extends BaseViewModel {
     }
   }
 
-  Future<void> updateAssignedLevels(
-      String userId, List<CheckboxData>? levels) async {
+  Future<void> updateAssignedLevels(String userId, List<CheckboxData>? levels,
+      {required bool assignedQuestion}) async {
     List<String> assignedLevels = levels?.map((e) => e.title).toList() ?? [];
     try {
       DocumentReference userDocRef =
           FirebaseFirestore.instance.collection("users").doc(userId);
 
-      List<String> speakingLevels =
-          assignedLevels.where((level) => level == "Speaking").toList();
       List<String> otherLevels =
           assignedLevels.where((level) => level != "Speaking").toList();
-
-      if (speakingLevels.isNotEmpty) {
+      if (!assignedQuestion) {
         await _firestoreService.updateQuestionUsingFieldPath(
           docPath: userDocRef,
-          fieldPath: FieldPath(const ['isSpeakingAssigned']),
-          newValue: true,
+          fieldPath: FieldPath(const ['assignedLevels']),
+          newValue: otherLevels,
         );
+        UserModel? user = _users.firstWhere((user) => user?.id == userId);
+        if (user != null) {
+          user.assignedLevels = otherLevels;
+          user.isSpeakingAssigned = otherLevels.isNotEmpty;
+        }
       } else {
         await _firestoreService.updateQuestionUsingFieldPath(
           docPath: userDocRef,
-          fieldPath: FieldPath(const ['isSpeakingAssigned']),
-          newValue: false,
+          fieldPath: FieldPath([
+            'assignedQuestions',
+            RouteConstants.sectionNameId[RouteConstants.speakingSectionName]!,
+            "assignedLevels"
+          ]),
+          newValue: otherLevels,
         );
+        UserModel? user = _users.firstWhere((user) => user?.id == userId);
+        if (user != null) {
+          user
+              .assignedQuestions![RouteConstants
+                  .sectionNameId[RouteConstants.speakingSectionName]]!
+              .assignedLevels = otherLevels;
+          user.isSpeakingAssigned = otherLevels.isNotEmpty;
+        }
+        if (otherLevels.isNotEmpty) {
+          await _firestoreService.updateQuestionUsingFieldPath(
+            docPath: userDocRef,
+            fieldPath: FieldPath(const ['isSpeakingAssigned']),
+            newValue: true,
+          );
+        } else {
+          await _firestoreService.updateQuestionUsingFieldPath(
+            docPath: userDocRef,
+            fieldPath: FieldPath(const ['isSpeakingAssigned']),
+            newValue: false,
+          );
+        }
       }
-      await _firestoreService.updateQuestionUsingFieldPath(
-        docPath: userDocRef,
-        fieldPath: FieldPath(const ['assignedLevels']),
-        newValue: otherLevels,
-      );
-
-      // Update the local user model
-      UserModel? user = _users.firstWhere((user) => user?.id == userId);
-      if (user != null) {
-        user.assignedLevels = otherLevels;
-        user.isSpeakingAssigned = speakingLevels.isNotEmpty;
-      }
-
       notifyListeners();
     } catch (e) {
       print("Error updating assigned levels: $e");

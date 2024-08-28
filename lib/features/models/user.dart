@@ -26,10 +26,9 @@ class UserModel {
       this.assignedLevels,
       this.levelsProgress,
       this.examResults,
-      assignedQuestions,
+      this.assignedQuestions,
       this.isSpeakingAssigned,
       this.userType = UserType.student});
-// TODO: Fetch the assigned questions when needed only
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       id: map['id'],
@@ -70,7 +69,8 @@ class UserModel {
       'emailAddress': emailAddress,
       'password': password,
       'assignedLevels': assignedLevels,
-      'assignedQuestions': assignedQuestions,
+      'assignedQuestions':
+          assignedQuestions?.map((key, value) => MapEntry(key, value.toMap())),
       'levelsProgress':
           levelsProgress?.map((key, value) => MapEntry(key, value.toMap())),
       'examResults':

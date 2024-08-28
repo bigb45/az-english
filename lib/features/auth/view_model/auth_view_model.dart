@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/home/viewmodel/test_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
+import 'package:ez_english/features/models/assigned_questions.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/features/sections/grammar/grammar_section_viewmodel.dart';
 import 'package:ez_english/features/sections/listening/viewmodel/listening_section_viewmodel.dart';
@@ -99,8 +101,17 @@ class AuthViewModel extends ChangeNotifier {
       if (userCredential.user != null) {
         user.id = userCredential.user!.uid;
         user.assignedLevels = [];
-        user.assignedQuestions = {};
         user.isSpeakingAssigned = false;
+        user.assignedQuestions = {};
+        user.assignedQuestions![RouteConstants
+                .sectionNameId[RouteConstants.speakingSectionName]!] =
+            AssignedQuestions(
+          questions: {},
+          sectionName: RouteConstants.speakingSectionName,
+          progress: 0.0,
+          lastStoppedQuestionIndex: 0,
+          assignedLevels: [],
+        );
         await _firestoreService.addUser(user);
         _subscribeToAuthChanges();
       }

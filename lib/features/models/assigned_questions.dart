@@ -7,11 +7,12 @@ class AssignedQuestions {
   int numberOfQuestionsWithDeletion;
   int numberOfQuestionWithoutDeletion;
   int lastStoppedQuestionIndex;
-
+  List<String?>? assignedLevels;
   AssignedQuestions({
     required this.questions,
     required this.sectionName,
     required this.progress,
+    this.assignedLevels,
     this.numberOfQuestionsWithDeletion = 0,
     this.numberOfQuestionWithoutDeletion = 0,
     required this.lastStoppedQuestionIndex,
@@ -26,6 +27,7 @@ class AssignedQuestions {
       numberOfQuestionsWithDeletion: map["numberOfQuestionsWithDeletion"],
       numberOfQuestionWithoutDeletion: map["numberOfQuestionWithoutDeletion"],
       lastStoppedQuestionIndex: map['lastStoppedQuestionIndex'],
+      assignedLevels: List<String?>.from(map["assignedLevels"] ?? []),
     );
   }
 
@@ -37,6 +39,7 @@ class AssignedQuestions {
       "numberOfQuestionsWithDeletion": numberOfQuestionsWithDeletion,
       "numberOfQuestionWithoutDeletion": numberOfQuestionWithoutDeletion,
       'lastStoppedQuestionIndex': lastStoppedQuestionIndex,
+      "assignedLevels": assignedLevels,
     };
   }
 }

@@ -19,7 +19,7 @@ class UserSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authViewmodel = Provider.of<AuthViewModel>(context, listen: false);
-
+    List<String?>? assignedLevels;
     return Consumer<UsersSettingsViewmodel>(
       builder: (context, viewmodel, _) {
         int userIdNumber = int.tryParse(userId)!;
@@ -34,6 +34,12 @@ class UserSettings extends StatelessWidget {
         }
 
         UserModel? user = viewmodel.users[userIdNumber];
+
+        assignedLevels = user!
+            .assignedQuestions![RouteConstants
+                .sectionNameId[RouteConstants.speakingSectionName]]!
+            .assignedLevels;
+
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -70,7 +76,7 @@ class UserSettings extends StatelessWidget {
                         }),
                     InfoCard(
                       title: AppStrings.username,
-                      subtitle: user!.studentName!,
+                      subtitle: user.studentName!,
                       actionIcon: Icons.edit,
                       onTap: () {
                         showEditDialog(
@@ -120,19 +126,17 @@ class UserSettings extends StatelessWidget {
                       },
                     ),
                     InfoCard(
-                      title: "Section Assignment",
-                      subtitle: (user.assignedLevels!.isNotEmpty ||
-                              user.isSpeakingAssigned!)
+                      title: "Speaking Section",
+                      subtitle: (user.assignedLevels!.isNotEmpty)
                           ? [
                               ...user.assignedLevels!,
-                              if (user.isSpeakingAssigned!) "Speaking"
                             ].join(", ")
                           : "No Assigned Sections yet",
                       actionIcon: Icons.edit,
                       onTap: () {
                         showAssignedLevelsDialog(
                           context,
-                          title: "Section Assignment",
+                          title: "Level Assignment",
                           allLevels: viewmodel.levels
                               .map(
                                 (level) => CheckboxData(title: level!.name),
@@ -151,9 +155,46 @@ class UserSettings extends StatelessWidget {
                                     .toList();
 
                             viewmodel.updateAssignedLevels(
-                                user.id!, selectedCheckboxData);
+                                user.id!, selectedCheckboxData,
+                                assignedQuestion: false);
                           },
-                          isSpeakingAssigned: user.isSpeakingAssigned!,
+                        );
+                      },
+                    ),
+                    InfoCard(
+                      title: "English Practice",
+                      subtitle:
+                          (assignedLevels != null && assignedLevels!.isNotEmpty)
+                              ? [
+                                  ...assignedLevels ?? [],
+                                ].join(", ")
+                              : "No Assigned Sections yet",
+                      actionIcon: Icons.edit,
+                      onTap: () {
+                        showAssignedLevelsDialog(
+                          context,
+                          title: "Level Assignment",
+                          allLevels: viewmodel.levels
+                              .map(
+                                (level) => CheckboxData(title: level!.name),
+                              )
+                              .toList(),
+                          assignedLevels: assignedLevels
+                              ?.map(
+                                (name) => CheckboxData(title: name ?? ""),
+                              )
+                              .toList(),
+                          onSubmitted: (List<String> selectedTitles) {
+                            List<CheckboxData> selectedCheckboxData =
+                                selectedTitles
+                                    .map((title) => CheckboxData(
+                                        title: title, isSelected: true))
+                                    .toList();
+
+                            viewmodel.updateAssignedLevels(
+                                user.id!, selectedCheckboxData,
+                                assignedQuestion: true);
+                          },
                         );
                       },
                     ),
@@ -168,13 +209,13 @@ class UserSettings extends StatelessWidget {
   }
 }
 
-void showAssignedLevelsDialog(BuildContext context,
-    {required String title,
-    required List<CheckboxData> allLevels,
-    required List<CheckboxData>? assignedLevels,
-    required Function(List<String>) onSubmitted,
-    required bool isSpeakingAssigned // Expecting List<String> here
-    }) {
+void showAssignedLevelsDialog(
+  BuildContext context, {
+  required String title,
+  required List<CheckboxData> allLevels,
+  required List<CheckboxData>? assignedLevels,
+  required Function(List<String>) onSubmitted,
+}) {
   // Initialize selected state from assigned levels
   allLevels.forEach((level) {
     level.isSelected =
@@ -195,17 +236,6 @@ void showAssignedLevelsDialog(BuildContext context,
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CheckboxListTile(
-                  title: const Text("Speaking"),
-                  value: isSpeakingAssigned,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      if (value != null) {
-                        isSpeakingAssigned = value;
-                      }
-                    });
-                  },
-                ),
                 ...allLevels.map((level) {
                   return CheckboxListTile(
                     title: Text(level.title),
@@ -243,9 +273,6 @@ void showAssignedLevelsDialog(BuildContext context,
                   .where((level) => level.isSelected)
                   .map((level) => level.title)
                   .toList();
-              if (isSpeakingAssigned) {
-                selectedTitles.add("Speaking");
-              }
 
               Navigator.pop(context);
               onSubmitted(
