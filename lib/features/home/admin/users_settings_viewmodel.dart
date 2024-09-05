@@ -38,6 +38,9 @@ class UsersSettingsViewmodel extends BaseViewModel {
   @override
   FutureOr<void> init() {}
 
+  Future<void> uploadWorksheetSolution({
+    required String imagePath,
+  }) async {}
   void filterUsers(String query) {
     printDebug("filtering by $query");
     _filteredUsers = _users
