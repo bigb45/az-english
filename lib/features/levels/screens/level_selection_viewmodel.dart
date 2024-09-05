@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
@@ -30,6 +31,11 @@ class LevelSelectionViewmodel extends BaseViewModel {
       await fetchLevels();
       await fetchUserData(_authProvider.user!.uid);
     }
+  }
+
+  Future<void> uploadWorksheetImage({required String imagePath}) async {
+    final selectedImage = File(imagePath);
+    print("uploading image at path: $imagePath");
   }
 
   Future<void> fetchUserData(String userId) async {

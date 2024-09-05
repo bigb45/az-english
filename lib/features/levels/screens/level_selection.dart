@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
@@ -6,10 +8,12 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
+import 'package:ez_english/widgets/upload_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class LevelSelection extends StatefulWidget {
@@ -82,6 +86,46 @@ class _LevelSelectionState extends State<LevelSelection> {
                                         context.push('/speaking_practice');
                                       })
                                   : const SizedBox(),
+
+                              UploadCard(
+                                onPressed: () async {
+                                  // TODO: Implement image upload in viewmodel
+                                  final pickedImage =
+                                      await ImagePicker().pickImage(
+                                    source: ImageSource.gallery,
+                                  );
+                                  if (pickedImage != null) {
+                                    viewmodel.uploadWorksheetImage(
+                                        imagePath: pickedImage.path);
+                                  }
+                                },
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    AutoSizeText(
+                                      'Add Worksheet',
+                                      style: TextStyles.cardHeader
+                                          .copyWith(fontSize: 18.sp),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 3,
+                                    ),
+                                    const Expanded(
+                                      child: FittedBox(
+                                        child: Icon(
+                                          Icons.add_rounded,
+                                          color: Palette.secondaryText,
+                                        ),
+                                      ),
+                                    ),
+                                    AutoSizeText(
+                                      "Submit your worksheet",
+                                      style: TextStyles.cardText,
+                                      textAlign: TextAlign.center,
+                                      maxLines: 3,
+                                    ),
+                                  ],
+                                ),
+                              )
                               // ...viewmodel.levels.map(
                               //   (level) {
                               //     return _buildCard(
