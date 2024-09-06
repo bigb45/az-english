@@ -8,6 +8,7 @@ import 'package:ez_english/features/home/admin/admin_screen.dart';
 import 'package:ez_english/features/home/admin/question_assignment/question_assignment.dart';
 import 'package:ez_english/features/home/admin/users/all_users.dart';
 import 'package:ez_english/features/home/admin/users/user_settings.dart';
+import 'package:ez_english/features/home/admin/worksheets/admin_worksheet_view.dart';
 import 'package:ez_english/features/home/admin/worksheets/all_worksheets.dart';
 import 'package:ez_english/features/home/content/add_question.dart';
 import 'package:ez_english/features/home/content/content_screen.dart';
@@ -15,7 +16,7 @@ import 'package:ez_english/features/home/content/edit_question.dart';
 import 'package:ez_english/features/home/test/test_overview.dart';
 import 'package:ez_english/features/levels/screens/speaking/landing_page.dart';
 import 'package:ez_english/features/levels/screens/speaking/speaking_practice.dart';
-import 'package:ez_english/features/levels/screens/worksheet_view/worksheet_view.dart';
+import 'package:ez_english/features/levels/screens/worksheet_view/student_worksheet_view.dart';
 import 'package:ez_english/features/models/test_result.dart';
 import 'package:ez_english/features/sections/components/youtube_lesson.dart';
 import 'package:ez_english/features/sections/exam/test.dart';
@@ -192,7 +193,7 @@ final loggedInRouter = GoRouter(
 
     GoRoute(
       path: '/student_worksheet_view',
-      builder: (context, state) => WorksheetView(),
+      builder: (context, state) => StudentWorksheetView(),
     ),
 
     GoRoute(
@@ -204,7 +205,9 @@ final loggedInRouter = GoRouter(
         path: '/worksheet/:worksheetId',
         builder: (context, state) {
           final worksheetId = state.pathParameters['worksheetId'] ?? "-1";
-          return WorksheetView();
+          return AdminWorksheetView(
+            worksheetId: worksheetId,
+          );
         }),
   ],
 );
