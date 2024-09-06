@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/home/admin/users_settings_viewmodel.dart';
+import 'package:ez_english/features/home/admin/users/users_settings_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/list_item_card.dart';

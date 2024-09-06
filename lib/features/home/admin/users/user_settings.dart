@@ -1,6 +1,6 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
-import 'package:ez_english/features/home/admin/users_settings_viewmodel.dart';
+import 'package:ez_english/features/home/admin/users/users_settings_viewmodel.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';

@@ -1,5 +1,5 @@
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
+import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';

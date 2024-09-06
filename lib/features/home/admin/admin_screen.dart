@@ -2,7 +2,7 @@
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/home/admin/users_settings_viewmodel.dart';
+import 'package:ez_english/features/home/admin/users/users_settings_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
@@ -87,7 +87,8 @@ class AdminScreen extends StatelessWidget {
                         source: ImageSource.gallery,
                       );
                       if (pickedImage != null && context.mounted) {
-                        Provider.of<UsersSettingsViewmodel>(context)
+                        Provider.of<UsersSettingsViewmodel>(context,
+                                listen: false)
                             .uploadWorksheetSolution(
                                 imagePath: pickedImage.path);
                       }
@@ -111,42 +112,35 @@ class AdminScreen extends StatelessWidget {
                           ),
                         ),
                         AutoSizeText(
-                          "Submit your worksheet",
+                          "Add worksheet solution",
                           style: TextStyles.cardText,
                           textAlign: TextAlign.center,
                           maxLines: 3,
                         ),
                       ],
                     ),
-                  )
-                  // SelectableCard(
-                  //   onPressed: null,
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //     children: [
-                  //       SvgPicture.asset(
-                  //         "assets/images/statistics.svg",
-                  //         height: 100.h,
-                  //         width: 100.w,
-                  //       ),
-                  //       Text(
-                  //         "Statistics",
-                  //         style: TextStyles.bodyLarge,
-                  //       )
-                  //     ],
-                  //   ),
-                  // ),
-                  // ElevatedButton(
-                  //     onPressed: () async {
-                  //       UploadDataViewmodel viewmodel =
-                  //           Provider.of<UploadDataViewmodel>(context,
-                  //               listen: false);
-                  //       List<Level> levels = await viewmodel.parseData();
-                  //       for (var i = 0; i < levels.length; i++) {
-                  //         viewmodel.saveLevelToFirestore(levels[i]);
-                  //       }
-                  //     },
-                  //     child: Text("Add data"))
+                  ),
+                  SelectableCard(
+                    onPressed: () {
+                      context.push(
+                        "/all_worksheets",
+                      );
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/images/worksheets.svg",
+                          height: 80.h,
+                          width: 80.w,
+                        ),
+                        Text(
+                          "Worksheets",
+                          style: TextStyles.bodyLarge,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

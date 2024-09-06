@@ -1,6 +1,6 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/admin/question_assignment/question_assignment_viewmodel.dart';
-import 'package:ez_english/features/home/admin/users_settings_viewmodel.dart';
+import 'package:ez_english/features/home/admin/users/users_settings_viewmodel.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/theme/palette.dart';
