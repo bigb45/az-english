@@ -6,6 +6,7 @@ import 'package:ez_english/features/home/admin/users/users_settings_viewmodel.da
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
+import 'package:ez_english/widgets/text_field.dart';
 import 'package:ez_english/widgets/upload_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,8 +16,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class AdminScreen extends StatelessWidget {
-  const AdminScreen({super.key});
-
+  AdminScreen({super.key});
+  final _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,10 +88,44 @@ class AdminScreen extends StatelessWidget {
                         source: ImageSource.gallery,
                       );
                       if (pickedImage != null && context.mounted) {
-                        Provider.of<UsersSettingsViewmodel>(context,
-                                listen: false)
-                            .uploadWorksheetSolution(
-                                imagePath: pickedImage.path);
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text(
+                                  "Add a title",
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text("Cancel"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Provider.of<UsersSettingsViewmodel>(
+                                              context,
+                                              listen: false)
+                                          .uploadWorksheetSolution(
+                                              imagePath: pickedImage.path,
+                                              worksheetTitle:
+                                                  _controller.text.isEmpty
+                                                      ? "Untitled worksheet"
+                                                      : _controller.text);
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text("Add"),
+                                  ),
+                                ],
+                                content: Form(
+                                  child: CustomTextField(
+                                    controller: _controller,
+                                    hintText: "Enter a title",
+                                  ),
+                                ),
+                              );
+                            });
                       }
                     },
                     child: Column(

@@ -43,15 +43,18 @@ class UsersSettingsViewmodel extends BaseViewModel {
 
   Future<void> uploadWorksheetSolution({
     required String imagePath,
+    required String worksheetTitle,
   }) async {
     isLoading = true;
     notifyListeners();
     try {
       String imageUrl = await uploadImageAndGetUrl(
           imagePath, '${DateTime.now().millisecondsSinceEpoch}');
-      // TODO add title
-      WorkSheet worksheet =
-          WorkSheet(title: "", imageUrl: imageUrl, timestamp: Timestamp.now());
+
+      WorkSheet worksheet = WorkSheet(
+          title: worksheetTitle,
+          imageUrl: imageUrl,
+          timestamp: Timestamp.now());
       await _firestoreService.addDocument(
           worksheet.toMap(), FirestoreConstants.worksheetsCollection);
     } catch (e) {
