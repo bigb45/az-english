@@ -10,6 +10,7 @@ import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/section_progress.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:ez_english/features/models/worksheet.dart';
 import 'package:ez_english/features/models/worksheet_student.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -969,6 +970,19 @@ class FirestoreService {
         .orderBy('timestamp', descending: true)
         .limit(1)
         .get();
+  }
+
+  Future<List<WorkSheet>> getAllWorksheets() async {
+    final querySnapshot = await _db
+        .collection(FirestoreConstants.worksheetsCollection)
+        .orderBy('timestamp', descending: true)
+        .get();
+
+    List<WorkSheet> worksheets = querySnapshot.docs.map((doc) {
+      return WorkSheet.fromMap(doc.data() as Map<String, dynamic>);
+    }).toList();
+
+    return worksheets;
   }
 
   Future<void> updateWorksheetWithStudent({
