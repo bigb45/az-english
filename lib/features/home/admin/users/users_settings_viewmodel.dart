@@ -1,14 +1,19 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/assigned_questions.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:ez_english/features/models/worksheet.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/checkbox.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class UsersSettingsViewmodel extends BaseViewModel {
@@ -40,7 +45,48 @@ class UsersSettingsViewmodel extends BaseViewModel {
 
   Future<void> uploadWorksheetSolution({
     required String imagePath,
-  }) async {}
+  }) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      String imageUrl = await uploadImageAndGetUrl(
+          imagePath, '${DateTime.now().millisecondsSinceEpoch}');
+      // TODO add title
+      WorkSheet worksheet =
+          WorkSheet(title: "", imageUrl: imageUrl, timestamp: Timestamp.now());
+      await _firestoreService.addDocument(
+          worksheet.toMap(), FirestoreConstants.worksheetsCollection);
+    } catch (e) {
+      print("Error uploading image: $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<String> uploadImageAndGetUrl(
+      String imagePath, String imageName) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      File imageFile = File(imagePath);
+      Uint8List imageData = await imageFile.readAsBytes();
+
+      UploadTask uploadTask = FirebaseStorage.instance
+          .ref('worksheets/solutions/$imageName')
+          .putData(imageData);
+      TaskSnapshot snapshot = await uploadTask;
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print("Error uploading image: $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+    return '';
+  }
+
   void filterUsers(String query) {
     printDebug("filtering by $query");
     _filteredUsers = _users

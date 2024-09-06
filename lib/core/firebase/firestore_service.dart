@@ -10,6 +10,7 @@ import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/section_progress.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:ez_english/features/models/worksheet_student.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -950,6 +951,58 @@ class FirestoreService {
           .set(user.toMap());
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
+    }
+  }
+
+  Future<void> addDocument(
+      Map<String, dynamic> modelMap, String collectionName) async {
+    try {
+      await _db.collection(collectionName).doc().set(modelMap);
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
+    }
+  }
+
+  Future<QuerySnapshot> getLastWorksheet() async {
+    return await _db
+        .collection(FirestoreConstants.worksheetsCollection)
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
+  }
+
+  Future<void> updateWorksheetWithStudent({
+    required DocumentReference worksheetDoc,
+    required String studentName,
+    required String studentImagePath,
+    required String userId,
+  }) async {
+    // Create the student object
+    WorksheetStudent student = WorksheetStudent(
+      studentName: studentName,
+      imagePath: studentImagePath,
+      dateSolved: DateTime.now(),
+    );
+
+    // Fetch the current 'students' field from the worksheet
+    DocumentSnapshot worksheetSnapshot = await worksheetDoc.get();
+    Map<String, dynamic>? studentsMap =
+        worksheetSnapshot['students'] as Map<String, dynamic>?;
+
+    if (studentsMap == null) {
+      // Initialize 'students' field if it doesn't exist
+      await worksheetDoc.update({
+        'students': {
+          userId: student.toMap(),
+        },
+      });
+    } else {
+      // Update the existing 'students' map
+      studentsMap[userId] = student.toMap();
+
+      await worksheetDoc.update({
+        'students': studentsMap,
+      });
     }
   }
 
