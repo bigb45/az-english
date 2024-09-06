@@ -23,7 +23,7 @@ class PassageForm extends StatefulWidget {
   final Function(BaseQuestion<dynamic>)? onSubmit;
   final PassageQuestionModel? question;
 
-  PassageForm({
+  const PassageForm({
     super.key,
     required this.level,
     required this.section,
@@ -224,8 +224,9 @@ class _PassageFormState extends State<PassageForm> {
                   Button(
                     type: ButtonType.secondary,
                     onPressed: () {
-                      if (_formKey.currentState!.validate())
+                      if (_formKey.currentState!.validate()) {
                         _showAddQuestionDialog(context, viewmodel);
+                      }
                     },
                     text: "Add paragraph question",
                   ),
@@ -283,7 +284,7 @@ class _PassageFormState extends State<PassageForm> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          insetPadding: EdgeInsets.all(5),
+          insetPadding: const EdgeInsets.all(5),
           title: const Text("Add Embedded Question"),
           content: SizedBox(
             child: AddEmbeddedQuestionForm(

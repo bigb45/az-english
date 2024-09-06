@@ -3,13 +3,11 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
-import 'package:ez_english/features/models/assigned_questions.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/checkbox.dart';
-import 'package:flutter/material.dart';
 
 class UsersSettingsViewmodel extends BaseViewModel {
   List<UserModel?> _users = [];

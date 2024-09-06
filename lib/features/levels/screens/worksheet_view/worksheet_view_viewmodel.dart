@@ -13,7 +13,7 @@ class WorksheetViewViewmodel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     // TODO: fetch the latest uploaded worksheet from firebase
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
 
     _isLoading = false;
     notifyListeners();

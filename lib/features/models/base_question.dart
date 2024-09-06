@@ -80,9 +80,6 @@ abstract class BaseQuestion<T> {
   }
 
   bool equals(BaseQuestion other) {
-    if (other == null) {
-      return false;
-    }
     return questionTextInEnglish == other.questionTextInEnglish &&
         questionTextInArabic == other.questionTextInArabic &&
         imageUrl == other.imageUrl &&

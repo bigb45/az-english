@@ -1,11 +1,7 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/firebase/firebase_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
-import 'package:ez_english/core/network/apis_constants.dart';
 import 'package:ez_english/core/network/custom_response.dart';
-import 'package:ez_english/core/network/network_helper.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';

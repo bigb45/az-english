@@ -126,7 +126,7 @@ class LevelSelectionViewmodel extends BaseViewModel {
     } catch (e) {
       isLoading = false;
       notifyListeners();
-      throw e;
+      rethrow;
     }
   }
 

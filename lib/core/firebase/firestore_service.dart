@@ -406,7 +406,7 @@ class FirestoreService {
       }
 
       // Update isCompleted status if all units are completed
-      if (sectionProgress.isSectionCompleted(tempUnitNumber!)) {
+      if (sectionProgress.isSectionCompleted(tempUnitNumber)) {
         sectionProgress.isCompleted = true;
         sectionProgress.lastStoppedQuestionIndex = 0;
       }
@@ -664,7 +664,7 @@ class FirestoreService {
         }
 
         return Unit(
-            name: tempUnitNumber!,
+            name: tempUnitNumber,
             descriptionInEnglish: data['descriptionInEnglish'],
             descriptionInArabic: data['descriptionInArabic'],
             questions: questions,

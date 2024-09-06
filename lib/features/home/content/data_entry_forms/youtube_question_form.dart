@@ -227,7 +227,7 @@ class _YoutubeLessonFormState extends State<YoutubeLessonForm> {
             padding: EdgeInsets.all(Constants.padding8),
             child: Text(
               updateMessage!,
-              style: TextStyle(color: Colors.red, fontSize: 16),
+              style: const TextStyle(color: Colors.red, fontSize: 16),
             ),
           ),
       ],

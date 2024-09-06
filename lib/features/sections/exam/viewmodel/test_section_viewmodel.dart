@@ -23,7 +23,7 @@ class TestSectionViewmodel extends BaseViewModel {
   bool _isReadyToSubmit = false;
   bool _isSubmitted = false;
   String? levelId;
-  List<BaseQuestion?> _questions = [];
+  final List<BaseQuestion?> _questions = [];
   List<bool?> _answers = [];
 
   bool get isReadyToSubmit => _isReadyToSubmit;
@@ -68,13 +68,13 @@ class TestSectionViewmodel extends BaseViewModel {
           passageTexts[entry.key] = passageQuestion.passageInEnglish!;
           passageTextTranslations[entry.key] = passageQuestion.passageInArabic;
 
-          passageQuestion.questions.values.forEach((question) {
+          for (var question in passageQuestion.questions.values) {
             if (question != null) {
               _questions.add(question);
               _answers.add(
                   null); // Assuming each question needs a corresponding answer placeholder.
             }
-          });
+          }
         } else {
           _questions.add(entry.value);
           _answers.add(null); // Add null for each normal question.

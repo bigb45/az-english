@@ -34,7 +34,7 @@ Widget buildQuestion({
     case QuestionType.sentenceForming:
       return SentenceFormingQuestion(
         question: question as SentenceFormingQuestionModel,
-        onChanged: (value) => onChanged(value as StringAnswer),
+        onChanged: (value) => onChanged(value),
         answerState: answerState,
       );
 
@@ -71,7 +71,7 @@ Widget buildQuestion({
         child: YouTubeVideoPlayer(
           key: ValueKey((question as YoutubeLessonModel).youtubeUrl ??
               "https://www.youtube.com/watch?v=aDm5WZ3QiIE"),
-          videoId: (question as YoutubeLessonModel).youtubeUrl ??
+          videoId: (question).youtubeUrl ??
               "https://www.youtube.com/watch?v=aDm5WZ3QiIE",
         ),
       );
@@ -88,7 +88,7 @@ Widget buildQuestion({
       );
 
     default:
-      print("Unsupported Question Type: ${question.questionType}, ${question}");
+      print("Unsupported Question Type: ${question.questionType}, $question");
       return const Text("Unsupported Question Type");
   }
 }

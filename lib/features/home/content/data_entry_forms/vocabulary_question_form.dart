@@ -17,7 +17,7 @@ class VocabularyForm extends StatefulWidget {
   final Function(BaseQuestion<dynamic>)? onSubmit;
   final WordDefinition? question;
 
-  VocabularyForm({
+  const VocabularyForm({
     super.key,
     required this.level,
     required this.section,

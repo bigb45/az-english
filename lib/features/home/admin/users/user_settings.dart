@@ -217,11 +217,11 @@ void showAssignedLevelsDialog(
   required Function(List<String>) onSubmitted,
 }) {
   // Initialize selected state from assigned levels
-  allLevels.forEach((level) {
+  for (var level in allLevels) {
     level.isSelected =
         assignedLevels?.any((assigned) => assigned.title == level.title) ??
             false;
-  });
+  }
 
   showDialog(
     context: context,
@@ -264,7 +264,7 @@ void showAssignedLevelsDialog(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
@@ -278,7 +278,7 @@ void showAssignedLevelsDialog(
               onSubmitted(
                   selectedTitles); // Pass the List<String> to onSubmitted
             },
-            child: Text('Submit'),
+            child: const Text('Submit'),
           ),
         ],
       );

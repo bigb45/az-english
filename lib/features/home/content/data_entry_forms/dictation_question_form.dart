@@ -21,7 +21,7 @@ class DictationQuestionForm extends StatefulWidget {
   final Function(BaseQuestion<dynamic>)? onSubmit;
   final DictationQuestionModel? question;
 
-  DictationQuestionForm({
+  const DictationQuestionForm({
     super.key,
     required this.level,
     required this.section,
@@ -281,7 +281,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
             padding: EdgeInsets.all(Constants.padding8),
             child: Text(
               updateMessage!,
-              style: TextStyle(color: Colors.red, fontSize: 16),
+              style: const TextStyle(color: Colors.red, fontSize: 16),
             ),
           ),
       ],
@@ -344,9 +344,9 @@ void showPreviewModalSheet<BaseQuestion>({
                             vertical: 10.0,
                           ),
                           child: ExpandableTextBox(
-                              paragraph: passageQuestion!.passageInEnglish!,
+                              paragraph: passageQuestion.passageInEnglish!,
                               paragraphTranslation:
-                                  passageQuestion!.passageInArabic,
+                                  passageQuestion.passageInArabic,
                               isFocused: false,
                               readMoreText: AppStrings.mcQuestionReadMoreText)),
                     buildQuestion(

@@ -217,7 +217,7 @@ class UploadDataViewmodel extends ChangeNotifier {
               } else {
                 existingUnit.questions[nextIndex++] = question;
               }
-              existingUnit!.numberOfQuestionsWithDeletion++;
+              existingUnit.numberOfQuestionsWithDeletion++;
 
               break;
             case QuestionType.vocabularyWithListening:
@@ -273,7 +273,7 @@ class UploadDataViewmodel extends ChangeNotifier {
                 } else {
                   existingUnit.questions[nextIndex++] = question;
                 }
-                existingUnit!.numberOfQuestionsWithDeletion++;
+                existingUnit.numberOfQuestionsWithDeletion++;
               });
               break;
 
@@ -346,7 +346,7 @@ class UploadDataViewmodel extends ChangeNotifier {
 
           // Add the unit to the section if it's not already added
           if (!existingSection!.units!.contains(existingUnit)) {
-            existingSection.units!.add(existingUnit!);
+            existingSection.units!.add(existingUnit);
           }
 
           // Add the section to the level if it's not already added

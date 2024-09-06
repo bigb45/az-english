@@ -42,7 +42,7 @@ class _TestResultsState extends State<TestResults> {
           ),
           body: viewmodel.isInitialized && viewmodel.isLoading == false
               ? Padding(
-                  padding: EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(12.0),
                   child: Column(
                     children: [
                       viewmodel.examResults.isEmpty

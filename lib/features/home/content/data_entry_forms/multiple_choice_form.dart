@@ -27,7 +27,7 @@ class MultipleChoiceForm extends StatefulWidget {
   final Function(BaseQuestion<dynamic>)? onSubmit;
   final MultipleChoiceQuestionModel? question;
 
-  MultipleChoiceForm({
+  const MultipleChoiceForm({
     Key? key,
     required this.levelName,
     required this.sectionName,
@@ -185,7 +185,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
 
   bool _checkForChanges() {
     print(
-        "${formattedTextInEnglish?.trim()} == $originalQuestionSentenceInEnglish");
+        "${formattedTextInEnglish.trim()} == $originalQuestionSentenceInEnglish");
     return questionEnglishController.text != originalQuestionTextInEnglish ||
         questionArabicController.text != originalQuestionTextInArabic ||
         questionSentenceEnglishController.text !=

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 class EditQuestionViewModel extends ChangeNotifier {
   List<BaseQuestion<dynamic>> questions = [];
-  FirestoreService _firestoreService = FirestoreService();
+  final FirestoreService _firestoreService = FirestoreService();
   List<Unit?>? units;
   bool _isLoading = false;
   bool get isLoading => _isLoading;

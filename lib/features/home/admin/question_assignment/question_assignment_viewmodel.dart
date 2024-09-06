@@ -110,6 +110,7 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
       print('Error fetching questions: $e');
       notifyListeners();
     }
+    return null;
   }
 
   Future<void> _fetchQuestions() async {
@@ -129,7 +130,7 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
             var sectionQuestions = await _firestoreService.fetchQuestions(
                 level: level,
                 section: sectionName,
-                day: unit!.name.substring(unit!.name.length - 1));
+                day: unit!.name.substring(unit.name.length - 1));
             for (var entry in sectionQuestions) {
               if (entry.questionType == QuestionType.passage) {
                 PassageQuestionModel? passageQuestion =
@@ -139,7 +140,6 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
                 var parentQuestionPath = entry.path;
                 for (var embeddedEntry in embeddedQuestionsData.entries) {
                   var embeddedQuestionMap = embeddedEntry.value as BaseQuestion;
-                  ;
                   PassageQuestionModel embeddedQuestion = PassageQuestionModel(
                       passageInEnglish: entry.passageInEnglish,
                       passageInArabic: entry.passageInArabic,
@@ -231,7 +231,7 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
         questionMap: question.toMap(),
         sectionName: RouteConstants.speakingSectionName,
         userId: userId);
-    question.path = "${FirestoreConstants.usersCollections}/${userId}/"
+    question.path = "${FirestoreConstants.usersCollections}/$userId/"
         "assignedQuestions/"
         "${RouteConstants.getSectionIds(RouteConstants.speakingSectionName)}/"
         "${FirestoreConstants.questionsField}/$questionIndex";

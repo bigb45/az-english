@@ -2,7 +2,6 @@
 
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/sections/listening/viewmodel/listening_section_viewmodel.dart';
-import 'package:ez_english/features/sections/writing/viewmodel/writing_section_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';

@@ -127,7 +127,7 @@ class MultipleChoiceViewModel extends ChangeNotifier {
     required String? titleInEnglish,
     required String? imageUrlInEditMode,
   }) async {
-    if (selectedAnswer != null && questionTextInEnglish != null) {
+    if (questionTextInEnglish != null) {
       String? imageUrl;
       if (_image != null) {
         imageUrl = await uploadImageAndGetUrl(
@@ -142,7 +142,7 @@ class MultipleChoiceViewModel extends ChangeNotifier {
         questionSentenceInArabic: questionSentenceInArabic,
         imageUrl: imageUrl,
         options: answers,
-        answer: MultipleChoiceAnswer(answer: selectedAnswer!),
+        answer: MultipleChoiceAnswer(answer: selectedAnswer),
         titleInEnglish: titleInEnglish,
       );
     } else {

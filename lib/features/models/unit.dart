@@ -65,7 +65,4 @@ class Unit {
             numberOfQuestionWithoutDeletion &&
         other.progress == progress;
   }
-
-  @override
-  int get hashCode => super.hashCode;
 }

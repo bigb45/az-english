@@ -7,7 +7,6 @@ import 'package:ez_english/features/sections/components/finished_questions_scree
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
 import 'package:ez_english/features/sections/listening/viewmodel/listening_section_viewmodel.dart';
 import 'package:ez_english/features/sections/util/build_question.dart';
-import 'package:ez_english/features/sections/writing/viewmodel/writing_section_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/progress_bar.dart';

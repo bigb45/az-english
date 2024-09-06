@@ -61,7 +61,7 @@ class _WordViewQuestionState extends State<WordViewQuestion> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: Constants.padding30),
                 child: Text(
-                  "${widget.wordData.questionTextInEnglish ?? ""}",
+                  widget.wordData.questionTextInEnglish ?? "",
                   style: TextStyles.practiceCardSecondaryText.copyWith(
                     color: Palette.primaryText,
                     fontSize: 24.sp,

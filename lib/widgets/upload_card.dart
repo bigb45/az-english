@@ -17,13 +17,13 @@ class UploadCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
-      child: Container(
+      child: SizedBox(
         width: 170.w,
         height: 170.h,
         child: DottedBorder(
           borderType: BorderType.RRect,
           radius: Radius.circular(16.r),
-          dashPattern: [6, 6],
+          dashPattern: const [6, 6],
           color: Palette.secondaryStroke,
           strokeWidth: 3.w,
           child: Padding(

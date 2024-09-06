@@ -121,7 +121,7 @@ class _RichTextfieldState extends State<RichTextfield> {
       }
       // Append the underlined text
       _internalTextRepresentation +=
-          '{{a' + _controller.text.substring(range.start, range.end) + '}}';
+          '{{a${_controller.text.substring(range.start, range.end)}}}';
       lastEnd = range.end;
     }
     // Append any remaining text after the last range
@@ -246,7 +246,7 @@ class _RichTextfieldState extends State<RichTextfield> {
           onChanged: (value) => _handleTextChanged(),
           controller: _controller,
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
             labelText: widget.isArabicText
                 ? "الجملة الكاملة (عربي)"
                 : "Full sentence (English)",

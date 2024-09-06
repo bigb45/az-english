@@ -19,7 +19,7 @@ class FillTheBlanksForm extends StatefulWidget {
   final String day;
   final Function(BaseQuestion<dynamic>)? onSubmit;
   final FillTheBlanksQuestionModel? question;
-  FillTheBlanksForm({
+  const FillTheBlanksForm({
     super.key,
     required this.level,
     required this.section,
@@ -158,7 +158,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
   void insertBlank(TextEditingController controller,
       {bool isEnglishField = true}) {
     if (controller.selection ==
-        TextSelection(baseOffset: -1, extentOffset: -1)) {
+        const TextSelection(baseOffset: -1, extentOffset: -1)) {
       return;
     }
     final selection = controller.selection;
@@ -341,7 +341,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
             padding: EdgeInsets.all(Constants.padding8),
             child: Text(
               updateMessage!,
-              style: TextStyle(color: Colors.red, fontSize: 16),
+              style: const TextStyle(color: Colors.red, fontSize: 16),
             ),
           ),
       ],

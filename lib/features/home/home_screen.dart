@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _pages = [
     const LevelSelection(),
     const TestResults(),
-    Account(),
+    const Account(),
   ];
 
   final Map<String, IconData> _labelIcons = {

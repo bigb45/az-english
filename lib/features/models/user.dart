@@ -63,7 +63,7 @@ class UserModel {
   Map<String, dynamic> toMap() {
     return {
       "id": id,
-      "userType": userType?.toShortString(),
+      "userType": userType.toShortString(),
       'studentName': studentName,
       'parentPhoneNumber': parentPhoneNumber,
       'emailAddress': emailAddress,

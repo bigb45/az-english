@@ -19,7 +19,7 @@ class Account extends StatelessWidget {
         appBar: AppBar(
           title: Text(
             AppStrings.accountSettingsScreenTitle,
-            style: TextStyle(color: Palette.primaryText),
+            style: const TextStyle(color: Palette.primaryText),
           ),
           centerTitle: true,
           backgroundColor: Colors.transparent,
@@ -51,7 +51,7 @@ class Account extends StatelessWidget {
                       context.push('/admin');
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
                 Button(
                   text: 'Sign out',
@@ -60,7 +60,7 @@ class Account extends StatelessWidget {
                     await viewmodel.signOut(context);
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
             ),
           ),

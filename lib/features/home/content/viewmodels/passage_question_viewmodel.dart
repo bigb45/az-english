@@ -11,7 +11,7 @@ import 'package:uuid/uuid.dart';
 class PassageViewModel extends ChangeNotifier {
   File? image;
   final FirestoreService _firestoreService = FirestoreService();
-  final Uuid uuid = Uuid();
+  final Uuid uuid = const Uuid();
 
   Future<void> pickImage() async {
     final pickedFile =

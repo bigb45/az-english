@@ -36,7 +36,7 @@ class Utils {
     final String apiKey = dotenv.env['AZURE_API_KEY_1'] ?? '';
 
     String requestBody =
-        '<speak version="1.0" xml:lang="en-US"><voice xml:lang="en-US" xml:gender="Female" name="en-US-JennyNeural">${text}</voice></speak>';
+        '<speak version="1.0" xml:lang="en-US"><voice xml:lang="en-US" xml:gender="Female" name="en-US-JennyNeural">$text</voice></speak>';
     Map<String, dynamic> requestBodyHeaders = {
       'Ocp-Apim-Subscription-Key': apiKey,
       'Content-Type': 'application/ssml+xml',

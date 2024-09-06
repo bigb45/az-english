@@ -30,7 +30,7 @@ class _ReadingPracticeState extends State<ReadingPractice> {
   late ReadingSectionViewmodel viewmodel;
   late List<BaseQuestion?> questions = [];
   late BaseQuestion? currentQuestion;
-  bool _isFocused = false;
+  final bool _isFocused = false;
   PassageQuestionModel? passageQuestion;
   @override
   void initState() {

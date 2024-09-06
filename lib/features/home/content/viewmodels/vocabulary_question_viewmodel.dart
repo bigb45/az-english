@@ -10,7 +10,7 @@ import 'package:uuid/uuid.dart';
 class VocabularyViewModel extends ChangeNotifier {
   File? image;
   final FirestoreService _firestoreService = FirestoreService();
-  final Uuid uuid = Uuid();
+  final Uuid uuid = const Uuid();
   bool _isLoading = false;
 
   get isLoading => _isLoading;

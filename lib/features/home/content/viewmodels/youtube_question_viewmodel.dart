@@ -7,7 +7,7 @@ import 'package:uuid/uuid.dart';
 
 class YoutubeLessonViewModel extends ChangeNotifier {
   File? image;
-  FirestoreService _firestoreService = FirestoreService();
+  final FirestoreService _firestoreService = FirestoreService();
   final Uuid uuid = const Uuid();
 
   Future<YoutubeLessonModel?> submitForm({

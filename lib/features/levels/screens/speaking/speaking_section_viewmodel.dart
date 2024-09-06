@@ -64,8 +64,8 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     try {
       List<BaseQuestion> embeddedPassageQuestions = [];
       User? user = _firebaseAuthService.getUser();
-      UserModel? _userModel = await _firestoreService.getUser(user!.uid);
-      AssignedQuestions assignedQuestions = _userModel!.assignedQuestions![
+      UserModel? userModel = await _firestoreService.getUser(user!.uid);
+      AssignedQuestions assignedQuestions = userModel!.assignedQuestions![
           RouteConstants.sectionNameId[RouteConstants.speakingSectionName]]!;
       int currentDay = assignedQuestions.currentDay;
       bool isFirstWeek = ((currentDay - 1) ~/ 5) % 2 == 0;
@@ -90,7 +90,7 @@ class SpeakingSectionViewmodel extends BaseViewModel {
         if (assignedQuestions.assignedLevels!.isNotEmpty) {
           for (var level in assignedQuestions.assignedLevels!) {
             var sectionQuestions = await _firestoreService.fetchQuestions(
-                level: level!, section: section!, day: tempUnitNumber);
+                level: level!, section: section, day: tempUnitNumber);
             tempAllQuestionsLength = sectionQuestions.length;
             List<BaseQuestion<dynamic>> finalSectionQuestions = [];
 
@@ -102,7 +102,6 @@ class SpeakingSectionViewmodel extends BaseViewModel {
                 var parentQuestionPath = entry.path;
                 for (var embeddedEntry in embeddedQuestionsData.entries) {
                   var embeddedQuestionMap = embeddedEntry.value as BaseQuestion;
-                  ;
                   PassageQuestionModel embeddedQuestion = PassageQuestionModel(
                       passageInEnglish: entry.passageInEnglish,
                       passageInArabic: entry.passageInArabic,
@@ -114,7 +113,7 @@ class SpeakingSectionViewmodel extends BaseViewModel {
                       imageUrl: entry.imageUrl,
                       voiceUrl: entry.voiceUrl,
                       questionType: QuestionType.passage,
-                      sectionName: SectionNameExtension.fromString(section!));
+                      sectionName: SectionNameExtension.fromString(section));
                   embeddedQuestion.path =
                       "$parentQuestionPath/embeddedQuestions/${embeddedEntry.key}";
                   embeddedPassageQuestions.add(embeddedQuestion);
@@ -214,13 +213,13 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     notifyListeners();
     try {
       User? user = _firebaseAuthService.getUser();
-      UserModel? _userModel = await _firestoreService.getUser(user!.uid);
-      AssignedQuestions assignedQuestions = _userModel!.assignedQuestions![
+      UserModel? userModel = await _firestoreService.getUser(user!.uid);
+      AssignedQuestions assignedQuestions = userModel!.assignedQuestions![
           RouteConstants.sectionNameId[RouteConstants.speakingSectionName]]!;
       int currentDay = assignedQuestions.currentDay;
       currentDay = currentDay + 1;
       DocumentReference userDocRef =
-          FirebaseFirestore.instance.collection("users").doc(_userModel.id);
+          FirebaseFirestore.instance.collection("users").doc(userModel.id);
       await _firestoreService.updateQuestionUsingFieldPath(
           docPath: userDocRef,
           fieldPath: FieldPath([
