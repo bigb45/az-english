@@ -24,13 +24,14 @@ class LevelSelectionViewmodel extends BaseViewModel {
   List<Level> _levels = [];
   bool _isSpeakingAssigned = false;
 
-// TODO: get this from firebase
   bool _isWorksheetUploaded = false;
+  String? _lastWorksheetPath;
 
   int get selectedLevel => _selectedLevelId;
   List<Level> get levels => _levels;
   bool get isSpeakingAssigned => _isSpeakingAssigned;
   bool get isWorksheetUploaded => _isWorksheetUploaded;
+  String? get lastWorksheetPath => _lastWorksheetPath;
 
   void update(AuthViewModel authViewModel) async {
     _authProvider = authViewModel;
@@ -39,6 +40,10 @@ class LevelSelectionViewmodel extends BaseViewModel {
       await fetchUserData(_authProvider.user!.uid);
       await checkIfWorksheetUploaded();
     }
+  }
+
+  void setLastWorksheetImageUrl(String imageUrl) {
+    _lastWorksheetPath = imageUrl;
   }
 
   Future<void> checkIfWorksheetUploaded() async {
@@ -57,6 +62,8 @@ class LevelSelectionViewmodel extends BaseViewModel {
 
         if (studentsMap != null && studentsMap.containsKey(user.uid)) {
           _isWorksheetUploaded = true;
+          String imageUrl = lastWorksheetDoc['imageUrl'];
+          setLastWorksheetImageUrl(imageUrl);
         } else {
           _isWorksheetUploaded = false;
         }
@@ -95,7 +102,11 @@ class LevelSelectionViewmodel extends BaseViewModel {
           studentImagePath: studentImagePath,
           userId: userModel.id!,
         );
-
+        Map<String, dynamic>? studentsMap =
+            lastWorksheetDoc['students'] as Map<String, dynamic>?;
+        String imageUrl = lastWorksheetDoc['imageUrl'];
+        _isWorksheetUploaded = true;
+        setLastWorksheetImageUrl(imageUrl);
         print("Student data associated with the last worksheet successfully.");
       } else {
         print("No worksheets found in the collection.");
@@ -110,8 +121,6 @@ class LevelSelectionViewmodel extends BaseViewModel {
 
   Future<String> uploadImageAndGetUrl(
       String imagePath, String imageName) async {
-    isLoading = true;
-    notifyListeners();
     try {
       File imageFile = File(imagePath);
       Uint8List imageData = await imageFile.readAsBytes();
@@ -124,10 +133,7 @@ class LevelSelectionViewmodel extends BaseViewModel {
       return downloadUrl;
     } catch (e) {
       print("Error uploading image: $e");
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
+    } finally {}
     return '';
   }
 
