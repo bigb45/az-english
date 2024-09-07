@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ez_english/features/home/admin/worksheets/worksheets_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/expandable_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -25,49 +26,54 @@ class AdminWorksheetView extends StatelessWidget {
             style: const TextStyle(color: Palette.primaryText),
           ),
           actions: [
-            GestureDetector(
-              onTap: () {
-                showModalBottomSheet(
-                    context: context,
-                    enableDrag: true,
-                    builder: (context) {
-                      return Center(
-                        child: InteractiveViewer(
-                          child: CachedNetworkImage(
-                            progressIndicatorBuilder: (context, url, progress) {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: progress.progress,
-                                ),
-                              );
-                            },
-                            imageUrl:
-                                viewmodel.worksheets[worksheetIndex].imageUrl ??
-                                    "",
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                      context: context,
+                      enableDrag: true,
+                      builder: (context) {
+                        return Center(
+                          child: InteractiveViewer(
+                            child: CachedNetworkImage(
+                              progressIndicatorBuilder:
+                                  (context, url, progress) {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: progress.progress,
+                                  ),
+                                );
+                              },
+                              imageUrl: viewmodel
+                                      .worksheets[worksheetIndex].imageUrl ??
+                                  "",
+                            ),
                           ),
-                        ),
-                      );
-                    });
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Palette.secondary,
-                  border: Border.all(color: Palette.secondaryStroke, width: 2),
-                  borderRadius: BorderRadius.circular(16.r),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Palette.secondaryStroke,
-                      offset: Offset(0, 3),
-                      blurRadius: 0,
+                        );
+                      });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Palette.secondary,
+                    border:
+                        Border.all(color: Palette.secondaryStroke, width: 2),
+                    borderRadius: BorderRadius.circular(16.r),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Palette.secondaryStroke,
+                        offset: Offset(0, 3),
+                        blurRadius: 0,
+                      ),
+                    ],
+                  ),
+                  width: 60.w,
+                  height: 60.h,
+                  child: const Center(
+                    child: Icon(
+                      Icons.task,
+                      color: Palette.secondaryText,
                     ),
-                  ],
-                ),
-                width: 70.w,
-                height: 70.h,
-                child: const Center(
-                  child: Icon(
-                    Icons.task,
-                    color: Palette.secondaryText,
                   ),
                 ),
               ),
@@ -85,29 +91,16 @@ class AdminWorksheetView extends StatelessWidget {
               : ListView.builder(
                   itemCount: submissionsList.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(
-                          submissionsList.values.elementAt(index).studentName!),
-                      subtitle: Column(
-                        // TODO: make expandable
-                        children: [
-                          Text(
-                            submissionsList.values
-                                .elementAt(index)
-                                .dateSolved
-                                .toString(),
-                          ),
-                          InteractiveViewer(
-                            child: CachedNetworkImage(
-                              imageUrl: submissionsList.values
-                                  .elementAt(index)
-                                  .imagePath!,
-                              placeholder: (context, url) =>
-                                  const CircularProgressIndicator(),
-                            ),
-                          ),
-                        ],
-                      ),
+                    return ExpandableListTile(
+                      title:
+                          submissionsList.values.elementAt(index).studentName!,
+                      subtitle: submissionsList.values
+                          .elementAt(index)
+                          .dateSolved
+                          .toString()
+                          .split(" ")[0],
+                      imageUrl:
+                          submissionsList.values.elementAt(index).imagePath!,
                     );
                   },
                 ),
