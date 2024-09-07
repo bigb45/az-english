@@ -9,11 +9,11 @@ class VerticalListItemCard extends StatelessWidget {
   final String? subText;
   final Widget? info;
   final IconData? action;
-  bool showDeleteIcon;
+  final bool showDeleteIcon;
   final VoidCallback? onTap;
   final VoidCallback? onIconPressed;
-  bool isLoading;
-  VerticalListItemCard({
+  final bool isLoading;
+  const VerticalListItemCard({
     super.key,
     required this.mainText,
     this.subText,
