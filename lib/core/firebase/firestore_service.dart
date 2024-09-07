@@ -979,7 +979,7 @@ class FirestoreService {
         .get();
 
     List<WorkSheet> worksheets = querySnapshot.docs.map((doc) {
-      return WorkSheet.fromMap(doc.data() as Map<String, dynamic>);
+      return WorkSheet.fromMap(doc.data());
     }).toList();
 
     return worksheets;
