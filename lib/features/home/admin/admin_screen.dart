@@ -82,77 +82,85 @@ class AdminScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  UploadCard(
-                    onPressed: () async {
-                      final pickedImage = await ImagePicker().pickImage(
-                        source: ImageSource.gallery,
-                      );
-                      if (pickedImage != null && context.mounted) {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Add a title",
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text("Cancel"),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Provider.of<UsersSettingsViewmodel>(
-                                              context,
-                                              listen: false)
-                                          .uploadWorksheetSolution(
-                                              imagePath: pickedImage.path,
-                                              worksheetTitle:
-                                                  _controller.text.isEmpty
-                                                      ? "Untitled worksheet"
-                                                      : _controller.text);
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text("Add"),
-                                  ),
-                                ],
-                                content: Form(
-                                  child: CustomTextField(
-                                    controller: _controller,
-                                    hintText: "Enter a title",
-                                  ),
-                                ),
+                  Consumer<UsersSettingsViewmodel>(
+                    builder: (context, viewmodel, _) => UploadCard(
+                      onPressed: viewmodel.isLoading
+                          ? () {}
+                          : () async {
+                              final pickedImage = await ImagePicker().pickImage(
+                                source: ImageSource.gallery,
                               );
-                            });
-                      }
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        AutoSizeText(
-                          'Add Worksheet',
-                          style:
-                              TextStyles.cardHeader.copyWith(fontSize: 18.sp),
-                          textAlign: TextAlign.center,
-                          maxLines: 3,
-                        ),
-                        const Expanded(
-                          child: FittedBox(
-                            child: Icon(
-                              Icons.add_rounded,
-                              color: Palette.secondaryText,
-                            ),
+                              if (pickedImage != null && context.mounted) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text(
+                                          "Add a title",
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("Cancel"),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              viewmodel.uploadWorksheetSolution(
+                                                  imagePath: pickedImage.path,
+                                                  worksheetTitle:
+                                                      _controller.text.isEmpty
+                                                          ? "Untitled worksheet"
+                                                          : _controller.text);
+                                              _controller.clear();
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("Add"),
+                                          ),
+                                        ],
+                                        content: Form(
+                                          child: CustomTextField(
+                                            controller: _controller,
+                                            hintText: "Enter a title",
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              }
+                            },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AutoSizeText(
+                            'Add Worksheet',
+                            style:
+                                TextStyles.cardHeader.copyWith(fontSize: 18.sp),
+                            textAlign: TextAlign.center,
+                            maxLines: 3,
                           ),
-                        ),
-                        AutoSizeText(
-                          "Add worksheet solution",
-                          style: TextStyles.cardText,
-                          textAlign: TextAlign.center,
-                          maxLines: 3,
-                        ),
-                      ],
+                          Expanded(
+                            child: viewmodel.isLoading
+                                ? Center(
+                                    child: CircularProgressIndicator(
+                                      color: Palette.primaryText,
+                                    ),
+                                  )
+                                : FittedBox(
+                                    child: Icon(
+                                      Icons.add_rounded,
+                                      color: Palette.secondaryText,
+                                    ),
+                                  ),
+                          ),
+                          AutoSizeText(
+                            "Add worksheet solution",
+                            style: TextStyles.cardText,
+                            textAlign: TextAlign.center,
+                            maxLines: 3,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   SelectableCard(
