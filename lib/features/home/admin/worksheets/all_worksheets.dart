@@ -42,7 +42,7 @@ class _AllWorksheetsState extends State<AllWorksheets> {
               horizontal: Constants.padding12, vertical: Constants.padding8),
           child: Center(
             child: viewmodel.isLoading
-                ? CircularProgressIndicator()
+                ? const CircularProgressIndicator()
                 : viewmodel.worksheets.isEmpty
                     ? Text(
                         "No worksheets uploaded yet",
