@@ -36,9 +36,6 @@ class UsersSettingsViewmodel extends BaseViewModel {
   List<Level?> get levels => _levels;
 
   @override
-  bool isLoading = false;
-
-  @override
   FutureOr<void> init() {}
 
   Future<void> uploadWorksheetSolution({
