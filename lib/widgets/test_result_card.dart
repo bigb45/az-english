@@ -12,7 +12,7 @@ class TestResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: GestureDetector(
         // onTap: onTap,
         child: Container(
@@ -21,7 +21,8 @@ class TestResultCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.r),
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
             child: Row(
               children: [
                 Column(

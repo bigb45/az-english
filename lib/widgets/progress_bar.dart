@@ -61,7 +61,7 @@ class _ProgressBarState extends State<ProgressBar>
   Widget build(BuildContext context) {
     return SizedBox(
       height: 23.h,
-      width: widget.width ?? null,
+      width: widget.width,
       child: Stack(
         alignment: Alignment.centerLeft,
         children: [

@@ -1,7 +1,7 @@
 import 'package:ez_english/features/models/base_question.dart';
 
 class YoutubeLessonModel extends BaseQuestion {
-  final String? youtubeUrl;
+  String? youtubeUrl;
 
   YoutubeLessonModel(
       {required this.youtubeUrl,
@@ -10,7 +10,19 @@ class YoutubeLessonModel extends BaseQuestion {
       super.questionTextInEnglish,
       super.questionTextInArabic,
       super.imageUrl,
-      required super.titleInEnglish});
+      required super.titleInEnglish,
+      super.sectionName});
+  @override
+  YoutubeLessonModel copy() {
+    return YoutubeLessonModel(
+        youtubeUrl: youtubeUrl,
+        questionType: questionType,
+        voiceUrl: voiceUrl,
+        questionTextInEnglish: questionTextInEnglish,
+        questionTextInArabic: questionTextInArabic,
+        imageUrl: imageUrl,
+        titleInEnglish: titleInEnglish);
+  }
 
   @override
   Map<String, dynamic> toMap() {
@@ -30,9 +42,29 @@ class YoutubeLessonModel extends BaseQuestion {
       imageUrl: map['imageUrl'],
       questionType: QuestionType.youtubeLesson,
       titleInEnglish: map["titleInEnglish"],
+      // this causes exception
+      sectionName: SectionNameExtension.fromString(
+        map['sectionName'],
+      ),
     );
   }
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
+    return other is YoutubeLessonModel &&
+        other.youtubeUrl == youtubeUrl &&
+        other.questionTextInEnglish == questionTextInEnglish &&
+        other.questionTextInArabic == questionTextInArabic &&
+        other.voiceUrl == voiceUrl &&
+        other.imageUrl == imageUrl &&
+        other.titleInEnglish == titleInEnglish &&
+        other.questionType == questionType;
+  }
+
+  @override
+  int get hashCode => Object.hash(youtubeUrl, questionTextInEnglish,
+      questionTextInArabic, voiceUrl, imageUrl, titleInEnglish, questionType);
   @override
   bool evaluateAnswer() {
     return true;

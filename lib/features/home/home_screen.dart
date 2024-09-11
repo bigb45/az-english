@@ -1,9 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/account.dart';
-import 'package:ez_english/features/home/test_results.dart';
-import 'package:ez_english/features/levels/screens/level_selection.dart';
+import 'package:ez_english/features/home/test/test_results.dart';
+import 'package:ez_english/features/levels/screens/levels/level_selection.dart';
 import 'package:ez_english/theme/palette.dart';
-import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -16,14 +17,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _pageIndex = 0;
-
   final PageController _pageController = PageController();
 
   final List<Widget> _pages = [
     const LevelSelection(),
     const TestResults(),
-    Account(),
+    const Account(),
   ];
+
+  final Map<String, IconData> _labelIcons = {
+    "Home": Icons.home,
+    "Results": Icons.assignment_turned_in_outlined,
+    "Account": Icons.person,
+  };
 
   void _onItemTapped(int index) {
     setState(() {
@@ -36,6 +42,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
+        onPageChanged: (index) {
+          setState(() {
+            _pageIndex = index;
+          });
+        },
         controller: _pageController,
         children: _pages,
       ),
@@ -44,11 +55,14 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: EdgeInsets.symmetric(vertical: 30.h),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildNavItem(Icons.home, 'Home', 0),
-            _buildNavItem(Icons.change_circle, 'Results', 1),
-            _buildNavItem(Icons.account_circle, 'Account', 2),
-          ],
+          children: List.generate(
+            _pages.length,
+            (index) => _buildNavItem(
+              _labelIcons.values.elementAt(index),
+              _labelIcons.keys.elementAt(index),
+              index,
+            ),
+          ),
         ),
       ),
     );

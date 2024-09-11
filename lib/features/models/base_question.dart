@@ -14,7 +14,7 @@ abstract class BaseQuestion<T> {
   String? voiceUrl;
   String? path; // Firestore document path
   String? titleInEnglish;
-
+  SectionName? sectionName;
   // correct answer
   BaseAnswer<T>? answer;
   BaseAnswer<T>? userAnswer;
@@ -24,11 +24,13 @@ abstract class BaseQuestion<T> {
     required this.questionTextInArabic,
     required this.imageUrl,
     required this.voiceUrl,
-    this.answer,
-    this.path,
     required this.questionType,
     required this.titleInEnglish,
+    this.sectionName,
+    this.path,
+    this.answer,
   });
+  BaseQuestion<T> copy();
 
   bool evaluateAnswer() {
     return answer?.validate(userAnswer) ?? false;
@@ -40,10 +42,11 @@ abstract class BaseQuestion<T> {
       'questionTextInArabic': questionTextInArabic,
       'imageUrl': imageUrl,
       'voiceUrl': voiceUrl,
-      'description': voiceUrl,
+      'description': null,
       'answer': answer?.toMap(),
       "titleInEnglish": titleInEnglish,
       "questionType": questionType.toShortString(),
+      'sectionName': sectionName?.toString().split('.').last,
     };
   }
 
@@ -75,6 +78,15 @@ abstract class BaseQuestion<T> {
         throw Exception('Unknown question type: $questionType');
     }
   }
+
+  bool equals(BaseQuestion other) {
+    return questionTextInEnglish == other.questionTextInEnglish &&
+        questionTextInArabic == other.questionTextInArabic &&
+        imageUrl == other.imageUrl &&
+        voiceUrl == other.voiceUrl &&
+        titleInEnglish == other.titleInEnglish &&
+        questionType == other.questionType;
+  }
 }
 
 enum QuestionType {
@@ -104,6 +116,45 @@ enum QuestionType {
   checkbox,
   //other
   other,
+}
+
+enum SectionName {
+  reading,
+  writing,
+  speaking,
+  grammar,
+  vocabulary,
+  listening,
+  test,
+  other
+}
+
+enum LevelName { A1, A2, B1, B2, C1, C2, other }
+
+extension LevelNameExtension on LevelName {
+  String toShortString() {
+    return toString().split('.').last;
+  }
+
+  static LevelName fromString(String str) {
+    return LevelName.values.firstWhere(
+      (e) => e.toString().split('.').last == str,
+      orElse: () => LevelName.other,
+    );
+  }
+}
+
+extension SectionNameExtension on SectionName {
+  String toShortString() {
+    return toString().split('.').last;
+  }
+
+  static SectionName fromString(String str) {
+    return SectionName.values.firstWhere(
+      (e) => e.toString().split('.').last == str,
+      orElse: () => SectionName.other,
+    );
+  }
 }
 
 extension QuestionTypeExtension on QuestionType {

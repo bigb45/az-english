@@ -15,6 +15,44 @@ class SpeakingQuestionModel extends BaseQuestion<String> {
             imageUrl: '',
             voiceUrl: audioUrl ?? "",
             questionType: QuestionType.speaking);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! SpeakingQuestionModel) return false;
+
+    return other.runtimeType == runtimeType &&
+        other.question == question &&
+        other.audioUrl == audioUrl &&
+        other.correctAnswer == correctAnswer &&
+        other.questionTextInEnglish ==
+            questionTextInEnglish && // From BaseQuestion
+        other.questionTextInArabic ==
+            questionTextInArabic && // From BaseQuestion
+        other.imageUrl == imageUrl && // From BaseQuestion
+        other.voiceUrl == voiceUrl && // From BaseQuestion
+        other.titleInEnglish == titleInEnglish && // From BaseQuestion
+        other.questionType == questionType; // From BaseQuestion
+  }
+
+  @override
+  int get hashCode => Object.hash(
+        runtimeType,
+        question,
+        audioUrl,
+        correctAnswer,
+        questionTextInEnglish, // From BaseQuestion
+        questionTextInArabic, // From BaseQuestion
+        imageUrl, // From BaseQuestion
+        voiceUrl, // From BaseQuestion
+        titleInEnglish, // From BaseQuestion
+        questionType, // From BaseQuestion
+      );
+
+  @override
+  BaseQuestion<String> copy() {
+    // TODO: implement copy
+    throw UnimplementedError();
+  }
 
 // TODO: make sure this is correct
   // factory SpeakingQuestionModel.fromJson(Map<String, dynamic> json) {

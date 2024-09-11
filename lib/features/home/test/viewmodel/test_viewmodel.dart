@@ -8,7 +8,7 @@ import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class HomeViewmodel extends BaseViewModel {
+class TestViewmodel extends BaseViewModel {
   int _selectedLevelId = 0;
   final FirestoreService _firestoreService = FirestoreService();
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
@@ -36,7 +36,7 @@ class HomeViewmodel extends BaseViewModel {
   }
 
   void _handleError(String e) {
-    Utils.showSnackBar(e);
+    Utils.showErrorSnackBar(e);
     // errorOccurred = true;
     // navigatorKey.currentState!.pop();
   }

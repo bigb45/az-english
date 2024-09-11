@@ -50,8 +50,7 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
       await audioPlayer.play(urlSource);
       // Add an event listener to be notified when the audio playback completes
     } catch (e) {
-      print(
-          "AUDIO PLAYING++++++++++++++++++++++++${e}+++++++++++++++++++++++++");
+      print("AUDIO PLAYING++++++++++++++++++++++++$e+++++++++++++++++++++++++");
     }
   }
 

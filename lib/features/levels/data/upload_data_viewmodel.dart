@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:excel/excel.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
-import 'package:ez_english/features/levels/data/models/reading_question.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/section.dart';
@@ -128,7 +127,7 @@ class UploadDataViewmodel extends ChangeNotifier {
             currentPassage = null;
           }
           previousSectionName = sectionName;
-
+// TODO: add sectionName to question instance
           // Add questions dynamically based on the row data
           Map<int, BaseQuestion?> questions = {};
           int nextIndex = existingUnit!.questions.length;
@@ -143,13 +142,15 @@ class UploadDataViewmodel extends ChangeNotifier {
                   speakableText: word,
                   answer: StringAnswer(answer: word),
                   titleInEnglish: titleInEnglish,
+                  sectionName: SectionNameExtension.fromString(sectionName),
                 );
                 if (currentPassage != null) {
-                  currentPassage.questions.add(question);
+                  currentPassage.questions[currentPassage.questions.length] =
+                      question;
                 } else {
                   existingUnit.questions[nextIndex++] = question;
                 }
-                existingUnit.numberOfQuestions++;
+                existingUnit.numberOfQuestionsWithDeletion++;
               });
 
               break;
@@ -166,6 +167,8 @@ class UploadDataViewmodel extends ChangeNotifier {
                 questionSentenceInEnglish: questionSentenceInEnglish,
                 questionSentenceInArabic: questionSentenceInArabic,
                 imageUrl: imageUrl,
+                sectionName: SectionNameExtension.fromString(sectionName),
+
                 // voiceUrl: '',
                 options:
                     questionAnswerOrOptionsInMCQ.asMap().entries.map((entry) {
@@ -184,11 +187,12 @@ class UploadDataViewmodel extends ChangeNotifier {
                 titleInEnglish: titleInEnglish,
               );
               if (currentPassage != null) {
-                currentPassage.questions.add(question);
+                currentPassage.questions[currentPassage.questions.length] =
+                    question;
               } else {
                 existingUnit.questions[nextIndex++] = question;
               }
-              existingUnit.numberOfQuestions++;
+              existingUnit.numberOfQuestionsWithDeletion++;
 
               break;
 
@@ -203,15 +207,17 @@ class UploadDataViewmodel extends ChangeNotifier {
                 questionTextInArabic: questionArabic,
                 imageUrl: imageUrl,
                 voiceUrl: '',
+                sectionName: SectionNameExtension.fromString(sectionName),
                 questionType: QuestionTypeExtension.fromString(questionType),
                 titleInEnglish: titleInEnglish,
               );
               if (currentPassage != null) {
-                currentPassage.questions.add(question);
+                currentPassage.questions[currentPassage.questions.length] =
+                    question;
               } else {
                 existingUnit.questions[nextIndex++] = question;
               }
-              existingUnit!.numberOfQuestions++;
+              existingUnit.numberOfQuestionsWithDeletion++;
 
               break;
             case QuestionType.vocabularyWithListening:
@@ -228,6 +234,7 @@ class UploadDataViewmodel extends ChangeNotifier {
 
                 var question = WordDefinition(
                   englishWord: englishAndArabicWordAsList[0],
+                  sectionName: SectionNameExtension.fromString(sectionName),
                   arabicWord: englishAndArabicWordAsList.length > 1
                       ? englishAndArabicWordAsList[1]
                       : null,
@@ -261,11 +268,12 @@ class UploadDataViewmodel extends ChangeNotifier {
                 );
 
                 if (currentPassage != null) {
-                  currentPassage.questions.add(question);
+                  currentPassage.questions[currentPassage.questions.length] =
+                      question;
                 } else {
                   existingUnit.questions[nextIndex++] = question;
                 }
-                existingUnit!.numberOfQuestions++;
+                existingUnit.numberOfQuestionsWithDeletion++;
               });
               break;
 
@@ -273,6 +281,7 @@ class UploadDataViewmodel extends ChangeNotifier {
               questionText?.split(';').asMap().forEach((index, questionText) {
                 List<String> questionParts = questionText.split("0");
                 var question = FillTheBlanksQuestionModel(
+                  sectionName: SectionNameExtension.fromString(sectionName),
                   incompleteSentenceInEnglish:
                       questionParts.isNotEmpty ? questionParts[0] : null,
                   incompleteSentenceInArabic:
@@ -287,11 +296,12 @@ class UploadDataViewmodel extends ChangeNotifier {
                 );
 
                 if (currentPassage != null) {
-                  currentPassage.questions.add(question);
+                  currentPassage.questions[currentPassage.questions.length] =
+                      question;
                 } else {
                   existingUnit.questions[nextIndex++] = question;
                 }
-                existingUnit.numberOfQuestions++;
+                existingUnit.numberOfQuestionsWithDeletion++;
               });
 
               break;
@@ -305,15 +315,17 @@ class UploadDataViewmodel extends ChangeNotifier {
                 titleInEnglish: titleInEnglish,
               );
               if (currentPassage != null) {
-                currentPassage.questions.add(question);
+                currentPassage.questions[currentPassage.questions.length] =
+                    question;
               } else {
                 existingUnit.questions[nextIndex++] = question;
               }
-              existingUnit!.numberOfQuestions++;
+              existingUnit.numberOfQuestionsWithDeletion++;
               break;
             case QuestionType.passage:
               currentPassage = PassageQuestionModel(
-                questions: [],
+                sectionName: SectionNameExtension.fromString(sectionName),
+                questions: {},
                 passageInEnglish: passageInEnglish,
                 passageInArabic: passageInArabic,
                 titleInEnglish: titleInEnglish,
@@ -334,7 +346,7 @@ class UploadDataViewmodel extends ChangeNotifier {
 
           // Add the unit to the section if it's not already added
           if (!existingSection!.units!.contains(existingUnit)) {
-            existingSection.units!.add(existingUnit!);
+            existingSection.units!.add(existingUnit);
           }
 
           // Add the section to the level if it's not already added

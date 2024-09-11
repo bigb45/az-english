@@ -10,8 +10,6 @@ import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 
 class WritingSectionViewmodel extends BaseViewModel {
-  final sectionId = "2";
-
   String? levelId;
   List<BaseQuestion> _questions = [];
 
@@ -25,8 +23,8 @@ class WritingSectionViewmodel extends BaseViewModel {
   Future<void> myInit() async {
     currentIndex = 0;
     levelName = RouteConstants.getLevelName(levelId!);
-    sectionName = RouteConstants.listeningWritingSectionName;
-    fetchQuestions();
+    sectionName = RouteConstants.writingSectionName;
+    await fetchQuestions();
     if (_questions.isNotEmpty &&
         _questions[currentIndex].questionType == QuestionType.youtubeLesson) {
       answerState = EvaluationState.noState;
@@ -40,8 +38,7 @@ class WritingSectionViewmodel extends BaseViewModel {
     //     .sectionProgress![_sectionName]!.lastStoppedQuestionIndex;
     try {
       Unit unit = await _firestoreService.fetchUnit(
-        RouteConstants
-            .sectionNameId[RouteConstants.listeningWritingSectionName]!,
+        RouteConstants.sectionNameId[RouteConstants.writingSectionName]!,
         levelName!,
       );
       _questions = unit.questions.values.cast<BaseQuestion>().toList();
@@ -90,9 +87,11 @@ class WritingSectionViewmodel extends BaseViewModel {
     if (currentIndex < _questions.length) {
       currentIndex = currentIndex + 1;
       progress = _firestoreService.calculateNewProgress(currentIndex);
-      if (_questions[currentIndex].questionType == QuestionType.youtubeLesson ||
-          _questions[currentIndex].questionType ==
-              QuestionType.vocabularyWithListening) {
+      if (currentIndex < _questions.length &&
+          (_questions[currentIndex].questionType ==
+                  QuestionType.youtubeLesson ||
+              _questions[currentIndex].questionType ==
+                  QuestionType.vocabularyWithListening)) {
         answerState = EvaluationState.noState;
       } else {
         answerState = EvaluationState.empty;

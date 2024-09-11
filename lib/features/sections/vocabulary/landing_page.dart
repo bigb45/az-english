@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class VocabularySection extends StatefulWidget {
   final String levelId;
-  VocabularySection({super.key, required this.levelId});
+  const VocabularySection({super.key, required this.levelId});
 
   @override
   State<VocabularySection> createState() => _VocabularySectionState();
@@ -21,6 +21,7 @@ class VocabularySection extends StatefulWidget {
 class _VocabularySectionState extends State<VocabularySection> {
   late VocabularySectionViewmodel vocabularySectionVm;
 
+  @override
   void initState() {
     vocabularySectionVm =
         Provider.of<VocabularySectionViewmodel>(context, listen: false);

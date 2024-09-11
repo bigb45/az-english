@@ -64,4 +64,10 @@ class ReadingQuestion extends BaseQuestion {
 
   factory ReadingQuestion.fromJson(String source) =>
       ReadingQuestion.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  BaseQuestion copy() {
+    // TODO: implement copy
+    throw UnimplementedError();
+  }
 }

@@ -1,6 +1,4 @@
-import 'package:ez_english/features/home/viewmodel/home_viewmodel.dart';
-import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
-import 'package:ez_english/features/models/level.dart';
+import 'package:ez_english/features/home/test/viewmodel/test_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/test_result_card.dart';
@@ -16,20 +14,20 @@ class TestResults extends StatefulWidget {
 }
 
 class _TestResultsState extends State<TestResults> {
-  late HomeViewmodel homeViewmodel;
+  late TestViewmodel viewmodel;
 
   @override
   void initState() {
     super.initState();
-    homeViewmodel = Provider.of<HomeViewmodel>(context, listen: false);
+    viewmodel = Provider.of<TestViewmodel>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      homeViewmodel.myInit();
+      viewmodel.myInit();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeViewmodel>(
+    return Consumer<TestViewmodel>(
       builder: (context, viewmodel, child) {
         return Scaffold(
           appBar: AppBar(
@@ -42,7 +40,7 @@ class _TestResultsState extends State<TestResults> {
           ),
           body: viewmodel.isInitialized && viewmodel.isLoading == false
               ? Padding(
-                  padding: EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(12.0),
                   child: Column(
                     children: [
                       viewmodel.examResults.isEmpty

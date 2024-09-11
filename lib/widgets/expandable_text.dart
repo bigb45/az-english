@@ -9,12 +9,13 @@ class ExpandableTextBox extends StatefulWidget {
   final String readMoreText;
   bool? isFocused;
   final String paragraph;
-
+  final String? paragraphTranslation;
   ExpandableTextBox({
     super.key,
     this.isReadMore,
-    required this.readMoreText,
     this.isFocused,
+    this.paragraphTranslation,
+    required this.readMoreText,
     required this.paragraph,
   });
 
@@ -23,15 +24,14 @@ class ExpandableTextBox extends StatefulWidget {
 }
 
 class _ExpandableTextBoxState extends State<ExpandableTextBox> {
-  late bool isReadMore;
+  bool isReadMore = false;
+  bool isFocused = false;
+  bool translate = false;
   late String readMoreText;
-  late bool isFocused;
   late String formattedParagraph;
 
   @override
   void initState() {
-    isFocused = false;
-    isReadMore = false;
     readMoreText = widget.readMoreText;
     super.initState();
   }
@@ -53,11 +53,41 @@ class _ExpandableTextBoxState extends State<ExpandableTextBox> {
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(10.0),
           child: Column(
             children: [
+              widget.paragraphTranslation == null
+                  ? const SizedBox()
+                  : Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Palette.primary,
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Palette.primaryShadow,
+                                blurRadius: 0.0,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(100.0),
+                          ),
+                          child: IconButton(
+                            color: Palette.secondary,
+                            onPressed: () {
+                              setState(() {
+                                translate = !translate;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.translate,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
               Text(
-                widget.paragraph,
+                translate ? widget.paragraphTranslation! : widget.paragraph,
                 maxLines: isReadMore ? 100 : 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyles.readingPracticeTextStyle,

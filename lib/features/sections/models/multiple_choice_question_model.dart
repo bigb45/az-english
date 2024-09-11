@@ -3,25 +3,49 @@
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
 import 'package:ez_english/widgets/radio_button.dart';
+import 'package:flutter/foundation.dart';
 
 class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
-  final List<RadioItemData> options;
-  final String? paragraph;
-  final String? questionSentenceInEnglish;
-  final String? questionSentenceInArabic;
+  List<RadioItemData> options;
+  String? paragraph;
+  final String? paragraphTranslation;
+  String? questionSentenceInEnglish;
+  String? questionSentenceInArabic;
   @override
-  MultipleChoiceQuestionModel(
-      {required this.options,
-      this.questionSentenceInEnglish,
-      required this.questionSentenceInArabic,
-      this.paragraph,
-      required super.answer,
-      required super.questionTextInArabic,
-      required super.questionTextInEnglish,
-      required super.imageUrl,
-      super.voiceUrl,
-      super.questionType = QuestionType.multipleChoice,
-      required super.titleInEnglish});
+  MultipleChoiceQuestionModel({
+    required this.options,
+    this.paragraphTranslation,
+    this.questionSentenceInEnglish,
+    required this.questionSentenceInArabic,
+    this.paragraph,
+    required super.answer,
+    required super.questionTextInArabic,
+    required super.questionTextInEnglish,
+    required super.imageUrl,
+    super.voiceUrl,
+    super.questionType = QuestionType.multipleChoice,
+    required super.titleInEnglish,
+    super.sectionName,
+  });
+  @override
+  MultipleChoiceQuestionModel copy() {
+    return MultipleChoiceQuestionModel(
+      options: options
+          .map((option) => RadioItemData.copy(option))
+          .toList(), // Ensuring a deep copy of options
+      paragraph: paragraph,
+      questionSentenceInEnglish: questionSentenceInEnglish,
+      questionSentenceInArabic: questionSentenceInArabic,
+      answer: answer?.copy(),
+      questionTextInArabic: questionTextInArabic,
+      questionTextInEnglish: questionTextInEnglish,
+      imageUrl: imageUrl,
+      voiceUrl: voiceUrl,
+      questionType: questionType,
+      titleInEnglish: titleInEnglish,
+      sectionName: sectionName,
+    );
+  }
 
   @override
   Map<String, dynamic> toMap() {
@@ -34,6 +58,41 @@ class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
     };
   }
 
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! MultipleChoiceQuestionModel) return false;
+
+    return other.runtimeType == runtimeType &&
+        listEquals(options, other.options) &&
+        other.paragraph == paragraph &&
+        other.questionSentenceInEnglish == questionSentenceInEnglish &&
+        other.questionSentenceInArabic == questionSentenceInArabic &&
+        other.questionTextInEnglish == questionTextInEnglish &&
+        other.questionTextInArabic == questionTextInArabic &&
+        other.imageUrl == imageUrl &&
+        other.voiceUrl == voiceUrl &&
+        other.titleInEnglish == titleInEnglish &&
+        other.answer ==
+            answer; // Ensure that BaseAnswer also correctly implements equality
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      Object.hashAll(
+          options), // Assuming RadioItemData has a proper hashCode implementation
+      paragraph,
+      questionSentenceInEnglish,
+      questionSentenceInArabic,
+      // Combine hash codes of inherited properties
+      questionTextInEnglish,
+      questionTextInArabic,
+      imageUrl,
+      voiceUrl,
+      titleInEnglish,
+      answer // Assuming BaseAnswer has a proper hashCode implementation
+      );
   factory MultipleChoiceQuestionModel.fromMap(Map<String, dynamic> map) {
     return MultipleChoiceQuestionModel(
       options: (map['options'] as List<dynamic>)
@@ -48,6 +107,7 @@ class MultipleChoiceQuestionModel extends BaseQuestion<RadioItemData> {
       questionSentenceInEnglish: map['questionSentenceInEnglish'],
       questionSentenceInArabic: map['questionSentenceInArabic'],
       titleInEnglish: map["titleInEnglish"],
+      sectionName: SectionNameExtension.fromString(map['sectionName']),
     );
   }
 

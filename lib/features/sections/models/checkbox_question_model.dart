@@ -34,4 +34,10 @@ class CheckboxQuestionModel extends BaseQuestion<List<CheckboxData>> {
   bool evaluateAnswer() {
     return answer?.validate(userAnswer) ?? false;
   }
+
+  @override
+  BaseQuestion<List<CheckboxData>> copy() {
+    // TODO: implement copy
+    throw UnimplementedError();
+  }
 }

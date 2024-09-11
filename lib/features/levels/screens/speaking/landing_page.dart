@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/sections/writing/viewmodel/writing_section_viewmodel.dart';
+import 'package:ez_english/features/levels/screens/speaking/speaking_section_viewmodel.dart';
+import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
@@ -10,50 +11,41 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class WritingSection extends StatefulWidget {
+class SpeakingSection extends StatefulWidget {
   final String levelId;
-
-  const WritingSection({super.key, required this.levelId});
+  const SpeakingSection({super.key, required this.levelId});
 
   @override
-  State<WritingSection> createState() => _WritingSectionState();
+  State<SpeakingSection> createState() => _SpeakingSectionState();
 }
 
-class _WritingSectionState extends State<WritingSection> {
-  late WritingSectionViewmodel viewmodel;
+class _SpeakingSectionState extends State<SpeakingSection> {
+  late SpeakingSectionViewmodel vm;
+
   @override
   void initState() {
-    viewmodel = Provider.of<WritingSectionViewmodel>(context, listen: false);
-    viewmodel.levelId = widget.levelId;
+    vm = Provider.of<SpeakingSectionViewmodel>(context, listen: false);
+    vm.levelId = widget.levelId;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      viewmodel.myInit();
+      vm.setValuesAndInit();
     });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    viewmodel = Provider.of<WritingSectionViewmodel>(context);
     return Scaffold(
       appBar: AppBar(
         title: ListTile(
           contentPadding: EdgeInsets.only(left: 0, right: 0),
           title: Text(
-            'Writing & Listening',
+            AppStrings.speakingPracticeScreenTitle,
             style: TextStyle(
               fontSize: 24.sp,
               color: Palette.secondary,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
-            ),
-          ),
-          subtitle: Text(
-            "Daily Conversations",
-            style: TextStyle(
-              fontSize: 17.sp,
-              color: Palette.secondary,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
             ),
           ),
         ),
@@ -69,13 +61,13 @@ class _WritingSectionState extends State<WritingSection> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgPicture.asset(
-                      'assets/images/writing_section.svg',
+                      'assets/images/speaking_section_onboarding.svg',
                       width: 200,
                       colorFilter: ColorFilter.mode(
                           Palette.primaryText, BlendMode.srcIn),
                     ),
                     Text(
-                      "Writing & Listening Section",
+                      AppStrings.speakingSectionPageTitle,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 32.sp,
@@ -85,8 +77,9 @@ class _WritingSectionState extends State<WritingSection> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
+                    Constants.gapH12,
                     Text(
-                      "In this section you will read a paragraph out loud and afterwards,  you will be asked some questions regarding the passage",
+                      AppStrings.speakingSectionOnboardingText,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         height: 2,
@@ -99,10 +92,10 @@ class _WritingSectionState extends State<WritingSection> {
               ),
               Button(
                 onPressed: () {
-                  context.push('/practice/listening');
+                  context.push('/speaking_practice/practice');
                 },
                 type: ButtonType.primary,
-                text: "continue",
+                text: AppStrings.startPracticingButton,
               )
             ],
           ),

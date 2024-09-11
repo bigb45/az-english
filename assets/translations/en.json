@@ -4,7 +4,8 @@
   "practiceScreenTitle": "Practice",
   "practiceScreenText": "B2 level, Basic Conversation",
   "readingSectionCardTitle": "Reading",
-  "listeningAndWritingSectionCardTitle": "Listening & Writing",
+  "writingSectionCardTitle": "Writing",
+  "listeningSectionCardTitle": "Listening",
   "vocabSectionCardTitle": "Vocabulary",
   "grammarSectionCardTitle": "Grammar",
   "skillTestSectionCardTitle": "Skill Test",
@@ -38,11 +39,15 @@
   "resultScreenText": "Your test results will be displayed here.",
   "username": "User Name",
   "phoneNumber": "Phone Number",
-
   "fieldRequired": "Field is required",
   "enterValidEmail": "Enter a vaild email",
   "passwordLength": "Password must be at least 6 characters",
   "nameRequired": "Name is required",
   "phoneRequired": "Phone number is required",
-  "phoneLength": "Phone number must be 10 digits"
+  "phoneLength": "Phone number must be 10 digits",
+  "requiredField": "This field is required.",
+  "checkAllFields": "Please check all the required fields.",
+  "speakingPracticeScreenTitle": "Practice",
+  "speakingSectionPageTitle": "English Practice",
+  "speakingSectionOnboardingText": "In this section you will complete the assigned questions."
 }

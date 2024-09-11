@@ -1,8 +1,8 @@
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/levels/screens/level_selection_viewmodel.dart';
+import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/resources/app_strings.dart';
-import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,13 +32,15 @@ class _PracticeSectionsState extends State<PracticeSections> {
   void initState() {
     hintTexts = [
       AppStrings.readingSectionCardTitle,
-      AppStrings.listeningAndWritingSectionCardTitle,
+      AppStrings.writingSectionCardTitle,
+      AppStrings.listeningSectionCardTitle,
       AppStrings.vocabSectionCardTitle,
       AppStrings.grammarSectionCardTitle,
       AppStrings.skillTestSectionCardTitle
     ];
     imageAssets = [
       "assets/images/reading_section_card.svg",
+      "assets/images/writing_section_card.svg",
       "assets/images/listening_section_card.svg",
       "assets/images/vocabulary_section_card.svg",
       "assets/images/grammar_section_card.svg",
@@ -46,6 +48,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
     ];
     backgroundColors = [
       const Color(0xFFFFA500),
+      const Color(0xFFae9d7e),
       const Color(0xFF3498DB),
       const Color(0xFF8F8F8F),
       const Color(0xFF663399),
@@ -69,21 +72,11 @@ class _PracticeSectionsState extends State<PracticeSections> {
           contentPadding: const EdgeInsets.only(left: 0, right: 0),
           title: Text(
             AppStrings.practiceScreenTitle,
-            style: TextStyle(
-              fontSize: 24.sp,
-              color: Palette.secondary,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyles.titleTextStyle,
           ),
           subtitle: Text(
-            widget.levelName,
-            style: TextStyle(
-              fontSize: 17.sp,
-              color: Palette.secondary,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
-            ),
+            "Speaking Practice",
+            style: TextStyles.subtitleTextStyle,
           ),
         ),
       ),
@@ -93,7 +86,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
               child: SingleChildScrollView(
                 child: SizedBox(
                   child: Padding(
-                    padding: EdgeInsets.all(Constants.padding20),
+                    padding: EdgeInsets.all(Constants.padding8),
                     child: Center(
                       child: Column(
                         children: [

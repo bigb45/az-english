@@ -1,32 +1,59 @@
 import 'dart:convert';
 
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:flutter/foundation.dart';
 
 class WordDefinition extends BaseQuestion {
-  final String englishWord;
-  final String? arabicWord;
-  final WordType type;
-  final String? definition;
-  final List<String>? exampleUsageInEnglish;
-  final List<String>? exampleUsageInArabic;
+  String englishWord;
+  String? arabicWord;
+  WordType type;
+  String? definition;
+  List<String>? exampleUsageInEnglish;
+  List<String>? exampleUsageInArabic;
 
   final String? tenses;
   bool isNew;
-  WordDefinition(
-      {required this.englishWord,
-      required super.titleInEnglish,
-      required this.arabicWord,
-      required this.type,
-      this.isNew = true,
-      this.definition,
-      this.exampleUsageInEnglish,
-      this.exampleUsageInArabic,
-      this.tenses,
-      required super.questionTextInEnglish,
-      required super.questionTextInArabic,
-      required super.questionType,
-      required super.imageUrl,
-      required super.voiceUrl});
+  WordDefinition({
+    required this.englishWord,
+    super.titleInEnglish,
+    required this.arabicWord,
+    required this.type,
+    this.isNew = true,
+    this.definition,
+    this.exampleUsageInEnglish,
+    this.exampleUsageInArabic,
+    this.tenses,
+    super.questionTextInEnglish,
+    super.questionTextInArabic,
+    required super.questionType,
+    super.imageUrl,
+    super.voiceUrl,
+    super.sectionName,
+  });
+  @override
+  WordDefinition copy() {
+    return WordDefinition(
+      englishWord: englishWord,
+      arabicWord: arabicWord,
+      type: type,
+      definition: definition,
+      exampleUsageInEnglish: exampleUsageInEnglish != null
+          ? List<String>.from(exampleUsageInEnglish!)
+          : null,
+      exampleUsageInArabic: exampleUsageInArabic != null
+          ? List<String>.from(exampleUsageInArabic!)
+          : null,
+      tenses: tenses,
+      isNew: isNew,
+      titleInEnglish: titleInEnglish,
+      questionTextInEnglish: questionTextInEnglish,
+      questionTextInArabic: questionTextInArabic,
+      questionType: questionType,
+      imageUrl: imageUrl,
+      voiceUrl: voiceUrl,
+    );
+  }
+
   @override
   Map<String, dynamic> toMap() {
     Map<String, dynamic> baseMap = super.toMap();
@@ -39,6 +66,7 @@ class WordDefinition extends BaseQuestion {
       'exampleUsageInEnglish': exampleUsageInEnglish,
       'exampleUsageInArabic': exampleUsageInArabic,
       'isNew': isNew,
+
       // TODO implement exampleUsage and tenses attributes if needed
     };
   }
@@ -46,29 +74,33 @@ class WordDefinition extends BaseQuestion {
   @override
   factory WordDefinition.fromMap(Map<String, dynamic> map) {
     return WordDefinition(
-        titleInEnglish: map["titleInEnglish"],
-        englishWord: map['englishWord'],
-        arabicWord: map['arabicWord'],
-        isNew: map['isNew'],
-        type: switch (map['type']) {
-          'verb' => WordType.verb,
-          'word' => WordType.word,
-          'sentence' => WordType.sentence,
-          null => WordType.sentence,
-          Object() => throw UnimplementedError(),
-        },
-        definition: map['definition'],
-        questionTextInEnglish: map['questionTextInEnglish'],
-        questionTextInArabic: map['questionTextInArabic'],
-        imageUrl: map['imageUrl'],
-        voiceUrl: map['voiceUrl'],
-        exampleUsageInEnglish: map['exampleUsageInEnglish'] != null
-            ? List<String>.from(map['exampleUsageInEnglish'])
-            : null,
-        exampleUsageInArabic: map['exampleUsageInArabic'] != null
-            ? List<String>.from(map['exampleUsageInArabic'])
-            : null,
-        questionType: QuestionTypeExtension.fromString(map['questionType']));
+      titleInEnglish: map["titleInEnglish"],
+      englishWord: map['englishWord'],
+      arabicWord: map['arabicWord'],
+      isNew: map['isNew'],
+      type: switch (map['type']) {
+        'verb' => WordType.verb,
+        'word' => WordType.word,
+        'sentence' => WordType.sentence,
+        null => WordType.sentence,
+        Object() => throw UnimplementedError(),
+      },
+      definition: map['definition'],
+      questionTextInEnglish: map['questionTextInEnglish'],
+      questionTextInArabic: map['questionTextInArabic'],
+      imageUrl: map['imageUrl'],
+      voiceUrl: map['voiceUrl'],
+      exampleUsageInEnglish: map['exampleUsageInEnglish'] != null
+          ? List<String>.from(map['exampleUsageInEnglish'])
+          : null,
+      exampleUsageInArabic: map['exampleUsageInArabic'] != null
+          ? List<String>.from(map['exampleUsageInArabic'])
+          : null,
+      questionType: QuestionTypeExtension.fromString(
+        map['questionType'],
+      ),
+      sectionName: SectionNameExtension.fromString(map['sectionName']),
+    );
   }
 
   factory WordDefinition.fromJson(String data) {
@@ -80,6 +112,32 @@ class WordDefinition extends BaseQuestion {
   bool evaluateAnswer() {
     return true;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is WordDefinition &&
+        other.englishWord == englishWord &&
+        other.arabicWord == arabicWord &&
+        other.type == type &&
+        other.definition == definition &&
+        listEquals(other.exampleUsageInEnglish, exampleUsageInEnglish) &&
+        listEquals(other.exampleUsageInArabic, exampleUsageInArabic) &&
+        other.tenses == tenses &&
+        other.isNew == isNew;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      englishWord,
+      arabicWord,
+      type,
+      definition,
+      Object.hashAll(exampleUsageInEnglish ?? []),
+      Object.hashAll(exampleUsageInArabic ?? []),
+      tenses,
+      isNew,
+      super.hashCode);
 }
 
 enum WordType {

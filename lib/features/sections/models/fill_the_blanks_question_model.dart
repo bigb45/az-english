@@ -4,19 +4,35 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/string_answer.dart';
 
 class FillTheBlanksQuestionModel extends BaseQuestion<String> {
-  final String? incompleteSentenceInEnglish;
-  final String? incompleteSentenceInArabic;
+  String? incompleteSentenceInEnglish;
+  String? incompleteSentenceInArabic;
   FillTheBlanksQuestionModel({
     this.incompleteSentenceInEnglish,
     this.incompleteSentenceInArabic,
     required super.answer,
-    required super.questionTextInEnglish,
-    required super.questionTextInArabic,
+    super.questionTextInEnglish,
+    super.questionTextInArabic,
     super.questionType = QuestionType.fillTheBlanks,
-    required super.imageUrl,
-    required super.voiceUrl,
-    required super.titleInEnglish,
+    super.imageUrl,
+    super.voiceUrl,
+    super.titleInEnglish,
+    super.sectionName,
   });
+
+  @override
+  FillTheBlanksQuestionModel copy() {
+    return FillTheBlanksQuestionModel(
+      incompleteSentenceInEnglish: incompleteSentenceInEnglish,
+      incompleteSentenceInArabic: incompleteSentenceInArabic,
+      answer: answer?.copy(),
+      questionTextInEnglish: questionTextInEnglish,
+      questionTextInArabic: questionTextInArabic,
+      imageUrl: imageUrl,
+      voiceUrl: voiceUrl,
+      titleInEnglish: titleInEnglish,
+      questionType: questionType,
+    );
+  }
 
   @override
   Map<String, dynamic> toMap() {
@@ -29,17 +45,18 @@ class FillTheBlanksQuestionModel extends BaseQuestion<String> {
     };
   }
 
-  factory FillTheBlanksQuestionModel.fromMap(Map<String, dynamic> json) {
+  factory FillTheBlanksQuestionModel.fromMap(Map<String, dynamic> map) {
     return FillTheBlanksQuestionModel(
-      answer: StringAnswer(answer: json['answer']['answer']),
-      questionTextInEnglish: json['questionTextInEnglish'],
-      questionTextInArabic: json['questionTextInArabic'],
-      imageUrl: json['imageUrl'],
-      voiceUrl: json['voiceUrl'],
-      incompleteSentenceInEnglish: json['incompleteSentenceInEnglish'],
-      incompleteSentenceInArabic: json['incompleteSentenceInArabic'],
+      answer: StringAnswer(answer: map['answer']['answer']),
+      questionTextInEnglish: map['questionTextInEnglish'],
+      questionTextInArabic: map['questionTextInArabic'],
+      imageUrl: map['imageUrl'],
+      voiceUrl: map['voiceUrl'],
+      incompleteSentenceInEnglish: map['incompleteSentenceInEnglish'],
+      incompleteSentenceInArabic: map['incompleteSentenceInArabic'],
       questionType: QuestionType.fillTheBlanks,
-      titleInEnglish: json["titleInEnglish"],
+      titleInEnglish: map["titleInEnglish"],
+      sectionName: SectionNameExtension.fromString(map['sectionName']),
     );
   }
 
@@ -48,4 +65,27 @@ class FillTheBlanksQuestionModel extends BaseQuestion<String> {
     userAnswer = userAnswer ?? StringAnswer(answer: "");
     return answer?.validate(userAnswer) ?? false;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is FillTheBlanksQuestionModel &&
+        other.questionTextInEnglish == questionTextInEnglish &&
+        other.questionTextInArabic == questionTextInArabic &&
+        other.imageUrl == imageUrl &&
+        other.voiceUrl == voiceUrl &&
+        other.titleInEnglish == titleInEnglish &&
+        other.incompleteSentenceInEnglish == incompleteSentenceInEnglish &&
+        other.incompleteSentenceInArabic == incompleteSentenceInArabic;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      questionTextInEnglish,
+      questionTextInArabic,
+      imageUrl,
+      voiceUrl,
+      titleInEnglish,
+      incompleteSentenceInEnglish,
+      incompleteSentenceInArabic);
 }

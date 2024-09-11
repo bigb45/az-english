@@ -4,12 +4,26 @@ import 'package:ez_english/components.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/auth/screens/sign_in.dart';
 import 'package:ez_english/features/auth/screens/sign_up.dart';
-import 'package:ez_english/features/home/test_overview.dart';
+import 'package:ez_english/features/home/admin/admin_screen.dart';
+import 'package:ez_english/features/home/admin/question_assignment/question_assignment.dart';
+import 'package:ez_english/features/home/admin/users/all_users.dart';
+import 'package:ez_english/features/home/admin/users/user_settings.dart';
+import 'package:ez_english/features/home/admin/worksheets/admin_worksheet_view.dart';
+import 'package:ez_english/features/home/admin/worksheets/all_worksheets.dart';
+import 'package:ez_english/features/home/content/add_question.dart';
+import 'package:ez_english/features/home/content/content_screen.dart';
+import 'package:ez_english/features/home/content/edit_question.dart';
+import 'package:ez_english/features/home/test/test_overview.dart';
+import 'package:ez_english/features/levels/screens/speaking/landing_page.dart';
+import 'package:ez_english/features/levels/screens/speaking/speaking_practice.dart';
+import 'package:ez_english/features/levels/screens/worksheet_view/student_worksheet_view.dart';
 import 'package:ez_english/features/models/test_result.dart';
 import 'package:ez_english/features/sections/components/youtube_lesson.dart';
 import 'package:ez_english/features/sections/exam/test.dart';
 import 'package:ez_english/features/sections/grammar/landing_page.dart';
 import 'package:ez_english/features/sections/grammar/practice.dart';
+import 'package:ez_english/features/sections/listening/landing_page.dart';
+import 'package:ez_english/features/sections/listening/practice.dart';
 import 'package:ez_english/features/sections/reading/landing_page.dart';
 import 'package:ez_english/features/sections/reading/practice.dart';
 import 'package:ez_english/features/sections/sections_screen.dart';
@@ -81,13 +95,16 @@ final loggedInRouter = GoRouter(
           "1" => WritingSection(
               levelId: levelId,
             ),
-          "2" => VocabularySection(
+          "2" => ListeningSection(
               levelId: levelId,
             ),
-          "3" => GrammarSection(
+          "3" => VocabularySection(
               levelId: levelId,
             ),
-          "4" => TestSection(levelId: levelId),
+          "4" => GrammarSection(
+              levelId: levelId,
+            ),
+          "5" => TestSection(levelId: levelId),
           String() => const Placeholder(),
         };
       }),
@@ -102,7 +119,8 @@ final loggedInRouter = GoRouter(
         return switch (state.pathParameters['sectionId']) {
           "reading" => ReadingPractice(),
           "grammar" => GrammarPractice(),
-          "listening" => WritingPractice(),
+          "listening" => ListeningPractice(),
+          "writing" => WritingPractice(),
           "vocabulary" => WordsListView(),
           String() || null => const Placeholder(),
         };
@@ -123,5 +141,73 @@ final loggedInRouter = GoRouter(
         );
       }),
     ),
+
+    // USER ROUTES
+    GoRoute(
+      path: '/all_users',
+      builder: (context, state) => AllUsers(),
+    ),
+    GoRoute(
+      path: '/user_settings/:userId',
+      builder: (context, state) {
+        final userId = state.pathParameters['userId'] ?? "-1";
+        return UserSettings(userId: userId);
+      },
+    ),
+
+    GoRoute(
+      path: '/user_settings/:userId/question_assignment',
+      builder: (context, state) {
+        final userId = state.pathParameters['userId'] ?? "-1";
+        return QuestionAssignment(userId: userId);
+      },
+    ),
+    // ADMIN ROUTES
+    GoRoute(
+      path: '/edit_question/:questionId',
+      builder: (context, state) {
+        final String questionId = state.pathParameters['questionId'] ?? "-1";
+        return EditQuestion();
+      },
+    ),
+    GoRoute(
+      path: '/add_question',
+      builder: (context, state) => const AddQuestion(),
+    ),
+    GoRoute(
+      path: '/all_questions',
+      builder: (context, state) => const ContentScreen(),
+    ),
+    GoRoute(
+      path: '/admin',
+      builder: (context, state) => AdminScreen(),
+    ),
+    GoRoute(
+      path: '/speaking_practice',
+      builder: (context, state) => SpeakingSection(levelId: "0"),
+    ),
+    GoRoute(
+      path: '/speaking_practice/practice',
+      builder: (context, state) => SpeakingPractice(),
+    ),
+
+    GoRoute(
+      path: '/student_worksheet_view',
+      builder: (context, state) => StudentWorksheetView(),
+    ),
+
+    GoRoute(
+      path: '/all_worksheets',
+      builder: (context, state) => AllWorksheets(),
+    ),
+
+    GoRoute(
+        path: '/worksheet/:worksheetId',
+        builder: (context, state) {
+          final worksheetId = state.pathParameters['worksheetId'] ?? "-1";
+          return AdminWorksheetView(
+            worksheetId: worksheetId,
+          );
+        }),
   ],
 );

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SelectableCard extends StatefulWidget {
   final VoidCallback? onPressed;
   final bool selected;
+
   final Widget child;
   const SelectableCard(
       {super.key,
@@ -50,7 +51,7 @@ class SelectableCardState extends State<SelectableCard> {
               width: 170.w,
               height: 170.h,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(10.sp, 10.sp, 10.sp, 10.sp),
+                padding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 10.h),
                 child: ColorFiltered(
                   colorFilter: ColorFilter.mode(
                       Palette.secondaryStroke.withOpacity(0.5),

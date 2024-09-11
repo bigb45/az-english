@@ -38,4 +38,10 @@ class ListeningQuestionModel extends BaseQuestion {
         json.decode(data) as Map<String, dynamic>);
   }
   String toJson() => json.encode(toMap());
+
+  @override
+  BaseQuestion copy() {
+    // TODO: implement copy
+    throw UnimplementedError();
+  }
 }

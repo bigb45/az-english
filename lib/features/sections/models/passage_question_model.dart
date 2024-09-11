@@ -6,7 +6,7 @@ class PassageQuestionModel extends BaseQuestion {
   String? passageInEnglish;
   String? passageInArabic;
   String? titleInArabic;
-  List<BaseQuestion?> questions;
+  Map<int, BaseQuestion?> questions;
   PassageQuestionModel(
       {this.passageInArabic,
       this.passageInEnglish,
@@ -17,7 +17,26 @@ class PassageQuestionModel extends BaseQuestion {
       required super.questionTextInArabic,
       required super.imageUrl,
       required super.voiceUrl,
+      super.sectionName,
       super.questionType = QuestionType.passage});
+
+  @override
+  PassageQuestionModel copy() {
+    return PassageQuestionModel(
+      passageInArabic: passageInArabic,
+      passageInEnglish: passageInEnglish,
+      titleInArabic: titleInArabic,
+      titleInEnglish: titleInEnglish,
+      questionTextInEnglish: questionTextInEnglish,
+      questionTextInArabic: questionTextInArabic,
+      imageUrl: imageUrl,
+      voiceUrl: voiceUrl,
+      questionType: questionType,
+      questions: questions.map(
+        (key, value) => MapEntry(key, value?.copy()),
+      ),
+    );
+  }
 
   factory PassageQuestionModel.fromMap(Map<String, dynamic> map) {
     return PassageQuestionModel(
@@ -25,14 +44,15 @@ class PassageQuestionModel extends BaseQuestion {
       passageInArabic: map['passageInArabic'] ?? "No Arabic Passage",
       titleInArabic: map['titleInArabic'] ?? "No title in Arabic",
       titleInEnglish: map['titleInEnglish'] ?? "No title in English",
-      questions: (map['questions'] as List)
-          .map((item) => BaseQuestion.fromMap(item))
-          .toList(),
+      questions: (map['questions'] as Map<String, dynamic>).map(
+        (key, value) => MapEntry(int.parse(key), BaseQuestion.fromMap(value)),
+      ),
       questionTextInEnglish: map['questionTextInEnglish'],
       questionTextInArabic: map['questionTextInArabic'],
       imageUrl: map['imageUrl'],
       voiceUrl: map['voiceUrl'],
       questionType: QuestionType.passage,
+      sectionName: SectionNameExtension.fromString(map['sectionName']),
     );
   }
 
@@ -45,7 +65,8 @@ class PassageQuestionModel extends BaseQuestion {
       'passageInArabic': passageInArabic,
       'titleInArabic': titleInArabic,
       "titleInEnglish": titleInEnglish,
-      "questions": questions.map((question) => question?.toMap()).toList()
+      'questions': questions
+          .map((key, value) => MapEntry(key.toString(), value?.toMap())),
     };
   }
 

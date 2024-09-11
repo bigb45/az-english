@@ -20,4 +20,22 @@ class StringAnswer extends BaseAnswer<String> {
       'answer': answer,
     };
   }
+
+  // Implementing == operator
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! StringAnswer) return false;
+    return other.answer == answer;
+  }
+
+  @override
+  int get hashCode => answer.hashCode;
+
+  @override
+  StringAnswer copy() {
+    return StringAnswer(
+      answer: answer ?? '',
+    )..userAnswer = userAnswer;
+  }
 }

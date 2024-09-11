@@ -4,7 +4,6 @@ import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/audio_control_button.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
@@ -26,14 +25,23 @@ class DictationQuestion extends StatefulWidget {
 }
 
 class _DictationQuestionState extends State<DictationQuestion> {
-  final String apiKey = dotenv.env['AZURE_API_KEY_1'] ?? '';
   late DictationQuestionViewModel viewmodel;
   bool _isLoading = false;
-
+  bool _isPlaying = false;
+  bool _isPaused = false;
   @override
   void initState() {
     super.initState();
     viewmodel = Provider.of<DictationQuestionViewModel>(context, listen: false);
+    player.playerStateStream.listen((playerState) {
+      setState(() {
+        _isPlaying = playerState.playing;
+        if (playerState.processingState == ProcessingState.completed) {
+          _isPlaying = false;
+          _isPaused = false;
+        }
+      });
+    });
   }
 
   @override
@@ -58,7 +66,18 @@ class _DictationQuestionState extends State<DictationQuestion> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  "Type the sentence you hear",
+                  widget.question.questionTextInEnglish ??
+                      "Type the sentence you hear",
+                  style: TextStyles.questionTextStyle.copyWith(height: 2),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  textDirection: TextDirection.rtl,
+                  widget.question.questionTextInArabic ?? "",
                   style: TextStyles.questionTextStyle.copyWith(height: 2),
                 ),
               ],
@@ -66,18 +85,34 @@ class _DictationQuestionState extends State<DictationQuestion> {
             SizedBox(height: Constants.padding20),
             AudioControlButton(
               onPressed: () async {
-                setState(() {
-                  _isLoading = true;
-                });
-                String audioUrl =
-                    await viewmodel.getAudioBytes(widget.question);
-                await player.setUrl(audioUrl);
-                setState(() {
-                  _isLoading = false;
-                });
-                await player.play();
+                if (_isPlaying) {
+                  await player.pause();
+                  setState(() {
+                    _isPaused = true;
+                  });
+                } else if (_isPaused) {
+                  await player.play();
+                  setState(() {
+                    _isPaused = false;
+                  });
+                } else {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  String audioUrl =
+                      await viewmodel.getAudioBytes(widget.question);
+                  await player.setUrl(audioUrl);
+                  setState(() {
+                    _isLoading = false;
+                  });
+                  await player.play();
+                }
               },
-              type: AudioControlType.speaker,
+              type: _isPlaying
+                  ? AudioControlType.pause
+                  : _isPaused
+                      ? AudioControlType.play
+                      : AudioControlType.speaker,
               isLoading: _isLoading,
             ),
             SizedBox(height: Constants.padding20),

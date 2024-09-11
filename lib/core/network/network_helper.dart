@@ -52,8 +52,7 @@ class NetworkHelper {
   }
 
   void _setAuthHeader() {
-    headers.putIfAbsent(
-        'Ocp-Apim-Subscription-Key', () => '${APIConstants.apiKey}');
+    headers.putIfAbsent('Ocp-Apim-Subscription-Key', () => APIConstants.apiKey);
   }
 
   Future<CustomResponse> get({

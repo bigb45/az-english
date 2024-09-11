@@ -18,4 +18,10 @@ class SentenceFormingQuestionModel extends BaseQuestion<String> {
             voiceUrl: '',
             questionType: QuestionType.sentenceForming,
             answer: StringAnswer(answer: correctAnswer));
+
+  @override
+  BaseQuestion<String> copy() {
+    // TODO: implement copy
+    throw UnimplementedError();
+  }
 }

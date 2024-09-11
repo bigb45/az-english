@@ -18,7 +18,6 @@ import 'package:ez_english/features/sections/models/speaking_question_model.dart
 import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
-import 'package:ez_english/features/sections/vocabulary/word_view.dart';
 import 'package:flutter/material.dart';
 
 Widget buildQuestion({
@@ -35,7 +34,7 @@ Widget buildQuestion({
     case QuestionType.sentenceForming:
       return SentenceFormingQuestion(
         question: question as SentenceFormingQuestionModel,
-        onChanged: (value) => onChanged(value as StringAnswer),
+        onChanged: (value) => onChanged(value),
         answerState: answerState,
       );
 
@@ -72,11 +71,12 @@ Widget buildQuestion({
         child: YouTubeVideoPlayer(
           key: ValueKey((question as YoutubeLessonModel).youtubeUrl ??
               "https://www.youtube.com/watch?v=aDm5WZ3QiIE"),
-          videoId: (question as YoutubeLessonModel).youtubeUrl ??
+          videoId: (question).youtubeUrl ??
               "https://www.youtube.com/watch?v=aDm5WZ3QiIE",
         ),
       );
     case QuestionType.vocabularyWithListening:
+    case QuestionType.vocabulary:
       return WordViewQuestion(wordData: question as WordDefinition);
     case QuestionType.fillTheBlanks:
       return FillTheBlanksQuestion(
@@ -88,7 +88,7 @@ Widget buildQuestion({
       );
 
     default:
-      print("Unsupported Question Type: ${question.questionType}, ${question}");
+      print("Unsupported Question Type: ${question.questionType}, $question");
       return const Text("Unsupported Question Type");
   }
 }

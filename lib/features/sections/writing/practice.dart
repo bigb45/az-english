@@ -99,7 +99,7 @@ class _WritingPracticeState extends State<WritingPractice> {
             title: ListTile(
               contentPadding: const EdgeInsets.only(left: 0, right: 0),
               title: Text(
-                'Writing & Listening Practice',
+                'Writing Practice',
                 style: TextStyles.titleTextStyle.copyWith(
                   color: Palette.primaryText,
                 ),

@@ -31,7 +31,7 @@ class FirebaseAuthService {
   Future<void> resetPassword(String email) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email.trim());
-      Utils.showSnackBar("Password Reset Email Sent");
+      Utils.showErrorSnackBar("Password Reset Email Sent");
     } on FirebaseAuthException catch (e) {
       throw CustomException.fromFirebaseAuthException(e);
     }

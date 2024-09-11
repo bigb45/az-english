@@ -133,6 +133,9 @@ class _TestSectionState extends State<TestSection> {
                                           child: ExpandableTextBox(
                                               paragraph: viewmodel
                                                   .passageTexts[index]!,
+                                              paragraphTranslation: viewmodel
+                                                      .passageTextTranslations[
+                                                  index],
                                               isFocused: false,
                                               readMoreText: AppStrings
                                                   .mcQuestionReadMoreText)),

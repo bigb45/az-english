@@ -58,13 +58,31 @@ class _RadioGroupState extends State<RadioGroup> {
 }
 
 class RadioItemData {
-  final String title;
-  final String value;
+  String title;
+  String value;
+
   RadioItemData({required this.title, required this.value});
+  RadioItemData.copy(RadioItemData source)
+      : title = source.title,
+        value = source.value;
+
+  @override
+  bool operator ==(Object other) {
+    // if (identical(this, other)) return true;
+    // TODO:should we compare the hash codes too ???
+
+    return other is RadioItemData &&
+        other.title == title &&
+        other.value == value;
+  }
+
+  @override
+  int get hashCode => title.hashCode ^ value.hashCode;
+
   Map<String, dynamic> toMap() {
     return {
-      'value': value,
       'title': title,
+      'value': value,
     };
   }
 

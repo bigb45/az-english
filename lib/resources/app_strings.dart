@@ -4,15 +4,18 @@ abstract class AppStrings {
   static final continueButton = 'continueButton'.tr();
   static final sectionScreen = 'sectionScreen'.tr();
   static final practiceScreenTitle = 'practiceScreenTitle'.tr();
+  static final speakingPracticeScreenTitle = 'speakingPracticeScreenTitle'.tr();
   static final practiceScreenText = 'practiceScreenText'.tr();
   static final readingSectionCardTitle = 'readingSectionCardTitle'.tr();
-  static final listeningAndWritingSectionCardTitle =
-      'listeningAndWritingSectionCardTitle'.tr();
+  static final writingSectionCardTitle = "writingSectionCardTitle".tr();
+  static final listeningSectionCardTitle = "listeningSectionCardTitle".tr();
   static final vocabSectionCardTitle = 'vocabSectionCardTitle'.tr();
   static final grammarSectionCardTitle = 'grammarSectionCardTitle'.tr();
   static final skillTestSectionCardTitle = 'skillTestSectionCardTitle'.tr();
   static final readingSectionOnboardingAppbarTitle =
       "readingSectionOnboardingAppbarTitle".tr();
+  static final speakingSectionOnboardingAppbarTitle =
+      "speakingSectionOnboardingAppbarTitle".tr();
   static final readingSectionOnboardingTitle =
       "readingSectionOnboardingTitle".tr();
   static final vocabularySectionOnboardingTitle =
@@ -62,4 +65,14 @@ abstract class AppStrings {
   static final String nameRequired = "nameRequired".tr();
   static final String phoneRequired = "phoneRequired".tr();
   static final String phoneLength = "phoneLength".tr();
+
+  static final String requiredField = "requiredField".tr();
+
+  static final String checkAllFields = "checkAllFields".tr();
+
+  static final String speakingSectionOnboardingText =
+      "speakingSectionOnboardingText".tr();
+
+  static final String speakingSectionPageTitle =
+      "speakingSectionPageTitle".tr();
 }

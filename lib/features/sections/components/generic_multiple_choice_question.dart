@@ -3,6 +3,7 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/expandable_text.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,7 @@ class _GenericMultipleChoiceQuestionState
             _isReadMore
                 ? ExpandableTextBox(
                     paragraph: widget.question.paragraph!,
+                    paragraphTranslation: widget.question.paragraphTranslation!,
                     isFocused: _isFocused,
                     isReadMore: _isReadMore,
                     readMoreText: AppStrings.mcQuestionReadMoreText)
@@ -68,19 +70,25 @@ class _GenericMultipleChoiceQuestionState
             if (widget.question.questionSentenceInEnglish != null)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  widget.question.questionSentenceInEnglish!,
-                  style: TextStyles.questionTextStyle.copyWith(height: 1.5),
+                child: RichText(
+                  text: TextSpan(
+                      children: stringToRichText(
+                    widget.question.questionSentenceInEnglish!,
+                  )),
+                  // style: TextStyles.questionTextStyle.copyWith(height: 1.5),
                   maxLines: 5,
                 ),
               ),
             if (widget.question.questionSentenceInArabic != null)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  widget.question.questionSentenceInArabic!,
-                  style: TextStyles.questionTextStyle.copyWith(height: 1.5),
+                child: RichText(
                   textDirection: TextDirection.rtl,
+                  text: TextSpan(
+                      children: stringToRichText(
+                    widget.question.questionSentenceInArabic!,
+                  )),
+                  // style: TextStyles.questionTextStyle.copyWith(height: 1.5),
                   maxLines: 5,
                 ),
               ),

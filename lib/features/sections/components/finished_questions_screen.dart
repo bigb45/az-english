@@ -34,7 +34,7 @@ class FinishedQuestionsScreen extends StatelessWidget {
               "Finished all questions",
               style: TextStyles.titleTextStyle,
             ),
-            contentPadding: EdgeInsets.only(left: 0, right: 0),
+            contentPadding: const EdgeInsets.only(left: 0, right: 0),
           ),
         ),
         body: Padding(
@@ -56,6 +56,5 @@ class FinishedQuestionsScreen extends StatelessWidget {
         ),
       ),
     );
-    ;
   }
 }
