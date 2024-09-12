@@ -72,7 +72,9 @@ class LevelSelectionViewmodel extends BaseViewModel {
       }
     } catch (e) {
       print("Error checking worksheet upload: $e");
-    } finally {}
+    } finally {
+      notifyListeners();
+    }
   }
 
   Future<void> uploadWorksheetImage({

@@ -46,7 +46,7 @@ class FirestoreService {
       QuerySnapshot levelSnapshot =
           await _db.collection(FirestoreConstants.levelsCollection).get();
       if (levelSnapshot.docs.isEmpty) {
-        throw "No levels found";
+        return [];
       }
 
       _userModel = await getUser(_user!.uid);
