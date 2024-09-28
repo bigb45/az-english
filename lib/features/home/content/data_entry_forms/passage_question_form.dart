@@ -325,6 +325,8 @@ class _PassageFormState extends State<PassageForm> {
                   ? () {
                       if (_formKey.currentState!.validate()) {
                         final updatedQuestion = viewmodel.submitForm(
+                          sectionName:
+                              SectionNameExtension.fromString(widget.section),
                           questions: questions,
                           passageInEnglish:
                               passageInEnglishController.text.trim(),

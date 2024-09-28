@@ -261,6 +261,8 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
 
                         viewmodel
                             .submitForm(
+                          sectionName:
+                              SectionNameExtension.fromString(widget.section),
                           incompleteSentenceInEnglish: newEnglishText,
                           incompleteSentenceInArabic:
                               arabicText.isEmpty ? null : arabicText,

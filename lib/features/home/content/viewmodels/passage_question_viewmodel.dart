@@ -29,6 +29,7 @@ class PassageViewModel extends ChangeNotifier {
       required String titleInArabic,
       required String questionTextInEnglish,
       required String questionTextInArabic,
+      required SectionName sectionName,
       required Map<int, BaseQuestion<dynamic>?> questions}) {
     return PassageQuestionModel(
       questions: questions,
@@ -40,6 +41,7 @@ class PassageViewModel extends ChangeNotifier {
       questionTextInArabic: questionTextInArabic,
       imageUrl: '', // Handle image URL if necessary
       voiceUrl: '', // Handle voice URL if necessary
+      sectionName: sectionName,
     );
   }
 

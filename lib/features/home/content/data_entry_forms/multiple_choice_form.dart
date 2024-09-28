@@ -462,7 +462,9 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                                     titleInEnglishController.text.trim().isEmpty
                                         ? null
                                         : titleInEnglishController.text.trim(),
-                                imageUrlInEditMode: widget.question?.imageUrl)
+                                imageUrlInEditMode: widget.question?.imageUrl,
+                                sectionName: SectionNameExtension.fromString(
+                                    widget.sectionName))
                             .then((updatedQuestion) {
                           if (updatedQuestion != null) {
                             setState(() {

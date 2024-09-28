@@ -268,6 +268,8 @@ class _VocabularyFormState extends State<VocabularyForm> {
                       if (_formKey.currentState!.validate()) {
                         viewmodel
                             .submitForm(
+                          sectionName:
+                              SectionNameExtension.fromString(widget.section),
                           englishWord: englishWordController.text.trim(),
                           arabicWord: arabicWordController.text.trim().isEmpty
                               ? null

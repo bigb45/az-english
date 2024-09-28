@@ -212,6 +212,8 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                               titleInEnglishController.text.trim().isEmpty
                                   ? null
                                   : titleInEnglishController.text.trim(),
+                          sectionName:
+                              SectionNameExtension.fromString(widget.section),
                         )
                             .then((updatedQuestion) {
                           if (updatedQuestion != null) {

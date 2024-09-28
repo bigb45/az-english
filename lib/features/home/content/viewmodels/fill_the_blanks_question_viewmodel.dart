@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class FillTheBlanksViewModel extends ChangeNotifier {
     required String answer,
     String? questionTextInEnglish,
     String? questionTextInArabic,
+    required SectionName sectionName,
   }) async {
     return FillTheBlanksQuestionModel(
       incompleteSentenceInEnglish: incompleteSentenceInEnglish,
@@ -34,6 +36,7 @@ class FillTheBlanksViewModel extends ChangeNotifier {
       answer: StringAnswer(answer: answer),
       questionTextInEnglish: questionTextInEnglish,
       questionTextInArabic: questionTextInArabic,
+      sectionName: sectionName,
     );
   }
 

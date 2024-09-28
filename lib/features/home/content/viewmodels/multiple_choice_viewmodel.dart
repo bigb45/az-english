@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/core/permissions/permission_handler_service.dart';
+import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
 import 'package:ez_english/widgets/radio_button.dart';
@@ -126,6 +127,7 @@ class MultipleChoiceViewModel extends ChangeNotifier {
     required String? questionSentenceInArabic,
     required String? titleInEnglish,
     required String? imageUrlInEditMode,
+    required SectionName sectionName,
   }) async {
     if (questionTextInEnglish != null) {
       String? imageUrl;
@@ -136,15 +138,15 @@ class MultipleChoiceViewModel extends ChangeNotifier {
         imageUrl = imageUrlInEditMode;
       }
       return MultipleChoiceQuestionModel(
-        questionTextInEnglish: questionTextInEnglish,
-        questionTextInArabic: questionTextInArabic,
-        questionSentenceInEnglish: questionSentenceInEnglish,
-        questionSentenceInArabic: questionSentenceInArabic,
-        imageUrl: imageUrl,
-        options: answers,
-        answer: MultipleChoiceAnswer(answer: selectedAnswer),
-        titleInEnglish: titleInEnglish,
-      );
+          questionTextInEnglish: questionTextInEnglish,
+          questionTextInArabic: questionTextInArabic,
+          questionSentenceInEnglish: questionSentenceInEnglish,
+          questionSentenceInArabic: questionSentenceInArabic,
+          imageUrl: imageUrl,
+          options: answers,
+          answer: MultipleChoiceAnswer(answer: selectedAnswer),
+          titleInEnglish: titleInEnglish,
+          sectionName: sectionName);
     } else {
       print("Form is not valid or no answer is selected or options are empty.");
     }
