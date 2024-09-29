@@ -2,10 +2,12 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/resources/app_strings.dart';
+import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +29,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
   late List<String?> imageAssets = [];
   late List<Color> backgroundColors = [];
   late List<String> sectionNames = [];
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -67,7 +70,17 @@ class _PracticeSectionsState extends State<PracticeSections> {
     LevelSelectionViewmodel viewmodel =
         Provider.of<LevelSelectionViewmodel>(context);
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              _scaffoldKey.currentState?.openEndDrawer();
+            },
+            icon: _buildCircularSvgIcon(
+                "assets/images/app_bar_action_button_icon.svg"),
+          ),
+        ],
         title: ListTile(
           contentPadding: const EdgeInsets.only(left: 0, right: 0),
           title: Text(
@@ -132,6 +145,65 @@ class _PracticeSectionsState extends State<PracticeSections> {
                 ),
               ),
             ),
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            SizedBox(
+              height: 158.h,
+              child: const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Palette.primaryButtonStroke,
+                ),
+                child: Center(
+                  child: Text(
+                    'Choose a Unit',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // Example unit options
+            ListTile(
+              leading: Icon(Icons.book),
+              title: Text('Unit 1'),
+              onTap: () {
+                // Handle unit selection
+                Navigator.of(context).pop(); // Close the drawer
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.book),
+              title: Text('Unit 2'),
+              onTap: () {
+                // Handle unit selection
+                Navigator.of(context).pop(); // Close the drawer
+              },
+            ),
+            // Add more units here...
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCircularSvgIcon(String assetPath) {
+    return Container(
+      width: 40.0,
+      height: 40.0,
+      decoration: BoxDecoration(
+          color: Colors.transparent,
+          border: Border.all(color: Colors.black.withOpacity(0.2), width: 2),
+          borderRadius: BorderRadius.circular(12)),
+      child: ClipOval(
+        child: SvgPicture.asset(
+          assetPath,
+          fit: BoxFit.scaleDown,
+        ),
+      ),
     );
   }
 
