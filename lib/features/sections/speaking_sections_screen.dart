@@ -31,7 +31,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
   late List<String> sectionNames = [];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late LevelSelectionViewmodel viewmodel;
-
+  late int currentUnitNumber;
   @override
   void initState() {
     hintTexts = [
@@ -72,8 +72,9 @@ class _PracticeSectionsState extends State<PracticeSections> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LevelSelectionViewmodel>(
-      builder: (context, viewmodel, _) => Scaffold(
+    return Consumer<LevelSelectionViewmodel>(builder: (context, viewmodel, _) {
+      currentUnitNumber = viewmodel.userCurrentDay;
+      return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
           actions: [
@@ -169,29 +170,23 @@ class _PracticeSectionsState extends State<PracticeSections> {
                   ),
                 ),
               ),
-              // Example unit options
-              ListTile(
-                leading: Icon(Icons.book),
-                title: Text('Unit 1'),
-                onTap: () {
-                  // Handle unit selection
-                  Navigator.of(context).pop(); // Close the drawer
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.book),
-                title: Text('Unit 2'),
-                onTap: () {
-                  // Handle unit selection
-                  Navigator.of(context).pop(); // Close the drawer
-                },
-              ),
-              // Add more units here...
+              ...List.generate(currentUnitNumber, (index) {
+                int unitNumber = index + 1;
+                return ListTile(
+                  leading: Icon(Icons.book),
+                  title: Text('Unit $unitNumber'),
+                  selected: unitNumber == currentUnitNumber,
+                  onTap: () {
+                    // Handle unit selection
+                    Navigator.of(context).pop(); // Close the drawer
+                  },
+                );
+              }),
             ],
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildCircularSvgIcon(String assetPath) {

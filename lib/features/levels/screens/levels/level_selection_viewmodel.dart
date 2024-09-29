@@ -21,8 +21,9 @@ class LevelSelectionViewmodel extends BaseViewModel {
   late AuthViewModel _authProvider;
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   List<Level> _levels = [];
-  bool _isSpeakingAssigned = false;
 
+  bool _isSpeakingAssigned = false;
+  int _userCurrentDay = 1;
   bool _isWorksheetUploaded = false;
   String? _lastWorksheetPath;
 
@@ -31,6 +32,7 @@ class LevelSelectionViewmodel extends BaseViewModel {
   bool get isSpeakingAssigned => _isSpeakingAssigned;
   bool get isWorksheetUploaded => _isWorksheetUploaded;
   String? get lastWorksheetPath => _lastWorksheetPath;
+  int get userCurrentDay => _userCurrentDay;
 
   void update(AuthViewModel authViewModel) async {
     _authProvider = authViewModel;
@@ -178,6 +180,7 @@ class LevelSelectionViewmodel extends BaseViewModel {
       error = null;
       _levels[level.id].sections =
           await firestoreService.fetchSection(level.name);
+      _userCurrentDay = int.tryParse(firestoreService.currentDayString!)!;
     } on CustomException catch (e) {
       // error = e as CustomException;
       _handleError(e.message);
