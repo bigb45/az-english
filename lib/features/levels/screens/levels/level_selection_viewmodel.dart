@@ -79,37 +79,27 @@ class LevelSelectionViewmodel extends BaseViewModel {
     }
   }
 
-  Future<void> uploadWorksheetImage({
-    required String imagePath,
-  }) async {
+  Future<void> uploadWorksheetImage(
+      {required String imagePath,
+      required String worksheetID,
+      required String levelID}) async {
     isLoading = true;
     notifyListeners();
     try {
-      User? user = _firebaseAuthService.getUser();
-      UserModel? userModel = await firestoreService.getUser(user!.uid);
-
       // Upload the student's image and get the URL
       String studentImagePath = await uploadImageAndGetUrl(
         imagePath,
         'worksheet_solution_${DateTime.now().millisecondsSinceEpoch}',
       );
-      QuerySnapshot querySnapshot = await firestoreService.getLastWorksheet();
+      // QuerySnapshot querySnapshot = await firestoreService.getLastWorksheet();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        // Get the last worksheet document
-        DocumentSnapshot lastWorksheetDoc = querySnapshot.docs.first;
-        // Update the worksheet with the student's info
-        await firestoreService.updateWorksheetWithStudent(
-          worksheetDoc: lastWorksheetDoc.reference,
-          studentName: userModel!.studentName!,
+      if (worksheetID.isNotEmpty) {
+        await firestoreService.updateStudentWorksheet(
+          worksheetID: worksheetID,
           studentImagePath: studentImagePath,
-          userId: userModel.id!,
+          levelID: levelID,
         );
-        Map<String, dynamic>? studentsMap =
-            lastWorksheetDoc['students'] as Map<String, dynamic>?;
-        String imageUrl = lastWorksheetDoc['imageUrl'];
         _isWorksheetUploaded = true;
-        setLastWorksheetImageUrl(imageUrl);
         print("Student data associated with the last worksheet successfully.");
       } else {
         print("No worksheets found in the collection.");

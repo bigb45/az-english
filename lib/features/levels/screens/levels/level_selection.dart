@@ -113,14 +113,17 @@ class _LevelSelectionState extends State<LevelSelection> {
                                                     child: const Text('Cancel'),
                                                   ),
                                                   TextButton(
-                                                    onPressed: () {
+                                                    onPressed: () async {
                                                       Navigator.pop(context);
-
-                                                      viewmodel
+                                                      //TODO: Change to dynamic paramters
+                                                      await viewmodel
                                                           .uploadWorksheetImage(
+                                                              levelID: "A1",
                                                               imagePath:
                                                                   pickedImage
-                                                                      .path);
+                                                                      .path,
+                                                              worksheetID:
+                                                                  "12312341412");
                                                     },
                                                     child: const Text('Upload'),
                                                   ),

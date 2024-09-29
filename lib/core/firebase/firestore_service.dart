@@ -963,38 +963,36 @@ class FirestoreService {
     return worksheets;
   }
 
-  Future<void> updateWorksheetWithStudent({
-    required DocumentReference worksheetDoc,
-    required String studentName,
+  Future<void> updateStudentWorksheet({
+    required String worksheetID,
     required String studentImagePath,
-    required String userId,
+    required String levelID,
   }) async {
-    // Create the student object
-    WorksheetStudent student = WorksheetStudent(
-      studentName: studentName,
-      imagePath: studentImagePath,
-      dateSolved: DateTime.now(),
-    );
+    try {
+      _userModel = await getUser(_user!.uid);
 
-    // Fetch the current 'students' field from the worksheet
-    DocumentSnapshot worksheetSnapshot = await worksheetDoc.get();
-    Map<String, dynamic>? studentsMap =
-        worksheetSnapshot['students'] as Map<String, dynamic>?;
+      int currentDay = _userModel!.levelsProgress![levelID]!.currentDay;
+      currentDayString = currentDay.toString();
+      unitNumber = "unit$currentDay";
 
-    if (studentsMap == null) {
-      // Initialize 'students' field if it doesn't exist
-      await worksheetDoc.update({
-        'students': {
-          userId: student.toMap(),
-        },
-      });
-    } else {
-      // Update the existing 'students' map
-      studentsMap[userId] = student.toMap();
+      WorksheetStudent student = WorksheetStudent(
+          studentName: _userModel!.studentName,
+          imagePath: studentImagePath,
+          dateSolved: DateTime.now(),
+          worksheetId: worksheetID,
+          unitNumber: unitNumber);
+      DocumentReference userDocRef =
+          _db.collection(FirestoreConstants.usersCollections).doc(_user!.uid);
 
-      await worksheetDoc.update({
-        'students': studentsMap,
-      });
+      CollectionReference worksheetStudents =
+          userDocRef.collection('worksheetStudents');
+      String compositeID = '${worksheetID}_${unitNumber}_${_user!.uid}';
+
+      await worksheetStudents.doc(compositeID).set(student.toMap());
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
+    } catch (e) {
+      rethrow;
     }
   }
 
