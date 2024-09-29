@@ -67,25 +67,12 @@ class SpeakingSectionViewmodel extends BaseViewModel {
       AssignedQuestions assignedQuestions = userModel!.assignedQuestions![
           RouteConstants.sectionNameId[RouteConstants.speakingSectionName]]!;
       int currentDay = assignedQuestions.currentDay;
-      bool isFirstWeek = ((currentDay - 1) ~/ 5) % 2 == 0;
-      List<String> daySections =
-          _firestoreService.getSectionsForDay(currentDay, isFirstWeek);
-      int unitIndex;
+      List<String> daySections = _firestoreService.getSectionsForDay();
       int tempAllQuestionsLength = 0;
       int tempFilterQuestionsLength = 0;
 
-      if (isFirstWeek) {
-        // First week pattern
-        unitIndex = (currentDay - 1) ~/ 2 + 1;
-      } else {
-        // Second week pattern
-        unitIndex = (currentDay - 2) ~/ 2 + 1;
-      }
       for (var section in daySections) {
-        String tempUnitNumber = (section == RouteConstants.testSectionName ||
-                section == RouteConstants.vocabularySectionName)
-            ? "$currentDay"
-            : "$unitIndex";
+        String tempUnitNumber = "$currentDay";
         if (assignedQuestions.assignedLevels!.isNotEmpty) {
           for (var level in assignedQuestions.assignedLevels!) {
             var sectionQuestions = await _firestoreService.fetchQuestions(

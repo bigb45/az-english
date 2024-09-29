@@ -270,21 +270,9 @@ class FirestoreService {
       int currentDay = levelProgressData['currentDay'] ?? 1;
       currentDayString = currentDay.toString();
 
-      bool isFirstWeek = ((currentDay - 1) ~/ 5) % 2 == 0;
-      int unitIndex;
-      if (isFirstWeek) {
-        // First week pattern
-        unitIndex = (currentDay - 1) ~/ 2 + 1;
-      } else {
-        // Second week pattern
-        unitIndex = (currentDay - 2) ~/ 2 + 1;
-      }
-      unitNumber = "unit$unitIndex";
+      unitNumber = "unit$currentDay";
 
-      // Ensure unitIndex doesn't go below 1
-      unitIndex = unitIndex.clamp(1, double.infinity).toInt();
-
-      List<String> daySections = getSectionsForDay(currentDay, isFirstWeek);
+      List<String> daySections = getSectionsForDay();
 
       QuerySnapshot sectionSnapshot = await _db
           .collection(FirestoreConstants.levelsCollection)
@@ -384,9 +372,7 @@ class FirestoreService {
       Map<String, dynamic> levelProgressData =
           userData['levelsProgress'][levelName];
       LevelProgress levelProgress = LevelProgress.fromMap(levelProgressData);
-      bool isFirstWeek = ((levelProgress.currentDay - 1) ~/ 5) % 2 == 0;
-      List<String> daySections =
-          getSectionsForDay(levelProgress.currentDay, isFirstWeek);
+      List<String> daySections = getSectionsForDay();
 
       WriteBatch batch = FirebaseFirestore.instance.batch();
 
@@ -483,39 +469,19 @@ class FirestoreService {
     }
   }
 
-  List<String> getSectionsForDay(int day, bool isFirstWeek) {
-    // Define the basic two-day repeating section pattern
+  List<String> getSectionsForDay() {
     List<List<String>> sectionsPattern = [
       [
         RouteConstants.readingSectionName,
         RouteConstants.grammarSectionName,
         RouteConstants.vocabularySectionName,
         RouteConstants.testSectionName,
-      ],
-      [
         RouteConstants.listeningSectionName,
         RouteConstants.writingSectionName,
-        RouteConstants.vocabularySectionName,
-        RouteConstants.testSectionName,
       ],
     ];
 
-    // Calculate which pattern to use based on the week and day
-    // (day - 1) % 2 determines the pattern within the week,
-    // day index is adjusted by adding (week number * 2) % 2 to alternate every week.
-    int weekNumber = ((day - 1) ~/ 5) %
-        2; // Calculate the week number (0 for first week, 1 for second within the cycle)
-    int dayIndex =
-        (day - 1) % 2; // Calculate the day index within the week (0 or 1)
-
-    if (!isFirstWeek) {
-      weekNumber = 1 -
-          weekNumber; // Invert week number for the second overall week to start with the opposite pattern
-    }
-    // Adjust day index based on the calculated week number
-    dayIndex = (dayIndex + weekNumber) % 2;
-
-    return sectionsPattern[dayIndex];
+    return sectionsPattern[0];
   }
 
   Future<int> getCurrentDay(User currentUser, String level) async {
