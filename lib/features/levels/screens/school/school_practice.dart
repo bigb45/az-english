@@ -1,5 +1,5 @@
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/levels/screens/speaking/speaking_section_viewmodel.dart';
+import 'package:ez_english/features/levels/screens/school/school_section_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/finished_questions_screen.dart';
