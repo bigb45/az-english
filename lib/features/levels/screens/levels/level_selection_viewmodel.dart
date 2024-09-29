@@ -144,6 +144,9 @@ class LevelSelectionViewmodel extends BaseViewModel {
   }
 
   Future<void> fetchLevels() async {
+    if (_levels.isNotEmpty) {
+      return;
+    }
     isLoading = true;
     notifyListeners();
     try {

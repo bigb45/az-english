@@ -70,9 +70,6 @@ class _LevelSelectionState extends State<LevelSelection> {
                                           navigateToLevel(
                                             levelId: viewmodel.levels[0].id,
                                           );
-                                          viewmodel.fetchSections(
-                                            viewmodel.levels[0],
-                                          );
                                         })
                                     : const SizedBox(),
                               viewmodel.isSpeakingAssigned

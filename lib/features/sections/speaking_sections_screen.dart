@@ -30,6 +30,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
   late List<Color> backgroundColors = [];
   late List<String> sectionNames = [];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late LevelSelectionViewmodel viewmodel;
 
   @override
   void initState() {
@@ -57,6 +58,10 @@ class _PracticeSectionsState extends State<PracticeSections> {
       const Color(0xFF663399),
       const Color(0xFF34495E)
     ];
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      viewmodel = Provider.of<LevelSelectionViewmodel>(context, listen: false);
+      await viewmodel.fetchSections(viewmodel.levels[0]);
+    });
 
     super.initState();
   }
@@ -67,124 +72,123 @@ class _PracticeSectionsState extends State<PracticeSections> {
 
   @override
   Widget build(BuildContext context) {
-    LevelSelectionViewmodel viewmodel =
-        Provider.of<LevelSelectionViewmodel>(context);
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () {
-              _scaffoldKey.currentState?.openEndDrawer();
-            },
-            icon: _buildCircularSvgIcon(
-                "assets/images/app_bar_action_button_icon.svg"),
-          ),
-        ],
-        title: ListTile(
-          contentPadding: const EdgeInsets.only(left: 0, right: 0),
-          title: Text(
-            AppStrings.practiceScreenTitle,
-            style: TextStyles.titleTextStyle,
-          ),
-          subtitle: Text(
-            "Speaking Practice",
-            style: TextStyles.subtitleTextStyle,
+    return Consumer<LevelSelectionViewmodel>(
+      builder: (context, viewmodel, _) => Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          actions: [
+            IconButton(
+              onPressed: () {
+                _scaffoldKey.currentState?.openEndDrawer();
+              },
+              icon: _buildCircularSvgIcon(
+                  "assets/images/app_bar_action_button_icon.svg"),
+            ),
+          ],
+          title: ListTile(
+            contentPadding: const EdgeInsets.only(left: 0, right: 0),
+            title: Text(
+              AppStrings.practiceScreenTitle,
+              style: TextStyles.titleTextStyle,
+            ),
+            subtitle: Text(
+              "Speaking Practice",
+              style: TextStyles.subtitleTextStyle,
+            ),
           ),
         ),
-      ),
-      body: viewmodel.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SizedBox(
-              child: SingleChildScrollView(
-                child: SizedBox(
-                  child: Padding(
-                    padding: EdgeInsets.all(Constants.padding8),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Constants.gapH20,
-                          Wrap(
-                            alignment: WrapAlignment.center,
-                            runSpacing: 15.h,
-                            spacing: 10.w,
-                            children: [
-                              ...hintTexts.asMap().entries.map((entry) {
-                                int index = entry.key;
-                                Section section = viewmodel
-                                    .levels[int.tryParse(widget.levelId)!]
-                                    .sections![index];
-
-                                String hintText = entry.value;
-                                return _buildCard(
-                                  headerText: hintText,
-                                  cardText:
-                                      "Learn common everyday expressions and simple phrases",
-                                  onTap: !section.isAssigned
-                                      ? null
-                                      : () {
-                                          navigateToSection(
-                                            sectionId:
-                                                RouteConstants.getSectionIds(
-                                                    section.name),
-                                          );
-                                          viewmodel.updateSectionStatus(
-                                              section, widget.levelName);
-                                        },
-                                  imagePath: imageAssets[index],
-                                  backgroundColor: backgroundColors[index],
-                                  section: section,
-                                );
-                              }).toList(),
-                            ],
-                          ),
-                        ],
+        body: viewmodel.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SizedBox(
+                child: SingleChildScrollView(
+                  child: SizedBox(
+                    child: Padding(
+                      padding: EdgeInsets.all(Constants.padding8),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Constants.gapH20,
+                            Wrap(
+                              alignment: WrapAlignment.center,
+                              runSpacing: 15.h,
+                              spacing: 10.w,
+                              children: [
+                                ...hintTexts.asMap().entries.map((entry) {
+                                  int index = entry.key;
+                                  Section section = viewmodel
+                                      .levels[int.tryParse(widget.levelId)!]
+                                      .sections![index];
+                                  String hintText = entry.value;
+                                  return _buildCard(
+                                    headerText: hintText,
+                                    cardText:
+                                        "Learn common everyday expressions and simple phrases",
+                                    onTap: !section.isAssigned
+                                        ? null
+                                        : () {
+                                            navigateToSection(
+                                              sectionId:
+                                                  RouteConstants.getSectionIds(
+                                                      section.name),
+                                            );
+                                            viewmodel.updateSectionStatus(
+                                                section, widget.levelName);
+                                          },
+                                    imagePath: imageAssets[index],
+                                    backgroundColor: backgroundColors[index],
+                                    section: section,
+                                  );
+                                }).toList(),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-      endDrawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            SizedBox(
-              height: 158.h,
-              child: const DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Palette.primaryButtonStroke,
-                ),
-                child: Center(
-                  child: Text(
-                    'Choose a Unit',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
+        endDrawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              SizedBox(
+                height: 158.h,
+                child: const DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Palette.primaryButtonStroke,
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Choose a Unit',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            // Example unit options
-            ListTile(
-              leading: Icon(Icons.book),
-              title: Text('Unit 1'),
-              onTap: () {
-                // Handle unit selection
-                Navigator.of(context).pop(); // Close the drawer
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.book),
-              title: Text('Unit 2'),
-              onTap: () {
-                // Handle unit selection
-                Navigator.of(context).pop(); // Close the drawer
-              },
-            ),
-            // Add more units here...
-          ],
+              // Example unit options
+              ListTile(
+                leading: Icon(Icons.book),
+                title: Text('Unit 1'),
+                onTap: () {
+                  // Handle unit selection
+                  Navigator.of(context).pop(); // Close the drawer
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.book),
+                title: Text('Unit 2'),
+                onTap: () {
+                  // Handle unit selection
+                  Navigator.of(context).pop(); // Close the drawer
+                },
+              ),
+              // Add more units here...
+            ],
+          ),
         ),
       ),
     );
