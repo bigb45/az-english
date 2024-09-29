@@ -12,6 +12,7 @@ import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:ez_english/features/models/worksheet.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -79,31 +80,26 @@ class LevelSelectionViewmodel extends BaseViewModel {
     }
   }
 
-  Future<void> uploadWorksheetImage(
+// TODO:Move this to the worksheet section viewmodel
+  Future<void> uploadStudentSubmission(
       {required String imagePath,
       required String worksheetID,
       required String levelID}) async {
     isLoading = true;
     notifyListeners();
     try {
-      // Upload the student's image and get the URL
       String studentImagePath = await uploadImageAndGetUrl(
         imagePath,
         'worksheet_solution_${DateTime.now().millisecondsSinceEpoch}',
       );
-      // QuerySnapshot querySnapshot = await firestoreService.getLastWorksheet();
-
-      if (worksheetID.isNotEmpty) {
-        await firestoreService.updateStudentWorksheet(
-          worksheetID: worksheetID,
-          studentImagePath: studentImagePath,
-          levelID: levelID,
-        );
-        _isWorksheetUploaded = true;
-        print("Student data associated with the last worksheet successfully.");
-      } else {
-        print("No worksheets found in the collection.");
-      }
+      await firestoreService.addStudentSubmission(
+        level: levelID,
+        section: FirestoreConstants.worksheetsCollection,
+        studentImagePath: studentImagePath,
+        workSheetID: worksheetID,
+      );
+      _isWorksheetUploaded = true;
+      print("Student data associated with the last worksheet successfully.");
     } catch (e) {
       print("Error uploading worksheet solution: $e");
     } finally {

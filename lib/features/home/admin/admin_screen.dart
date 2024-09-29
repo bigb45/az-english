@@ -106,13 +106,18 @@ class AdminScreen extends StatelessWidget {
                                             child: const Text("Cancel"),
                                           ),
                                           TextButton(
-                                            onPressed: () {
-                                              viewmodel.uploadWorksheetSolution(
-                                                  imagePath: pickedImage.path,
-                                                  worksheetTitle:
-                                                      _controller.text.isEmpty
+                                            onPressed: () async {
+                                              // TODO:change this to dynamic after implementing the form
+                                              await viewmodel
+                                                  .uploadWorksheetAnswerKey(
+                                                      imagePath:
+                                                          pickedImage.path,
+                                                      worksheetTitle: _controller
+                                                              .text.isEmpty
                                                           ? "Untitled worksheet"
-                                                          : _controller.text);
+                                                          : _controller.text,
+                                                      levelID: 'A1',
+                                                      unitNumber: '1');
                                               _controller.clear();
                                               Navigator.of(context).pop();
                                             },

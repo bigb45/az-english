@@ -963,36 +963,63 @@ class FirestoreService {
     return worksheets;
   }
 
-  Future<void> updateStudentWorksheet({
-    required String worksheetID,
-    required String studentImagePath,
+  Future<void> addWorksheet({
+    required WorkSheet worksheet,
     required String levelID,
+    required String sectionName,
+    required String unitNumber,
   }) async {
     try {
       _userModel = await getUser(_user!.uid);
-
-      int currentDay = _userModel!.levelsProgress![levelID]!.currentDay;
-      currentDayString = currentDay.toString();
-      unitNumber = "unit$currentDay";
-
-      WorksheetStudent student = WorksheetStudent(
-          studentName: _userModel!.studentName,
-          imagePath: studentImagePath,
-          dateSolved: DateTime.now(),
-          worksheetId: worksheetID,
-          unitNumber: unitNumber);
-      DocumentReference userDocRef =
-          _db.collection(FirestoreConstants.usersCollections).doc(_user!.uid);
-
-      CollectionReference worksheetStudents =
-          userDocRef.collection('worksheetStudents');
-      String compositeID = '${worksheetID}_${unitNumber}_${_user!.uid}';
-
-      await worksheetStudents.doc(compositeID).set(student.toMap());
+      uploadQuestionToFirestore(
+          day: unitNumber,
+          level: levelID,
+          section: sectionName,
+          questionMap: worksheet.toMap());
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<void> addStudentSubmission(
+      {required String level,
+      required String section,
+      required String studentImagePath,
+      required String workSheetID}) async {
+    try {
+      WorksheetStudent studentSubmission = WorksheetStudent(
+        studentName: _userModel!.studentName,
+        imagePath: studentImagePath,
+        dateSolved: DateTime.now(),
+        worksheetId: workSheetID, // TODO: Replace with your actual worksheet ID
+        unitNumber: "unit$currentDayString",
+      );
+
+      // Reference to the unit document
+      DocumentReference unitRef = _db
+          .collection(FirestoreConstants.levelsCollection)
+          .doc(level)
+          .collection(FirestoreConstants.sectionsCollection)
+          .doc(RouteConstants.getSectionIds(section))
+          .collection(FirestoreConstants.unitsCollection)
+          .doc("unit$currentDayString");
+
+      FieldPath fieldPath = FieldPath([
+        FirestoreConstants.questionsField,
+        workSheetID,
+        'students',
+        _userModel!.id!
+      ]);
+
+      await updateQuestionUsingFieldPath(
+        docPath: unitRef,
+        fieldPath: fieldPath,
+        newValue: studentSubmission.toMap(),
+      );
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
     }
   }
 

@@ -38,9 +38,11 @@ class UsersSettingsViewmodel extends BaseViewModel {
   @override
   FutureOr<void> init() {}
 
-  Future<void> uploadWorksheetSolution({
+  Future<void> uploadWorksheetAnswerKey({
     required String imagePath,
     required String worksheetTitle,
+    required String levelID,
+    required String unitNumber,
   }) async {
     isLoading = true;
     notifyListeners();
@@ -52,8 +54,12 @@ class UsersSettingsViewmodel extends BaseViewModel {
           title: worksheetTitle,
           imageUrl: imageUrl,
           timestamp: Timestamp.now());
-      await _firestoreService.addDocument(
-          worksheet.toMap(), FirestoreConstants.worksheetsCollection);
+      await _firestoreService.addWorksheet(
+        worksheet: worksheet,
+        levelID: levelID,
+        sectionName: RouteConstants.worksheetSectionName,
+        unitNumber: unitNumber,
+      );
     } catch (e) {
       print("Error uploading image: $e");
     } finally {

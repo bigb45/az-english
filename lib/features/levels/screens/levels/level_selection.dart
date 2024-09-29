@@ -115,15 +115,14 @@ class _LevelSelectionState extends State<LevelSelection> {
                                                   TextButton(
                                                     onPressed: () async {
                                                       Navigator.pop(context);
-                                                      //TODO: Change to dynamic paramters
+                                                      // TODO: Change the paramaters after implementing the UI
                                                       await viewmodel
-                                                          .uploadWorksheetImage(
+                                                          .uploadStudentSubmission(
                                                               levelID: "A1",
                                                               imagePath:
                                                                   pickedImage
                                                                       .path,
-                                                              worksheetID:
-                                                                  "12312341412");
+                                                              worksheetID: "1");
                                                     },
                                                     child: const Text('Upload'),
                                                   ),
