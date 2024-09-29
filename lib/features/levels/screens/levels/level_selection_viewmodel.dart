@@ -173,13 +173,13 @@ class LevelSelectionViewmodel extends BaseViewModel {
     }
   }
 
-  Future<void> fetchSections(Level level) async {
+  Future<void> fetchSections(Level level, {int? desiredDay}) async {
     isLoading = true;
     notifyListeners();
     try {
       error = null;
-      _levels[level.id].sections =
-          await firestoreService.fetchSection(level.name);
+      _levels[level.id].sections = await firestoreService
+          .fetchSection(level.name, desiredDay: desiredDay);
       _userCurrentDay = int.tryParse(firestoreService.currentDayString!)!;
     } on CustomException catch (e) {
       // error = e as CustomException;

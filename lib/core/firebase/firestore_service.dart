@@ -257,7 +257,10 @@ class FirestoreService {
     }
   }
 
-  Future<List<Section>> fetchSection(String levelName) async {
+  Future<List<Section>> fetchSection(
+    String levelName, {
+    int? desiredDay,
+  }) async {
     try {
       _userModel = await getUser(_user!.uid);
       DocumentReference userDocRef =
@@ -267,8 +270,8 @@ class FirestoreService {
 
       Map<String, dynamic> levelProgressData =
           userData['levelsProgress'][levelName];
-      int currentDay = levelProgressData['currentDay'] ?? 1;
-      currentDayString = currentDay.toString();
+      int currentDay = desiredDay ?? (levelProgressData['currentDay'] ?? 1);
+      if (desiredDay == null) currentDayString = currentDay.toString();
 
       unitNumber = "unit$currentDay";
 
@@ -302,16 +305,23 @@ class FirestoreService {
 
         Map<String, dynamic> sectionProgress =
             levelProgressData['sectionProgress'][sectionId];
-
-        // Update section properties from user data
-        section.isAssigned = sectionProgress['isAssigned'];
-        section.isCompleted = sectionProgress['isCompleted'];
-        section.isAttempted = sectionProgress['isAttempted'];
-        section.numberOfSolvedQuestions =
-            sectionProgress['lastStoppedQuestionIndex'];
-        section.progress = (sectionProgress['progress'] is int)
-            ? (sectionProgress['progress'] as int).toDouble()
-            : (sectionProgress['progress'] ?? 0.0) as double;
+        if (desiredDay != null) {
+          section.isAssigned = true;
+          section.isCompleted = true;
+          section.isAttempted = true;
+          section.numberOfSolvedQuestions = 0;
+          section.progress = 0;
+        } else {
+          // Update section properties from user data
+          section.isAssigned = sectionProgress['isAssigned'];
+          section.isCompleted = sectionProgress['isCompleted'];
+          section.isAttempted = sectionProgress['isAttempted'];
+          section.numberOfSolvedQuestions =
+              sectionProgress['lastStoppedQuestionIndex'];
+          section.progress = (sectionProgress['progress'] is int)
+              ? (sectionProgress['progress'] as int).toDouble()
+              : (sectionProgress['progress'] ?? 0.0) as double;
+        }
         if (daySections.contains(section.name)) {
           String tempUnitNumber = (sectionId ==
                       RouteConstants.getSectionIds(
@@ -348,7 +358,9 @@ class FirestoreService {
       }).toList();
 
       // Save updated user progress back to Firestore
-      await userDocRef.update({'levelsProgress': userData['levelsProgress']});
+      if (desiredDay != null) {
+        await userDocRef.update({'levelsProgress': userData['levelsProgress']});
+      }
 
       return await Future.wait(sectionFutures);
     } on FirebaseException catch (e) {

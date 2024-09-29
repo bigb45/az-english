@@ -31,7 +31,10 @@ class _PracticeSectionsState extends State<PracticeSections> {
   late List<String> sectionNames = [];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late LevelSelectionViewmodel viewmodel;
-  late int currentUnitNumber;
+  int originalCurrentUnitNumber = 1;
+  int tempCurrentUnitNumber = 1;
+
+  bool _isLoading = true;
   @override
   void initState() {
     hintTexts = [
@@ -59,11 +62,21 @@ class _PracticeSectionsState extends State<PracticeSections> {
       const Color(0xFF34495E)
     ];
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      viewmodel = Provider.of<LevelSelectionViewmodel>(context, listen: false);
-      await viewmodel.fetchSections(viewmodel.levels[0]);
+      _fetchSections();
     });
 
     super.initState();
+  }
+
+  Future<void> _fetchSections() async {
+    viewmodel = Provider.of<LevelSelectionViewmodel>(context, listen: false);
+    await viewmodel
+        .fetchSections(viewmodel.levels[int.tryParse(widget.levelId)!]);
+    originalCurrentUnitNumber = viewmodel.userCurrentDay;
+    tempCurrentUnitNumber = originalCurrentUnitNumber;
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void navigateToSection({required String sectionId}) {
@@ -73,7 +86,6 @@ class _PracticeSectionsState extends State<PracticeSections> {
   @override
   Widget build(BuildContext context) {
     return Consumer<LevelSelectionViewmodel>(builder: (context, viewmodel, _) {
-      currentUnitNumber = viewmodel.userCurrentDay;
       return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
@@ -98,7 +110,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
             ),
           ),
         ),
-        body: viewmodel.isLoading
+        body: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : SizedBox(
                 child: SingleChildScrollView(
@@ -170,15 +182,30 @@ class _PracticeSectionsState extends State<PracticeSections> {
                   ),
                 ),
               ),
-              ...List.generate(currentUnitNumber, (index) {
+              ...List.generate(originalCurrentUnitNumber, (index) {
                 int unitNumber = index + 1;
                 return ListTile(
                   leading: Icon(Icons.book),
                   title: Text('Unit $unitNumber'),
-                  selected: unitNumber == currentUnitNumber,
-                  onTap: () {
-                    // Handle unit selection
-                    Navigator.of(context).pop(); // Close the drawer
+                  selected: unitNumber == tempCurrentUnitNumber,
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    setState(() {
+                      _isLoading = true;
+                      tempCurrentUnitNumber = unitNumber;
+                    });
+                    if (unitNumber != originalCurrentUnitNumber) {
+                      await viewmodel.fetchSections(
+                          viewmodel.levels[int.tryParse(widget.levelId)!],
+                          desiredDay: unitNumber);
+                    } else {
+                      await viewmodel.fetchSections(
+                        viewmodel.levels[int.tryParse(widget.levelId)!],
+                      );
+                    }
+                    setState(() {
+                      _isLoading = false;
+                    });
                   },
                 );
               }),
