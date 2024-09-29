@@ -62,8 +62,7 @@ class AuthViewModel extends ChangeNotifier {
   Future<void> signInDev() async {
     errorOccurred = false;
     try {
-      final tempUser =
-          UserModel(emailAddress: "ribhi@g.com", password: "123456");
+      final tempUser = UserModel(emailAddress: "r@g.com", password: "123456");
       await _firebaseAuthService.signIn(tempUser);
     } on CustomException catch (e) {
       errorOccurred = true;
