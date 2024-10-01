@@ -162,20 +162,7 @@ class _LevelSelectionState extends State<LevelSelection> {
                                           ],
                                         ),
                                       ),
-                                    )
-                              // ...viewmodel.levels.map(
-                              //   (level) {
-                              //     return _buildCard(
-                              //       headerText: level.name,
-                              //       isAssigned: level.isAssigned,
-                              //       cardText: level.description,
-                              //       onTap: () {
-                              //         navigateToLevel(levelId: level.id);
-                              //         viewmodel.fetchSections(level);
-                              //       },
-                              //     );
-                              //   },
-                              // ),
+                                    ),
                             ],
                           ),
                         ),
