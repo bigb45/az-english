@@ -24,7 +24,6 @@ class _EvaluationSectionState extends State<EvaluationSection> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 130.h,
       color: switch (widget.state) {
         EvaluationState.correct => Palette.primaryFill,
         EvaluationState.incorrect => Palette.errorFill,
