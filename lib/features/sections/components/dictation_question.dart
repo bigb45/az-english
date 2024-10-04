@@ -62,25 +62,25 @@ class _DictationQuestionState extends State<DictationQuestion> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             SizedBox(height: Constants.padding20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  widget.question.questionTextInEnglish ??
-                      "Type the sentence you hear",
-                  style: TextStyles.questionTextStyle.copyWith(height: 2),
-                ),
-              ],
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                softWrap: true,
+                overflow: TextOverflow.visible,
+                widget.question.questionTextInEnglish ??
+                    "Type the sentence you hear",
+                style: TextStyles.questionTextStyle.copyWith(height: 2),
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  textDirection: TextDirection.rtl,
-                  widget.question.questionTextInArabic ?? "",
-                  style: TextStyles.questionTextStyle.copyWith(height: 2),
-                ),
-              ],
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                softWrap: true,
+                overflow: TextOverflow.visible,
+                textDirection: TextDirection.rtl,
+                widget.question.questionTextInArabic ?? "",
+                style: TextStyles.questionTextStyle.copyWith(height: 2),
+              ),
             ),
             SizedBox(height: Constants.padding20),
             AudioControlButton(
