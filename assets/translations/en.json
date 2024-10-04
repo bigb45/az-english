@@ -49,5 +49,6 @@
   "checkAllFields": "Please check all the required fields.",
   "speakingPracticeScreenTitle": "Practice",
   "speakingSectionPageTitle": "English Practice",
-  "speakingSectionOnboardingText": "In this section you will complete the assigned questions."
+  "speakingSectionOnboardingText": "In this section you will complete the assigned questions.",
+  "worksheetSectionCardTitle": "Worksheets"
 }

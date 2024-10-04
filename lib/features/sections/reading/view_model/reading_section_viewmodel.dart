@@ -31,7 +31,7 @@ class ReadingSectionViewmodel extends BaseViewModel {
     levelName = RouteConstants.getLevelName(levelId!);
     sectionName = RouteConstants.readingSectionName;
     answerState = EvaluationState.empty;
-    fetchQuestions();
+    await fetchQuestions();
   }
 
   Future<void> fetchQuestions() async {

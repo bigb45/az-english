@@ -16,7 +16,7 @@ import 'package:ez_english/features/home/content/edit_question.dart';
 import 'package:ez_english/features/home/test/test_overview.dart';
 import 'package:ez_english/features/levels/screens/school/landing_page.dart';
 import 'package:ez_english/features/levels/screens/school/school_practice.dart';
-import 'package:ez_english/features/levels/screens/worksheet_view/student_worksheet_view.dart';
+import 'package:ez_english/features/sections/worksheet/student_worksheet_view.dart';
 import 'package:ez_english/features/models/test_result.dart';
 import 'package:ez_english/features/sections/components/youtube_lesson.dart';
 import 'package:ez_english/features/sections/exam/test.dart';
@@ -29,6 +29,7 @@ import 'package:ez_english/features/sections/reading/practice.dart';
 import 'package:ez_english/features/sections/speaking_sections_screen.dart';
 import 'package:ez_english/features/sections/vocabulary/landing_page.dart';
 import 'package:ez_english/features/sections/vocabulary/words_list.dart';
+import 'package:ez_english/features/sections/worksheet/worksheet_view.dart';
 import 'package:ez_english/features/sections/writing/landing_page.dart';
 import 'package:ez_english/features/sections/writing/practice.dart';
 import 'package:flutter/material.dart';
@@ -71,17 +72,20 @@ final loggedInRouter = GoRouter(
       }),
     ),
     GoRoute(
-        path: '/youtube',
-        builder: (context, state) => Scaffold(
-                body: Column(
-              children: const [
-                Text("widgets"),
-                YouTubeVideoPlayer(
-                  videoId: "DoKYYLZVU98",
-                ),
-                Text("other widgets")
-              ],
-            ))),
+      path: '/youtube',
+      builder: (context, state) => Scaffold(
+        body: Column(
+          children: const [
+            Text("widgets"),
+            YouTubeVideoPlayer(
+              videoId: "DoKYYLZVU98",
+            ),
+            Text("other widgets")
+          ],
+        ),
+      ),
+    ),
+
     GoRoute(
       path: '/landing_page/:levelId/:sectionId',
       builder: ((context, state) {
@@ -104,7 +108,12 @@ final loggedInRouter = GoRouter(
           "4" => GrammarSection(
               levelId: levelId,
             ),
-          "5" => TestSection(levelId: levelId),
+          "5" => TestSection(
+              levelId: levelId,
+            ),
+          "7" => WorksheetView(
+              levelId: levelId,
+            ),
           String() => const Placeholder(),
         };
       }),

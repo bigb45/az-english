@@ -75,4 +75,7 @@ abstract class AppStrings {
 
   static final String speakingSectionPageTitle =
       "speakingSectionPageTitle".tr();
+
+  static final String worksheetSectionCardTitle =
+      "worksheetSectionCardTitle".tr();
 }

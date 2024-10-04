@@ -6,12 +6,10 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
-import 'package:ez_english/widgets/upload_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class LevelSelection extends StatefulWidget {
@@ -81,88 +79,89 @@ class _LevelSelectionState extends State<LevelSelection> {
                                         context.push('/speaking_practice');
                                       })
                                   : const SizedBox(),
-                              viewmodel.isWorksheetUploaded
-                                  ? _buildCard(
-                                      headerText: "Worksheet",
-                                      isAssigned: true,
-                                      cardText: "View Worksheet answers",
-                                      onTap: () {
-                                        context.push('/student_worksheet_view');
-                                      })
-                                  : UploadCard(
-                                      onPressed: () async {
-                                        // TODO: Implement image upload in viewmodel
-                                        final pickedImage =
-                                            await ImagePicker().pickImage(
-                                          source: ImageSource.gallery,
-                                        );
-                                        if (pickedImage != null) {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                content: const Text(
-                                                    "Are you sure you want to upload the selected image?"),
-                                                title: const Text(
-                                                    'Confirm Upload'),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text('Cancel'),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () async {
-                                                      Navigator.pop(context);
-                                                      // TODO: Change the paramaters after implementing the UI
-                                                      await viewmodel
-                                                          .uploadStudentSubmission(
-                                                              levelID: "A1",
-                                                              imagePath:
-                                                                  pickedImage
-                                                                      .path,
-                                                              worksheetID: "1");
-                                                    },
-                                                    child: const Text('Upload'),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        }
-                                      },
-                                      child: SizedBox(
-                                        width: double.infinity,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            AutoSizeText(
-                                              'Add Worksheet',
-                                              style: TextStyles.cardHeader
-                                                  .copyWith(fontSize: 18.sp),
-                                              textAlign: TextAlign.center,
-                                              maxLines: 3,
-                                            ),
-                                            const Expanded(
-                                              child: FittedBox(
-                                                child: Icon(
-                                                  Icons.add_rounded,
-                                                  color: Palette.secondaryText,
-                                                ),
-                                              ),
-                                            ),
-                                            AutoSizeText(
-                                              "Submit your worksheet",
-                                              style: TextStyles.cardText,
-                                              textAlign: TextAlign.center,
-                                              maxLines: 3,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                              // viewmodel.isWorksheetUploaded
+                              //     ? _buildCard(
+                              //         headerText: "Worksheet",
+                              //         isAssigned: true,
+                              //         cardText: "View Worksheet answers",
+                              //         onTap: () {
+                              //           context.push('/student_worksheet_view');
+                              //         })
+                              //     :
+                              //     UploadCard(
+                              //         onPressed: () async {
+                              //           // TODO: Implement image upload in viewmodel
+                              //           final pickedImage =
+                              //               await ImagePicker().pickImage(
+                              //             source: ImageSource.gallery,
+                              //           );
+                              //           if (pickedImage != null) {
+                              //             showDialog(
+                              //               context: context,
+                              //               builder: (context) {
+                              //                 return AlertDialog(
+                              //                   content: const Text(
+                              //                       "Are you sure you want to upload the selected image?"),
+                              //                   title: const Text(
+                              //                       'Confirm Upload'),
+                              //                   actions: [
+                              //                     TextButton(
+                              //                       onPressed: () {
+                              //                         Navigator.pop(context);
+                              //                       },
+                              //                       child: const Text('Cancel'),
+                              //                     ),
+                              //                     TextButton(
+                              //                       onPressed: () async {
+                              //                         Navigator.pop(context);
+                              //                         // TODO: Change the paramaters after implementing the UI
+                              //                         await viewmodel
+                              //                             .uploadStudentSubmission(
+                              //                                 levelID: "A1",
+                              //                                 imagePath:
+                              //                                     pickedImage
+                              //                                         .path,
+                              //                                 worksheetID: "1");
+                              //                       },
+                              //                       child: const Text('Upload'),
+                              //                     ),
+                              //                   ],
+                              //                 );
+                              //               },
+                              //             );
+                              //           }
+                              //         },
+                              //         child: SizedBox(
+                              //           width: double.infinity,
+                              //           child: Column(
+                              //             mainAxisAlignment:
+                              //                 MainAxisAlignment.center,
+                              //             children: [
+                              //               AutoSizeText(
+                              //                 'Add Worksheet',
+                              //                 style: TextStyles.cardHeader
+                              //                     .copyWith(fontSize: 18.sp),
+                              //                 textAlign: TextAlign.center,
+                              //                 maxLines: 3,
+                              //               ),
+                              //               const Expanded(
+                              //                 child: FittedBox(
+                              //                   child: Icon(
+                              //                     Icons.add_rounded,
+                              //                     color: Palette.secondaryText,
+                              //                   ),
+                              //                 ),
+                              //               ),
+                              //               AutoSizeText(
+                              //                 "Submit your worksheet",
+                              //                 style: TextStyles.cardText,
+                              //                 textAlign: TextAlign.center,
+                              //                 maxLines: 3,
+                              //               ),
+                              //             ],
+                              //           ),
+                              //         ),
+                              //       ),
                             ],
                           ),
                         ),

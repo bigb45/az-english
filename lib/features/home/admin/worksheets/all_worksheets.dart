@@ -20,13 +20,14 @@ class _AllWorksheetsState extends State<AllWorksheets> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<WorksheetsViewmodel>(context, listen: false).getWorksheets();
+      Provider.of<AdminWorksheetsViewmodel>(context, listen: false)
+          .getWorksheets();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WorksheetsViewmodel>(
+    return Consumer<AdminWorksheetsViewmodel>(
       builder: (context, viewmodel, _) => Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Palette.primaryText),

@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
-import 'package:ez_english/features/levels/screens/worksheet_view/worksheet_view_viewmodel.dart';
+import 'package:ez_english/features/sections/worksheet/student_worksheet_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +13,7 @@ class StudentWorksheetView extends StatelessWidget {
     final viewModel = Provider.of<LevelSelectionViewmodel>(context);
     final worksheetPath = viewModel.lastWorksheetPath;
 
-    return Consumer<WorksheetViewViewmodel>(
+    return Consumer<StudentWorksheetViewModel>(
       builder: (context, viewmodel, _) => Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Palette.primaryText),

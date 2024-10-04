@@ -57,6 +57,8 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     }
   }
 
+  Future<void> fetchSectionsForSelectedDay() async {}
+
   Future<void> _fetchQuestions() async {
     isLoading = true;
     notifyListeners();

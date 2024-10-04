@@ -17,11 +17,11 @@ class ReadingQuestion extends BaseQuestion {
     required super.voiceUrl,
     required super.questionType,
     required super.titleInEnglish,
+    required this.answers,
     this.titleInArabic,
     this.passageInEnglish,
     this.passageInArabic,
     this.words,
-    required this.answers,
   });
   @override
   Map<String, dynamic> toMap() {

@@ -482,6 +482,7 @@ class FirestoreService {
         RouteConstants.testSectionName,
         RouteConstants.listeningSectionName,
         RouteConstants.writingSectionName,
+        RouteConstants.worksheetSectionName,
       ],
     ];
 
@@ -978,7 +979,7 @@ class FirestoreService {
         studentName: _userModel!.studentName,
         imagePath: studentImagePath,
         dateSolved: DateTime.now(),
-        worksheetId: workSheetID, // TODO: Replace with your actual worksheet ID
+        worksheetId: workSheetID,
         unitNumber: unitNumber,
       );
 

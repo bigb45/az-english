@@ -3,7 +3,7 @@ import 'package:ez_english/features/models/worksheet.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:flutter/material.dart';
 
-class WorksheetsViewmodel extends ChangeNotifier {
+class AdminWorksheetsViewmodel extends ChangeNotifier {
   List<WorkSheet> _worksheets = [];
   final FirestoreService _firestoreService = FirestoreService();
   bool _isLoading = false;

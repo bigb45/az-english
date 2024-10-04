@@ -4,7 +4,9 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/levels/screens/school/school_section_viewmodel.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
+import 'package:ez_english/widgets/drawer_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,14 +22,21 @@ class SpeakingSection extends StatefulWidget {
 }
 
 class _SpeakingSectionState extends State<SpeakingSection> {
-  late SpeakingSectionViewmodel vm;
+  late SpeakingSectionViewmodel viewmodel;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  int originalCurrentUnitNumber = 1;
+  int tempCurrentUnitNumber = 1;
 
   @override
   void initState() {
-    vm = Provider.of<SpeakingSectionViewmodel>(context, listen: false);
-    vm.levelId = widget.levelId;
+    viewmodel = Provider.of<SpeakingSectionViewmodel>(context, listen: false);
+    viewmodel.levelId = widget.levelId;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      vm.setValuesAndInit();
+      viewmodel.setValuesAndInit();
+      if (_scaffoldKey.currentState != null) {
+        // Safe to access _scaffoldKey.currentState here
+        print("Scaffold State is available now");
+      }
     });
 
     super.initState();
@@ -36,7 +45,21 @@ class _SpeakingSectionState extends State<SpeakingSection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
+        actions: [
+          Padding(
+            padding: EdgeInsets.all(Constants.padding20),
+            child: DrawerActionButton(
+              onPressed: () {
+                printDebug("Opening end drawer");
+                printDebug(
+                    "_scaffoldKey.currentState: ${_scaffoldKey.currentState}");
+                _scaffoldKey.currentState?.openEndDrawer();
+              },
+            ),
+          )
+        ],
         title: ListTile(
           contentPadding: EdgeInsets.only(left: 0, right: 0),
           title: Text(
@@ -99,6 +122,53 @@ class _SpeakingSectionState extends State<SpeakingSection> {
               )
             ],
           ),
+        ),
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            SizedBox(
+              height: 158.h,
+              child: const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Palette.primaryButtonStroke,
+                ),
+                child: Center(
+                  child: Text(
+                    'Choose a Unit',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            ...List.generate(originalCurrentUnitNumber, (index) {
+              int unitNumber = index + 1;
+              return ListTile(
+                leading: const Icon(Icons.book),
+                title: Text('Unit $unitNumber'),
+                selected: unitNumber == tempCurrentUnitNumber,
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    tempCurrentUnitNumber = unitNumber;
+                  });
+                  if (unitNumber != originalCurrentUnitNumber) {
+                    // await viewmodel.fetchSections(
+                    //     viewmodel.levels[int.tryParse(widget.levelId)!],
+                    //     desiredDay: unitNumber);
+                  } else {
+                    // await viewmodel.fetchSections(
+                    //   viewmodel.levels[int.tryParse(widget.levelId)!],
+                    // );
+                  }
+                },
+              );
+            }),
+          ],
         ),
       ),
     );

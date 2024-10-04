@@ -6,13 +6,13 @@ import 'package:ez_english/features/home/test/viewmodel/test_viewmodel.dart';
 import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/school/school_section_viewmodel.dart';
-import 'package:ez_english/features/levels/screens/worksheet_view/worksheet_view_viewmodel.dart';
 import 'package:ez_english/features/sections/components/view_model/dictation_question_view.model.dart';
 import 'package:ez_english/features/sections/exam/viewmodel/test_section_viewmodel.dart';
 import 'package:ez_english/features/sections/grammar/grammar_section_viewmodel.dart';
 import 'package:ez_english/features/sections/listening/viewmodel/listening_section_viewmodel.dart';
 import 'package:ez_english/features/sections/reading/view_model/reading_section_viewmodel.dart';
 import 'package:ez_english/features/sections/vocabulary/viewmodel/vocabulary_section_viewmodel.dart';
+import 'package:ez_english/features/sections/worksheet/student_worksheet_viewmodel.dart';
 import 'package:ez_english/features/sections/writing/viewmodel/writing_section_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,8 +42,8 @@ class AppProviders extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UsersSettingsViewmodel()),
         ChangeNotifierProvider(create: (_) => SpeakingSectionViewmodel()),
         ChangeNotifierProvider(create: (_) => QuestionAssignmentViewmodel()),
-        ChangeNotifierProvider(create: (_) => WorksheetViewViewmodel()),
-        ChangeNotifierProvider(create: (_) => WorksheetsViewmodel()),
+        ChangeNotifierProvider(create: (_) => AdminWorksheetsViewmodel()),
+        ChangeNotifierProvider(create: (_) => StudentWorksheetViewModel()),
       ],
       child: child,
     );

@@ -14,7 +14,7 @@ class AdminWorksheetView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int worksheetIndex = int.tryParse(worksheetId) ?? 0;
-    return Consumer<WorksheetsViewmodel>(builder: (context, viewmodel, _) {
+    return Consumer<AdminWorksheetsViewmodel>(builder: (context, viewmodel, _) {
       final submissionsList = viewmodel.worksheets[worksheetIndex].students;
       // print("submissionsList: ${submissionsList[0].studentName}");
       return Scaffold(

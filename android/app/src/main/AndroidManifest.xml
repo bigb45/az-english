@@ -12,7 +12,9 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:cleartextTrafficPermitted="true" 
+        >
         <activity
             android:name=".MainActivity"
             android:exported="true"

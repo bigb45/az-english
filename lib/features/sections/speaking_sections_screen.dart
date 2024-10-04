@@ -4,6 +4,7 @@ import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/drawer_button.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,8 @@ class _PracticeSectionsState extends State<PracticeSections> {
       AppStrings.listeningSectionCardTitle,
       AppStrings.vocabSectionCardTitle,
       AppStrings.grammarSectionCardTitle,
-      AppStrings.skillTestSectionCardTitle
+      AppStrings.skillTestSectionCardTitle,
+      AppStrings.worksheetSectionCardTitle,
     ];
     imageAssets = [
       "assets/images/reading_section_card.svg",
@@ -52,7 +54,8 @@ class _PracticeSectionsState extends State<PracticeSections> {
       "assets/images/listening_section_card.svg",
       "assets/images/vocabulary_section_card.svg",
       "assets/images/grammar_section_card.svg",
-      null
+      null,
+      "assets/images/worksheet.svg"
     ];
     backgroundColors = [
       const Color(0xFFFFA500),
@@ -60,7 +63,8 @@ class _PracticeSectionsState extends State<PracticeSections> {
       const Color(0xFF3498DB),
       const Color(0xFF8F8F8F),
       const Color(0xFF663399),
-      const Color(0xFF34495E)
+      const Color(0xFF34495E),
+      const Color(0xFF2ECC71),
     ];
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _fetchSections();
@@ -133,7 +137,11 @@ class _PracticeSectionsState extends State<PracticeSections> {
                                   Section section = viewmodel
                                       .levels[int.tryParse(widget.levelId)!]
                                       .sections![index];
+                                  printDebug(
+                                      "${section.name} ${section.isAssigned}, ${section.numberOfQuestions}");
                                   String hintText = entry.value;
+                                  bool showCardInfo = section.name !=
+                                      RouteConstants.worksheetSectionName;
                                   return _buildCard(
                                     headerText: hintText,
                                     cardText:
@@ -149,6 +157,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
                                             viewmodel.updateSectionStatus(
                                                 section, widget.levelName);
                                           },
+                                    shouldShowCardInformation: showCardInfo,
                                     imagePath: imageAssets[index],
                                     backgroundColor: backgroundColors[index],
                                     section: section,
@@ -241,6 +250,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
     required Color backgroundColor,
     required Section section,
     required VoidCallback? onTap,
+    bool shouldShowCardInformation = true,
     String? imagePath,
     Color? cardShadowColor,
   }) {
@@ -250,6 +260,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
               onTap();
             }
           : null,
+      showCardInfo: shouldShowCardInformation,
       cardBackgroundColor: backgroundColor,
       image: imagePath,
       cardShadowColor: cardShadowColor,
