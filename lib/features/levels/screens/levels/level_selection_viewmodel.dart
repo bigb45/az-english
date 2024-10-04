@@ -7,6 +7,7 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
+import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
@@ -15,31 +16,39 @@ import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 
-class LevelSelectionViewmodel extends BaseViewModel {
+class LevelSelectionViewmodel extends ChangeNotifier {
   int _selectedLevelId = 0;
   late AuthViewModel _authProvider;
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   List<Level> _levels = [];
-
+  final FirestoreService firestoreService = FirestoreService();
   bool _isSpeakingAssigned = false;
   int _userCurrentDay = 1;
   bool _isWorksheetUploaded = false;
   String? _lastWorksheetPath;
-
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
   int get selectedLevel => _selectedLevelId;
   List<Level> get levels => _levels;
   bool get isSpeakingAssigned => _isSpeakingAssigned;
   bool get isWorksheetUploaded => _isWorksheetUploaded;
   String? get lastWorksheetPath => _lastWorksheetPath;
   int get userCurrentDay => _userCurrentDay;
+  CustomException? _error;
+  CustomException? get error => _error;
 
   void update(AuthViewModel authViewModel) async {
     _authProvider = authViewModel;
     if (_authProvider.isSignedIn) {
+      _isLoading = true;
+      notifyListeners();
       await fetchLevels();
       await fetchUserData(_authProvider.user!.uid);
       await checkIfWorksheetUploaded();
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -84,7 +93,7 @@ class LevelSelectionViewmodel extends BaseViewModel {
       {required String imagePath,
       required String worksheetID,
       required String levelID}) async {
-    isLoading = true;
+    _isLoading = true;
     notifyListeners();
     try {
       String studentImagePath = await uploadImageAndGetUrl(
@@ -102,7 +111,7 @@ class LevelSelectionViewmodel extends BaseViewModel {
     } catch (e) {
       print("Error uploading worksheet solution: $e");
     } finally {
-      isLoading = false;
+      _isLoading = false;
       notifyListeners();
     }
   }
@@ -134,14 +143,12 @@ class LevelSelectionViewmodel extends BaseViewModel {
     if (_levels.isNotEmpty) {
       return;
     }
-    isLoading = true;
-    notifyListeners();
     try {
       User? user = _firebaseAuthService.getUser();
 
       if (_authProvider.userData == null) return;
       List<String>? assignedLevels = _authProvider.userData!.assignedLevels;
-      error = null;
+      _error = null;
       _levels = await firestoreService.fetchLevels(user!);
       for (var level in _levels) {
         level.isAssigned = assignedLevels!.contains(level.name);
@@ -152,17 +159,14 @@ class LevelSelectionViewmodel extends BaseViewModel {
       notifyListeners();
     } catch (e) {
       _handleError("An undefined error occurred ${e.toString()}");
-    } finally {
-      isLoading = false;
-      notifyListeners();
     }
   }
 
   Future<void> fetchSections(Level level, {int? desiredDay}) async {
-    isLoading = true;
+    _isLoading = true;
     notifyListeners();
     try {
-      error = null;
+      _error = null;
       _levels[level.id].sections = await firestoreService
           .fetchSection(level.name, desiredDay: desiredDay);
       _userCurrentDay = int.tryParse(firestoreService.currentDayString!)!;
@@ -173,7 +177,7 @@ class LevelSelectionViewmodel extends BaseViewModel {
     } catch (e) {
       _handleError("An undefined error occurred ${e.toString()}");
     } finally {
-      isLoading = false;
+      _isLoading = false;
       notifyListeners();
     }
   }
@@ -190,7 +194,7 @@ class LevelSelectionViewmodel extends BaseViewModel {
   }
 
   Future<void> updateSectionStatus(Section section, String levelName) async {
-    isLoading = true;
+    _isLoading = true;
     notifyListeners();
     try {
       section.isAttempted = true;
@@ -205,18 +209,15 @@ class LevelSelectionViewmodel extends BaseViewModel {
         'levelsProgress.$levelName.sectionProgress.$sectionId.isAttempted':
             true,
       });
-
-      isLoading = false;
-      notifyListeners();
     } catch (e) {
-      isLoading = false;
+      _isLoading = false;
       notifyListeners();
       rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
-
-  @override
-  FutureOr<void> init() {}
 
   void _handleError(String e) {
     Utils.showErrorSnackBar(e);
