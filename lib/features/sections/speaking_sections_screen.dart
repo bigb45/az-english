@@ -187,7 +187,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
               ...List.generate(originalCurrentUnitNumber, (index) {
                 int unitNumber = index + 1;
                 return ListTile(
-                  leading: Icon(Icons.book),
+                  leading: const Icon(Icons.book),
                   title: Text('Unit $unitNumber'),
                   selected: unitNumber == tempCurrentUnitNumber,
                   onTap: () async {
