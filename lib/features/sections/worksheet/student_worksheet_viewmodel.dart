@@ -4,12 +4,14 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/unit.dart';
+import 'package:ez_english/features/models/worksheet.dart';
+import 'package:ez_english/features/models/worksheet_student.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -18,13 +20,11 @@ class StudentWorksheetViewModel extends BaseViewModel {
 
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
 
+  WorksheetStudent? _uploadedWorksheet;
+  WorksheetStudent? get uploadedWorksheet => _uploadedWorksheet;
+  final String _currentUserId = FirebaseAuth.instance.currentUser!.uid;
   Map<String, BaseQuestion> _worksheets = {};
   Map<String, BaseQuestion> get worksheets => _worksheets;
-  bool _isWorksheetUploaded = false;
-  String? _lastWorksheetPath;
-
-  bool get isWorksheetUploaded => _isWorksheetUploaded;
-  String? get lastWorksheetPath => _lastWorksheetPath;
 
   bool _isLoading = false;
 
@@ -33,42 +33,6 @@ class StudentWorksheetViewModel extends BaseViewModel {
   void setValuesAndInit() async {
     levelName = RouteConstants.getLevelName(levelId!);
     await fetchWorksheets();
-  }
-
-  void setLastWorksheetImageUrl(String imageUrl) {
-    _lastWorksheetPath = imageUrl;
-  }
-
-  Future<void> checkIfWorksheetUploaded() async {
-    try {
-      User? user = _firebaseAuthService.getUser();
-      if (user == null) {
-        throw Exception("User not logged in");
-      }
-
-      QuerySnapshot querySnapshot = await firestoreService.getLastWorksheet();
-      if (querySnapshot.docs.isNotEmpty) {
-        DocumentSnapshot lastWorksheetDoc = querySnapshot.docs.first;
-
-        Map<String, dynamic>? studentsMap =
-            lastWorksheetDoc['students'] as Map<String, dynamic>?;
-
-        if (studentsMap != null && studentsMap.containsKey(user.uid)) {
-          _isWorksheetUploaded = true;
-          String imageUrl = lastWorksheetDoc['imageUrl'];
-          setLastWorksheetImageUrl(imageUrl);
-        } else {
-          _isWorksheetUploaded = false;
-        }
-      } else {
-        _isWorksheetUploaded = false;
-        print("No worksheets found in the collection.");
-      }
-    } catch (e) {
-      print("Error checking worksheet upload: $e");
-    } finally {
-      notifyListeners();
-    }
   }
 
   Future<void> uploadStudentSubmission(
@@ -82,11 +46,10 @@ class StudentWorksheetViewModel extends BaseViewModel {
       );
       await firestoreService.addStudentSubmission(
         level: levelName!,
-        section: FirestoreConstants.worksheetsCollection,
+        section: RouteConstants.worksheetSectionName,
         studentImagePath: studentImagePath,
         workSheetID: worksheetID,
       );
-      _isWorksheetUploaded = true;
       print("Student data associated with the last worksheet successfully.");
     } catch (e) {
       print("Error uploading worksheet solution: $e");
@@ -145,5 +108,25 @@ class StudentWorksheetViewModel extends BaseViewModel {
   @override
   FutureOr<void> init() {}
 
-  // endregion fetchWorhsheets
+  bool getCurrentUserSubmission(String worksheetId) {
+    final worksheetEntry = _worksheets.entries.firstWhere(
+        (element) => element.key == worksheetId,
+        orElse: () => MapEntry('', WorkSheet()));
+
+    if (worksheetEntry.value is WorkSheet) {
+      final workSheet = worksheetEntry.value as WorkSheet;
+
+      final userSubmission = workSheet.students?.entries.firstWhere(
+          (studentEntry) => studentEntry.key == _currentUserId,
+          orElse: () => MapEntry('', WorksheetStudent()));
+
+      if (userSubmission != null) {
+        _uploadedWorksheet = userSubmission.value;
+        return true;
+      } else {
+        printDebug("No submission found for user $_currentUserId");
+      }
+    }
+    return false;
+  }
 }

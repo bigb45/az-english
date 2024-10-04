@@ -5,8 +5,25 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class StudentWorksheetView extends StatelessWidget {
-  const StudentWorksheetView({super.key});
+class StudentWorksheetView extends StatefulWidget {
+  final String worksheetId;
+
+  const StudentWorksheetView({super.key, required this.worksheetId});
+
+  @override
+  State<StudentWorksheetView> createState() => _StudentWorksheetViewState();
+}
+
+class _StudentWorksheetViewState extends State<StudentWorksheetView> {
+  @override
+  void initState() {
+    super.initState();
+    final viewmodel = context.read<StudentWorksheetViewModel>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      viewmodel.getCurrentUserSubmission(widget.worksheetId);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +42,16 @@ class StudentWorksheetView extends StatelessWidget {
           backgroundColor: Colors.transparent,
         ),
         body: Center(
-            child: viewmodel.isLoading
-                ? const CircularProgressIndicator()
-                : InteractiveViewer(
-                    child: CachedNetworkImage(
-                      imageUrl: worksheetPath!,
-                      placeholder: (context, url) =>
-                          const CircularProgressIndicator(),
-                    ),
-                  )),
+          child: viewmodel.isLoading
+              ? const CircularProgressIndicator()
+              : InteractiveViewer(
+                  child: CachedNetworkImage(
+                    imageUrl: viewmodel.uploadedWorksheet?.imagePath ?? '',
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                  ),
+                ),
+        ),
       ),
     );
   }

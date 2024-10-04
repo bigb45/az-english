@@ -35,10 +35,10 @@ class _WorksheetViewState extends State<WorksheetView> {
         appBar: AppBar(
           title: const Text("Worksheets"),
         ),
-        body: viewmodel.isLoading
-            ? const CircularProgressIndicator()
-            : Center(
-                child: Padding(
+        body: Center(
+          child: viewmodel.isLoading
+              ? const CircularProgressIndicator()
+              : Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: Constants.padding12,
                       vertical: Constants.padding8),
@@ -71,8 +71,10 @@ class _WorksheetViewState extends State<WorksheetView> {
                               showDeleteIcon: false,
                               showIconDivider: false,
                               onTap: () async {
-                                if (viewmodel.isWorksheetUploaded) {
-                                  context.push('/student_worksheet_view');
+                                if (viewmodel
+                                    .getCurrentUserSubmission(questionKey)) {
+                                  context.push(
+                                      '/student_worksheet_view/$questionKey');
                                 } else {
                                   final pickedImage =
                                       await ImagePicker().pickImage(
@@ -120,7 +122,7 @@ class _WorksheetViewState extends State<WorksheetView> {
                     ],
                   ),
                 ),
-              ),
+        ),
       ),
     );
   }

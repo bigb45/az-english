@@ -201,8 +201,11 @@ final loggedInRouter = GoRouter(
     ),
 
     GoRoute(
-      path: '/student_worksheet_view',
-      builder: (context, state) => StudentWorksheetView(),
+      path: '/student_worksheet_view/:worksheetId',
+      builder: (context, state) {
+        String worksheetId = state.pathParameters['worksheetId'] ?? "-1";
+        return StudentWorksheetView(worksheetId: worksheetId);
+      },
     ),
 
     GoRoute(
