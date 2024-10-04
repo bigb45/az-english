@@ -322,14 +322,7 @@ class FirestoreService {
               : (sectionProgress['progress'] ?? 0.0) as double;
         }
         if (daySections.contains(section.name)) {
-          String tempUnitNumber = (sectionId ==
-                      RouteConstants.getSectionIds(
-                          RouteConstants.testSectionName) ||
-                  sectionId ==
-                      RouteConstants.getSectionIds(
-                          RouteConstants.vocabularySectionName))
-              ? "unit${currentDayString!}"
-              : unitNumber!;
+          String tempUnitNumber = unitNumber!;
 
           if (section.name != RouteConstants.testSectionName) {
             section.isAssigned = true;
@@ -399,14 +392,7 @@ class FirestoreService {
 
       SectionProgress sectionProgress =
           levelProgress.sectionProgress![sectionId]!;
-      String tempUnitNumber = (sectionId ==
-                  RouteConstants.getSectionIds(
-                      RouteConstants.testSectionName) ||
-              sectionId ==
-                  RouteConstants.getSectionIds(
-                      RouteConstants.vocabularySectionName))
-          ? "unit${currentDayString!}"
-          : unitNumber!;
+      String tempUnitNumber = unitNumber!;
       if (!sectionProgress.unitsCompleted.contains(tempUnitNumber)) {
         sectionProgress.unitsCompleted.add(tempUnitNumber);
       }
@@ -537,14 +523,7 @@ class FirestoreService {
 
       double progress = _userModel!
           .levelsProgress![level]!.sectionProgress![sectionName]!.progress;
-      String tempUnitNumber = (sectionName ==
-                  RouteConstants.getSectionIds(
-                      RouteConstants.testSectionName) ||
-              sectionName ==
-                  RouteConstants.getSectionIds(
-                      RouteConstants.vocabularySectionName))
-          ? "unit${currentDayString!}"
-          : unitNumber!;
+      String tempUnitNumber = unitNumber!;
       DocumentSnapshot levelDoc = await _db
           .collection(FirestoreConstants.levelsCollection)
           .doc(level)
@@ -1000,7 +979,7 @@ class FirestoreService {
         imagePath: studentImagePath,
         dateSolved: DateTime.now(),
         worksheetId: workSheetID, // TODO: Replace with your actual worksheet ID
-        unitNumber: "unit$currentDayString",
+        unitNumber: unitNumber,
       );
 
       // Reference to the unit document
@@ -1010,7 +989,7 @@ class FirestoreService {
           .collection(FirestoreConstants.sectionsCollection)
           .doc(RouteConstants.getSectionIds(section))
           .collection(FirestoreConstants.unitsCollection)
-          .doc("unit$currentDayString");
+          .doc(unitNumber);
 
       FieldPath fieldPath = FieldPath([
         FirestoreConstants.questionsField,
