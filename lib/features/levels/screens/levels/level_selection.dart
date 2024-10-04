@@ -132,47 +132,37 @@ class _LevelSelectionState extends State<LevelSelection> {
                                           );
                                         }
                                       },
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          AutoSizeText(
-                                            'Add Worksheet',
-                                            style: TextStyles.cardHeader
-                                                .copyWith(fontSize: 18.sp),
-                                            textAlign: TextAlign.center,
-                                            maxLines: 3,
-                                          ),
-                                          const Expanded(
-                                            child: FittedBox(
-                                              child: Icon(
-                                                Icons.add_rounded,
-                                                color: Palette.secondaryText,
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            AutoSizeText(
+                                              'Add Worksheet',
+                                              style: TextStyles.cardHeader
+                                                  .copyWith(fontSize: 18.sp),
+                                              textAlign: TextAlign.center,
+                                              maxLines: 3,
+                                            ),
+                                            const Expanded(
+                                              child: FittedBox(
+                                                child: Icon(
+                                                  Icons.add_rounded,
+                                                  color: Palette.secondaryText,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          AutoSizeText(
-                                            "Submit your worksheet",
-                                            style: TextStyles.cardText,
-                                            textAlign: TextAlign.center,
-                                            maxLines: 3,
-                                          ),
-                                        ],
+                                            AutoSizeText(
+                                              "Submit your worksheet",
+                                              style: TextStyles.cardText,
+                                              textAlign: TextAlign.center,
+                                              maxLines: 3,
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    )
-                              // ...viewmodel.levels.map(
-                              //   (level) {
-                              //     return _buildCard(
-                              //       headerText: level.name,
-                              //       isAssigned: level.isAssigned,
-                              //       cardText: level.description,
-                              //       onTap: () {
-                              //         navigateToLevel(levelId: level.id);
-                              //         viewmodel.fetchSections(level);
-                              //       },
-                              //     );
-                              //   },
-                              // ),
+                                    ),
                             ],
                           ),
                         ),

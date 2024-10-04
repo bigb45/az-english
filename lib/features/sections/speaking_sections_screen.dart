@@ -4,6 +4,7 @@ import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/drawer_button.dart';
 import 'package:ez_english/widgets/exercise_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -90,13 +91,14 @@ class _PracticeSectionsState extends State<PracticeSections> {
         key: _scaffoldKey,
         appBar: AppBar(
           actions: [
-            IconButton(
-              onPressed: () {
-                _scaffoldKey.currentState?.openEndDrawer();
-              },
-              icon: _buildCircularSvgIcon(
-                  "assets/images/app_bar_action_button_icon.svg"),
-            ),
+            Padding(
+              padding: EdgeInsets.all(Constants.padding20),
+              child: DrawerActionButton(
+                onPressed: () {
+                  _scaffoldKey.currentState?.openEndDrawer();
+                },
+              ),
+            )
           ],
           title: ListTile(
             contentPadding: const EdgeInsets.only(left: 0, right: 0),
@@ -185,7 +187,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
               ...List.generate(originalCurrentUnitNumber, (index) {
                 int unitNumber = index + 1;
                 return ListTile(
-                  leading: Icon(Icons.book),
+                  leading: const Icon(Icons.book),
                   title: Text('Unit $unitNumber'),
                   selected: unitNumber == tempCurrentUnitNumber,
                   onTap: () async {
