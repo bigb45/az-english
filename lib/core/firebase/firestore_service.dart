@@ -312,7 +312,6 @@ class FirestoreService {
           section.numberOfSolvedQuestions = 0;
           section.progress = 0;
         } else {
-          // Update section properties from user data
           section.isAssigned = sectionProgress['isAssigned'];
           section.isCompleted = sectionProgress['isCompleted'];
           section.isAttempted = sectionProgress['isAttempted'];
@@ -332,6 +331,13 @@ class FirestoreService {
               ? "unit${currentDayString!}"
               : unitNumber!;
 
+          if (section.name != RouteConstants.testSectionName) {
+            section.isAssigned = true;
+            levelProgressData['sectionProgress'][sectionId]['sectionName'] =
+                section.name;
+            levelProgressData['sectionProgress'][sectionId]['isAssigned'] =
+                true;
+          }
           DocumentReference unitReference = _db
               .collection(FirestoreConstants.levelsCollection)
               .doc(levelName)
@@ -341,24 +347,24 @@ class FirestoreService {
               .doc(tempUnitNumber);
 
           dynamic questionsNumber = await unitReference.get().then((snapshot) {
-            return (snapshot.data()
-                as Map<String, dynamic>)['numberOfQuestionsWithDeletion']!;
+            if (snapshot.exists && snapshot.data() != null) {
+              return (snapshot.data() as Map<String, dynamic>)[
+                      'numberOfQuestionsWithDeletion'] ??
+                  0;
+            } else {
+              section.isAssigned = false;
+              section.isAttempted = false;
+              section.isCompleted = false;
+              return 0;
+            }
           });
-
           section.numberOfQuestions = questionsNumber;
-          if (section.name != RouteConstants.testSectionName) {
-            section.isAssigned = true;
-            levelProgressData['sectionProgress'][sectionId]['sectionName'] =
-                section.name;
-            levelProgressData['sectionProgress'][sectionId]['isAssigned'] =
-                true;
-          }
         }
         return section;
       }).toList();
 
       // Save updated user progress back to Firestore
-      if (desiredDay != null) {
+      if (desiredDay == null) {
         await userDocRef.update({'levelsProgress': userData['levelsProgress']});
       }
 
