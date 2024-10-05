@@ -50,31 +50,33 @@ class _WorksheetViewState extends State<WorksheetView> {
                           itemBuilder: (context, index) {
                             final currentWorksheet =
                                 viewmodel.worksheets.entries.elementAt(index);
-                            final questionKey = currentWorksheet.key.toString();
-                            final question =
+                            final worksheetId = currentWorksheet.key.toString();
+                            final worksheet =
                                 currentWorksheet.value as WorkSheet;
                             // String key = viewmodel.worksheets.entries
                             //     .elementAt(index)
                             //     .key;
-
+                            final isSubmitted =
+                                viewmodel.getCurrentUserSubmission(worksheetId);
                             return VerticalListItemCard(
                               mainText:
-                                  question.title ?? "Worksheet #${index + 1}",
+                                  worksheet.title ?? "Worksheet #${index + 1}",
                               subText: "TODO ADD DESCRIPTION",
                               info: Text(
-                                "Due on ${question.timestamp!.toDate().toString().split(" ")[0]}",
+                                "Due on ${worksheet.timestamp!.toDate().toString().split(" ")[0]}",
                                 style: const TextStyle(
                                   color: Palette.secondaryText,
                                 ),
                               ),
-                              action: Icons.arrow_forward_ios,
+                              action: isSubmitted
+                                  ? Icons.remove_red_eye
+                                  : Icons.arrow_forward_ios,
                               showDeleteIcon: false,
                               showIconDivider: false,
                               onTap: () async {
-                                if (viewmodel
-                                    .getCurrentUserSubmission(questionKey)) {
+                                if (isSubmitted) {
                                   context.push(
-                                      '/student_worksheet_view/$questionKey');
+                                      '/student_worksheet_view/$worksheetId');
                                 } else {
                                   final pickedImage =
                                       await ImagePicker().pickImage(
@@ -104,7 +106,7 @@ class _WorksheetViewState extends State<WorksheetView> {
                                                         imagePath:
                                                             pickedImage.path,
                                                         worksheetID:
-                                                            questionKey);
+                                                            worksheetId);
                                               },
                                               child: const Text('Upload'),
                                             ),

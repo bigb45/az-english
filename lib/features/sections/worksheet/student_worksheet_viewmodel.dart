@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
@@ -22,13 +21,13 @@ class StudentWorksheetViewModel extends BaseViewModel {
 
   WorksheetStudent? _uploadedWorksheet;
   WorksheetStudent? get uploadedWorksheet => _uploadedWorksheet;
+
+  WorkSheet? _worksheetAnswer;
+  WorkSheet? get worksheetAnswer => _worksheetAnswer;
+
   final String _currentUserId = FirebaseAuth.instance.currentUser!.uid;
   Map<String, BaseQuestion> _worksheets = {};
   Map<String, BaseQuestion> get worksheets => _worksheets;
-
-  bool _isLoading = false;
-
-  bool get isLoading => _isLoading;
 
   void setValuesAndInit() async {
     levelName = RouteConstants.getLevelName(levelId!);
@@ -37,7 +36,7 @@ class StudentWorksheetViewModel extends BaseViewModel {
 
   Future<void> uploadStudentSubmission(
       {required String imagePath, required String worksheetID}) async {
-    _isLoading = true;
+    isLoading = true;
     notifyListeners();
     try {
       String studentImagePath = await uploadImageAndGetUrl(
@@ -54,7 +53,7 @@ class StudentWorksheetViewModel extends BaseViewModel {
     } catch (e) {
       print("Error uploading worksheet solution: $e");
     } finally {
-      _isLoading = false;
+      isLoading = false;
       notifyListeners();
     }
   }
@@ -115,13 +114,15 @@ class StudentWorksheetViewModel extends BaseViewModel {
 
     if (worksheetEntry.value is WorkSheet) {
       final workSheet = worksheetEntry.value as WorkSheet;
-
       final userSubmission = workSheet.students?.entries.firstWhere(
           (studentEntry) => studentEntry.key == _currentUserId,
           orElse: () => MapEntry('', WorksheetStudent()));
 
       if (userSubmission != null) {
         _uploadedWorksheet = userSubmission.value;
+        _worksheetAnswer = workSheet;
+        printDebug(
+            "Submission: ${_worksheetAnswer?.students}, ${_worksheetAnswer?.imageUrl}, ");
         return true;
       } else {
         printDebug("No submission found for user $_currentUserId");

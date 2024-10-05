@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/worksheet_student.dart';
+import 'package:ez_english/utils/utils.dart';
 
 class WorkSheet extends BaseQuestion {
   String? title;
-  String? imageUrl;
+  String? description;
   Map<String, WorksheetStudent>? students;
   Timestamp? timestamp; // Add a timestamp field
 // TODO: add description
@@ -24,6 +25,7 @@ class WorkSheet extends BaseQuestion {
   });
 
   factory WorkSheet.fromMap(Map<String, dynamic> map) {
+    printDebug("getting worksheet from, $map");
     return WorkSheet(
       answer: null,
       questionTextInEnglish: null,

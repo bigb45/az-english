@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/sections/worksheet/student_worksheet_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -41,16 +43,45 @@ class _StudentWorksheetViewState extends State<StudentWorksheetView> {
           centerTitle: true,
           backgroundColor: Colors.transparent,
         ),
-        body: Center(
-          child: viewmodel.isLoading
-              ? const CircularProgressIndicator()
-              : InteractiveViewer(
-                  child: CachedNetworkImage(
-                    imageUrl: viewmodel.uploadedWorksheet?.imagePath ?? '',
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                  ),
-                ),
+        body: Padding(
+          padding: EdgeInsets.all(Constants.padding12),
+          child: Center(
+              child: viewmodel.isLoading
+                  ? const CircularProgressIndicator()
+                  : SingleChildScrollView(
+                      // scrollDirection: Axis.horizontal,
+                      child: Column(
+                        children: [
+                          Text("Your submission", style: TextStyles.bodyLarge),
+                          Container(
+                            decoration: const BoxDecoration(),
+                            child: InteractiveViewer(
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    viewmodel.uploadedWorksheet?.imagePath ??
+                                        '',
+                                placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator()),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: Constants.padding12,
+                          ),
+                          Text("Answer key", style: TextStyles.bodyLarge),
+                          Container(
+                            child: InteractiveViewer(
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    viewmodel.worksheetAnswer?.imageUrl ?? '',
+                                placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator()),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
         ),
       ),
     );
