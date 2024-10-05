@@ -3,6 +3,7 @@ import 'package:ez_english/features/home/admin/worksheets/worksheets_viewmodel.d
 import 'package:ez_english/features/models/worksheet.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/drawer_button.dart';
 import 'package:ez_english/widgets/vertical_list_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +17,7 @@ class AllWorksheets extends StatefulWidget {
 }
 
 class _AllWorksheetsState extends State<AllWorksheets> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
@@ -29,7 +31,18 @@ class _AllWorksheetsState extends State<AllWorksheets> {
   Widget build(BuildContext context) {
     return Consumer<AdminWorksheetsViewmodel>(
       builder: (context, viewmodel, _) => Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
+          actions: [
+            Padding(
+              padding: EdgeInsets.all(Constants.padding20),
+              child: DrawerActionButton(
+                  invertColors: true,
+                  onPressed: () {
+                    _scaffoldKey.currentState?.openEndDrawer();
+                  }),
+            )
+          ],
           iconTheme: const IconThemeData(color: Palette.primaryText),
           title: const Text(
             'All worksheets',
@@ -75,6 +88,7 @@ class _AllWorksheetsState extends State<AllWorksheets> {
                         }),
           ),
         ),
+        endDrawer: const Drawer(),
       ),
     );
   }
