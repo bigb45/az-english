@@ -4,6 +4,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/fill_the_blank
 import 'package:ez_english/features/home/content/data_entry_forms/multiple_choice_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/passage_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
+import 'package:ez_english/features/home/content/data_entry_forms/worksheet_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/add_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -163,6 +164,10 @@ class _AddQuestionState extends State<AddQuestion> {
                                 value: "test",
                                 child: Text("Test"),
                               ),
+                              DropdownMenuItem(
+                                value: "worksheet",
+                                child: Text("Worksheet"),
+                              )
                             ],
                             onChanged: (sectionSelection) {
                               setState(() {
@@ -259,58 +264,60 @@ class _AddQuestionState extends State<AddQuestion> {
                           : const Text("Please add the level first"),
                     ),
                     SizedBox(height: 16.h),
-                    DropdownButtonFormField(
-                      value: selectedQuestionType,
-                      isExpanded: true,
-                      items: const [
-                        DropdownMenuItem(
-                          value: QuestionType.multipleChoice,
-                          child: Text("Multiple Choice"),
+                    // don't select question type if admin is uploading a worksheet
+                    if (selectedSection != RouteConstants.worksheetSectionName)
+                      DropdownButtonFormField(
+                        value: selectedQuestionType,
+                        isExpanded: true,
+                        items: const [
+                          DropdownMenuItem(
+                            value: QuestionType.multipleChoice,
+                            child: Text("Multiple Choice"),
+                          ),
+                          DropdownMenuItem(
+                            value: QuestionType.dictation,
+                            child: Text("Dictation"),
+                          ),
+                          DropdownMenuItem(
+                            value: QuestionType.passage,
+                            child: Text("Passage"),
+                          ),
+                          DropdownMenuItem(
+                            value: QuestionType.youtubeLesson,
+                            child: Text("Youtube video"),
+                          ),
+                          DropdownMenuItem(
+                            value: QuestionType.vocabulary,
+                            child: Text("Vocabulary"),
+                          ),
+                          DropdownMenuItem(
+                            value: QuestionType.fillTheBlanks,
+                            child: Text("Fill in the blank"),
+                          ),
+                        ],
+                        onChanged: isQuestionTypeEnabled
+                            ? (QuestionType? questionTypeSelection) {
+                                print(
+                                    "Question type selected: ${questionTypeSelection!.toShortString()}");
+                                setState(() {
+                                  selectedQuestionType = questionTypeSelection;
+                                });
+                              }
+                            : null,
+                        decoration: const InputDecoration(
+                          labelText: "Question Type",
+                          hintText: "Select question type",
+                          border: OutlineInputBorder(),
                         ),
-                        DropdownMenuItem(
-                          value: QuestionType.dictation,
-                          child: Text("Dictation"),
-                        ),
-                        DropdownMenuItem(
-                          value: QuestionType.passage,
-                          child: Text("Passage"),
-                        ),
-                        DropdownMenuItem(
-                          value: QuestionType.youtubeLesson,
-                          child: Text("Youtube video"),
-                        ),
-                        DropdownMenuItem(
-                          value: QuestionType.vocabulary,
-                          child: Text("Vocabulary"),
-                        ),
-                        DropdownMenuItem(
-                          value: QuestionType.fillTheBlanks,
-                          child: Text("Fill in the blank"),
-                        ),
-                      ],
-                      onChanged: isQuestionTypeEnabled
-                          ? (QuestionType? questionTypeSelection) {
-                              print(
-                                  "Question type selected: ${questionTypeSelection!.toShortString()}");
-                              setState(() {
-                                selectedQuestionType = questionTypeSelection;
-                              });
-                            }
-                          : null,
-                      decoration: const InputDecoration(
-                        labelText: "Question Type",
-                        hintText: "Select question type",
-                        border: OutlineInputBorder(),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please select a question type';
+                          }
+                          return null;
+                        },
+                        disabledHint: const Text(
+                            "Please fill all fields above to select question type"),
                       ),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Please select a question type';
-                        }
-                        return null;
-                      },
-                      disabledHint: const Text(
-                          "Please fill all fields above to select question type"),
-                    ),
                     SizedBox(height: 16.h),
                     const Text("Fields marked with * are required"),
                     SizedBox(height: 16.h),
@@ -374,6 +381,9 @@ class _AddQuestionState extends State<AddQuestion> {
           section: selectedSection!,
           day: selectedUnit!.name.split("t")[1],
         );
+
+      case QuestionType.worksheet:
+        return WorksheetForm();
       default:
         return const Text("Select question type to start");
     }
