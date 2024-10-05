@@ -161,6 +161,10 @@ class ExerciseCardState extends State<ExerciseCard> {
                                         fontWeight: FontWeight.bold),
                                   ),
                           ],
+                        )
+                      else
+                        SizedBox(
+                          height: 20.h,
                         ),
                       SvgPicture.asset(
                         widget.image ?? 'assets/images/notepad.svg',
@@ -287,6 +291,10 @@ class ExerciseCardState extends State<ExerciseCard> {
                                           fontWeight: FontWeight.bold),
                                     ),
                             ],
+                          )
+                        else
+                          SizedBox(
+                            height: 20.h,
                           ),
                         SvgPicture.asset(
                           widget.image ?? 'assets/images/notepad.svg',
