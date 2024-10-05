@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
@@ -9,13 +7,11 @@ import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
-import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class LevelSelectionViewmodel extends ChangeNotifier {
@@ -26,15 +22,11 @@ class LevelSelectionViewmodel extends ChangeNotifier {
   final FirestoreService firestoreService = FirestoreService();
   bool _isSpeakingAssigned = false;
   int _userCurrentDay = 1;
-  bool _isWorksheetUploaded = false;
-  String? _lastWorksheetPath;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   int get selectedLevel => _selectedLevelId;
   List<Level> get levels => _levels;
   bool get isSpeakingAssigned => _isSpeakingAssigned;
-  bool get isWorksheetUploaded => _isWorksheetUploaded;
-  String? get lastWorksheetPath => _lastWorksheetPath;
   int get userCurrentDay => _userCurrentDay;
   CustomException? _error;
   CustomException? get error => _error;
@@ -46,93 +38,28 @@ class LevelSelectionViewmodel extends ChangeNotifier {
       notifyListeners();
       await fetchLevels();
       await fetchUserData(_authProvider.user!.uid);
-      await checkIfWorksheetUploaded();
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  void setLastWorksheetImageUrl(String imageUrl) {
-    _lastWorksheetPath = imageUrl;
-  }
+  // Future<String> uploadImageAndGetUrl(
+  //     String imagePath, String imageName) async {
+  //   try {
+  //     File imageFile = File(imagePath);
+  //     Uint8List imageData = await imageFile.readAsBytes();
 
-  Future<void> checkIfWorksheetUploaded() async {
-    try {
-      User? user = _firebaseAuthService.getUser();
-      if (user == null) {
-        throw Exception("User not logged in");
-      }
-
-      QuerySnapshot querySnapshot = await firestoreService.getLastWorksheet();
-      if (querySnapshot.docs.isNotEmpty) {
-        DocumentSnapshot lastWorksheetDoc = querySnapshot.docs.first;
-
-        Map<String, dynamic>? studentsMap =
-            lastWorksheetDoc['students'] as Map<String, dynamic>?;
-
-        if (studentsMap != null && studentsMap.containsKey(user.uid)) {
-          _isWorksheetUploaded = true;
-          String imageUrl = lastWorksheetDoc['imageUrl'];
-          setLastWorksheetImageUrl(imageUrl);
-        } else {
-          _isWorksheetUploaded = false;
-        }
-      } else {
-        _isWorksheetUploaded = false;
-        print("No worksheets found in the collection.");
-      }
-    } catch (e) {
-      print("Error checking worksheet upload: $e");
-    } finally {
-      notifyListeners();
-    }
-  }
-
-// TODO:Move this to the worksheet section viewmodel
-  Future<void> uploadStudentSubmission(
-      {required String imagePath,
-      required String worksheetID,
-      required String levelID}) async {
-    _isLoading = true;
-    notifyListeners();
-    try {
-      String studentImagePath = await uploadImageAndGetUrl(
-        imagePath,
-        'worksheet_solution_${DateTime.now().millisecondsSinceEpoch}',
-      );
-      await firestoreService.addStudentSubmission(
-        level: levelID,
-        section: FirestoreConstants.worksheetsCollection,
-        studentImagePath: studentImagePath,
-        workSheetID: worksheetID,
-      );
-      _isWorksheetUploaded = true;
-      print("Student data associated with the last worksheet successfully.");
-    } catch (e) {
-      print("Error uploading worksheet solution: $e");
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
-
-  Future<String> uploadImageAndGetUrl(
-      String imagePath, String imageName) async {
-    try {
-      File imageFile = File(imagePath);
-      Uint8List imageData = await imageFile.readAsBytes();
-
-      UploadTask uploadTask = FirebaseStorage.instance
-          .ref('worksheets/student_solutions/$imageName')
-          .putData(imageData);
-      TaskSnapshot snapshot = await uploadTask;
-      String downloadUrl = await snapshot.ref.getDownloadURL();
-      return downloadUrl;
-    } catch (e) {
-      print("Error uploading image: $e");
-    } finally {}
-    return '';
-  }
+  //     UploadTask uploadTask = FirebaseStorage.instance
+  //         .ref('worksheets/student_solutions/$imageName')
+  //         .putData(imageData);
+  //     TaskSnapshot snapshot = await uploadTask;
+  //     String downloadUrl = await snapshot.ref.getDownloadURL();
+  //     return downloadUrl;
+  //   } catch (e) {
+  //     print("Error uploading image: $e");
+  //   } finally {}
+  //   return '';
+  // }
 
   Future<void> fetchUserData(String userId) async {
     UserModel? userModel = await firestoreService.getUser(userId);

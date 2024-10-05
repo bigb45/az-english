@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/sections/worksheet/student_worksheet_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -29,8 +28,7 @@ class _StudentWorksheetViewState extends State<StudentWorksheetView> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<LevelSelectionViewmodel>(context);
-    final worksheetPath = viewModel.lastWorksheetPath;
+    final viewModel = Provider.of<StudentWorksheetViewModel>(context);
 
     return Consumer<StudentWorksheetViewModel>(
       builder: (context, viewmodel, _) => Scaffold(
