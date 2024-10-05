@@ -265,59 +265,62 @@ class _AddQuestionState extends State<AddQuestion> {
                     ),
                     SizedBox(height: 16.h),
                     // don't select question type if admin is uploading a worksheet
-                    if (selectedSection != RouteConstants.worksheetSectionName)
-                      DropdownButtonFormField(
-                        value: selectedQuestionType,
-                        isExpanded: true,
-                        items: const [
-                          DropdownMenuItem(
-                            value: QuestionType.multipleChoice,
-                            child: Text("Multiple Choice"),
-                          ),
-                          DropdownMenuItem(
-                            value: QuestionType.dictation,
-                            child: Text("Dictation"),
-                          ),
-                          DropdownMenuItem(
-                            value: QuestionType.passage,
-                            child: Text("Passage"),
-                          ),
-                          DropdownMenuItem(
-                            value: QuestionType.youtubeLesson,
-                            child: Text("Youtube video"),
-                          ),
-                          DropdownMenuItem(
-                            value: QuestionType.vocabulary,
-                            child: Text("Vocabulary"),
-                          ),
-                          DropdownMenuItem(
-                            value: QuestionType.fillTheBlanks,
-                            child: Text("Fill in the blank"),
-                          ),
-                        ],
-                        onChanged: isQuestionTypeEnabled
-                            ? (QuestionType? questionTypeSelection) {
-                                print(
-                                    "Question type selected: ${questionTypeSelection!.toShortString()}");
-                                setState(() {
-                                  selectedQuestionType = questionTypeSelection;
-                                });
-                              }
-                            : null,
-                        decoration: const InputDecoration(
-                          labelText: "Question Type",
-                          hintText: "Select question type",
-                          border: OutlineInputBorder(),
+                    DropdownButtonFormField(
+                      value: selectedQuestionType,
+                      isExpanded: true,
+                      items: const [
+                        DropdownMenuItem(
+                          value: QuestionType.multipleChoice,
+                          child: Text("Multiple Choice"),
                         ),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please select a question type';
-                          }
-                          return null;
-                        },
-                        disabledHint: const Text(
-                            "Please fill all fields above to select question type"),
+                        DropdownMenuItem(
+                          value: QuestionType.dictation,
+                          child: Text("Dictation"),
+                        ),
+                        DropdownMenuItem(
+                          value: QuestionType.passage,
+                          child: Text("Passage"),
+                        ),
+                        DropdownMenuItem(
+                          value: QuestionType.youtubeLesson,
+                          child: Text("Youtube video"),
+                        ),
+                        DropdownMenuItem(
+                          value: QuestionType.vocabulary,
+                          child: Text("Vocabulary"),
+                        ),
+                        DropdownMenuItem(
+                          value: QuestionType.fillTheBlanks,
+                          child: Text("Fill in the blank"),
+                        ),
+                        DropdownMenuItem(
+                          value: QuestionType.worksheet,
+                          child: Text("Worksheet"),
+                        ),
+                      ],
+                      onChanged: isQuestionTypeEnabled
+                          ? (QuestionType? questionTypeSelection) {
+                              print(
+                                  "Question type selected: ${questionTypeSelection!.toShortString()}");
+                              setState(() {
+                                selectedQuestionType = questionTypeSelection;
+                              });
+                            }
+                          : null,
+                      decoration: const InputDecoration(
+                        labelText: "Question Type",
+                        hintText: "Select question type",
+                        border: OutlineInputBorder(),
                       ),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select a question type';
+                        }
+                        return null;
+                      },
+                      disabledHint: const Text(
+                          "Please fill all fields above to select question type"),
+                    ),
                     SizedBox(height: 16.h),
                     const Text("Fields marked with * are required"),
                     SizedBox(height: 16.h),
@@ -383,7 +386,11 @@ class _AddQuestionState extends State<AddQuestion> {
         );
 
       case QuestionType.worksheet:
-        return WorksheetForm();
+        return WorksheetForm(
+          level: selectedLevel!,
+          section: selectedSection!,
+          day: selectedUnit!.name.split("t")[1],
+        );
       default:
         return const Text("Select question type to start");
     }

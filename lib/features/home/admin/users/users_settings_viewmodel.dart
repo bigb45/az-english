@@ -37,7 +37,7 @@ class UsersSettingsViewmodel extends BaseViewModel {
   @override
   FutureOr<void> init() {}
 
-  Future<void> uploadWorksheetAnswerKey({
+  Future<WorkSheet> uploadWorksheetAnswerKey({
     required String imagePath,
     required String worksheetTitle,
     required String levelID,
@@ -65,6 +65,7 @@ class UsersSettingsViewmodel extends BaseViewModel {
       isLoading = false;
       notifyListeners();
     }
+    return WorkSheet();
   }
 
   Future<String> uploadImageAndGetUrl(
