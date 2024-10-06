@@ -127,4 +127,10 @@ class TextStyles {
     fontWeight: FontWeight.w700,
     height: 2,
   );
+  static TextStyle deleteTextStyle = TextStyle(
+    color: Palette.error,
+    fontFamily: 'Inter',
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w700,
+  );
 }

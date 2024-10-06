@@ -75,4 +75,9 @@ abstract class AppStrings {
 
   static final String speakingSectionPageTitle =
       "speakingSectionPageTitle".tr();
+  static final deleteAccountButton = "deleteAccountButton".tr();
+  static final confirmAccountDeletion = "confirmAccountDeletion".tr();
+  static final deleteAccountMessage = "deleteAccountMessage".tr();
+  static final delete = "delete".tr();
+  static final cancel = "cancel".tr();
 }

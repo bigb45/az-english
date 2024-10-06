@@ -2,6 +2,7 @@ import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/info_card.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,51 @@ class Account extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 20),
+                Button(
+                  text: AppStrings.deleteAccountButton,
+                  type: ButtonType.error,
+                  onPressed: () async {
+                    bool confirmed = await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(AppStrings.confirmAccountDeletion,
+                              style:
+                                  const TextStyle(color: Palette.primaryText)),
+                          content: Text(
+                            AppStrings.deleteAccountMessage,
+                            style: TextStyles.bodyMedium,
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(false);
+                              },
+                              child: Text(
+                                AppStrings.cancel,
+                                style: TextStyles.deleteTextStyle
+                                    .copyWith(color: Palette.primaryText),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(true);
+                              },
+                              child: Text(
+                                AppStrings.delete,
+                                style: TextStyles.deleteTextStyle,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    if (confirmed) {
+                      await viewmodel
+                          .deleteUserAccount(viewmodel.userData!.password);
+                    }
+                  },
+                ),
               ],
             ),
           ),
