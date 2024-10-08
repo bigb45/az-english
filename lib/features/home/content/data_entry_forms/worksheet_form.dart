@@ -1,12 +1,17 @@
+import 'dart:io';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/admin/users/users_settings_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/resources/app_strings.dart';
+import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
+import 'package:ez_english/widgets/upload_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class WorksheetForm extends StatefulWidget {
@@ -33,13 +38,13 @@ class _WorksheetFormState extends State<WorksheetForm> {
 
   bool isFormValid = false;
   String? updateMessage;
-  XFile? pickedImage;
   String? imageUrl;
+  File? currentImage;
 
   final _formKey = GlobalKey<FormState>();
   void _validateForm() {
     bool formValid =
-        pickedImage != null && (_formKey.currentState?.validate() ?? false);
+        currentImage != null && (_formKey.currentState?.validate() ?? false);
 
     // bool changesMade = _checkForChanges();
     setState(() {
@@ -88,6 +93,102 @@ class _WorksheetFormState extends State<WorksheetForm> {
             ),
             SizedBox(
               height: 10.h,
+            ),
+            Stack(
+              children: [
+                viewmodel.image != null
+                    ? Center(child: Image.file(viewmodel.image!))
+                    : UploadCard(
+                        onPressed: () async {
+                          await viewmodel.pickImage();
+                          setState(() {
+                            currentImage = viewmodel.image;
+                            _validateForm();
+                          });
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            AutoSizeText(
+                              'Add Worksheet',
+                              style: TextStyles.cardHeader
+                                  .copyWith(fontSize: 18.sp),
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                            ),
+                            Expanded(
+                              child: viewmodel.isLoading
+                                  ? const Center(
+                                      child: CircularProgressIndicator(
+                                        color: Palette.primaryText,
+                                      ),
+                                    )
+                                  : const FittedBox(
+                                      child: Icon(
+                                        Icons.add_rounded,
+                                        color: Palette.secondaryText,
+                                      ),
+                                    ),
+                            ),
+                            AutoSizeText(
+                              "Add worksheet solution",
+                              style: TextStyles.cardText,
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                            ),
+                          ],
+                        )
+                        // child: Container(
+                        //   height: 200.h,
+                        //   decoration: const BoxDecoration(
+                        //     color: Color.fromARGB(255, 216, 243, 255),
+                        //   ),
+                        //   child: Center(
+                        //       child: viewmodel.image != null
+                        //           ? Image.file(viewmodel.image!)
+                        //           : Text(
+                        //               "Tap here to pick image",
+                        //               style: TextStyles.bodyLarge,
+                        //             )),
+                        // ),
+                        ),
+                // DottedBorder(
+                //   color: Palette.primaryVariant,
+                //   strokeWidth: 1,
+                //   padding: const EdgeInsets.all(0),
+                //   child: Container(
+                //     height: 200.h,
+                //     decoration: const BoxDecoration(
+                //       color: Color.fromARGB(255, 216, 243, 255),
+                //     ),
+                //     child: Center(
+                //         child: viewmodel.image != null
+                //             ? Image.file(viewmodel.image!)
+                //             : Text(
+                //                 "Tap here to pick image",
+                //                 style: TextStyles.bodyLarge,
+                //               )),
+                //   ),
+                // ),
+                if (viewmodel.image != null)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          viewmodel.removeImage();
+                          currentImage = null;
+                          _validateForm();
+                        });
+                      },
+                    ),
+                  ),
+              ],
             ),
 // region NEW IMAGE PICKER
             // GestureDetector(
