@@ -4,7 +4,6 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/levels/screens/school/school_section_viewmodel.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
-import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/drawer_button.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +23,8 @@ class SpeakingSection extends StatefulWidget {
 class _SpeakingSectionState extends State<SpeakingSection> {
   late SpeakingSectionViewmodel viewmodel;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  int originalCurrentUnitNumber = 1;
-  int tempCurrentUnitNumber = 1;
+  int originalCurrentUnitNumber = 0;
+  int tempCurrentUnitNumber = 0;
 
   @override
   void initState() {
@@ -38,6 +37,7 @@ class _SpeakingSectionState extends State<SpeakingSection> {
         print("Scaffold State is available now");
       }
     });
+    originalCurrentUnitNumber = viewmodel.userCurrentDay;
 
     super.initState();
   }
@@ -52,9 +52,6 @@ class _SpeakingSectionState extends State<SpeakingSection> {
             padding: EdgeInsets.all(Constants.padding20),
             child: DrawerActionButton(
               onPressed: () {
-                printDebug("Opening end drawer");
-                printDebug(
-                    "_scaffoldKey.currentState: ${_scaffoldKey.currentState}");
                 _scaffoldKey.currentState?.openEndDrawer();
               },
             ),
@@ -157,13 +154,13 @@ class _SpeakingSectionState extends State<SpeakingSection> {
                     tempCurrentUnitNumber = unitNumber;
                   });
                   if (unitNumber != originalCurrentUnitNumber) {
-                    // await viewmodel.fetchSections(
-                    //     viewmodel.levels[int.tryParse(widget.levelId)!],
-                    //     desiredDay: unitNumber);
+                    await viewmodel.fetchSections(
+                        viewmodel.levels[int.tryParse(widget.levelId)!],
+                        desiredDay: unitNumber);
                   } else {
-                    // await viewmodel.fetchSections(
-                    //   viewmodel.levels[int.tryParse(widget.levelId)!],
-                    // );
+                    await viewmodel.fetchSections(
+                      viewmodel.levels[int.tryParse(widget.levelId)!],
+                    );
                   }
                 },
               );

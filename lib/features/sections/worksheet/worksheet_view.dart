@@ -52,7 +52,7 @@ class _WorksheetViewState extends State<WorksheetView> {
                                 viewmodel.worksheets.entries.elementAt(index);
                             final worksheetId = currentWorksheet.key.toString();
                             final worksheet =
-                                currentWorksheet.value as WorkSheet;
+                                currentWorksheet.value as Worksheet;
                             // String key = viewmodel.worksheets.entries
                             //     .elementAt(index)
                             //     .key;

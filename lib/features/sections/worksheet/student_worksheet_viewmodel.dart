@@ -22,8 +22,8 @@ class StudentWorksheetViewModel extends BaseViewModel {
   WorksheetStudent? _uploadedWorksheet;
   WorksheetStudent? get uploadedWorksheet => _uploadedWorksheet;
 
-  WorkSheet? _worksheetAnswer;
-  WorkSheet? get worksheetAnswer => _worksheetAnswer;
+  Worksheet? _worksheetAnswer;
+  Worksheet? get worksheetAnswer => _worksheetAnswer;
 
   final String _currentUserId = FirebaseAuth.instance.currentUser!.uid;
   Map<String, BaseQuestion> _worksheets = {};
@@ -110,10 +110,10 @@ class StudentWorksheetViewModel extends BaseViewModel {
   bool getCurrentUserSubmission(String worksheetId) {
     final worksheetEntry = _worksheets.entries.firstWhere(
         (element) => element.key == worksheetId,
-        orElse: () => MapEntry('', WorkSheet()));
+        orElse: () => MapEntry('', Worksheet()));
 
-    if (worksheetEntry.value is WorkSheet) {
-      final workSheet = worksheetEntry.value as WorkSheet;
+    if (worksheetEntry.value is Worksheet) {
+      final workSheet = worksheetEntry.value as Worksheet;
       final userSubmission = workSheet.students?.entries.firstWhere(
           (studentEntry) => studentEntry.key == _currentUserId,
           orElse: () => MapEntry('', WorksheetStudent()));

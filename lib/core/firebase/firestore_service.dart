@@ -936,21 +936,21 @@ class FirestoreService {
         .get();
   }
 
-  Future<List<WorkSheet>> getAllWorksheets() async {
+  Future<List<Worksheet>> getAllWorksheets() async {
     final querySnapshot = await _db
         .collection(FirestoreConstants.worksheetsCollection)
         .orderBy('timestamp', descending: true)
         .get();
 
-    List<WorkSheet> worksheets = querySnapshot.docs.map((doc) {
-      return WorkSheet.fromMap(doc.data());
+    List<Worksheet> worksheets = querySnapshot.docs.map((doc) {
+      return Worksheet.fromMap(doc.data());
     }).toList();
 
     return worksheets;
   }
 
   Future<void> addWorksheet({
-    required WorkSheet worksheet,
+    required Worksheet worksheet,
     required String levelID,
     required String sectionName,
     required String unitNumber,

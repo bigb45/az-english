@@ -75,7 +75,7 @@ abstract class BaseQuestion<T> {
         return FillTheBlanksQuestionModel.fromMap(json);
 
       case QuestionType.worksheet:
-        return WorkSheet.fromMap(json);
+        return Worksheet.fromMap(json);
 
       default:
         throw Exception('Unknown question type: $questionType');

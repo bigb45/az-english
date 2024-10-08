@@ -9,15 +9,23 @@ import 'package:ez_english/features/models/assigned_questions.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
+import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SpeakingSectionViewmodel extends BaseViewModel {
   String? levelId;
   List<BaseQuestion> _questions = [];
   get questions => _questions;
+
+  List<Level> _levels = [];
+  int _userCurrentDay = 0;
+
+  List<Level> get levels => _levels;
+  int get userCurrentDay => _userCurrentDay;
 
   final FirestoreService _firestoreService = FirestoreService();
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
@@ -57,7 +65,30 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     }
   }
 
-  Future<void> fetchSectionsForSelectedDay() async {}
+  Future<void> fetchSections(Level level, {int? desiredDay}) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      error = null;
+      _levels[level.id].sections = await firestoreService
+          .fetchSection(level.name, desiredDay: desiredDay);
+      _userCurrentDay = int.tryParse(firestoreService.currentDayString!)!;
+    } on CustomException catch (e) {
+      // error = e as CustomException;
+      _handleError(e.message);
+      notifyListeners();
+    } catch (e) {
+      _handleError("An undefined error occurred ${e.toString()}");
+    } finally {
+      isLoading = false;
+      printDebug("loading sections, ${_levels[level.id].sections}");
+      notifyListeners();
+    }
+  }
+
+  void _handleError(String e) {
+    Utils.showErrorSnackBar(e);
+  }
 
   Future<void> _fetchQuestions() async {
     isLoading = true;

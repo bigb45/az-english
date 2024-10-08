@@ -3,9 +3,11 @@ import 'package:ez_english/features/home/admin/worksheets/worksheets_viewmodel.d
 import 'package:ez_english/features/models/worksheet.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/drawer_button.dart';
 import 'package:ez_english/widgets/vertical_list_item_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +20,8 @@ class AllWorksheets extends StatefulWidget {
 
 class _AllWorksheetsState extends State<AllWorksheets> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  int tempUnitNumber = 0;
+  int selectedLevelNumber = 0;
   @override
   void initState() {
     super.initState();
@@ -65,7 +69,7 @@ class _AllWorksheetsState extends State<AllWorksheets> {
                     : ListView.builder(
                         itemCount: viewmodel.worksheets.length,
                         itemBuilder: (context, index) {
-                          WorkSheet currentWorksheet =
+                          Worksheet currentWorksheet =
                               viewmodel.worksheets[index];
                           int submissionCount =
                               currentWorksheet.students?.length ?? 0;
@@ -88,7 +92,79 @@ class _AllWorksheetsState extends State<AllWorksheets> {
                         }),
           ),
         ),
-        endDrawer: const Drawer(),
+        endDrawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              SizedBox(
+                height: 158.h,
+                child: const DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Palette.primaryButtonStroke,
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Choose a Unit',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              ...List.generate(viewmodel.levels.length, (levelIndex) {
+                return Container(
+                    padding: EdgeInsets.all(Constants.padding8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Level ${levelIndex + 1}",
+                          style: TextStyles.bodyLarge,
+                        ),
+                        ...List.generate(
+                            /*originalCurrentUnitNumber*/
+                            viewmodel.levels["level$levelIndex"]?.length ?? 3,
+                            (unitIndex) {
+                          int unitNumber = unitIndex + 1;
+                          return ListTile(
+                            leading: const Icon(Icons.book),
+                            title: Text('Unit $unitNumber'),
+                            selected: unitNumber == tempUnitNumber &&
+                                levelIndex ==
+                                    selectedLevelNumber /* tempCurrentUnitNumber */,
+                            onTap: () async {
+                              printDebug(
+                                  "selected unit: $unitNumber, in level ${levelIndex + 1}");
+                              printDebug("${viewmodel.levels[levelIndex]}");
+
+                              // Navigator.of(context).pop();
+                              setState(() {
+                                /* tempCurrentUnitNumber = unitNumber; */
+                                tempUnitNumber = unitNumber;
+                                selectedLevelNumber = levelIndex;
+                              });
+                              // if (unitNumber != 3) {
+                              viewmodel.selectWorksheet(
+                                  selectedLevelNumber, unitNumber - 1);
+                              //   await viewmodel.fetchSections(
+                              //       viewmodel.levels[int.tryParse(widget.levelId)!],
+                              //       desiredDay: unitNumber);
+                              // } else {
+                              //   await viewmodel.fetchSections(
+                              //     viewmodel.levels[int.tryParse(widget.levelId)!],
+                              //   );
+                              // }
+                            },
+                          );
+                        }),
+                      ],
+                    ));
+              })
+            ],
+          ),
+        ),
       ),
     );
   }

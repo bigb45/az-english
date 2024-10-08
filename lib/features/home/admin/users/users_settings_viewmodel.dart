@@ -61,7 +61,7 @@ class UsersSettingsViewmodel extends BaseViewModel {
     }
   }
 
-  Future<WorkSheet> uploadWorksheetAnswerKey({
+  Future<Worksheet> uploadWorksheetAnswerKey({
     required String imagePath,
     required String worksheetTitle,
     required String levelID,
@@ -73,7 +73,7 @@ class UsersSettingsViewmodel extends BaseViewModel {
       String imageUrl = await uploadImageAndGetUrl(
           imagePath, '${DateTime.now().millisecondsSinceEpoch}');
 
-      WorkSheet worksheet = WorkSheet(
+      Worksheet worksheet = Worksheet(
           title: worksheetTitle,
           imageUrl: imageUrl,
           timestamp: Timestamp.now());
@@ -89,7 +89,7 @@ class UsersSettingsViewmodel extends BaseViewModel {
       isLoading = false;
       notifyListeners();
     }
-    return WorkSheet();
+    return Worksheet();
   }
 
   void removeImage() {

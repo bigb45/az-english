@@ -4,13 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/worksheet_student.dart';
 
-class WorkSheet extends BaseQuestion {
+class Worksheet extends BaseQuestion {
   String? title;
   String? description;
   Map<String, WorksheetStudent>? students;
-  Timestamp? timestamp; // Add a timestamp field
+  Timestamp? timestamp;
 // TODO: add description
-  WorkSheet({
+  Worksheet({
     this.title,
     this.students,
     this.timestamp, // Include timestamp in the constructor
@@ -23,8 +23,8 @@ class WorkSheet extends BaseQuestion {
     super.titleInEnglish = '',
   });
 
-  factory WorkSheet.fromMap(Map<String, dynamic> map) {
-    return WorkSheet(
+  factory Worksheet.fromMap(Map<String, dynamic> map) {
+    return Worksheet(
       answer: null,
       questionTextInEnglish: null,
       imageUrl: map['imageUrl'],
@@ -57,8 +57,8 @@ class WorkSheet extends BaseQuestion {
     };
   }
 
-  factory WorkSheet.fromJson(String data) {
-    return WorkSheet.fromMap(json.decode(data) as Map<String, dynamic>);
+  factory Worksheet.fromJson(String data) {
+    return Worksheet.fromMap(json.decode(data) as Map<String, dynamic>);
   }
 
   String toJson() => json.encode(toMap());
