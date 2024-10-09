@@ -369,8 +369,12 @@ Widget sectionDropDown({required onChanged}) {
         child: Text("Reading"),
       ),
       DropdownMenuItem(
-        value: "listeningWriting",
-        child: Text("Writing & Listening"),
+        value: "writing",
+        child: Text("Writing"),
+      ),
+      DropdownMenuItem(
+        value: "listening",
+        child: Text("Listening"),
       ),
       DropdownMenuItem(
         value: "vocabulary",

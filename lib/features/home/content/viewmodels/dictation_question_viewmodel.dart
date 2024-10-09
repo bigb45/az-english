@@ -25,6 +25,7 @@ class DictationQuestionViewModel extends ChangeNotifier {
     required String? speakableText,
     required String? titleInEnglish,
     required SectionName sectionName,
+    required String? answer,
   }) async {
     if (speakableText == null) {
       return null;
@@ -35,7 +36,7 @@ class DictationQuestionViewModel extends ChangeNotifier {
       questionTextInArabic: questionTextInArabic ?? '',
       imageUrl: null,
       speakableText: speakableText,
-      answer: StringAnswer(answer: speakableText),
+      answer: StringAnswer(answer: answer),
       titleInEnglish: titleInEnglish,
       sectionName: sectionName,
     );
