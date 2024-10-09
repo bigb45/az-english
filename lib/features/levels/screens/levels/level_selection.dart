@@ -25,6 +25,15 @@ class _LevelSelectionState extends State<LevelSelection> {
   }
 
   @override
+  void initState() {
+    LevelSelectionViewmodel levelViewmodel =
+        Provider.of<LevelSelectionViewmodel>(context, listen: false);
+    levelViewmodel.tempUnit = false;
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<LevelSelectionViewmodel>(
       builder: (context, viewmodel, _) => Scaffold(

@@ -1,4 +1,5 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
 import 'package:ez_english/features/sections/exam/viewmodel/test_section_viewmodel.dart';
@@ -28,6 +29,9 @@ class _TestSectionState extends State<TestSection> {
   void initState() {
     super.initState();
     viewmodel = Provider.of<TestSectionViewmodel>(context, listen: false);
+    LevelSelectionViewmodel levelViewmodel =
+        Provider.of<LevelSelectionViewmodel>(context, listen: false);
+    viewmodel.tempUnit = levelViewmodel.tempUnit;
     viewmodel.levelId = widget.levelId;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       viewmodel.myInit();

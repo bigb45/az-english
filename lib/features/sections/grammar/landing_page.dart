@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/sections/grammar/grammar_section_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -25,6 +26,9 @@ class _GrammarSectionState extends State<GrammarSection> {
   void initState() {
     super.initState();
     viewmodel = Provider.of<GrammarSectionViewmodel>(context, listen: false);
+    LevelSelectionViewmodel levelViewmodel =
+        Provider.of<LevelSelectionViewmodel>(context, listen: false);
+    viewmodel.tempUnit = levelViewmodel.tempUnit;
     // Future.microtask(() => viewmodel.setValuesAndInit());
     viewmodel.levelId = widget.levelId;
     WidgetsBinding.instance.addPostFrameCallback((_) async {

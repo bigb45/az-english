@@ -30,6 +30,7 @@ class LevelSelectionViewmodel extends ChangeNotifier {
   int get userCurrentDay => _userCurrentDay;
   CustomException? _error;
   CustomException? get error => _error;
+  bool tempUnit = false;
 
   void update(AuthViewModel authViewModel) async {
     _authProvider = authViewModel;

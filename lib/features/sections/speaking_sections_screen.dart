@@ -77,6 +77,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
     viewmodel = Provider.of<LevelSelectionViewmodel>(context, listen: false);
     await viewmodel
         .fetchSections(viewmodel.levels[int.tryParse(widget.levelId)!]);
+    viewmodel.tempUnit = false;
     originalCurrentUnitNumber = viewmodel.userCurrentDay;
     tempCurrentUnitNumber = originalCurrentUnitNumber;
     setState(() {
@@ -206,6 +207,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
                       tempCurrentUnitNumber = unitNumber;
                     });
                     if (unitNumber != originalCurrentUnitNumber) {
+                      viewmodel.tempUnit = true;
                       await viewmodel.fetchSections(
                           viewmodel.levels[int.tryParse(widget.levelId)!],
                           desiredDay: unitNumber);
