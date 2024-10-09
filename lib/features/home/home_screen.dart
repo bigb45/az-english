@@ -4,9 +4,11 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/account.dart';
 import 'package:ez_english/features/home/test/test_results.dart';
 import 'package:ez_english/features/levels/screens/levels/level_selection.dart';
+import 'package:ez_english/features/levels/screens/school/school_section_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -36,6 +38,14 @@ class _HomeScreenState extends State<HomeScreen> {
       _pageIndex = index;
       _pageController.jumpToPage(_pageIndex);
     });
+  }
+
+  @override
+  void initState() {
+    SpeakingSectionViewmodel speakingViewmodel =
+        Provider.of<SpeakingSectionViewmodel>(context, listen: false);
+    speakingViewmodel.tempUnit = false;
+    super.initState();
   }
 
   @override

@@ -38,7 +38,7 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     levelName = RouteConstants.getLevelName(levelId!);
     sectionName = RouteConstants.speakingSectionName;
     await fetchQuestions();
-    await _fetchQuestions();
+    await fetchQuestionsFromLevel();
     if (_questions.isNotEmpty &&
         _questions[currentIndex].questionType == QuestionType.youtubeLesson) {
       answerState = EvaluationState.noState;
@@ -65,23 +65,27 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     }
   }
 
-  Future<void> fetchSections(Level level, {int? desiredDay}) async {
+  Future<int> fetchSections() async {
     isLoading = true;
     notifyListeners();
     try {
       error = null;
-      _levels[level.id].sections = await firestoreService
-          .fetchSection(level.name, desiredDay: desiredDay);
-      _userCurrentDay = int.tryParse(firestoreService.currentDayString!)!;
+      User? user = _firebaseAuthService.getUser();
+      UserModel? userModel = await _firestoreService.getUser(user!.uid);
+      AssignedQuestions assignedQuestions = userModel!.assignedQuestions![
+          RouteConstants.sectionNameId[RouteConstants.speakingSectionName]]!;
+      int currentDay = assignedQuestions.currentDay;
+      return currentDay;
     } on CustomException catch (e) {
       // error = e as CustomException;
       _handleError(e.message);
       notifyListeners();
+      return 0;
     } catch (e) {
       _handleError("An undefined error occurred ${e.toString()}");
+      return 0;
     } finally {
       isLoading = false;
-      printDebug("loading sections, ${_levels[level.id].sections}");
       notifyListeners();
     }
   }
@@ -90,15 +94,22 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     Utils.showErrorSnackBar(e);
   }
 
-  Future<void> _fetchQuestions() async {
+  Future<void> fetchQuestionsFromLevel({int? desiredDay}) async {
     isLoading = true;
     notifyListeners();
     try {
+      _questions = [];
       List<BaseQuestion> embeddedPassageQuestions = [];
       User? user = _firebaseAuthService.getUser();
       UserModel? userModel = await _firestoreService.getUser(user!.uid);
       AssignedQuestions assignedQuestions = userModel!.assignedQuestions![
           RouteConstants.sectionNameId[RouteConstants.speakingSectionName]]!;
+      if (desiredDay != null) {
+        assignedQuestions.lastStoppedQuestionIndex = 0;
+        assignedQuestions.progress = 0;
+        assignedQuestions.currentDay = desiredDay;
+      }
+      progress = assignedQuestions.progress;
       int currentDay = assignedQuestions.currentDay;
       List<String> daySections = _firestoreService.getSectionsForDay();
       int tempAllQuestionsLength = 0;
@@ -215,9 +226,12 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     isLoading = true;
     notifyListeners();
     try {
-      await _firestoreService
-          .updateCurrentSectionQuestionIndexForAssignedQuestions(
-              currentIndex, sectionName!);
+      if (!tempUnit) {
+        await _firestoreService
+            .updateCurrentSectionQuestionIndexForAssignedQuestions(
+                currentIndex, sectionName!);
+      }
+      ;
     } catch (e) {
       error = CustomException("An undefined error ocurred ${e.toString()}");
     } finally {
@@ -231,38 +245,41 @@ class SpeakingSectionViewmodel extends BaseViewModel {
     isLoading = true;
     notifyListeners();
     try {
-      User? user = _firebaseAuthService.getUser();
-      UserModel? userModel = await _firestoreService.getUser(user!.uid);
-      AssignedQuestions assignedQuestions = userModel!.assignedQuestions![
-          RouteConstants.sectionNameId[RouteConstants.speakingSectionName]]!;
-      int currentDay = assignedQuestions.currentDay;
-      currentDay = currentDay + 1;
-      DocumentReference userDocRef =
-          FirebaseFirestore.instance.collection("users").doc(userModel.id);
-      await _firestoreService.updateQuestionUsingFieldPath(
-          docPath: userDocRef,
-          fieldPath: FieldPath([
-            'assignedQuestions',
-            RouteConstants.sectionNameId[RouteConstants.speakingSectionName]!,
-            "currentDay"
-          ]),
-          newValue: currentDay);
-      await _firestoreService.updateQuestionUsingFieldPath(
-          docPath: userDocRef,
-          fieldPath: FieldPath([
-            'assignedQuestions',
-            RouteConstants.sectionNameId[RouteConstants.speakingSectionName]!,
-            "lastStoppedQuestionIndex"
-          ]),
-          newValue: 0);
-      await _firestoreService.updateQuestionUsingFieldPath(
-          docPath: userDocRef,
-          fieldPath: FieldPath([
-            'assignedQuestions',
-            RouteConstants.sectionNameId[RouteConstants.speakingSectionName]!,
-            "progress"
-          ]),
-          newValue: 0);
+      if (!tempUnit) {
+        User? user = _firebaseAuthService.getUser();
+        UserModel? userModel = await _firestoreService.getUser(user!.uid);
+        AssignedQuestions assignedQuestions = userModel!.assignedQuestions![
+            RouteConstants.sectionNameId[RouteConstants.speakingSectionName]]!;
+        int currentDay = assignedQuestions.currentDay;
+        currentDay = currentDay + 1;
+        DocumentReference userDocRef =
+            FirebaseFirestore.instance.collection("users").doc(userModel.id);
+        await _firestoreService.updateQuestionUsingFieldPath(
+            docPath: userDocRef,
+            fieldPath: FieldPath([
+              'assignedQuestions',
+              RouteConstants.sectionNameId[RouteConstants.speakingSectionName]!,
+              "currentDay"
+            ]),
+            newValue: currentDay);
+        await _firestoreService.updateQuestionUsingFieldPath(
+            docPath: userDocRef,
+            fieldPath: FieldPath([
+              'assignedQuestions',
+              RouteConstants.sectionNameId[RouteConstants.speakingSectionName]!,
+              "lastStoppedQuestionIndex"
+            ]),
+            newValue: 0);
+        await _firestoreService.updateQuestionUsingFieldPath(
+            docPath: userDocRef,
+            fieldPath: FieldPath([
+              'assignedQuestions',
+              RouteConstants.sectionNameId[RouteConstants.speakingSectionName]!,
+              "progress"
+            ]),
+            newValue: 0);
+      }
+      ;
     } catch (e) {
       // this causes speaking section error
       error = CustomException("An undefined error ocurred ${e.toString()}");
