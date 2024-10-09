@@ -61,7 +61,7 @@ class UsersSettingsViewmodel extends BaseViewModel {
     }
   }
 
-  Future<Worksheet> uploadWorksheetAnswerKey({
+  Future<Worksheet?> uploadWorksheetAnswerKey({
     required String imagePath,
     required String worksheetTitle,
     required String levelID,

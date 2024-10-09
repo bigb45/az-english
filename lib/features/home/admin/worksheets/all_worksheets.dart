@@ -135,10 +135,6 @@ class _AllWorksheetsState extends State<AllWorksheets> {
                                 levelIndex ==
                                     selectedLevelNumber /* tempCurrentUnitNumber */,
                             onTap: () async {
-                              printDebug(
-                                  "selected unit: $unitNumber, in level ${levelIndex + 1}");
-                              printDebug("${viewmodel.levels[levelIndex]}");
-
                               // Navigator.of(context).pop();
                               setState(() {
                                 /* tempCurrentUnitNumber = unitNumber; */

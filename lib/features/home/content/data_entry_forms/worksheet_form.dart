@@ -34,7 +34,7 @@ class WorksheetForm extends StatefulWidget {
 
 class _WorksheetFormState extends State<WorksheetForm> {
   final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
+  // final _descriptionController = TextEditingController();
 
   bool isFormValid = false;
   String? updateMessage;
@@ -63,251 +63,111 @@ class _WorksheetFormState extends State<WorksheetForm> {
         key: _formKey,
         onChanged: _validateForm,
         autovalidateMode: AutovalidateMode.always,
-        child: Column(
-          children: [
-            // TextFormField for worksheet title
-            TextFormField(
-              controller: _titleController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return AppStrings.fieldRequired;
-                }
-                return null;
-              },
-              decoration: const InputDecoration(
-                labelText: 'Worksheet Title',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-            // TextFormField for worksheet description
-            TextFormField(
-              controller: _descriptionController,
-              maxLines: 4,
-              decoration: const InputDecoration(
-                labelText: 'Worksheet Description',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-            Stack(
-              children: [
-                viewmodel.image != null
-                    ? Center(child: Image.file(viewmodel.image!))
-                    : UploadCard(
-                        onPressed: () async {
-                          await viewmodel.pickImage();
-                          setState(() {
-                            currentImage = viewmodel.image;
-                            _validateForm();
-                          });
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            AutoSizeText(
-                              'Add Worksheet',
-                              style: TextStyles.cardHeader
-                                  .copyWith(fontSize: 18.sp),
-                              textAlign: TextAlign.center,
-                              maxLines: 3,
-                            ),
-                            Expanded(
-                              child: viewmodel.isLoading
-                                  ? const Center(
-                                      child: CircularProgressIndicator(
-                                        color: Palette.primaryText,
-                                      ),
-                                    )
-                                  : const FittedBox(
-                                      child: Icon(
-                                        Icons.add_rounded,
-                                        color: Palette.secondaryText,
-                                      ),
-                                    ),
-                            ),
-                            AutoSizeText(
-                              "Add worksheet solution",
-                              style: TextStyles.cardText,
-                              textAlign: TextAlign.center,
-                              maxLines: 3,
-                            ),
-                          ],
-                        )
-                        // child: Container(
-                        //   height: 200.h,
-                        //   decoration: const BoxDecoration(
-                        //     color: Color.fromARGB(255, 216, 243, 255),
-                        //   ),
-                        //   child: Center(
-                        //       child: viewmodel.image != null
-                        //           ? Image.file(viewmodel.image!)
-                        //           : Text(
-                        //               "Tap here to pick image",
-                        //               style: TextStyles.bodyLarge,
-                        //             )),
-                        // ),
-                        ),
-                // DottedBorder(
-                //   color: Palette.primaryVariant,
-                //   strokeWidth: 1,
-                //   padding: const EdgeInsets.all(0),
-                //   child: Container(
-                //     height: 200.h,
-                //     decoration: const BoxDecoration(
-                //       color: Color.fromARGB(255, 216, 243, 255),
-                //     ),
-                //     child: Center(
-                //         child: viewmodel.image != null
-                //             ? Image.file(viewmodel.image!)
-                //             : Text(
-                //                 "Tap here to pick image",
-                //                 style: TextStyles.bodyLarge,
-                //               )),
-                //   ),
-                // ),
-                if (viewmodel.image != null)
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.close,
-                        color: Colors.red,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          viewmodel.removeImage();
-                          currentImage = null;
-                          _validateForm();
-                        });
-                      },
+        child: viewmodel.isLoading
+            ? CircularProgressIndicator()
+            : Column(
+                children: [
+                  // TextFormField for worksheet title
+                  TextFormField(
+                    controller: _titleController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppStrings.fieldRequired;
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Worksheet Title',
+                      border: OutlineInputBorder(),
                     ),
                   ),
-              ],
-            ),
-// region NEW IMAGE PICKER
-            // GestureDetector(
-            //   onTap: () async {
-            //     await viewmodel.pickImage();
-            //     setState(() {
-            //       currentImage = viewmodel.image;
-            //       _validateForm();
-            //     });
-            //   },
-            //   child: Stack(
-            //     children: [
-            //       DottedBorder(
-            //         color: Palette.primaryVariant,
-            //         strokeWidth: 1,
-            //         padding: const EdgeInsets.all(0),
-            //         child: Container(
-            //           height: 200.h,
-            //           decoration: const BoxDecoration(
-            //             color: Color.fromARGB(255, 216, 243, 255),
-            //           ),
-            //           child: Center(
-            //             child: viewmodel.image != null
-            //                 ? Image.file(viewmodel.image!)
-            //                 : (viewmodel.showCachedImage &&
-            //                         widget.question != null &&
-            //                         widget.question!.imageUrl != null
-            //                     ? CachedNetworkImage(
-            //                         imageUrl: widget.question!.imageUrl!,
-            //                         placeholder: (context, url) =>
-            //                             const CircularProgressIndicator(),
-            //                       )
-            //                     : Text(
-            //                         "Tap here to pick image",
-            //                         style: TextStyles.bodyLarge,
-            //                       )),
-            //           ),
-            //         ),
-            //       ),
-            //       if (viewmodel.image != null || viewmodel.showCachedImage)
-            //         Positioned(
-            //           top: 0,
-            //           right: 0,
-            //           child: IconButton(
-            //             icon: const Icon(
-            //               Icons.close,
-            //               color: Colors.red,
-            //             ),
-            //             onPressed: () {
-            //               setState(() {
-            //                 viewmodel.removeImage();
-            //                 currentImage = null;
-            //                 currentImageURL = null;
-            //                 _validateForm();
-            //               });
-            //             },
-            //           ),
-            //         ),
-            //     ],
-            //   ),
-            // ),
-            // endregion NEW IMAGE PICKER
-
-            // if (pickedImage != null)
-            //   InteractiveViewer(child: Image.file(File(pickedImage!.path)))
-            // else
-            //   UploadCard(
-            //     onPressed: viewmodel.isLoading
-            //         ? () {}
-            //         : () async {
-            //             pickedImage = await ImagePicker().pickImage(
-            //               source: ImageSource.gallery,
-            //             );
-            //             _validateForm();
-            //           },
-            //     child: Column(
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //       children: [
-            //         AutoSizeText(
-            //           'Add Worksheet',
-            //           style: TextStyles.cardHeader.copyWith(fontSize: 18.sp),
-            //           textAlign: TextAlign.center,
-            //           maxLines: 3,
-            //         ),
-            //         Expanded(
-            //           child: viewmodel.isLoading
-            //               ? const Center(
-            //                   child: CircularProgressIndicator(
-            //                     color: Palette.primaryText,
-            //                   ),
-            //                 )
-            //               : const FittedBox(
-            //                   child: Icon(
-            //                     Icons.add_rounded,
-            //                     color: Palette.secondaryText,
-            //                   ),
-            //                 ),
-            //         ),
-            //         AutoSizeText(
-            //           "Add worksheet solution",
-            //           style: TextStyles.cardText,
-            //           textAlign: TextAlign.center,
-            //           maxLines: 3,
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            SizedBox(
-              height: 10.h,
-            ),
-            _updateButton(viewmodel)
-          ],
-        ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  Stack(
+                    children: [
+                      viewmodel.image != null
+                          ? Center(child: Image.file(viewmodel.image!))
+                          : UploadCard(
+                              onPressed: () async {
+                                await viewmodel.pickImage();
+                                setState(() {
+                                  currentImage = viewmodel.image;
+                                  _validateForm();
+                                });
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  AutoSizeText(
+                                    'Add Worksheet',
+                                    style: TextStyles.cardHeader
+                                        .copyWith(fontSize: 18.sp),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 3,
+                                  ),
+                                  Expanded(
+                                    child: viewmodel.isLoading
+                                        ? const Center(
+                                            child: CircularProgressIndicator(
+                                              color: Palette.primaryText,
+                                            ),
+                                          )
+                                        : const FittedBox(
+                                            child: Icon(
+                                              Icons.add_rounded,
+                                              color: Palette.secondaryText,
+                                            ),
+                                          ),
+                                  ),
+                                  AutoSizeText(
+                                    "Add worksheet solution",
+                                    style: TextStyles.cardText,
+                                    textAlign: TextAlign.center,
+                                    maxLines: 3,
+                                  ),
+                                ],
+                              )),
+                      if (viewmodel.image != null)
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.close,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                viewmodel.removeImage();
+                                currentImage = null;
+                                _validateForm();
+                              });
+                            },
+                          ),
+                        ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  _updateButton(viewmodel)
+                ],
+              ),
       ),
     );
   }
 
   Widget _updateButton(UsersSettingsViewmodel viewmodel) {
     bool isEnabled = isFormValid;
+    void resetForm() {
+      _titleController.clear();
+      currentImage = null;
+      viewmodel.removeImage();
+      setState(() {
+        isFormValid = false;
+      });
+    }
 
     return Column(
       children: [
@@ -318,50 +178,23 @@ class _WorksheetFormState extends State<WorksheetForm> {
               onPressed: isEnabled
                   ? () {
                       if (_formKey.currentState!.validate()) {
+                        printDebug(
+                            "uploading image: ${currentImage!.path}, title: ${_titleController.text.trim()}, level: ${widget.level}, unit: ${widget.day}");
                         viewmodel
                             .uploadWorksheetAnswerKey(
-                          imagePath: "",
-                          worksheetTitle: "",
-                          levelID: "",
-                          unitNumber: "",
+                          imagePath: currentImage!.path,
+                          worksheetTitle: _titleController.text.trim(),
+                          levelID: widget.level,
+                          unitNumber: widget.day,
                         )
                             .then((updatedQuestion) {
-                          // if (updatedQuestion != null) {
-                          //   if (widget.onSubmit != null) {
-                          //     setState(() {
-                          //       updateQuestion(updatedQuestion);
-                          //     });
-
-                          //     updatedQuestion.path =
-                          //         widget.question?.path ?? '';
-                          //     widget.onSubmit!(updatedQuestion);
-                          //     Navigator.of(context).pop();
-                          //     Utils.showSnackbar(
-                          //         text: "Question updated successfully");
-                          //   } else {
-                          //     showPreviewModalSheet(
-                          //         context: context,
-                          //         onSubmit: () {
-                          //           viewmodel
-                          //               .uploadQuestion(
-                          //                   level: widget.level,
-                          //                   section: widget.section,
-                          //                   day: widget.day,
-                          //                   question: updatedQuestion)
-                          //               .then((_) {
-                          //             Utils.showSnackbar(
-                          //                 text:
-                          //                     "Question uploaded successfully");
-                          //             // _formKey.currentState!.reset();
-                          //             resetForm();
-                          //           });
-                          //           if (widget.onSubmit != null) {
-                          //             widget.onSubmit!(updatedQuestion);
-                          //           }
-                          //         },
-                          //         question: updatedQuestion);
-                          //   }
-                          // }
+                          if (updatedQuestion != null) {
+                            {
+                              resetForm();
+                              Utils.showSnackbar(
+                                  text: "Question uploaded successfully");
+                            }
+                          }
                         });
                       } else {
                         Utils.showErrorSnackBar(
