@@ -21,21 +21,21 @@ class SpeakingSection extends StatefulWidget {
 }
 
 class _SpeakingSectionState extends State<SpeakingSection> {
-  late SpeakingSectionViewmodel viewmodel;
+  late SchoolSectionViewmodel viewmodel;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int originalCurrentUnitNumber = 0;
   int tempCurrentUnitNumber = 0;
 
   @override
   void initState() {
-    viewmodel = Provider.of<SpeakingSectionViewmodel>(context, listen: false);
+    viewmodel = Provider.of<SchoolSectionViewmodel>(context, listen: false);
     viewmodel.levelId = widget.levelId;
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       viewmodel.setValuesAndInit();
-      if (_scaffoldKey.currentState != null) {
-        // Safe to access _scaffoldKey.currentState here
-        print("Scaffold State is available now");
-      }
+      await viewmodel.fetchSections(
+        viewmodel.levels[int.tryParse(widget.levelId)!],
+      );
     });
     originalCurrentUnitNumber = viewmodel.userCurrentDay;
 

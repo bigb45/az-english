@@ -30,7 +30,7 @@ class _SpeakingPracticeState extends State<SpeakingPractice> {
   @override
   Widget build(BuildContext context) {
     PassageQuestionModel? passageQuestion;
-    return Consumer<SpeakingSectionViewmodel>(builder: (context, viewmodel, _) {
+    return Consumer<SchoolSectionViewmodel>(builder: (context, viewmodel, _) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (viewmodel.error != null) {
           print("showing error");
