@@ -42,8 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    SpeakingSectionViewmodel speakingViewmodel =
-        Provider.of<SpeakingSectionViewmodel>(context, listen: false);
+    SchoolSectionViewmodel speakingViewmodel =
+        Provider.of<SchoolSectionViewmodel>(context, listen: false);
     speakingViewmodel.tempUnit = false;
     super.initState();
   }

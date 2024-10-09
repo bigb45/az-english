@@ -40,7 +40,7 @@ class AppProviders extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DictationQuestionViewModel()),
         ChangeNotifierProvider(create: (_) => TestViewmodel()),
         ChangeNotifierProvider(create: (_) => UsersSettingsViewmodel()),
-        ChangeNotifierProvider(create: (_) => SpeakingSectionViewmodel()),
+        ChangeNotifierProvider(create: (_) => SchoolSectionViewmodel()),
         ChangeNotifierProvider(create: (_) => QuestionAssignmentViewmodel()),
         ChangeNotifierProvider(create: (_) => AdminWorksheetsViewmodel()),
         ChangeNotifierProvider(create: (_) => StudentWorksheetViewModel()),

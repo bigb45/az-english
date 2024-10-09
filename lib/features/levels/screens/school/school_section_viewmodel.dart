@@ -16,7 +16,7 @@ import 'package:ez_english/features/sections/models/passage_question_model.dart'
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class SpeakingSectionViewmodel extends BaseViewModel {
+class SchoolSectionViewmodel extends BaseViewModel {
   String? levelId;
   List<BaseQuestion> _questions = [];
   get questions => _questions;
