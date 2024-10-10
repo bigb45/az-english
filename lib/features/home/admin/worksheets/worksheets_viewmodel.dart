@@ -29,9 +29,6 @@ class AdminWorksheetsViewmodel extends ChangeNotifier {
   }
 
   Future<void> fetchLevels() async {
-    if (_levels.isNotEmpty) {
-      return;
-    }
     try {
       User user = _firebaseAuthService.getUser()!;
       UserModel? userModel = await firestoreService.getUser(user.uid);
