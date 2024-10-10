@@ -50,5 +50,10 @@
   "speakingPracticeScreenTitle": "Practice",
   "speakingSectionPageTitle": "English Practice",
   "speakingSectionOnboardingText": "In this section you will complete the assigned questions.",
-  "worksheetSectionCardTitle": "Worksheets"
+  "worksheetSectionCardTitle": "Worksheets",
+  "deleteAccountButton": "Delete Account",
+  "confirmAccountDeletion": "Confirm Account Deletion",
+  "deleteAccountMessage": "Are you sure you want to delete your account? This action is irreversible.",
+  "delete": "Delete",
+  "cancel": "Cancel"
 }

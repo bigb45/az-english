@@ -3,11 +3,11 @@
 <plist version="1.0">
 	<dict>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Your app needs access to the photo library.</string>
+			<string>We need access to your photo library to allow you to upload images for worksheet submissions in the app.</string>
 		<key>NSCameraUsageDescription</key>
-		<string>Your app needs access to the camera.</string>
+			<string>We need access to your camera to take photos for uploading worksheets or other assignments.</string>
 		<key>NSMicrophoneUsageDescription</key>
-		<string>sadsadasdasdasdsadsa</string>
+			<string>We need access to your microphone for recording audio during speaking exercises or assignments.</string>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
 		<key>CFBundleDevelopmentRegion</key>

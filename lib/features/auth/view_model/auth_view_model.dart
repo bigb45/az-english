@@ -171,6 +171,27 @@ class AuthViewModel extends ChangeNotifier {
     );
   }
 
+  Future<void> deleteUserAccount(String password) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      AuthCredential credential =
+          EmailAuthProvider.credential(email: user!.email!, password: password);
+      await user.reauthenticateWithCredential(credential);
+      if (user != null) {
+        await user.delete();
+        print("User account deleted successfully.");
+      } else {
+        print("No user is currently signed in.");
+      }
+    } catch (e) {
+      if (e is FirebaseAuthException && e.code == 'requires-recent-login') {
+        print("The user must re-authenticate before deleting the account.");
+      } else {
+        print("Error deleting user account: $e");
+      }
+    }
+  }
+
   void _resetAuthState() {
     _user = null;
     _userData = null;
