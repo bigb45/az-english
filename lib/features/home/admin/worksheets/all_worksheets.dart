@@ -140,33 +140,44 @@ class _AllWorksheetsState extends State<AllWorksheets> {
                               Section section = sections[sectionIndex];
                               if (section.name ==
                                   RouteConstants.worksheetSectionName) {
-                                return Column(
-                                  children: [
-                                    ...List.generate(section.units?.length ?? 0,
-                                        (unitIndex) {
-                                      int unitNumber = unitIndex + 1;
-                                      Unit unit = section.units![unitIndex];
-                                      return ListTile(
-                                        leading: const Icon(Icons.book),
-                                        title: Text('Unit $unitNumber'),
-                                        selected: unitNumber ==
-                                                tempUnitNumber &&
-                                            levelIndex == selectedLevelNumber,
-                                        onTap: () async {
-                                          await viewmodel.fetchWorksheets(
-                                            levelName: viewmodel
-                                                .levels[levelIndex].name,
-                                            unitName: unit.name,
-                                          );
-                                          setState(() {
-                                            tempUnitNumber = unitNumber;
-                                            selectedLevelNumber = levelIndex;
-                                          });
-                                        },
+                                return (section.units != null &&
+                                        section.units!.isEmpty)
+                                    ? Center(
+                                        child: Text(
+                                        "No assigned worksheet yet",
+                                        style: TextStyles.bodyMedium,
+                                      ))
+                                    : Column(
+                                        children: [
+                                          ...List.generate(
+                                              section.units?.length ?? 0,
+                                              (unitIndex) {
+                                            int unitNumber = unitIndex + 1;
+                                            Unit unit =
+                                                section.units![unitIndex];
+                                            return ListTile(
+                                              leading: const Icon(Icons.book),
+                                              title: Text('Unit $unitNumber'),
+                                              selected: unitNumber ==
+                                                      tempUnitNumber &&
+                                                  levelIndex ==
+                                                      selectedLevelNumber,
+                                              onTap: () async {
+                                                await viewmodel.fetchWorksheets(
+                                                  levelName: viewmodel
+                                                      .levels[levelIndex].name,
+                                                  unitName: unit.name,
+                                                );
+                                                setState(() {
+                                                  tempUnitNumber = unitNumber;
+                                                  selectedLevelNumber =
+                                                      levelIndex;
+                                                });
+                                              },
+                                            );
+                                          }),
+                                        ],
                                       );
-                                    }),
-                                  ],
-                                );
                               }
                               return Container();
                             }),
