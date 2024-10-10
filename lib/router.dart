@@ -192,12 +192,12 @@ final loggedInRouter = GoRouter(
       builder: (context, state) => AdminScreen(),
     ),
     GoRoute(
-      path: '/speaking_practice',
-      builder: (context, state) => SpeakingSection(levelId: "0"),
+      path: '/school_practice',
+      builder: (context, state) => SchoolSection(levelId: "0"),
     ),
     GoRoute(
-      path: '/speaking_practice/practice',
-      builder: (context, state) => SpeakingPractice(),
+      path: '/school_practice/practice',
+      builder: (context, state) => SchoolPractice(),
     ),
 
     GoRoute(

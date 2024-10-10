@@ -95,11 +95,24 @@ class LevelSelectionViewmodel extends ChangeNotifier {
     notifyListeners();
     try {
       _error = null;
-      _levels[level.id].sections = await firestoreService
-          .fetchSection(level.name, desiredDay: desiredDay);
+
+      if (_levels[level.id].sections == null ||
+          _levels[level.id].sections!.isEmpty) {
+        _levels[level.id].sections = _initializeSections(level);
+      }
+
+      notifyListeners();
+
+      final fetchedSections = await firestoreService.fetchSection(level.name,
+          desiredDay: desiredDay);
+
+      if (fetchedSections != null) {
+        _levels[level.id].sections = _mergeSectionsWithFetchedData(
+            _levels[level.id].sections!, fetchedSections);
+      }
+
       _userCurrentDay = int.tryParse(firestoreService.currentDayString!)!;
     } on CustomException catch (e) {
-      // error = e as CustomException;
       _handleError(e.message);
       notifyListeners();
     } catch (e) {
@@ -108,6 +121,68 @@ class LevelSelectionViewmodel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  List<Section> _initializeSections(Level level) {
+    return [
+      Section(
+        name: RouteConstants.readingSectionName,
+        description: null,
+        units: [],
+      ),
+      Section(
+        name: RouteConstants.writingSectionName,
+        description: null,
+        units: [],
+      ),
+      Section(
+        name: RouteConstants.listeningSectionName,
+        description: null,
+        units: [],
+      ),
+      Section(
+        name: RouteConstants.vocabularySectionName,
+        description: null,
+        units: [],
+      ),
+      Section(
+        name: RouteConstants.grammarSectionName,
+        description: null,
+        units: [],
+      ),
+      Section(
+        name: RouteConstants.testSectionName,
+        description: null,
+        units: [],
+      ),
+      Section(
+        name: RouteConstants.worksheetSectionName,
+        description: null,
+        units: [],
+      ),
+    ];
+  }
+
+  List<Section> _mergeSectionsWithFetchedData(
+      List<Section> initializedSections, List<Section> fetchedSections) {
+    if (initializedSections.length == fetchedSections.length) {
+      return fetchedSections;
+    }
+    Map<String, Section> sectionMap = {
+      for (var section in initializedSections) section.name: section
+    };
+
+    for (var fetchedSection in fetchedSections) {
+      if (sectionMap.containsKey(fetchedSection.name)) {
+        // Override the section if it already exists
+        sectionMap[fetchedSection.name] = fetchedSection;
+      } else {
+        // Add the section if it doesn't exist
+        sectionMap[fetchedSection.name] = fetchedSection;
+      }
+    }
+
+    return sectionMap.values.toList();
   }
 
   void setSelectedLevel(int level) {

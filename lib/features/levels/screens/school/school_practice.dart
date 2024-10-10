@@ -17,14 +17,14 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class SpeakingPractice extends StatefulWidget {
-  const SpeakingPractice({super.key});
+class SchoolPractice extends StatefulWidget {
+  const SchoolPractice({super.key});
 
   @override
-  State<SpeakingPractice> createState() => _SpeakingPracticeState();
+  State<SchoolPractice> createState() => _SchoolPracticeState();
 }
 
-class _SpeakingPracticeState extends State<SpeakingPractice> {
+class _SchoolPracticeState extends State<SchoolPractice> {
   BaseQuestion? currentQuestion;
 
   @override

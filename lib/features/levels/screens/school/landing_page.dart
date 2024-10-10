@@ -13,15 +13,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class SpeakingSection extends StatefulWidget {
+class SchoolSection extends StatefulWidget {
   final String levelId;
-  const SpeakingSection({super.key, required this.levelId});
+  const SchoolSection({super.key, required this.levelId});
 
   @override
-  State<SpeakingSection> createState() => _SpeakingSectionState();
+  State<SchoolSection> createState() => _SchoolSectionState();
 }
 
-class _SpeakingSectionState extends State<SpeakingSection> {
+class _SchoolSectionState extends State<SchoolSection> {
   late SchoolSectionViewmodel viewmodel;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int originalCurrentUnitNumber = 0;
@@ -123,7 +123,7 @@ class _SpeakingSectionState extends State<SpeakingSection> {
                     ),
                     Button(
                       onPressed: () {
-                        context.push('/speaking_practice/practice');
+                        context.push('/school_practice/practice');
                       },
                       type: ButtonType.primary,
                       text: AppStrings.startPracticingButton,
