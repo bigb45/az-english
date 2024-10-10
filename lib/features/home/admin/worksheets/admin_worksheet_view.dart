@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/admin/worksheets/worksheets_viewmodel.dart';
+import 'package:ez_english/features/models/worksheet.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/expandable_list_tile.dart';
@@ -16,13 +17,15 @@ class AdminWorksheetView extends StatelessWidget {
   Widget build(BuildContext context) {
     final int worksheetIndex = int.tryParse(worksheetId) ?? 0;
     return Consumer<AdminWorksheetsViewmodel>(builder: (context, viewmodel, _) {
-      final submissionsList = viewmodel.worksheets[worksheetIndex].students;
+      List<Worksheet> worksheets = viewmodel.worksheets.cast<Worksheet>();
+
+      final submissionsList = worksheets[worksheetIndex].students ?? {};
       // print("submissionsList: ${submissionsList[0].studentName}");
       return Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Palette.primaryText),
           title: Text(
-            viewmodel.worksheets[worksheetIndex].title ?? "Worksheet view",
+            "Worksheet view",
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(color: Palette.primaryText),
           ),
@@ -47,7 +50,7 @@ class AdminWorksheetView extends StatelessWidget {
                                 );
                               },
                               imageUrl: viewmodel
-                                      .worksheets[worksheetIndex].imageUrl ??
+                                      .worksheets[worksheetIndex]?.imageUrl ??
                                   "",
                             ),
                           ),

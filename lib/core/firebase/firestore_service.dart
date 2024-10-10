@@ -257,6 +257,43 @@ class FirestoreService {
     }
   }
 
+  Future<List<Unit>> fetchWorksheetUnits(
+      String levelName, String worksheetSectionName) async {
+    try {
+      // Fetch the worksheet section document
+      DocumentSnapshot sectionDoc = await _db
+          .collection(FirestoreConstants.levelsCollection)
+          .doc(levelName)
+          .collection(FirestoreConstants.sectionsCollection)
+          .doc(RouteConstants.getSectionIds(worksheetSectionName))
+          .get();
+
+      if (!sectionDoc.exists) {
+        return []; // Return an empty list if the section doesn't exist
+      }
+
+      // Fetch the units inside the worksheet section
+      QuerySnapshot unitSnapshot = await _db
+          .collection(FirestoreConstants.levelsCollection)
+          .doc(levelName)
+          .collection(FirestoreConstants.sectionsCollection)
+          .doc(RouteConstants.getSectionIds(worksheetSectionName))
+          .collection(FirestoreConstants.unitsCollection)
+          .get();
+
+      // Map the unit documents to Unit objects
+      List<Unit> units = unitSnapshot.docs.map((unitDoc) {
+        return Unit.fromMap(unitDoc.data() as Map<String, dynamic>);
+      }).toList();
+
+      return units;
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<List<Section>> fetchSection(
     String levelName, {
     int? desiredDay,
@@ -509,10 +546,48 @@ class FirestoreService {
     }
   }
 
-  Future<Unit> fetchUnit(
-    String sectionName,
-    String level,
-  ) async {
+  Future<Section?> fetchUnitsForLevelAndSection(
+      String levelId, String sectionName) async {
+    try {
+      // Fetch the specific section for the provided levelId and sectionName
+      final sectionSnapshot = await _db
+          .collection(FirestoreConstants.levelsCollection)
+          .doc(levelId)
+          .collection(FirestoreConstants.sectionsCollection)
+          .doc(RouteConstants.getSectionIds(sectionName))
+          .get();
+
+      if (sectionSnapshot.exists) {
+        // Convert Firestore data to Section using fromMap
+        Section section =
+            Section.fromMap(sectionSnapshot.data() as Map<String, dynamic>);
+
+        // Fetch units for this section
+        final unitsSnapshot = await _db
+            .collection(FirestoreConstants.levelsCollection)
+            .doc(levelId)
+            .collection(FirestoreConstants.sectionsCollection)
+            .doc(RouteConstants.getSectionIds(sectionName))
+            .collection(FirestoreConstants.unitsCollection)
+            .get();
+
+        // Convert Firestore data to Unit objects and assign to the section
+        section.units = unitsSnapshot.docs.map((unitDoc) {
+          return Unit.fromMap(unitDoc.data() as Map<String, dynamic>);
+        }).toList();
+
+        return section; // Return the section with units
+      } else {
+        return null; // Section not found
+      }
+    } catch (e) {
+      print("Error fetching section or units: $e");
+      return null;
+    }
+  }
+
+  Future<Unit> fetchUnit(String sectionName, String level,
+      {String? unit}) async {
     Map<int, BaseQuestion> questions = {};
     try {
       _userModel = await getUser(_user!.uid);
@@ -524,7 +599,7 @@ class FirestoreService {
 
       double progress = _userModel!
           .levelsProgress![level]!.sectionProgress![sectionName]!.progress;
-      String tempUnitNumber = unitNumber!;
+      String tempUnitNumber = unit ?? unitNumber!;
       DocumentSnapshot levelDoc = await _db
           .collection(FirestoreConstants.levelsCollection)
           .doc(level)
