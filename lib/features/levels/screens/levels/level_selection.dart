@@ -1,17 +1,17 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
+import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
+import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/selectable_card.dart';
-import 'package:ez_english/widgets/upload_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class LevelSelection extends StatefulWidget {
@@ -24,6 +24,15 @@ class LevelSelection extends StatefulWidget {
 class _LevelSelectionState extends State<LevelSelection> {
   void navigateToLevel({required int levelId}) {
     context.push('/level/$levelId');
+  }
+
+  @override
+  void initState() {
+    LevelSelectionViewmodel levelViewmodel =
+        Provider.of<LevelSelectionViewmodel>(context, listen: false);
+    levelViewmodel.tempUnit = false;
+
+    super.initState();
   }
 
   @override
@@ -60,18 +69,35 @@ class _LevelSelectionState extends State<LevelSelection> {
                             runSpacing: 10.w,
                             spacing: 10.w,
                             children: [
+                              // ElevatedButton(
+                              //   onPressed: () async {
+                              //     UploadDataViewmodel _dataViewmodel =
+                              //         Provider.of<UploadDataViewmodel>(context,
+                              //             listen: false);
+                              //     List<Level> levels =
+                              //         await _dataViewmodel.parseData();
+                              //     for (Level level in levels) {
+                              //       await _dataViewmodel
+                              //           .saveLevelToFirestore(level);
+                              //     }
+                              //   },
+                              //   child: const Text("Add data"),
+                              // ),
                               if (viewmodel.levels.isNotEmpty)
-                                viewmodel.levels[0].isAssigned
+                                viewmodel.levels
+                                        .firstWhere(
+                                            (level) => level.isAssigned == true)
+                                        .isAssigned
                                     ? _buildCard(
                                         headerText: "Speaking",
                                         isAssigned: true,
                                         cardText: "Practice Speaking",
                                         onTap: () {
                                           navigateToLevel(
-                                            levelId: viewmodel.levels[0].id,
-                                          );
-                                          viewmodel.fetchSections(
-                                            viewmodel.levels[0],
+                                            levelId: viewmodel.levels
+                                                .firstWhere((level) =>
+                                                    level.isAssigned == true)
+                                                .id,
                                           );
                                         })
                                     : const SizedBox(),
@@ -81,99 +107,9 @@ class _LevelSelectionState extends State<LevelSelection> {
                                       isAssigned: true,
                                       cardText: "Practice English",
                                       onTap: () {
-                                        context.push('/speaking_practice');
+                                        context.push('/school_practice');
                                       })
                                   : const SizedBox(),
-                              viewmodel.isWorksheetUploaded
-                                  ? _buildCard(
-                                      headerText: "Worksheet",
-                                      isAssigned: true,
-                                      cardText: "View Worksheet answers",
-                                      onTap: () {
-                                        context.push('/student_worksheet_view');
-                                      })
-                                  : UploadCard(
-                                      onPressed: () async {
-                                        // TODO: Implement image upload in viewmodel
-                                        final pickedImage =
-                                            await ImagePicker().pickImage(
-                                          source: ImageSource.gallery,
-                                        );
-                                        if (pickedImage != null) {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                content: const Text(
-                                                    "Are you sure you want to upload the selected image?"),
-                                                title: const Text(
-                                                    'Confirm Upload'),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text('Cancel'),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-
-                                                      viewmodel
-                                                          .uploadWorksheetImage(
-                                                              imagePath:
-                                                                  pickedImage
-                                                                      .path);
-                                                    },
-                                                    child: const Text('Upload'),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        }
-                                      },
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          AutoSizeText(
-                                            'Add Worksheet',
-                                            style: TextStyles.cardHeader
-                                                .copyWith(fontSize: 18.sp),
-                                            textAlign: TextAlign.center,
-                                            maxLines: 3,
-                                          ),
-                                          const Expanded(
-                                            child: FittedBox(
-                                              child: Icon(
-                                                Icons.add_rounded,
-                                                color: Palette.secondaryText,
-                                              ),
-                                            ),
-                                          ),
-                                          AutoSizeText(
-                                            "Submit your worksheet",
-                                            style: TextStyles.cardText,
-                                            textAlign: TextAlign.center,
-                                            maxLines: 3,
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                              // ...viewmodel.levels.map(
-                              //   (level) {
-                              //     return _buildCard(
-                              //       headerText: level.name,
-                              //       isAssigned: level.isAssigned,
-                              //       cardText: level.description,
-                              //       onTap: () {
-                              //         navigateToLevel(levelId: level.id);
-                              //         viewmodel.fetchSections(level);
-                              //       },
-                              //     );
-                              //   },
-                              // ),
                             ],
                           ),
                         ),

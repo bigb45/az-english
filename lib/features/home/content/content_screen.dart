@@ -1,6 +1,6 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/theme/text_styles.dart';
-import 'package:ez_english/widgets/list_item_card.dart';
+import 'package:ez_english/widgets/vertical_list_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -27,21 +27,25 @@ class ContentScreen extends StatelessWidget {
         padding: EdgeInsets.all(Constants.padding12),
         child: Column(
           children: [
-            ListItemCard(
+            VerticalListItemCard(
               mainText: "Edit Qusetions",
-              subText: "Edit existing questions and answers",
-              actionIcon: Icons.arrow_forward_ios,
+              subText: "Edit existing questions",
+              action: Icons.arrow_forward_ios,
+              showDeleteIcon: false,
+              showIconDivider: false,
               onTap: () {
                 context.push('/edit_question/2');
               },
             ),
-            ListItemCard(
+            VerticalListItemCard(
+              mainText: "Add Questions",
+              subText: "Add new questions",
+              action: Icons.arrow_forward_ios,
+              showDeleteIcon: false,
+              showIconDivider: false,
               onTap: () {
                 context.push('/add_question');
               },
-              mainText: "Add Questions",
-              subText: "Add new questions",
-              actionIcon: Icons.arrow_forward_ios,
             ),
           ],
         ),

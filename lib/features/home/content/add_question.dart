@@ -4,6 +4,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/fill_the_blank
 import 'package:ez_english/features/home/content/data_entry_forms/multiple_choice_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/passage_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
+import 'package:ez_english/features/home/content/data_entry_forms/worksheet_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/add_question_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -144,8 +145,12 @@ class _AddQuestionState extends State<AddQuestion> {
                                 child: Text("Reading"),
                               ),
                               DropdownMenuItem(
-                                value: "listeningWriting",
-                                child: Text("Writing & Listening"),
+                                value: "writing",
+                                child: Text("Writing"),
+                              ),
+                              DropdownMenuItem(
+                                value: "listening",
+                                child: Text("Listening"),
                               ),
                               DropdownMenuItem(
                                 value: "vocabulary",
@@ -159,6 +164,10 @@ class _AddQuestionState extends State<AddQuestion> {
                                 value: "test",
                                 child: Text("Test"),
                               ),
+                              DropdownMenuItem(
+                                value: "worksheet",
+                                child: Text("Worksheet"),
+                              )
                             ],
                             onChanged: (sectionSelection) {
                               setState(() {
@@ -255,6 +264,7 @@ class _AddQuestionState extends State<AddQuestion> {
                           : const Text("Please add the level first"),
                     ),
                     SizedBox(height: 16.h),
+                    // don't select question type if admin is uploading a worksheet
                     DropdownButtonFormField(
                       value: selectedQuestionType,
                       isExpanded: true,
@@ -282,6 +292,10 @@ class _AddQuestionState extends State<AddQuestion> {
                         DropdownMenuItem(
                           value: QuestionType.fillTheBlanks,
                           child: Text("Fill in the blank"),
+                        ),
+                        DropdownMenuItem(
+                          value: QuestionType.worksheet,
+                          child: Text("Worksheet"),
                         ),
                       ],
                       onChanged: isQuestionTypeEnabled
@@ -366,6 +380,13 @@ class _AddQuestionState extends State<AddQuestion> {
       case QuestionType.vocabulary:
       case QuestionType.vocabularyWithListening:
         return VocabularyForm(
+          level: selectedLevel!,
+          section: selectedSection!,
+          day: selectedUnit!.name.split("t")[1],
+        );
+
+      case QuestionType.worksheet:
+        return WorksheetForm(
           level: selectedLevel!,
           section: selectedSection!,
           day: selectedUnit!.name.split("t")[1],

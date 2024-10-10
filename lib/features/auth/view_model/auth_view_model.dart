@@ -62,8 +62,7 @@ class AuthViewModel extends ChangeNotifier {
   Future<void> signInDev() async {
     errorOccurred = false;
     try {
-      final tempUser =
-          UserModel(emailAddress: "ribhi@g.com", password: "123456");
+      final tempUser = UserModel(emailAddress: "r@g.com", password: "123456");
       await _firebaseAuthService.signIn(tempUser);
     } on CustomException catch (e) {
       errorOccurred = true;
@@ -170,6 +169,27 @@ class AuthViewModel extends ChangeNotifier {
       barrierDismissible: false,
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
+  }
+
+  Future<void> deleteUserAccount(String password) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      AuthCredential credential =
+          EmailAuthProvider.credential(email: user!.email!, password: password);
+      await user.reauthenticateWithCredential(credential);
+      if (user != null) {
+        await user.delete();
+        print("User account deleted successfully.");
+      } else {
+        print("No user is currently signed in.");
+      }
+    } catch (e) {
+      if (e is FirebaseAuthException && e.code == 'requires-recent-login') {
+        print("The user must re-authenticate before deleting the account.");
+      } else {
+        print("Error deleting user account: $e");
+      }
+    }
   }
 
   void _resetAuthState() {

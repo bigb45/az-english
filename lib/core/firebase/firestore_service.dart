@@ -257,7 +257,47 @@ class FirestoreService {
     }
   }
 
-  Future<List<Section>> fetchSection(String levelName) async {
+  Future<List<Unit>> fetchWorksheetUnits(
+      String levelName, String worksheetSectionName) async {
+    try {
+      // Fetch the worksheet section document
+      DocumentSnapshot sectionDoc = await _db
+          .collection(FirestoreConstants.levelsCollection)
+          .doc(levelName)
+          .collection(FirestoreConstants.sectionsCollection)
+          .doc(RouteConstants.getSectionIds(worksheetSectionName))
+          .get();
+
+      if (!sectionDoc.exists) {
+        return []; // Return an empty list if the section doesn't exist
+      }
+
+      // Fetch the units inside the worksheet section
+      QuerySnapshot unitSnapshot = await _db
+          .collection(FirestoreConstants.levelsCollection)
+          .doc(levelName)
+          .collection(FirestoreConstants.sectionsCollection)
+          .doc(RouteConstants.getSectionIds(worksheetSectionName))
+          .collection(FirestoreConstants.unitsCollection)
+          .get();
+
+      // Map the unit documents to Unit objects
+      List<Unit> units = unitSnapshot.docs.map((unitDoc) {
+        return Unit.fromMap(unitDoc.data() as Map<String, dynamic>);
+      }).toList();
+
+      return units;
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<Section>> fetchSection(
+    String levelName, {
+    int? desiredDay,
+  }) async {
     try {
       _userModel = await getUser(_user!.uid);
       DocumentReference userDocRef =
@@ -267,24 +307,12 @@ class FirestoreService {
 
       Map<String, dynamic> levelProgressData =
           userData['levelsProgress'][levelName];
-      int currentDay = levelProgressData['currentDay'] ?? 1;
-      currentDayString = currentDay.toString();
+      int currentDay = desiredDay ?? (levelProgressData['currentDay'] ?? 1);
+      if (desiredDay == null) currentDayString = currentDay.toString();
 
-      bool isFirstWeek = ((currentDay - 1) ~/ 5) % 2 == 0;
-      int unitIndex;
-      if (isFirstWeek) {
-        // First week pattern
-        unitIndex = (currentDay - 1) ~/ 2 + 1;
-      } else {
-        // Second week pattern
-        unitIndex = (currentDay - 2) ~/ 2 + 1;
-      }
-      unitNumber = "unit$unitIndex";
+      unitNumber = "unit$currentDay";
 
-      // Ensure unitIndex doesn't go below 1
-      unitIndex = unitIndex.clamp(1, double.infinity).toInt();
-
-      List<String> daySections = getSectionsForDay(currentDay, isFirstWeek);
+      List<String> daySections = getSectionsForDay();
 
       QuerySnapshot sectionSnapshot = await _db
           .collection(FirestoreConstants.levelsCollection)
@@ -314,26 +342,32 @@ class FirestoreService {
 
         Map<String, dynamic> sectionProgress =
             levelProgressData['sectionProgress'][sectionId];
-
-        // Update section properties from user data
-        section.isAssigned = sectionProgress['isAssigned'];
-        section.isCompleted = sectionProgress['isCompleted'];
-        section.isAttempted = sectionProgress['isAttempted'];
-        section.numberOfSolvedQuestions =
-            sectionProgress['lastStoppedQuestionIndex'];
-        section.progress = (sectionProgress['progress'] is int)
-            ? (sectionProgress['progress'] as int).toDouble()
-            : (sectionProgress['progress'] ?? 0.0) as double;
+        if (desiredDay != null) {
+          section.isAssigned = true;
+          section.isCompleted = true;
+          section.isAttempted = true;
+          section.numberOfSolvedQuestions = 0;
+          section.progress = 0;
+        } else {
+          section.isAssigned = sectionProgress['isAssigned'];
+          section.isCompleted = sectionProgress['isCompleted'];
+          section.isAttempted = sectionProgress['isAttempted'];
+          section.numberOfSolvedQuestions =
+              sectionProgress['lastStoppedQuestionIndex'];
+          section.progress = (sectionProgress['progress'] is int)
+              ? (sectionProgress['progress'] as int).toDouble()
+              : (sectionProgress['progress'] ?? 0.0) as double;
+        }
         if (daySections.contains(section.name)) {
-          String tempUnitNumber = (sectionId ==
-                      RouteConstants.getSectionIds(
-                          RouteConstants.testSectionName) ||
-                  sectionId ==
-                      RouteConstants.getSectionIds(
-                          RouteConstants.vocabularySectionName))
-              ? "unit${currentDayString!}"
-              : unitNumber!;
+          String tempUnitNumber = unitNumber!;
 
+          if (section.name != RouteConstants.testSectionName) {
+            section.isAssigned = true;
+            levelProgressData['sectionProgress'][sectionId]['sectionName'] =
+                section.name;
+            levelProgressData['sectionProgress'][sectionId]['isAssigned'] =
+                true;
+          }
           DocumentReference unitReference = _db
               .collection(FirestoreConstants.levelsCollection)
               .doc(levelName)
@@ -343,24 +377,26 @@ class FirestoreService {
               .doc(tempUnitNumber);
 
           dynamic questionsNumber = await unitReference.get().then((snapshot) {
-            return (snapshot.data()
-                as Map<String, dynamic>)['numberOfQuestionsWithDeletion']!;
+            if (snapshot.exists && snapshot.data() != null) {
+              return (snapshot.data() as Map<String, dynamic>)[
+                      'numberOfQuestionsWithDeletion'] ??
+                  0;
+            } else {
+              section.isAssigned = false;
+              section.isAttempted = false;
+              section.isCompleted = false;
+              return 0;
+            }
           });
-
           section.numberOfQuestions = questionsNumber;
-          if (section.name != RouteConstants.testSectionName) {
-            section.isAssigned = true;
-            levelProgressData['sectionProgress'][sectionId]['sectionName'] =
-                section.name;
-            levelProgressData['sectionProgress'][sectionId]['isAssigned'] =
-                true;
-          }
         }
         return section;
       }).toList();
 
       // Save updated user progress back to Firestore
-      await userDocRef.update({'levelsProgress': userData['levelsProgress']});
+      if (desiredDay == null) {
+        await userDocRef.update({'levelsProgress': userData['levelsProgress']});
+      }
 
       return await Future.wait(sectionFutures);
     } on FirebaseException catch (e) {
@@ -384,9 +420,7 @@ class FirestoreService {
       Map<String, dynamic> levelProgressData =
           userData['levelsProgress'][levelName];
       LevelProgress levelProgress = LevelProgress.fromMap(levelProgressData);
-      bool isFirstWeek = ((levelProgress.currentDay - 1) ~/ 5) % 2 == 0;
-      List<String> daySections =
-          getSectionsForDay(levelProgress.currentDay, isFirstWeek);
+      List<String> daySections = getSectionsForDay();
 
       WriteBatch batch = FirebaseFirestore.instance.batch();
 
@@ -395,14 +429,7 @@ class FirestoreService {
 
       SectionProgress sectionProgress =
           levelProgress.sectionProgress![sectionId]!;
-      String tempUnitNumber = (sectionId ==
-                  RouteConstants.getSectionIds(
-                      RouteConstants.testSectionName) ||
-              sectionId ==
-                  RouteConstants.getSectionIds(
-                      RouteConstants.vocabularySectionName))
-          ? "unit${currentDayString!}"
-          : unitNumber!;
+      String tempUnitNumber = unitNumber!;
       if (!sectionProgress.unitsCompleted.contains(tempUnitNumber)) {
         sectionProgress.unitsCompleted.add(tempUnitNumber);
       }
@@ -483,39 +510,20 @@ class FirestoreService {
     }
   }
 
-  List<String> getSectionsForDay(int day, bool isFirstWeek) {
-    // Define the basic two-day repeating section pattern
+  List<String> getSectionsForDay() {
     List<List<String>> sectionsPattern = [
       [
         RouteConstants.readingSectionName,
         RouteConstants.grammarSectionName,
         RouteConstants.vocabularySectionName,
         RouteConstants.testSectionName,
-      ],
-      [
         RouteConstants.listeningSectionName,
         RouteConstants.writingSectionName,
-        RouteConstants.vocabularySectionName,
-        RouteConstants.testSectionName,
+        RouteConstants.worksheetSectionName,
       ],
     ];
 
-    // Calculate which pattern to use based on the week and day
-    // (day - 1) % 2 determines the pattern within the week,
-    // day index is adjusted by adding (week number * 2) % 2 to alternate every week.
-    int weekNumber = ((day - 1) ~/ 5) %
-        2; // Calculate the week number (0 for first week, 1 for second within the cycle)
-    int dayIndex =
-        (day - 1) % 2; // Calculate the day index within the week (0 or 1)
-
-    if (!isFirstWeek) {
-      weekNumber = 1 -
-          weekNumber; // Invert week number for the second overall week to start with the opposite pattern
-    }
-    // Adjust day index based on the calculated week number
-    dayIndex = (dayIndex + weekNumber) % 2;
-
-    return sectionsPattern[dayIndex];
+    return sectionsPattern[0];
   }
 
   Future<int> getCurrentDay(User currentUser, String level) async {
@@ -538,10 +546,48 @@ class FirestoreService {
     }
   }
 
-  Future<Unit> fetchUnit(
-    String sectionName,
-    String level,
-  ) async {
+  Future<Section?> fetchUnitsForLevelAndSection(
+      String levelId, String sectionName) async {
+    try {
+      // Fetch the specific section for the provided levelId and sectionName
+      final sectionSnapshot = await _db
+          .collection(FirestoreConstants.levelsCollection)
+          .doc(levelId)
+          .collection(FirestoreConstants.sectionsCollection)
+          .doc(RouteConstants.getSectionIds(sectionName))
+          .get();
+
+      if (sectionSnapshot.exists) {
+        // Convert Firestore data to Section using fromMap
+        Section section =
+            Section.fromMap(sectionSnapshot.data() as Map<String, dynamic>);
+
+        // Fetch units for this section
+        final unitsSnapshot = await _db
+            .collection(FirestoreConstants.levelsCollection)
+            .doc(levelId)
+            .collection(FirestoreConstants.sectionsCollection)
+            .doc(RouteConstants.getSectionIds(sectionName))
+            .collection(FirestoreConstants.unitsCollection)
+            .get();
+
+        // Convert Firestore data to Unit objects and assign to the section
+        section.units = unitsSnapshot.docs.map((unitDoc) {
+          return Unit.fromMap(unitDoc.data() as Map<String, dynamic>);
+        }).toList();
+
+        return section; // Return the section with units
+      } else {
+        return null; // Section not found
+      }
+    } catch (e) {
+      print("Error fetching section or units: $e");
+      return null;
+    }
+  }
+
+  Future<Unit> fetchUnit(String sectionName, String level,
+      {String? unit}) async {
     Map<int, BaseQuestion> questions = {};
     try {
       _userModel = await getUser(_user!.uid);
@@ -553,14 +599,7 @@ class FirestoreService {
 
       double progress = _userModel!
           .levelsProgress![level]!.sectionProgress![sectionName]!.progress;
-      String tempUnitNumber = (sectionName ==
-                  RouteConstants.getSectionIds(
-                      RouteConstants.testSectionName) ||
-              sectionName ==
-                  RouteConstants.getSectionIds(
-                      RouteConstants.vocabularySectionName))
-          ? "unit${currentDayString!}"
-          : unitNumber!;
+      String tempUnitNumber = unit ?? unitNumber!;
       DocumentSnapshot levelDoc = await _db
           .collection(FirestoreConstants.levelsCollection)
           .doc(level)
@@ -972,51 +1011,77 @@ class FirestoreService {
         .get();
   }
 
-  Future<List<WorkSheet>> getAllWorksheets() async {
+  Future<List<Worksheet>> getAllWorksheets() async {
     final querySnapshot = await _db
         .collection(FirestoreConstants.worksheetsCollection)
         .orderBy('timestamp', descending: true)
         .get();
 
-    List<WorkSheet> worksheets = querySnapshot.docs.map((doc) {
-      return WorkSheet.fromMap(doc.data());
+    List<Worksheet> worksheets = querySnapshot.docs.map((doc) {
+      return Worksheet.fromMap(doc.data());
     }).toList();
 
     return worksheets;
   }
 
-  Future<void> updateWorksheetWithStudent({
-    required DocumentReference worksheetDoc,
-    required String studentName,
-    required String studentImagePath,
-    required String userId,
+  Future<void> addWorksheet({
+    required Worksheet worksheet,
+    required String levelID,
+    required String sectionName,
+    required String unitNumber,
   }) async {
-    // Create the student object
-    WorksheetStudent student = WorksheetStudent(
-      studentName: studentName,
-      imagePath: studentImagePath,
-      dateSolved: DateTime.now(),
-    );
+    try {
+      _userModel = await getUser(_user!.uid);
+      uploadQuestionToFirestore(
+          day: unitNumber,
+          level: levelID,
+          section: sectionName,
+          questionMap: worksheet.toMap());
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
+    } catch (e) {
+      rethrow;
+    }
+  }
 
-    // Fetch the current 'students' field from the worksheet
-    DocumentSnapshot worksheetSnapshot = await worksheetDoc.get();
-    Map<String, dynamic>? studentsMap =
-        worksheetSnapshot['students'] as Map<String, dynamic>?;
+  Future<WorksheetStudent> addStudentSubmission(
+      {required String level,
+      required String section,
+      required String studentImagePath,
+      required String workSheetID}) async {
+    try {
+      WorksheetStudent studentSubmission = WorksheetStudent(
+        studentName: _userModel!.studentName,
+        imagePath: studentImagePath,
+        dateSolved: DateTime.now(),
+        worksheetId: workSheetID,
+        unitNumber: unitNumber,
+      );
 
-    if (studentsMap == null) {
-      // Initialize 'students' field if it doesn't exist
-      await worksheetDoc.update({
-        'students': {
-          userId: student.toMap(),
-        },
-      });
-    } else {
-      // Update the existing 'students' map
-      studentsMap[userId] = student.toMap();
+      // Reference to the unit document
+      DocumentReference unitRef = _db
+          .collection(FirestoreConstants.levelsCollection)
+          .doc(level)
+          .collection(FirestoreConstants.sectionsCollection)
+          .doc(RouteConstants.getSectionIds(section))
+          .collection(FirestoreConstants.unitsCollection)
+          .doc(unitNumber);
 
-      await worksheetDoc.update({
-        'students': studentsMap,
-      });
+      FieldPath fieldPath = FieldPath([
+        FirestoreConstants.questionsField,
+        workSheetID,
+        'students',
+        _userModel!.id!
+      ]);
+
+      await updateQuestionUsingFieldPath(
+        docPath: unitRef,
+        fieldPath: fieldPath,
+        newValue: studentSubmission.toMap(),
+      );
+      return studentSubmission;
+    } on FirebaseException catch (e) {
+      throw CustomException.fromFirebaseFirestoreException(e);
     }
   }
 

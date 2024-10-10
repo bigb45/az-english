@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,8 @@ class DictationQuestionViewModel extends ChangeNotifier {
     required String? questionTextInArabic,
     required String? speakableText,
     required String? titleInEnglish,
+    required SectionName sectionName,
+    required String? answer,
   }) async {
     if (speakableText == null) {
       return null;
@@ -33,8 +36,9 @@ class DictationQuestionViewModel extends ChangeNotifier {
       questionTextInArabic: questionTextInArabic ?? '',
       imageUrl: null,
       speakableText: speakableText,
-      answer: StringAnswer(answer: speakableText),
+      answer: StringAnswer(answer: answer),
       titleInEnglish: titleInEnglish,
+      sectionName: sectionName,
     );
   }
 

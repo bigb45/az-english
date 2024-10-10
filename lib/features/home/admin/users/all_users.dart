@@ -20,12 +20,16 @@ class AllUsers extends StatefulWidget {
 class _AllUsersState extends State<AllUsers> {
   late UsersSettingsViewmodel viewmodel;
   final TextEditingController _controller = TextEditingController();
+  bool _isLoading = true;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       viewmodel = Provider.of<UsersSettingsViewmodel>(context, listen: false);
-      viewmodel.myInit();
+      await viewmodel.myInit();
+      setState(() {
+        _isLoading = false;
+      });
     });
   }
 
@@ -47,7 +51,7 @@ class _AllUsersState extends State<AllUsers> {
             ),
           ),
         ),
-        body: viewmodel.isLoading
+        body: (viewmodel.isLoading || _isLoading)
             ? const Center(
                 child: CircularProgressIndicator(),
               )

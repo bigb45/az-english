@@ -41,6 +41,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
   String? originalQuestionTextInArabic;
   String? originalSpeakableText;
   String? originalTitleInEnglish;
+  String? originalAnswer;
   String? updateMessage;
   final TextEditingController questionEnglishController =
       TextEditingController();
@@ -49,6 +50,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
       TextEditingController();
 
   final TextEditingController speakableTextController = TextEditingController();
+  final TextEditingController answerTextController = TextEditingController();
 
   final TextEditingController titleInEnglishController =
       TextEditingController();
@@ -66,6 +68,9 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
       if (titleInEnglishController.text != originalTitleInEnglish) {
         widget.question!.titleInEnglish = titleInEnglishController.text;
       }
+      if (answerTextController.text != originalAnswer) {
+        widget.question!.answer!.answer = answerTextController.text;
+      }
     }
   }
 
@@ -82,6 +87,8 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
           originalSpeakableText = widget.question!.speakableText;
       titleInEnglishController.text =
           originalTitleInEnglish = widget.question!.titleInEnglish ?? "";
+      answerTextController.text =
+          originalAnswer = widget.question!.answer!.answer ?? "";
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -95,6 +102,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
     questionArabicController.dispose();
     speakableTextController.dispose();
     titleInEnglishController.dispose();
+    answerTextController.dispose();
     super.dispose();
   }
 
@@ -113,7 +121,8 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
     return questionEnglishController.text != originalQuestionTextInEnglish ||
         questionArabicController.text != originalQuestionTextInArabic ||
         speakableTextController.text != originalSpeakableText ||
-        titleInEnglishController.text != originalTitleInEnglish;
+        titleInEnglishController.text != originalTitleInEnglish ||
+        answerTextController.text != originalAnswer;
   }
 
   @override
@@ -165,6 +174,22 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                 ),
                 SizedBox(height: 10.h),
                 TextFormField(
+                  controller: answerTextController,
+                  maxLines: 2,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Answer",
+                    hintText: "The student answer",
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please fill some text in English';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 10.h),
+                TextFormField(
                   controller: titleInEnglishController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
@@ -196,6 +221,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                       if (_formKey.currentState!.validate()) {
                         viewmodel
                             .submitForm(
+                          answer: answerTextController.text.trim(),
                           questionTextInEnglish:
                               questionEnglishController.text.trim().isEmpty
                                   ? null
@@ -212,6 +238,8 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                               titleInEnglishController.text.trim().isEmpty
                                   ? null
                                   : titleInEnglishController.text.trim(),
+                          sectionName:
+                              SectionNameExtension.fromString(widget.section),
                         )
                             .then((updatedQuestion) {
                           if (updatedQuestion != null) {
@@ -294,6 +322,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
     questionArabicController.text = "";
     speakableTextController.text = "";
     titleInEnglishController.text = "";
+    answerTextController.text = "";
     setState(() {
       isFormValid = false;
       updateMessage = null;

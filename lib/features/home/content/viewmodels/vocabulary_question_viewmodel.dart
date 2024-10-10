@@ -30,16 +30,17 @@ class VocabularyViewModel extends ChangeNotifier {
     required List<String>? exampleUsageInEnglish,
     required List<String>? exampleUsageInArabic,
     required String? questionTextInEnglish,
+    required SectionName sectionName,
   }) async {
     return WordDefinition(
-      englishWord: englishWord!,
-      arabicWord: arabicWord,
-      type: type,
-      exampleUsageInEnglish: exampleUsageInEnglish,
-      exampleUsageInArabic: exampleUsageInArabic,
-      questionType: QuestionType.vocabulary,
-      questionTextInEnglish: questionTextInEnglish,
-    );
+        englishWord: englishWord!,
+        arabicWord: arabicWord,
+        type: type,
+        exampleUsageInEnglish: exampleUsageInEnglish,
+        exampleUsageInArabic: exampleUsageInArabic,
+        questionType: QuestionType.vocabulary,
+        questionTextInEnglish: questionTextInEnglish,
+        sectionName: sectionName);
   }
 
   Future<void> uploadQuestion({

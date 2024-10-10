@@ -4,8 +4,8 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/core/firebase/constants.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/core/permissions/permission_handler_service.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/user.dart';
@@ -13,11 +13,14 @@ import 'package:ez_english/features/models/worksheet.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/checkbox.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UsersSettingsViewmodel extends BaseViewModel {
+  final PermissionHandlerService _permissionHandlerService =
+      PermissionHandlerService();
   List<UserModel?> _users = [];
   List<UserModel?> _filteredUsers = [];
-
+  File? _image;
   final FirestoreService _firestoreService = FirestoreService();
   List<Level?> _levels = [];
 
@@ -34,13 +37,35 @@ class UsersSettingsViewmodel extends BaseViewModel {
   List<UserModel?> get users => _users;
   List<UserModel?> get filteredUsers => _filteredUsers;
   List<Level?> get levels => _levels;
+  File? get image => _image;
 
   @override
   FutureOr<void> init() {}
 
-  Future<void> uploadWorksheetSolution({
+  bool _showCachedImage = true; // Flag to control cached image display
+  bool get showCachedImage => _showCachedImage;
+  Future<void> pickImage() async {
+    bool hasPermission =
+        await _permissionHandlerService.requestStoragePermission();
+    if (hasPermission) {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+        _showCachedImage = false;
+
+        notifyListeners();
+      }
+    } else {
+      print("Permission denied");
+    }
+  }
+
+  Future<Worksheet?> uploadWorksheetAnswerKey({
     required String imagePath,
     required String worksheetTitle,
+    required String levelID,
+    required String unitNumber,
   }) async {
     isLoading = true;
     notifyListeners();
@@ -48,18 +73,29 @@ class UsersSettingsViewmodel extends BaseViewModel {
       String imageUrl = await uploadImageAndGetUrl(
           imagePath, '${DateTime.now().millisecondsSinceEpoch}');
 
-      WorkSheet worksheet = WorkSheet(
+      Worksheet worksheet = Worksheet(
           title: worksheetTitle,
           imageUrl: imageUrl,
           timestamp: Timestamp.now());
-      await _firestoreService.addDocument(
-          worksheet.toMap(), FirestoreConstants.worksheetsCollection);
+      await _firestoreService.addWorksheet(
+        worksheet: worksheet,
+        levelID: levelID,
+        sectionName: RouteConstants.worksheetSectionName,
+        unitNumber: unitNumber,
+      );
     } catch (e) {
       print("Error uploading image: $e");
     } finally {
       isLoading = false;
       notifyListeners();
     }
+    return Worksheet();
+  }
+
+  void removeImage() {
+    _image = null;
+    _showCachedImage = false;
+    notifyListeners();
   }
 
   Future<String> uploadImageAndGetUrl(

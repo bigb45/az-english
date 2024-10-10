@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
-import 'package:ez_english/features/models/unit.dart';
-import 'package:flutter/material.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/models/unit.dart';
+import 'package:ez_english/utils/utils.dart';
+import 'package:flutter/material.dart';
 
 class AddQuestionViewModel extends ChangeNotifier {
   List<BaseQuestion<dynamic>> questions = [];
@@ -54,6 +55,7 @@ class AddQuestionViewModel extends ChangeNotifier {
         section,
       );
       notifyListeners();
+      printDebug("${units?[0].toString()}");
     } catch (e) {
       print('Error fetching questions: $e');
       questions = [];

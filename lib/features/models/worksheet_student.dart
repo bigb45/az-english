@@ -4,11 +4,15 @@ class WorksheetStudent {
   String? studentName;
   String? imagePath;
   DateTime? dateSolved;
+  String? worksheetId;
+  String? unitNumber;
 
   WorksheetStudent({
     this.studentName,
     this.imagePath,
     this.dateSolved,
+    this.worksheetId,
+    this.unitNumber,
   });
 
   factory WorksheetStudent.fromMap(Map<String, dynamic> map) {
@@ -16,6 +20,8 @@ class WorksheetStudent {
       studentName: map['studentName'],
       imagePath: map['imagePath'],
       dateSolved: DateTime.parse(map['dateSolved']),
+      worksheetId: map['worksheetId'],
+      unitNumber: map['unitNumber'],
     );
   }
 
@@ -24,6 +30,8 @@ class WorksheetStudent {
       'studentName': studentName,
       'imagePath': imagePath,
       'dateSolved': dateSolved?.toIso8601String(),
+      'worksheetId': worksheetId,
+      'unitNumber': unitNumber,
     };
   }
 

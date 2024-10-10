@@ -13,6 +13,7 @@ class VerticalListItemCard extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onIconPressed;
   final bool isLoading;
+  final bool showIconDivider;
   const VerticalListItemCard({
     super.key,
     required this.mainText,
@@ -23,6 +24,7 @@ class VerticalListItemCard extends StatelessWidget {
     this.onIconPressed,
     this.showDeleteIcon = true,
     this.isLoading = false,
+    this.showIconDivider = true,
   });
 
   @override
@@ -73,12 +75,13 @@ class VerticalListItemCard extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Container(
-                      margin: EdgeInsets.only(right: Constants.padding8),
-                      width: 2,
-                      height: 50.h,
-                      color: Palette.secondaryStroke,
-                    ),
+                    if (showIconDivider)
+                      Container(
+                        margin: EdgeInsets.only(right: Constants.padding8),
+                        width: 2,
+                        height: 50.h,
+                        color: Palette.secondaryStroke,
+                      ),
                     if (showDeleteIcon)
                       IconButton(
                         icon: const Icon(Icons.delete),

@@ -150,6 +150,8 @@ class _YoutubeLessonFormState extends State<YoutubeLessonForm> {
                       if (_formKey.currentState!.validate()) {
                         viewmodel
                             .submitForm(
+                          sectionName:
+                              SectionNameExtension.fromString(widget.section),
                           youtubeUrl: youtubeUrlController.text.trim().isEmpty
                               ? null
                               : youtubeUrlController.text.trim(),

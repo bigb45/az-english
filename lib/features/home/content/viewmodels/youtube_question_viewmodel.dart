@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:ez_english/core/firebase/firestore_service.dart';
+import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -13,6 +14,7 @@ class YoutubeLessonViewModel extends ChangeNotifier {
   Future<YoutubeLessonModel?> submitForm({
     required String? youtubeUrl,
     required String? titleInEnglish,
+    required SectionName sectionName,
   }) async {
     if (youtubeUrl == null) {
       return null;
@@ -21,6 +23,7 @@ class YoutubeLessonViewModel extends ChangeNotifier {
     return YoutubeLessonModel(
       youtubeUrl: youtubeUrl,
       titleInEnglish: titleInEnglish,
+      sectionName: sectionName,
     );
   }
 

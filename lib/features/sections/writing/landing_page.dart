@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/sections/writing/viewmodel/writing_section_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/widgets/button.dart';
@@ -25,6 +26,10 @@ class _WritingSectionState extends State<WritingSection> {
   void initState() {
     viewmodel = Provider.of<WritingSectionViewmodel>(context, listen: false);
     viewmodel.levelId = widget.levelId;
+    LevelSelectionViewmodel levelViewmodel =
+        Provider.of<LevelSelectionViewmodel>(context, listen: false);
+    viewmodel.tempUnit = levelViewmodel.tempUnit;
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       viewmodel.myInit();
     });

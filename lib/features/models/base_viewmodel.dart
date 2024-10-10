@@ -15,6 +15,7 @@ abstract class BaseViewModel extends ChangeNotifier {
   String? _levelName;
   String? _sectionName;
   double? _progress;
+  bool tempUnit = false;
   final FirestoreService _firestoreService = FirestoreService();
 
   String? get sectionName => _sectionName;
@@ -123,7 +124,9 @@ abstract class BaseViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      await _firestoreService.updateUserProgress("A1", sectionName!);
+      if (!tempUnit) {
+        await _firestoreService.updateUserProgress("A1", sectionName!);
+      }
     } catch (e) {
       // this causes speaking section error
       error = CustomException("An undefined error ocurred ${e.toString()}");
@@ -134,8 +137,10 @@ abstract class BaseViewModel extends ChangeNotifier {
   }
 
   Future<void> updateSectionProgress() async {
-    _firestoreService.updateCurrentSectionQuestionIndex(
-        currentIndex, levelName!, sectionName!);
+    if (!tempUnit) {
+      _firestoreService.updateCurrentSectionQuestionIndex(
+          currentIndex, levelName!, sectionName!);
+    }
   }
 
   @protected

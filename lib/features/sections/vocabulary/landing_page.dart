@@ -1,5 +1,6 @@
 // this may not be necessary
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/sections/vocabulary/viewmodel/vocabulary_section_viewmodel.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -28,6 +29,9 @@ class _VocabularySectionState extends State<VocabularySection> {
     vocabularySectionVm.levelId = widget.levelId;
     // no need to pass section Id since each viewmodel is already knows its section
     // readingSectionVm.sectionId = widget.sectionId;
+    LevelSelectionViewmodel levelViewmodel =
+        Provider.of<LevelSelectionViewmodel>(context, listen: false);
+    vocabularySectionVm.tempUnit = levelViewmodel.tempUnit;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       vocabularySectionVm.setValuesAndInit();

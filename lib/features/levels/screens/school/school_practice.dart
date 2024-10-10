@@ -1,5 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/levels/screens/speaking/speaking_section_viewmodel.dart';
+import 'package:ez_english/features/levels/screens/school/school_section_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/components/finished_questions_screen.dart';
@@ -17,20 +18,21 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class SpeakingPractice extends StatefulWidget {
-  const SpeakingPractice({super.key});
+class SchoolPractice extends StatefulWidget {
+  const SchoolPractice({super.key});
 
   @override
-  State<SpeakingPractice> createState() => _SpeakingPracticeState();
+  State<SchoolPractice> createState() => _SchoolPracticeState();
 }
 
-class _SpeakingPracticeState extends State<SpeakingPractice> {
+class _SchoolPracticeState extends State<SchoolPractice> {
   BaseQuestion? currentQuestion;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     PassageQuestionModel? passageQuestion;
-    return Consumer<SpeakingSectionViewmodel>(builder: (context, viewmodel, _) {
+    return Consumer<SchoolSectionViewmodel>(builder: (context, viewmodel, _) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (viewmodel.error != null) {
           print("showing error");
@@ -46,16 +48,35 @@ class _SpeakingPracticeState extends State<SpeakingPractice> {
               .then((reason) => viewmodel.resetError());
         }
       });
-      if (viewmodel.currentIndex == viewmodel.questions.length &&
-          viewmodel.isLoading == false) {
-        return FinishedQuestionsScreen(
-          onFinished: () async {
-            await viewmodel.updateUserProgress().then((value) {
-              context.pop();
-              context.pop();
-            });
-          },
-        );
+      if (viewmodel.currentIndex == viewmodel.questions.length) {
+        return _isLoading == true
+            ? Scaffold(
+                appBar: AppBar(
+                  automaticallyImplyLeading: false,
+                  systemOverlayStyle: SystemUiOverlayStyle.dark,
+                  title: ListTile(
+                    title: Text(
+                      "Finished all questions",
+                      style: TextStyles.titleTextStyle,
+                    ),
+                    contentPadding: const EdgeInsets.only(left: 0, right: 0),
+                  ),
+                ),
+                body: const Center(child: CircularProgressIndicator()))
+            : FinishedQuestionsScreen(
+                onFinished: () async {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  await viewmodel.updateUserProgress().then((value) {
+                    setState(() {
+                      _isLoading = false;
+                    });
+                    context.pop();
+                    context.pop();
+                  });
+                },
+              );
       }
       if (viewmodel.isLoading == false) {
         currentQuestion = viewmodel.questions[viewmodel.currentIndex];

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/sections/reading/view_model/reading_section_viewmodel.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -27,6 +28,10 @@ class _ReadingSectionState extends State<ReadingSection> {
     readingSectionVm =
         Provider.of<ReadingSectionViewmodel>(context, listen: false);
     readingSectionVm.levelId = widget.levelId;
+    LevelSelectionViewmodel levelViewmodel =
+        Provider.of<LevelSelectionViewmodel>(context, listen: false);
+    readingSectionVm.tempUnit = levelViewmodel.tempUnit;
+
     // no need to pass section Id since each viewmodel is already knows its section
     // readingSectionVm.sectionId = widget.sectionId;
 
