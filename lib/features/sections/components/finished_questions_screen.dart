@@ -15,19 +15,6 @@ class FinishedQuestionsScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          // actions: [
-          //   IconButton(
-          //     icon: const Icon(
-          //       Icons.close,
-          //       color: Palette.primaryText,
-          //     ),
-          //     onPressed: () {
-          //       showLeaveAlertDialog(
-          //         context,
-          //       );
-          //     },
-          //   ),
-          // ],
           systemOverlayStyle: SystemUiOverlayStyle.dark,
           title: ListTile(
             title: Text(

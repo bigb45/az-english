@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/levels/screens/school/school_section_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -26,6 +27,7 @@ class SchoolPractice extends StatefulWidget {
 
 class _SchoolPracticeState extends State<SchoolPractice> {
   BaseQuestion? currentQuestion;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,16 +48,35 @@ class _SchoolPracticeState extends State<SchoolPractice> {
               .then((reason) => viewmodel.resetError());
         }
       });
-      if (viewmodel.currentIndex == viewmodel.questions.length &&
-          viewmodel.isLoading == false) {
-        return FinishedQuestionsScreen(
-          onFinished: () async {
-            await viewmodel.updateUserProgress().then((value) {
-              context.pop();
-              context.pop();
-            });
-          },
-        );
+      if (viewmodel.currentIndex == viewmodel.questions.length) {
+        return _isLoading == true
+            ? Scaffold(
+                appBar: AppBar(
+                  automaticallyImplyLeading: false,
+                  systemOverlayStyle: SystemUiOverlayStyle.dark,
+                  title: ListTile(
+                    title: Text(
+                      "Finished all questions",
+                      style: TextStyles.titleTextStyle,
+                    ),
+                    contentPadding: const EdgeInsets.only(left: 0, right: 0),
+                  ),
+                ),
+                body: const Center(child: CircularProgressIndicator()))
+            : FinishedQuestionsScreen(
+                onFinished: () async {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  await viewmodel.updateUserProgress().then((value) {
+                    setState(() {
+                      _isLoading = false;
+                    });
+                    context.pop();
+                    context.pop();
+                  });
+                },
+              );
       }
       if (viewmodel.isLoading == false) {
         currentQuestion = viewmodel.questions[viewmodel.currentIndex];
