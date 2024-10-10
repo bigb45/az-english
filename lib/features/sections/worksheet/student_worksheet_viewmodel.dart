@@ -29,7 +29,7 @@ class StudentWorksheetViewModel extends BaseViewModel {
   Map<String, BaseQuestion> _worksheets = {};
   Map<String, BaseQuestion> get worksheets => _worksheets;
 
-  void setValuesAndInit() async {
+  Future<void> setValuesAndInit() async {
     levelName = RouteConstants.getLevelName(levelId!);
     await fetchWorksheets();
   }
@@ -43,12 +43,22 @@ class StudentWorksheetViewModel extends BaseViewModel {
         imagePath,
         'worksheet_solution_${DateTime.now().millisecondsSinceEpoch}',
       );
-      await firestoreService.addStudentSubmission(
+
+      WorksheetStudent studentSubmission =
+          await firestoreService.addStudentSubmission(
         level: levelName!,
         section: RouteConstants.worksheetSectionName,
         studentImagePath: studentImagePath,
         workSheetID: worksheetID,
       );
+      if (_worksheets.containsKey(worksheetID)) {
+        Worksheet currentWorksheet = _worksheets[worksheetID] as Worksheet;
+
+        currentWorksheet.students ??= {};
+        currentWorksheet.students![_currentUserId] = studentSubmission;
+        _worksheets[worksheetID] = currentWorksheet;
+      }
+
       print("Student data associated with the last worksheet successfully.");
     } catch (e) {
       print("Error uploading worksheet solution: $e");

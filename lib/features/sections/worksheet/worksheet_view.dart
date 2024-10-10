@@ -17,6 +17,7 @@ class WorksheetView extends StatefulWidget {
 }
 
 class _WorksheetViewState extends State<WorksheetView> {
+  bool _isloading = true;
   @override
   void initState() {
     super.initState();
@@ -24,7 +25,10 @@ class _WorksheetViewState extends State<WorksheetView> {
 
     viewmodel.levelId = widget.levelId;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      viewmodel.setValuesAndInit();
+      await viewmodel.setValuesAndInit();
+      setState(() {
+        _isloading = false;
+      });
     });
   }
 
@@ -36,7 +40,7 @@ class _WorksheetViewState extends State<WorksheetView> {
           title: const Text("Worksheets"),
         ),
         body: Center(
-          child: viewmodel.isLoading
+          child: _isloading
               ? const CircularProgressIndicator()
               : Padding(
                   padding: EdgeInsets.symmetric(
@@ -45,81 +49,84 @@ class _WorksheetViewState extends State<WorksheetView> {
                   child: Column(
                     children: [
                       Expanded(
-                        child: ListView.builder(
-                          itemCount: viewmodel.worksheets.length,
-                          itemBuilder: (context, index) {
-                            final currentWorksheet =
-                                viewmodel.worksheets.entries.elementAt(index);
-                            final worksheetId = currentWorksheet.key.toString();
-                            final worksheet =
-                                currentWorksheet.value as Worksheet;
-                            // String key = viewmodel.worksheets.entries
-                            //     .elementAt(index)
-                            //     .key;
-                            final isSubmitted =
-                                viewmodel.getCurrentUserSubmission(worksheetId);
-                            return VerticalListItemCard(
-                              mainText:
-                                  worksheet.title ?? "Worksheet #${index + 1}",
-                              subText: "TODO ADD DESCRIPTION",
-                              info: Text(
-                                "Due on ${worksheet.timestamp!.toDate().toString().split(" ")[0]}",
-                                style: const TextStyle(
-                                  color: Palette.secondaryText,
-                                ),
-                              ),
-                              action: isSubmitted
-                                  ? Icons.remove_red_eye
-                                  : Icons.arrow_forward_ios,
-                              showDeleteIcon: false,
-                              showIconDivider: false,
-                              onTap: () async {
-                                if (isSubmitted) {
-                                  context.push(
-                                      '/student_worksheet_view/$worksheetId');
-                                } else {
-                                  final pickedImage =
-                                      await ImagePicker().pickImage(
-                                    source: ImageSource.gallery,
-                                  );
-                                  if (pickedImage != null) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          content: const Text(
-                                              "Are you sure you want to upload the selected image?"),
-                                          title: const Text('Confirm Upload'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('Cancel'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () async {
-                                                Navigator.pop(context);
-                                                // TODO: Change the paramaters after implementing the UI
-                                                await viewmodel
-                                                    .uploadStudentSubmission(
-                                                        imagePath:
-                                                            pickedImage.path,
-                                                        worksheetID:
-                                                            worksheetId);
-                                              },
-                                              child: const Text('Upload'),
-                                            ),
-                                          ],
+                        child: viewmodel.isLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : ListView.builder(
+                                itemCount: viewmodel.worksheets.length,
+                                itemBuilder: (context, index) {
+                                  final currentWorksheet = viewmodel
+                                      .worksheets.entries
+                                      .elementAt(index);
+                                  final worksheetId =
+                                      currentWorksheet.key.toString();
+                                  final worksheet =
+                                      currentWorksheet.value as Worksheet;
+                                  final isSubmitted = viewmodel
+                                      .getCurrentUserSubmission(worksheetId);
+                                  return VerticalListItemCard(
+                                    mainText: worksheet.title ??
+                                        "Worksheet #${index + 1}",
+                                    //
+                                    // subText: "", TODO: ADD DESCRIPTION
+                                    info: Text(
+                                      "Due on ${worksheet.timestamp!.toDate().toString().split(" ")[0]}",
+                                      style: const TextStyle(
+                                        color: Palette.secondaryText,
+                                      ),
+                                    ),
+                                    action: isSubmitted
+                                        ? Icons.remove_red_eye
+                                        : Icons.arrow_forward_ios,
+                                    showDeleteIcon: false,
+                                    showIconDivider: false,
+                                    onTap: () async {
+                                      if (isSubmitted) {
+                                        context.push(
+                                            '/student_worksheet_view/$worksheetId');
+                                      } else {
+                                        final pickedImage =
+                                            await ImagePicker().pickImage(
+                                          source: ImageSource.gallery,
                                         );
-                                      },
-                                    );
-                                  }
-                                }
-                              },
-                            );
-                          },
-                        ),
+                                        if (pickedImage != null) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                content: const Text(
+                                                    "Are you sure you want to upload the selected image?"),
+                                                title: const Text(
+                                                    'Confirm Upload'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text('Cancel'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () async {
+                                                      Navigator.pop(context);
+                                                      await viewmodel
+                                                          .uploadStudentSubmission(
+                                                              imagePath:
+                                                                  pickedImage
+                                                                      .path,
+                                                              worksheetID:
+                                                                  worksheetId);
+                                                    },
+                                                    child: const Text('Upload'),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
+                                      }
+                                    },
+                                  );
+                                },
+                              ),
                       ),
                     ],
                   ),

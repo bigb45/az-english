@@ -1044,7 +1044,7 @@ class FirestoreService {
     }
   }
 
-  Future<void> addStudentSubmission(
+  Future<WorksheetStudent> addStudentSubmission(
       {required String level,
       required String section,
       required String studentImagePath,
@@ -1079,6 +1079,7 @@ class FirestoreService {
         fieldPath: fieldPath,
         newValue: studentSubmission.toMap(),
       );
+      return studentSubmission;
     } on FirebaseException catch (e) {
       throw CustomException.fromFirebaseFirestoreException(e);
     }
