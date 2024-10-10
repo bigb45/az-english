@@ -81,6 +81,8 @@ class _WorksheetViewState extends State<WorksheetView> {
                                     showIconDivider: false,
                                     onTap: () async {
                                       if (isSubmitted) {
+                                        viewmodel.getCurrentUserSubmission(
+                                            worksheetId);
                                         context.push(
                                             '/student_worksheet_view/$worksheetId');
                                       } else {

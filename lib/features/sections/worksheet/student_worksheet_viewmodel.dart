@@ -137,6 +137,7 @@ class StudentWorksheetViewModel extends BaseViewModel {
       } else {
         printDebug("No submission found for user $_currentUserId");
       }
+      notifyListeners();
     }
     return false;
   }
