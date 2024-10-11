@@ -3,6 +3,7 @@ import 'package:ez_english/features/home/admin/question_assignment/question_assi
 import 'package:ez_english/features/home/admin/users/users_settings_viewmodel.dart';
 import 'package:ez_english/features/home/admin/worksheets/worksheets_viewmodel.dart';
 import 'package:ez_english/features/home/test/viewmodel/test_viewmodel.dart';
+import 'package:ez_english/features/home/whiteboard/whiteboard_viewmodel.dart';
 import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/school/school_section_viewmodel.dart';
@@ -44,6 +45,7 @@ class AppProviders extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => QuestionAssignmentViewmodel()),
         ChangeNotifierProvider(create: (_) => AdminWorksheetsViewmodel()),
         ChangeNotifierProvider(create: (_) => StudentWorksheetViewModel()),
+        ChangeNotifierProvider(create: (_) => WhiteboardViewmodel()),
       ],
       child: child,
     );

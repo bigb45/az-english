@@ -3,6 +3,7 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/account.dart';
 import 'package:ez_english/features/home/test/test_results.dart';
+import 'package:ez_english/features/home/whiteboard/whiteboard.dart';
 import 'package:ez_english/features/levels/screens/levels/level_selection.dart';
 import 'package:ez_english/features/levels/screens/school/school_section_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -24,12 +25,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _pages = [
     const LevelSelection(),
     const TestResults(),
+    const Whiteboard(),
     const Account(),
   ];
 
   final Map<String, IconData> _labelIcons = {
     "Home": Icons.home,
     "Results": Icons.assignment_turned_in_outlined,
+    "Whiteboard": Icons.school,
     "Account": Icons.person,
   };
 
