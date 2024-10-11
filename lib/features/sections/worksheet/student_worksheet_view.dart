@@ -28,8 +28,6 @@ class _StudentWorksheetViewState extends State<StudentWorksheetView> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<StudentWorksheetViewModel>(context);
-
     return Consumer<StudentWorksheetViewModel>(
       builder: (context, viewmodel, _) => Scaffold(
         appBar: AppBar(
@@ -67,14 +65,12 @@ class _StudentWorksheetViewState extends State<StudentWorksheetView> {
                             height: Constants.padding12,
                           ),
                           Text("Answer key", style: TextStyles.bodyLarge),
-                          Container(
-                            child: InteractiveViewer(
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    viewmodel.worksheetAnswer?.imageUrl ?? '',
-                                placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator()),
-                              ),
+                          InteractiveViewer(
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  viewmodel.worksheetAnswer?.imageUrl ?? '',
+                              placeholder: (context, url) => const Center(
+                                  child: CircularProgressIndicator()),
                             ),
                           ),
                         ],

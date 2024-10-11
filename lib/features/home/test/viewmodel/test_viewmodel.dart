@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
-import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/test_result.dart';
 import 'package:ez_english/features/models/user.dart';
@@ -10,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class TestViewmodel extends BaseViewModel {
   int _selectedLevelId = 0;
-  final FirestoreService _firestoreService = FirestoreService();
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   List<TestResult> _examResults = [];
 

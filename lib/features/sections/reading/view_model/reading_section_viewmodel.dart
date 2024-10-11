@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
-import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -15,7 +14,6 @@ class ReadingSectionViewmodel extends BaseViewModel {
   String? levelId;
   PassageQuestionModel? _passageQuestion;
   final FirestoreService _firestoreService = FirestoreService();
-  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
 
   List<BaseQuestion?> _questions = [];
 

@@ -57,7 +57,7 @@ class LevelSelectionViewmodel extends ChangeNotifier {
   //     String downloadUrl = await snapshot.ref.getDownloadURL();
   //     return downloadUrl;
   //   } catch (e) {
-  //     print("Error uploading image: $e");
+  //     printDebug("Error uploading image: $e");
   //   } finally {}
   //   return '';
   // }
@@ -106,10 +106,8 @@ class LevelSelectionViewmodel extends ChangeNotifier {
       final fetchedSections = await firestoreService.fetchSection(level.name,
           desiredDay: desiredDay);
 
-      if (fetchedSections != null) {
-        _levels[level.id].sections = _mergeSectionsWithFetchedData(
-            _levels[level.id].sections!, fetchedSections);
-      }
+      _levels[level.id].sections = _mergeSectionsWithFetchedData(
+          _levels[level.id].sections!, fetchedSections);
 
       _userCurrentDay = int.tryParse(firestoreService.currentDayString!)!;
     } on CustomException catch (e) {

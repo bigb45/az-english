@@ -184,7 +184,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
   }
 
   bool _checkForChanges() {
-    print(
+    printDebug(
         "${formattedTextInEnglish.trim()} == $originalQuestionSentenceInEnglish");
     return questionEnglishController.text != originalQuestionTextInEnglish ||
         questionArabicController.text != originalQuestionTextInArabic ||
@@ -261,7 +261,7 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
                         controller: questionSentenceEnglishController,
                         onChanged: (answer, formattedText) {
                           formattedTextInEnglish = formattedText;
-                          print(
+                          printDebug(
                               "formattedTextInEnglish: $formattedTextInEnglish");
                           _validateForm();
                         },

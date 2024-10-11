@@ -80,7 +80,7 @@ class VocabularySectionViewmodel extends BaseViewModel {
               "Error while generating audio: ${response.statusCode}, ${response.errorMessage}");
         }
       } catch (e) {
-        print("Error while playing audio: $e");
+        printDebug("Error while playing audio: $e");
       }
     }
     throw Exception("No audio URL found.");

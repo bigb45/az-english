@@ -54,7 +54,7 @@ class AuthViewModel extends ChangeNotifier {
   //     _isAdmin = user.userType == UserType.admin ||
   //         user.userType == UserType.developer;
   //   }
-  //   print(user?.userType.toShortString());
+  //   printDebug(user?.userType.toShortString());
   //   notifyListeners();
   // }
 
@@ -68,7 +68,7 @@ class AuthViewModel extends ChangeNotifier {
       errorOccurred = true;
       _handleError(e.message);
     } catch (e) {
-      print("object");
+      printDebug("object");
     }
     // if (!errorOccurred) {
     //   navigatorKey.currentState!.popUntil((route) => route.isFirst);
@@ -76,7 +76,6 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   Future<void> signIn(UserModel user, BuildContext context) async {
-    // TODO change the lodaing design
     _showDialog(context);
     errorOccurred = false;
     try {
@@ -146,13 +145,15 @@ class AuthViewModel extends ChangeNotifier {
       await _firebaseAuthService.signOut();
       _firestoreService.reset();
       _resetAuthState();
-      Provider.of<WritingSectionViewmodel>(context, listen: false).reset();
-      Provider.of<ListeningSectionViewmodel>(context, listen: false).reset();
-      Provider.of<ReadingSectionViewmodel>(context, listen: false).reset();
-      Provider.of<VocabularySectionViewmodel>(context, listen: false).reset();
-      Provider.of<GrammarSectionViewmodel>(context, listen: false).reset();
-      Provider.of<LevelSelectionViewmodel>(context, listen: false).reset();
-      Provider.of<TestViewmodel>(context, listen: false).reset();
+      if (context.mounted) {
+        Provider.of<WritingSectionViewmodel>(context, listen: false).reset();
+        Provider.of<ListeningSectionViewmodel>(context, listen: false).reset();
+        Provider.of<ReadingSectionViewmodel>(context, listen: false).reset();
+        Provider.of<VocabularySectionViewmodel>(context, listen: false).reset();
+        Provider.of<GrammarSectionViewmodel>(context, listen: false).reset();
+        Provider.of<LevelSelectionViewmodel>(context, listen: false).reset();
+        Provider.of<TestViewmodel>(context, listen: false).reset();
+      }
     } on CustomException catch (e) {
       errorOccurred = true;
       _handleError(e.message);
@@ -179,15 +180,16 @@ class AuthViewModel extends ChangeNotifier {
       await user.reauthenticateWithCredential(credential);
       if (user != null) {
         await user.delete();
-        print("User account deleted successfully.");
+        printDebug("User account deleted successfully.");
       } else {
-        print("No user is currently signed in.");
+        printDebug("No user is currently signed in.");
       }
     } catch (e) {
       if (e is FirebaseAuthException && e.code == 'requires-recent-login') {
-        print("The user must re-authenticate before deleting the account.");
+        printDebug(
+            "The user must re-authenticate before deleting the account.");
       } else {
-        print("Error deleting user account: $e");
+        printDebug("Error deleting user account: $e");
       }
     }
   }

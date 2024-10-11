@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/levels/screens/school/school_section_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
@@ -10,6 +9,7 @@ import 'package:ez_english/features/sections/util/build_question.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/expandable_text.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:ez_english/widgets/skip_question_button.dart';
@@ -35,7 +35,7 @@ class _SchoolPracticeState extends State<SchoolPractice> {
     return Consumer<SchoolSectionViewmodel>(builder: (context, viewmodel, _) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (viewmodel.error != null) {
-          print("showing error");
+          printDebug("showing error");
           ScaffoldMessenger.of(context)
               .showSnackBar(
                 SnackBar(

@@ -36,7 +36,6 @@ class DrawerActionButtonState extends State<DrawerActionButton> {
     final borderColor = widget.invertColors
         ? Palette.secondaryStroke
         : Palette.primaryButtonStroke;
-    final iconColor = widget.invertColors ? Palette.primary : Palette.secondary;
     final shadowColor = widget.invertColors
         ? Palette.secondaryStroke
         : Palette.PrimaryShadowDarker;
@@ -83,7 +82,7 @@ class DrawerActionButtonState extends State<DrawerActionButton> {
                       : [
                           BoxShadow(
                             color: shadowColor,
-                            offset: Offset(0, 4),
+                            offset: const Offset(0, 4),
                             blurRadius: 0,
                           ),
                         ],

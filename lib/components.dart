@@ -1,6 +1,7 @@
 import 'package:ez_english/features/models/test_result.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/audio_control_button.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/checkbox.dart';
@@ -88,7 +89,7 @@ class Components extends StatelessWidget {
                     SizedBox(height: 20.h),
                     Menu(
                       onItemSelected: (index) {
-                        print(index);
+                        printDebug(index);
                       },
                       items: const [
                         MenuItemData(
@@ -116,7 +117,7 @@ class Components extends StatelessWidget {
                     SizedBox(height: 20.h),
                     RadioGroup(
                       onChanged: (value) {
-                        print(value.title);
+                        printDebug(value.title);
                       },
                       options: [
                         RadioItemData(
@@ -143,7 +144,7 @@ class Components extends StatelessWidget {
                         onChanged: (selections) {
                           List<bool?> options =
                               selections.map((e) => e.value).toList();
-                          print("new selections: $options");
+                          printDebug("new selections: $options");
                         },
                         options: [
                           CheckboxData(

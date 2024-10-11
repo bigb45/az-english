@@ -15,9 +15,9 @@ class YoutubeLessonForm extends StatefulWidget {
   final String section;
   final String day;
   final Function(BaseQuestion<dynamic>)? onSubmit;
-  YoutubeLessonModel? question;
+  final YoutubeLessonModel? question;
 
-  YoutubeLessonForm({
+  const YoutubeLessonForm({
     super.key,
     required this.level,
     required this.section,
@@ -161,7 +161,7 @@ class _YoutubeLessonFormState extends State<YoutubeLessonForm> {
                                   : titleInEnglishController.text.trim(),
                         )
                             .then((updatedQuestion) {
-                          if (updatedQuestion != null) {
+                          if (updatedQuestion != null && mounted) {
                             if (widget.onSubmit != null) {
                               setState(() {
                                 updateQuestion(updatedQuestion);

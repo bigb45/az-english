@@ -73,7 +73,7 @@ class DynamicRichTextSpan {
 
   // TextSpan clickableTextSpan(String text, TextStyle? style) => TextSpan(
   //       text: text,
-  //       recognizer: TapGestureRecognizer()..onTap = () => print(text),
+  //       recognizer: TapGestureRecognizer()..onTap = () => printDebug(text),
   //       style: style ??
   //           const TextStyle(
   //               fontSize: 22,

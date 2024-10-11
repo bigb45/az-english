@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
@@ -71,7 +72,7 @@ class PassageViewModel extends ChangeNotifier {
               newValue: question.toMap());
       notifyListeners();
     } catch (e) {
-      print('Error updating question: $e');
+      printDebug('Error updating question: $e');
     }
   }
 
@@ -95,7 +96,7 @@ class PassageViewModel extends ChangeNotifier {
           docRef: docRef, questionFieldPath: fieldPath);
       notifyListeners();
     } catch (e) {
-      print('Error updating question: $e');
+      printDebug('Error updating question: $e');
     }
   }
 
@@ -112,7 +113,7 @@ class PassageViewModel extends ChangeNotifier {
           section: section,
           questionMap: question.toMap());
     } catch (e) {
-      print('Error adding question: $e');
+      printDebug('Error adding question: $e');
     }
   }
 

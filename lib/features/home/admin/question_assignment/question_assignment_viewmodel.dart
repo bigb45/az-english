@@ -107,7 +107,7 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
         section,
       );
     } catch (e) {
-      print('Error fetching questions: $e');
+      printDebug('Error fetching questions: $e');
       notifyListeners();
     }
     return null;
@@ -176,7 +176,7 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
       error = CustomException(e.toString());
     } finally {
       isLoading = false;
-      print("questions: ${_questions.length}");
+      printDebug("questions: ${_questions.length}");
       notifyListeners();
     }
   }
@@ -186,7 +186,7 @@ class QuestionAssignmentViewmodel extends BaseViewModel {
         .map((level) => level?.name ?? "")
         .toList();
     notifyListeners();
-    print("levels: $_levels");
+    printDebug("levels: $_levels");
   }
 
   Future<void> _fetchAssignedQuestions() async {

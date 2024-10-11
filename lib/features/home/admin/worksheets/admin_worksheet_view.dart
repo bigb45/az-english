@@ -20,7 +20,7 @@ class AdminWorksheetView extends StatelessWidget {
       List<Worksheet> worksheets = viewmodel.worksheets.cast<Worksheet>();
 
       final submissionsList = worksheets[worksheetIndex].students ?? {};
-      // print("submissionsList: ${submissionsList[0].studentName}");
+      // printDebug("submissionsList: ${submissionsList[0].studentName}");
       return Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Palette.primaryText),
@@ -50,7 +50,7 @@ class AdminWorksheetView extends StatelessWidget {
                                 );
                               },
                               imageUrl: viewmodel
-                                      .worksheets[worksheetIndex]?.imageUrl ??
+                                      .worksheets[worksheetIndex].imageUrl ??
                                   "",
                             ),
                           ),
@@ -87,7 +87,7 @@ class AdminWorksheetView extends StatelessWidget {
           backgroundColor: Colors.transparent,
         ),
         body: Center(
-          child: (submissionsList == null || submissionsList.isEmpty)
+          child: (submissionsList.isEmpty)
               ? Text(
                   "No submissions yet",
                   style: TextStyles.bodyLarge,

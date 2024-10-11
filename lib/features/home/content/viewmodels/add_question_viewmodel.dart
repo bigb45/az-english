@@ -28,7 +28,7 @@ class AddQuestionViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      print('Error fetching questions: $e');
+      printDebug('Error fetching questions: $e');
       questions = [];
       notifyListeners();
     }
@@ -57,7 +57,7 @@ class AddQuestionViewModel extends ChangeNotifier {
       notifyListeners();
       printDebug("${units?[0].toString()}");
     } catch (e) {
-      print('Error fetching questions: $e');
+      printDebug('Error fetching questions: $e');
       questions = [];
       notifyListeners();
     }
@@ -91,7 +91,7 @@ class AddQuestionViewModel extends ChangeNotifier {
       }).toList();
       notifyListeners();
     } catch (e) {
-      print('Error updating question: $e');
+      printDebug('Error updating question: $e');
     }
   }
 

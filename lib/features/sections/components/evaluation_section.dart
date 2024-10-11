@@ -3,7 +3,6 @@ import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EvaluationSection extends StatefulWidget {
   final VoidCallback onPressed;

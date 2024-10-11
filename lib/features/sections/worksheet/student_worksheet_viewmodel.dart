@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
-import 'package:ez_english/core/firebase/firebase_authentication_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/unit.dart';
@@ -16,8 +15,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 class StudentWorksheetViewModel extends BaseViewModel {
   String? levelId;
-
-  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
 
   WorksheetStudent? _uploadedWorksheet;
   WorksheetStudent? get uploadedWorksheet => _uploadedWorksheet;
@@ -59,9 +56,10 @@ class StudentWorksheetViewModel extends BaseViewModel {
         _worksheets[worksheetID] = currentWorksheet;
       }
 
-      print("Student data associated with the last worksheet successfully.");
+      printDebug(
+          "Student data associated with the last worksheet successfully.");
     } catch (e) {
-      print("Error uploading worksheet solution: $e");
+      printDebug("Error uploading worksheet solution: $e");
     } finally {
       isLoading = false;
       notifyListeners();
@@ -81,7 +79,7 @@ class StudentWorksheetViewModel extends BaseViewModel {
       String downloadUrl = await snapshot.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
-      print("Error uploading image: $e");
+      printDebug("Error uploading image: $e");
     } finally {}
     return '';
   }

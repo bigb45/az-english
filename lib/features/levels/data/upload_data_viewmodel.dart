@@ -14,6 +14,7 @@ import 'package:ez_english/features/sections/models/passage_question_model.dart'
 import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -127,9 +128,7 @@ class UploadDataViewmodel extends ChangeNotifier {
             currentPassage = null;
           }
           previousSectionName = sectionName;
-// TODO: add sectionName to question instance
           // Add questions dynamically based on the row data
-          Map<int, BaseQuestion?> questions = {};
           int nextIndex = existingUnit!.questions.length;
           switch (QuestionTypeExtension.fromString(questionType)) {
             case QuestionType.dictation:
@@ -361,7 +360,7 @@ class UploadDataViewmodel extends ChangeNotifier {
         }
       }
     } catch (e) {
-      print('Error parsing data: $e');
+      printDebug('Error parsing data: $e');
       return [];
     }
 
@@ -391,7 +390,7 @@ class UploadDataViewmodel extends ChangeNotifier {
       String downloadUrl = await snapshot.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
-      print("Error uploading image: $e");
+      printDebug("Error uploading image: $e");
       return '';
     }
   }
@@ -400,7 +399,7 @@ class UploadDataViewmodel extends ChangeNotifier {
     try {
       await _firestoreService.uploadLevelToFirestore(levelData);
     } catch (e) {
-      print('Error saving level to Firestore: $e');
+      printDebug('Error saving level to Firestore: $e');
     }
   }
 }

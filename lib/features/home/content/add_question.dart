@@ -11,6 +11,7 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -300,7 +301,7 @@ class _AddQuestionState extends State<AddQuestion> {
                       ],
                       onChanged: isQuestionTypeEnabled
                           ? (QuestionType? questionTypeSelection) {
-                              print(
+                              printDebug(
                                   "Question type selected: ${questionTypeSelection!.toShortString()}");
                               setState(() {
                                 selectedQuestionType = questionTypeSelection;

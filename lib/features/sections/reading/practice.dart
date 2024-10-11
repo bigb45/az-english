@@ -30,7 +30,6 @@ class _ReadingPracticeState extends State<ReadingPractice> {
   late ReadingSectionViewmodel viewmodel;
   late List<BaseQuestion?> questions = [];
   late BaseQuestion? currentQuestion;
-  final bool _isFocused = false;
   PassageQuestionModel? passageQuestion;
   @override
   void initState() {
@@ -163,7 +162,6 @@ class _ReadingPracticeState extends State<ReadingPractice> {
                                         passageQuestion!.passageInEnglish!,
                                     paragraphTranslation:
                                         passageQuestion!.passageInArabic!,
-                                    isFocused: _isFocused,
                                     readMoreText:
                                         AppStrings.mcQuestionReadMoreText)
                                 : const SizedBox(),

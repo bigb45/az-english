@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/unit.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_english/features/models/base_question.dart';
 
@@ -27,7 +28,7 @@ class EditQuestionViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      print('Error fetching questions: $e');
+      printDebug('Error fetching questions: $e');
       questions = [];
       notifyListeners();
     }
@@ -42,7 +43,7 @@ class EditQuestionViewModel extends ChangeNotifier {
       );
       notifyListeners();
     } catch (e) {
-      print('Error fetching questions: $e');
+      printDebug('Error fetching questions: $e');
       questions = [];
       notifyListeners();
     }
@@ -77,7 +78,7 @@ class EditQuestionViewModel extends ChangeNotifier {
       }).toList();
       notifyListeners();
     } catch (e) {
-      print('Error updating question: $e');
+      printDebug('Error updating question: $e');
     }
   }
 
@@ -106,7 +107,7 @@ class EditQuestionViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      print('Error updating question: $e');
+      printDebug('Error updating question: $e');
     }
   }
 }

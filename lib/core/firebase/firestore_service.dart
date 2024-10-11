@@ -13,6 +13,7 @@ import 'package:ez_english/features/models/user.dart';
 import 'package:ez_english/features/models/worksheet.dart';
 import 'package:ez_english/features/models/worksheet_student.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirestoreService {
@@ -581,7 +582,7 @@ class FirestoreService {
         return null; // Section not found
       }
     } catch (e) {
-      print("Error fetching section or units: $e");
+      printDebug("Error fetching section or units: $e");
       return null;
     }
   }
@@ -945,7 +946,7 @@ class FirestoreService {
         fieldPath: newValue,
       });
     } catch (e) {
-      print("Error updating progress: $e");
+      printDebug("Error updating progress: $e");
     }
   }
 
@@ -956,7 +957,7 @@ class FirestoreService {
     try {
       await docPath.set(newValues, SetOptions(merge: true));
     } catch (e) {
-      print("Error updating progress: $e");
+      printDebug("Error updating progress: $e");
     }
   }
 
@@ -1158,7 +1159,7 @@ class FirestoreService {
       var docSnapshot = await docRef.get();
       return docSnapshot.exists;
     } catch (e) {
-      print('Error checking document existence: $e');
+      printDebug('Error checking document existence: $e');
       return false;
     }
   }
@@ -1353,9 +1354,9 @@ class FirestoreService {
       }
 
       await Future.wait(uploadFutures);
-      print('Level data uploaded successfully to Firestore.');
+      printDebug('Level data uploaded successfully to Firestore.');
     } catch (e) {
-      print('Error uploading level data to Firestore: $e');
+      printDebug('Error uploading level data to Firestore: $e');
     }
   }
 }

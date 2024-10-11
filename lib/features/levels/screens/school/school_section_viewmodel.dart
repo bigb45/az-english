@@ -176,7 +176,7 @@ class SchoolSectionViewmodel extends BaseViewModel {
       error = CustomException(e.toString());
     } finally {
       isLoading = false;
-      print("questions: ${_questions.length}");
+      printDebug("questions: ${_questions.length}");
       notifyListeners();
     }
   }

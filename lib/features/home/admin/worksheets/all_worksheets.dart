@@ -5,7 +5,6 @@ import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/models/worksheet.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
-import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/drawer_button.dart';
 import 'package:ez_english/widgets/vertical_list_item_card.dart';
 import 'package:flutter/material.dart';
@@ -28,11 +27,11 @@ class _AllWorksheetsState extends State<AllWorksheets> {
   @override
   void initState() {
     super.initState();
+    AdminWorksheetsViewmodel initStateViewmodel =
+        Provider.of<AdminWorksheetsViewmodel>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Provider.of<AdminWorksheetsViewmodel>(context, listen: false)
-          .fetchLevels();
-      Provider.of<AdminWorksheetsViewmodel>(context, listen: false).worksheets =
-          [];
+      await initStateViewmodel.fetchLevels();
+      initStateViewmodel.worksheets = [];
       setState(() {
         _isLoading = false;
       });

@@ -198,7 +198,8 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                     onChanged: (answer, formattedText) {
                       this.answer = answer;
                       formattedTextInEnglish = formattedText;
-                      print("Answer: $answer, formattedText: $formattedText");
+                      printDebug(
+                          "Answer: $answer, formattedText: $formattedText");
                       _validateForm();
                     },
                     controller: incompleteSentenceInEnglishController,
@@ -211,7 +212,8 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                     controller: incompleteSentenceInArabicController,
                     onChanged: (answer, formattedText) {
                       formattedTextInArabic = formattedText;
-                      print("Answer: $answer, formattedText: $formattedText");
+                      printDebug(
+                          "Answer: $answer, formattedText: $formattedText");
                       _validateForm();
                     },
                   ),
@@ -309,7 +311,7 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                                   question: updatedQuestion);
                             }
                           } else {
-                            print("not working");
+                            printDebug("not working");
                           }
                         });
                       } else {

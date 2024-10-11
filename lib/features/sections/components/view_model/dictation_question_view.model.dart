@@ -4,8 +4,8 @@ import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/core/network/custom_response.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
 import 'package:ez_english/utils/utils.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DictationQuestionViewModel extends ChangeNotifier {
   final FirebaseService _firebaseService = FirebaseService();
@@ -62,7 +62,7 @@ class DictationQuestionViewModel extends ChangeNotifier {
               "Error while generating audio: ${response.statusCode}, ${response.errorMessage}");
         }
       } catch (e) {
-        print("Error while playing audio: $e");
+        printDebug("Error while playing audio: $e");
       }
     }
     throw Exception("No audio URL found.");

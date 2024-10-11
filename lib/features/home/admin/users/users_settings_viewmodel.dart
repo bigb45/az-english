@@ -57,7 +57,7 @@ class UsersSettingsViewmodel extends BaseViewModel {
         notifyListeners();
       }
     } else {
-      print("Permission denied");
+      printDebug("Permission denied");
     }
   }
 
@@ -84,7 +84,7 @@ class UsersSettingsViewmodel extends BaseViewModel {
         unitNumber: unitNumber,
       );
     } catch (e) {
-      print("Error uploading image: $e");
+      printDebug("Error uploading image: $e");
     } finally {
       isLoading = false;
       notifyListeners();
@@ -113,7 +113,7 @@ class UsersSettingsViewmodel extends BaseViewModel {
       String downloadUrl = await snapshot.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
-      print("Error uploading image: $e");
+      printDebug("Error uploading image: $e");
     } finally {
       isLoading = false;
       notifyListeners();
@@ -152,7 +152,7 @@ class UsersSettingsViewmodel extends BaseViewModel {
     } catch (e) {
       // TODO: set error state and show error in UI
       // Utils.showErrorSnackBar("Error updating studentName");
-      print("Error updating studentName: $e");
+      printDebug("Error updating studentName: $e");
     }
   }
 
@@ -172,7 +172,7 @@ class UsersSettingsViewmodel extends BaseViewModel {
       }
       notifyListeners();
     } catch (e) {
-      print("Error updating user type: $e");
+      printDebug("Error updating user type: $e");
     }
   }
 
@@ -193,7 +193,7 @@ class UsersSettingsViewmodel extends BaseViewModel {
       }
       notifyListeners();
     } catch (e) {
-      print("Error updating phone number: $e");
+      printDebug("Error updating phone number: $e");
     }
   }
 
@@ -251,7 +251,7 @@ class UsersSettingsViewmodel extends BaseViewModel {
       }
       notifyListeners();
     } catch (e) {
-      print("Error updating assigned levels: $e");
+      printDebug("Error updating assigned levels: $e");
     }
   }
 }

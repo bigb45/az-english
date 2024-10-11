@@ -389,7 +389,7 @@ void showPreviewModalSheet<BaseQuestion>({
                       Button(
                         onPressed: () {
                           onSubmit();
-                          print("submitting question");
+                          printDebug("submitting question");
                           Navigator.pop(context);
                         },
                         text: "Submit",

@@ -5,6 +5,7 @@ import 'package:ez_english/core/permissions/permission_handler_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_answer.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/radio_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class MultipleChoiceViewModel extends ChangeNotifier {
         notifyListeners();
       }
     } else {
-      print("Permission denied");
+      printDebug("Permission denied");
     }
   }
 
@@ -61,7 +62,7 @@ class MultipleChoiceViewModel extends ChangeNotifier {
       String downloadUrl = await snapshot.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
-      print("Error uploading image: $e");
+      printDebug("Error uploading image: $e");
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -88,7 +89,7 @@ class MultipleChoiceViewModel extends ChangeNotifier {
       answers[index].title = newAnswer;
       // answers[index].value = (index + 1).toString();
       for (var answer in answers) {
-        print(
+        printDebug(
             "updating answer, title: ${answer.title}, value: ${answer.value}");
       }
       notifyListeners();
@@ -99,10 +100,10 @@ class MultipleChoiceViewModel extends ChangeNotifier {
     if (answers.length < maxAnswers) {
       answers.add(RadioItemData(title: "", value: idGenerator.v4()));
       answerCount++;
-      print("selected answer: ${_selectedAnswer.value}");
+      printDebug("selected answer: ${_selectedAnswer.value}");
 
       for (var answer in answers) {
-        print(
+        printDebug(
             "updating answer, title: ${answer.title}, value: ${answer.value}");
       }
       notifyListeners();
@@ -114,7 +115,7 @@ class MultipleChoiceViewModel extends ChangeNotifier {
       answers.remove(option);
       answerCount--;
       for (var answer in answers) {
-        print("title: ${answer.title}, value: ${answer.value}");
+        printDebug("title: ${answer.title}, value: ${answer.value}");
       }
       notifyListeners();
     }
@@ -148,7 +149,8 @@ class MultipleChoiceViewModel extends ChangeNotifier {
           titleInEnglish: titleInEnglish,
           sectionName: sectionName);
     } else {
-      print("Form is not valid or no answer is selected or options are empty.");
+      printDebug(
+          "Form is not valid or no answer is selected or options are empty.");
     }
     return null;
   }
@@ -166,7 +168,7 @@ class MultipleChoiceViewModel extends ChangeNotifier {
           section: section,
           questionMap: question.toMap());
     } catch (e) {
-      print('Error adding question: $e');
+      printDebug('Error adding question: $e');
     }
   }
 

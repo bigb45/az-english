@@ -9,6 +9,7 @@ import 'package:ez_english/core/network/network_helper.dart';
 import 'package:ez_english/features/sections/models/speaking_question_model.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/audio_control_button.dart';
 import 'package:ez_english/widgets/text_box.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,8 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
       await audioPlayer.play(urlSource);
       // Add an event listener to be notified when the audio playback completes
     } catch (e) {
-      print("AUDIO PLAYING++++++++++++++++++++++++$e+++++++++++++++++++++++++");
+      printDebug(
+          "AUDIO PLAYING++++++++++++++++++++++++$e+++++++++++++++++++++++++");
     }
   }
 
@@ -80,7 +82,7 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
         _audioFilePath = path; // Save the file path
       });
     } catch (err) {
-      print('Error starting recording: $err');
+      printDebug('Error starting recording: $err');
     }
   }
 
@@ -91,7 +93,7 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
         _isRecording = false;
       });
     } catch (err) {
-      print('Error stopping recording: $err');
+      printDebug('Error stopping recording: $err');
     }
   }
 
@@ -129,13 +131,13 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
 
       // Handle response
       if (response.statusCode == 200) {
-        print("Status code: ${response.data}");
+        printDebug("Status code: ${response.data}");
       } else {
-        print(
+        printDebug(
             'Failed to send audio file: ${response.errorMessage} ${response.statusCode}');
       }
     } catch (error) {
-      print('Error sending audio file: $error');
+      printDebug('Error sending audio file: $error');
     }
   }
 
@@ -172,7 +174,7 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
                   await _stopRecording();
                   if (_audioFilePath != null) {
                     // Call your API sending function here
-                    print('Sending audio file: $_audioFilePath');
+                    printDebug('Sending audio file: $_audioFilePath');
                     _sendAudioFile();
                   }
                 } else {

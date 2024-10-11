@@ -18,6 +18,7 @@ import 'package:ez_english/features/sections/models/speaking_question_model.dart
 import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 Widget buildQuestion({
@@ -88,7 +89,8 @@ Widget buildQuestion({
       );
 
     default:
-      print("Unsupported Question Type: ${question.questionType}, $question");
+      printDebug(
+          "Unsupported Question Type: ${question.questionType}, $question");
       return const Text("Unsupported Question Type");
   }
 }

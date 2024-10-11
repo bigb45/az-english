@@ -2,6 +2,7 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/menu.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class _PracticeFrequencyScreenState extends State<PracticeFrequencyScreen> {
               Menu(
                 onItemSelected: (index) {
                   // TODO: implement practice frequency plan
-                  print(index);
+                  printDebug(index);
                 },
                 items: [
                   MenuItemData(

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -40,7 +41,7 @@ class YoutubeLessonViewModel extends ChangeNotifier {
           section: section,
           questionMap: question.toMap());
     } catch (e) {
-      print('Error adding question: $e');
+      printDebug('Error adding question: $e');
     } finally {}
   }
 }
