@@ -49,7 +49,7 @@ class DictationQuestionViewModel extends ChangeNotifier {
     required DictationQuestionModel question,
   }) async {
     print("Uploading question to firestore");
-    _firestoreService.uploadQuestionToFirestore(
+    await _firestoreService.uploadQuestionToFirestore(
         day: day,
         level: level,
         section: section,

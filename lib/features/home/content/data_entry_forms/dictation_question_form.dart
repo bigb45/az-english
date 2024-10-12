@@ -256,8 +256,8 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                             } else {
                               showPreviewModalSheet(
                                   context: context,
-                                  onSubmit: () {
-                                    viewmodel
+                                  onSubmit: () async {
+                                    await viewmodel
                                         .uploadQuestion(
                                             level: widget.level,
                                             section: widget.section,
