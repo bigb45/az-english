@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/whiteboard_viewmodel.dart';
+import 'package:ez_english/features/home/whiteboard/whiteboard_model.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -19,6 +22,7 @@ class WhiteboardForm extends StatefulWidget {
   final String section;
   final String day;
   final Function(BaseQuestion<dynamic>)? onSubmit;
+  final WhiteboardModel? question;
 
   const WhiteboardForm({
     super.key,
@@ -26,6 +30,7 @@ class WhiteboardForm extends StatefulWidget {
     required this.section,
     required this.day,
     this.onSubmit,
+    this.question,
   });
 
   @override
@@ -34,26 +39,57 @@ class WhiteboardForm extends StatefulWidget {
 
 class _WhiteboardFormState extends State<WhiteboardForm> {
   final _titleController = TextEditingController();
-  // final _descriptionController = TextEditingController();
-
+  String? originalTitle;
   bool isFormValid = false;
   String? updateMessage;
   String? imageUrl;
   File? currentImage;
 
+  String? originalImagePath;
+  String? newImagePath;
+
+  void updateQuestion(WhiteboardModel updatedQuestion) {
+    if (widget.question != null) {
+      if (_titleController.text != originalTitle) {
+        widget.question!.title = _titleController.text;
+      }
+      if (newImagePath != originalImagePath) {
+        widget.question!.imageUrl = newImagePath;
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    if (widget.question != null) {
+      _titleController.text = widget.question!.title;
+      originalTitle = widget.question!.title;
+      originalImagePath = widget.question!.imageUrl;
+      newImagePath = originalImagePath;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _validateForm();
+    });
+    super.initState();
+  }
+
   final _formKey = GlobalKey<FormState>();
   void _validateForm() {
     bool formValid =
-        currentImage != null && (_formKey.currentState?.validate() ?? false);
+        newImagePath != null && (_formKey.currentState?.validate() ?? false);
+    bool changesMade = _checkForChanges();
 
-    // bool changesMade = _checkForChanges();
     setState(() {
-      isFormValid = formValid;
-      printDebug("is valid: $isFormValid");
-      // if (changesMade) {
-      //   updateMessage = null;
-      // }
+      isFormValid = formValid && (widget.question == null || changesMade);
+      if (changesMade) {
+        updateMessage = null;
+      }
     });
+  }
+
+  bool _checkForChanges() {
+    return _titleController.text != originalTitle ||
+        newImagePath != originalImagePath;
   }
 
   @override
@@ -85,43 +121,57 @@ class _WhiteboardFormState extends State<WhiteboardForm> {
                   ),
                   Stack(
                     children: [
-                      viewmodel.image != null
-                          ? Center(child: Image.file(viewmodel.image!))
-                          : UploadCard(
-                              onPressed: () async {
-                                await viewmodel.pickImage();
-                                setState(() {
-                                  currentImage = viewmodel.image;
-                                  _validateForm();
-                                });
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  AutoSizeText(
-                                    'Add Whiteboard',
-                                    style: TextStyles.cardHeader
-                                        .copyWith(fontSize: 18.sp),
-                                    textAlign: TextAlign.center,
-                                    maxLines: 3,
-                                  ),
-                                  Expanded(
-                                    child: viewmodel.isLoading
-                                        ? const Center(
-                                            child: CircularProgressIndicator(
-                                              color: Palette.primaryText,
-                                            ),
-                                          )
-                                        : const FittedBox(
-                                            child: Icon(
-                                              Icons.add_rounded,
-                                              color: Palette.secondaryText,
-                                            ),
+                      if (currentImage != null)
+                        Center(child: Image.file(currentImage!))
+                      else if (originalImagePath != null)
+                        Center(
+                            child: CachedNetworkImage(
+                                progressIndicatorBuilder:
+                                    (context, url, progress) {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: progress.progress,
+                                    ),
+                                  );
+                                },
+                                imageUrl: originalImagePath!))
+                      else
+                        UploadCard(
+                            onPressed: () async {
+                              await viewmodel.pickImage();
+                              setState(() {
+                                currentImage = viewmodel.image;
+                                newImagePath = viewmodel.image?.path;
+                                _validateForm();
+                              });
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AutoSizeText(
+                                  'Add Whiteboard',
+                                  style: TextStyles.cardHeader
+                                      .copyWith(fontSize: 18.sp),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 3,
+                                ),
+                                Expanded(
+                                  child: viewmodel.isLoading
+                                      ? const Center(
+                                          child: CircularProgressIndicator(
+                                            color: Palette.primaryText,
                                           ),
-                                  ),
-                                ],
-                              )),
-                      if (viewmodel.image != null)
+                                        )
+                                      : const FittedBox(
+                                          child: Icon(
+                                            Icons.add_rounded,
+                                            color: Palette.secondaryText,
+                                          ),
+                                        ),
+                                ),
+                              ],
+                            )),
+                      if (currentImage != null || (newImagePath != null))
                         Positioned(
                           top: 0,
                           right: 0,
@@ -134,6 +184,7 @@ class _WhiteboardFormState extends State<WhiteboardForm> {
                               setState(() {
                                 viewmodel.removeImage();
                                 currentImage = null;
+                                newImagePath = null;
                                 _validateForm();
                               });
                             },
@@ -157,6 +208,7 @@ class _WhiteboardFormState extends State<WhiteboardForm> {
       _titleController.clear();
       currentImage = null;
       viewmodel.removeImage();
+      updateMessage = null;
       setState(() {
         isFormValid = false;
       });
@@ -171,22 +223,48 @@ class _WhiteboardFormState extends State<WhiteboardForm> {
               onPressed: isEnabled
                   ? () {
                       if (_formKey.currentState!.validate()) {
-                        printDebug(
-                            "uploading image: ${currentImage!.path}, title: ${_titleController.text.trim()}, level: ${widget.level}, unit: ${widget.day}");
+                        WhiteboardModel question = WhiteboardModel(
+                            title: _titleController.text.trim(),
+                            imageUrl: currentImage?.path ??
+                                widget.question!.imageUrl);
                         viewmodel
-                            .uploadQusetion(
-                          imagePath: currentImage!.path,
-                          worksheetTitle: _titleController.text.trim(),
+                            .submitQuestion(
+                          question: question,
                           levelID: widget.level,
                           unitNumber: widget.day,
                           section: widget.section,
                         )
                             .then((updatedQuestion) {
                           if (updatedQuestion != null) {
-                            {
-                              resetForm();
+                            setState(() {
+                              newImagePath = updatedQuestion.imageUrl;
+                              updateQuestion(updatedQuestion);
+                            });
+                            if (widget.onSubmit != null) {
+                              updatedQuestion.path =
+                                  widget.question?.path ?? '';
+                              widget.onSubmit!(updatedQuestion);
+                              Navigator.of(context).pop();
                               Utils.showSnackbar(
-                                  text: "Question uploaded successfully");
+                                  text: "Question updated successfully");
+                            } else {
+                              showPreviewModalSheet(
+                                  context: context,
+                                  onSubmit: () {
+                                    viewmodel
+                                        .uploadQuestion(
+                                            level: widget.level,
+                                            section: widget.section,
+                                            day: widget.day,
+                                            question: updatedQuestion)
+                                        .then((_) {
+                                      Utils.showSnackbar(
+                                          text:
+                                              "Question uploaded successfully");
+                                      resetForm();
+                                    });
+                                  },
+                                  question: updatedQuestion);
                             }
                           }
                         });

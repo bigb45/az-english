@@ -3,8 +3,10 @@ import 'package:ez_english/features/home/content/data_entry_forms/fill_the_blank
 import 'package:ez_english/features/home/content/data_entry_forms/multiple_choice_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/passage_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
+import 'package:ez_english/features/home/content/data_entry_forms/whiteboard_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/edit_question_viewmodel.dart';
+import 'package:ez_english/features/home/whiteboard/whiteboard_model.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/models/dictation_question_model.dart';
@@ -350,6 +352,18 @@ Widget buildQuestionForm(BaseQuestion<dynamic> question, String? selectedLevel,
                     Navigator.of(context).pop();
                   },
               question: question as PassageQuestionModel,
+            );
+          case QuestionType.whiteboard:
+            return WhiteboardForm(
+              level: selectedLevel!,
+              section: selectedSection!,
+              day: dayController!,
+              onSubmit: updateQuestionCallback ??
+                  (updatedQuestion) {
+                    viewModel.updateQuestion(updatedQuestion);
+                    Navigator.of(context).pop();
+                  },
+              question: question as WhiteboardModel,
             );
 
           default:

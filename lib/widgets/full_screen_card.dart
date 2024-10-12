@@ -16,12 +16,18 @@ class FullScreenCard extends StatelessWidget {
           child: Hero(
             tag: imageUrl,
             child: InteractiveViewer(
-              minScale:
-                  1.0, // Minimum scale to prevent shrinking below the original size
-              maxScale: 4.0, // Maximum zoom level
+              minScale: 1.0,
+              maxScale: 4.0,
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   return CachedNetworkImage(
+                    progressIndicatorBuilder: (context, url, progress) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: progress.progress,
+                        ),
+                      );
+                    },
                     imageUrl: imageUrl,
                     width: constraints.maxWidth,
                     height: constraints.maxHeight,

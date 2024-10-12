@@ -37,9 +37,8 @@ class WhiteboardViewmodel extends BaseViewModel {
     }
   }
 
-  Future<WhiteboardModel?> uploadQusetion({
-    required String imagePath,
-    required String worksheetTitle,
+  Future<WhiteboardModel?> submitQuestion({
+    required WhiteboardModel question,
     required String levelID,
     required String unitNumber,
     required String section,
@@ -47,18 +46,17 @@ class WhiteboardViewmodel extends BaseViewModel {
     isLoading = true;
     notifyListeners();
     try {
-      String imageUrl = await uploadImageAndGetUrl(
-          imagePath, '${DateTime.now().millisecondsSinceEpoch}');
+      String? imageUrl;
+      if (!question.imageUrl!.contains("https")) {
+        imageUrl = await uploadImageAndGetUrl(
+            question.imageUrl!, '${DateTime.now().millisecondsSinceEpoch}');
+      } else {
+        imageUrl = question.imageUrl!;
+      }
 
       WhiteboardModel whiteboard =
-          WhiteboardModel(title: worksheetTitle, imageUrl: imageUrl);
+          WhiteboardModel(title: question.title, imageUrl: imageUrl);
 
-      await firestoreService.uploadQuestionToFirestore(
-        questionMap: whiteboard.toMap(),
-        level: levelID,
-        section: section,
-        day: unitNumber,
-      );
       return whiteboard;
     } catch (e) {
       print("Error uploading image: $e");
@@ -67,6 +65,28 @@ class WhiteboardViewmodel extends BaseViewModel {
       notifyListeners();
     }
     return null;
+  }
+
+  Future<void> uploadQuestion({
+    required String level,
+    required String section,
+    required String day,
+    required WhiteboardModel question,
+  }) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      await firestoreService.uploadQuestionToFirestore(
+          day: day,
+          level: level,
+          section: section,
+          questionMap: question.toMap());
+    } catch (e) {
+      print("Error uploading image: $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
   void removeImage() {

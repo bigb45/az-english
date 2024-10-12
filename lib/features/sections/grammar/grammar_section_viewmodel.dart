@@ -26,7 +26,11 @@ class GrammarSectionViewmodel extends BaseViewModel {
     sectionName = RouteConstants.grammarSectionName;
     await fetchQuestions();
     if (_questions.isNotEmpty &&
-        _questions[currentIndex].questionType == QuestionType.youtubeLesson) {
+            _questions[currentIndex].questionType ==
+                QuestionType.youtubeLesson ||
+        _questions[currentIndex].questionType ==
+            QuestionType.vocabularyWithListening ||
+        _questions[currentIndex].questionType == QuestionType.whiteboard) {
       answerState = EvaluationState.noState;
     }
   }
@@ -89,7 +93,9 @@ class GrammarSectionViewmodel extends BaseViewModel {
           (_questions[currentIndex].questionType ==
                   QuestionType.youtubeLesson ||
               _questions[currentIndex].questionType ==
-                  QuestionType.vocabularyWithListening)) {
+                  QuestionType.vocabularyWithListening ||
+              _questions[currentIndex].questionType ==
+                  QuestionType.whiteboard)) {
         answerState = EvaluationState.noState;
       } else {
         answerState = EvaluationState.empty;
