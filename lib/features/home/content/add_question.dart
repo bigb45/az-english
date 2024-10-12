@@ -66,285 +66,300 @@ class _AddQuestionState extends State<AddQuestion> {
               ),
             ),
           ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(Constants.padding12),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    SizedBox(height: 16.h),
-                    Row(
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(Constants.padding12),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
                       children: [
-                        Expanded(
-                          child: DropdownButtonFormField(
-                            items: const [
-                              DropdownMenuItem(
-                                value: "A1",
-                                child: Text("A1"),
-                              ),
-                              DropdownMenuItem(
-                                value: "A2",
-                                child: Text("A2"),
-                              ),
-                              DropdownMenuItem(
-                                value: "B1",
-                                child: Text("B1"),
-                              ),
-                              DropdownMenuItem(
-                                value: "B2",
-                                child: Text("B2"),
-                              ),
-                              DropdownMenuItem(
-                                value: "C1",
-                                child: Text("C1"),
-                              ),
-                              DropdownMenuItem(
-                                value: "C2",
-                                child: Text("C2"),
-                              ),
-                            ],
-                            onChanged: (levelSelection) {
-                              setState(() {
-                                selectedLevel = levelSelection;
-                              });
-                              _updateQuestionTypeState();
-                              _updateDayMenuState();
-                              if (selectedLevel != null &&
-                                  selectedSection != null) {
-                                setState(() {
-                                  selectedUnit = null;
-                                  selectedQuestionType = null;
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField(
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: "A1",
+                                    child: Text("A1"),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "A2",
+                                    child: Text("A2"),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "B1",
+                                    child: Text("B1"),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "B2",
+                                    child: Text("B2"),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "C1",
+                                    child: Text("C1"),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "C2",
+                                    child: Text("C2"),
+                                  ),
+                                ],
+                                onChanged: (levelSelection) {
+                                  setState(() {
+                                    selectedLevel = levelSelection;
+                                  });
+                                  _updateQuestionTypeState();
+                                  _updateDayMenuState();
+                                  if (selectedLevel != null &&
+                                      selectedSection != null) {
+                                    setState(() {
+                                      selectedUnit = null;
+                                      selectedQuestionType = null;
 
-                                  _updateQuestionTypeState();
-                                });
-                                viewmodel.fetchDays(
-                                    level: selectedLevel!,
-                                    section: selectedSection!);
-                              }
-                            },
-                            decoration: const InputDecoration(
-                              labelText: "Select level",
-                              hintText: "Select level",
-                              border: OutlineInputBorder(),
+                                      _updateQuestionTypeState();
+                                    });
+                                    viewmodel.fetchDays(
+                                        level: selectedLevel!,
+                                        section: selectedSection!);
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  labelText: "Select level",
+                                  hintText: "Select level",
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: (value) {
+                                  if (value == null) {
+                                    return 'Please select a level';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
-                            validator: (value) {
-                              if (value == null) {
-                                return 'Please select a level';
-                              }
-                              return null;
-                            },
-                          ),
+                            SizedBox(width: 16.w),
+                            Expanded(
+                              child: DropdownButtonFormField(
+                                isExpanded: true,
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: "reading",
+                                    child: Text("Reading"),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "writing",
+                                    child: Text("Writing"),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "listening",
+                                    child: Text("Listening"),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "vocabulary",
+                                    child: Text("Vocabulary"),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "grammar",
+                                    child: Text("Grammar"),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "test",
+                                    child: Text("Test"),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "worksheet",
+                                    child: Text("Worksheet"),
+                                  )
+                                ],
+                                onChanged: (sectionSelection) {
+                                  setState(() {
+                                    selectedSection = sectionSelection;
+                                  });
+                                  _updateQuestionTypeState();
+                                  _updateDayMenuState();
+                                  if (selectedLevel != null &&
+                                      selectedSection != null) {
+                                    setState(() {
+                                      selectedUnit = null;
+                                      selectedQuestionType = null;
+                                      _updateQuestionTypeState();
+                                    });
+                                    viewmodel.fetchDays(
+                                        level: selectedLevel!,
+                                        section: selectedSection!);
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  labelText: "Section",
+                                  hintText: "Select section",
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: (value) {
+                                  if (value == null) {
+                                    return 'Please select a section';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 16.w),
-                        Expanded(
-                          child: DropdownButtonFormField(
-                            isExpanded: true,
-                            items: const [
-                              DropdownMenuItem(
-                                value: "reading",
-                                child: Text("Reading"),
+                        const SizedBox(height: 16),
+                        DropdownButtonFormField<Unit>(
+                          isExpanded: true,
+                          value: selectedUnit,
+                          items: viewmodel.units != null
+                              ? viewmodel.units!.map((Unit? unit) {
+                                  return DropdownMenuItem<Unit>(
+                                    value: unit,
+                                    child: Text(unit!.name.capitalizeFirst()),
+                                  );
+                                }).toList()
+                              : []
+                            ..add(
+                              DropdownMenuItem<Unit>(
+                                value: Unit(
+                                    name: "+ Add new unit",
+                                    numberOfQuestionsWithDeletion: 0,
+                                    questions: {}),
+                                child: const Row(
+                                  children: [
+                                    Icon(Icons.add),
+                                    Text("Add new unit")
+                                  ],
+                                ),
                               ),
-                              DropdownMenuItem(
-                                value: "writing",
-                                child: Text("Writing"),
-                              ),
-                              DropdownMenuItem(
-                                value: "listening",
-                                child: Text("Listening"),
-                              ),
-                              DropdownMenuItem(
-                                value: "vocabulary",
-                                child: Text("Vocabulary"),
-                              ),
-                              DropdownMenuItem(
-                                value: "grammar",
-                                child: Text("Grammar"),
-                              ),
-                              DropdownMenuItem(
-                                value: "test",
-                                child: Text("Test"),
-                              ),
-                              DropdownMenuItem(
-                                value: "worksheet",
-                                child: Text("Worksheet"),
-                              )
-                            ],
-                            onChanged: (sectionSelection) {
-                              setState(() {
-                                selectedSection = sectionSelection;
-                              });
-                              _updateQuestionTypeState();
-                              _updateDayMenuState();
-                              if (selectedLevel != null &&
-                                  selectedSection != null) {
-                                setState(() {
-                                  selectedUnit = null;
-                                  selectedQuestionType = null;
-                                  _updateQuestionTypeState();
-                                });
-                                viewmodel.fetchDays(
-                                    level: selectedLevel!,
-                                    section: selectedSection!);
-                              }
-                            },
-                            decoration: const InputDecoration(
-                              labelText: "Section",
-                              hintText: "Select section",
-                              border: OutlineInputBorder(),
                             ),
-                            validator: (value) {
-                              if (value == null) {
-                                return 'Please select a section';
-                              }
-                              return null;
-                            },
+                          onChanged: isDayMenuEnabled
+                              ? (Unit? newUnit) {
+                                  if (newUnit != null &&
+                                      newUnit.name == "+ Add new unit") {
+                                    newUnit = viewmodel.addUnit();
+                                  }
+                                  setState(() {
+                                    selectedUnit = newUnit;
+                                  });
+
+                                  if (selectedUnit != null &&
+                                      selectedLevel != null &&
+                                      selectedSection != null) {
+                                    _updateQuestionTypeState();
+                                    setState(() {
+                                      selectedQuestionType = null;
+
+                                      selectedUnit = newUnit;
+                                    });
+                                  }
+                                }
+                              : null,
+                          decoration: const InputDecoration(
+                            labelText: "Please select a unit",
+                            hintText: "Select a unit",
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please select a unit';
+                            }
+                            return null;
+                          },
+                          disabledHint: viewmodel.units == null
+                              ? const Text(
+                                  "Please fill all fields above to select a unit")
+                              : const Text("Please add the level first"),
+                        ),
+                        SizedBox(height: 16.h),
+                        // don't select question type if admin is uploading a worksheet
+                        DropdownButtonFormField(
+                          value: selectedQuestionType,
+                          isExpanded: true,
+                          items: const [
+                            DropdownMenuItem(
+                              value: QuestionType.multipleChoice,
+                              child: Text("Multiple Choice"),
+                            ),
+                            DropdownMenuItem(
+                              value: QuestionType.dictation,
+                              child: Text("Dictation"),
+                            ),
+                            DropdownMenuItem(
+                              value: QuestionType.passage,
+                              child: Text("Passage"),
+                            ),
+                            DropdownMenuItem(
+                              value: QuestionType.youtubeLesson,
+                              child: Text("Youtube video"),
+                            ),
+                            DropdownMenuItem(
+                              value: QuestionType.vocabulary,
+                              child: Text("Vocabulary"),
+                            ),
+                            DropdownMenuItem(
+                              value: QuestionType.fillTheBlanks,
+                              child: Text("Fill in the blank"),
+                            ),
+                            DropdownMenuItem(
+                              value: QuestionType.worksheet,
+                              child: Text("Worksheet"),
+                            ),
+                            DropdownMenuItem(
+                              value: QuestionType.whiteboard,
+                              child: Text("Whiteboard"),
+                            ),
+                          ],
+                          onChanged: isQuestionTypeEnabled
+                              ? (QuestionType? questionTypeSelection) {
+                                  print(
+                                      "Question type selected: ${questionTypeSelection!.toShortString()}");
+                                  setState(() {
+                                    selectedQuestionType =
+                                        questionTypeSelection;
+                                  });
+                                }
+                              : null,
+                          decoration: const InputDecoration(
+                            labelText: "Question Type",
+                            hintText: "Select question type",
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please select a question type';
+                            }
+                            return null;
+                          },
+                          disabledHint: const Text(
+                              "Please fill all fields above to select question type"),
+                        ),
+                        SizedBox(height: 16.h),
+                        const Text("Fields marked with * are required"),
+                        SizedBox(height: 16.h),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(Constants.padding12),
+                            child: selectedQuestionType == null
+                                ? const Text("Select question type to start")
+                                : _buildQuestionForm(),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<Unit>(
-                      isExpanded: true,
-                      value: selectedUnit,
-                      items: viewmodel.units != null
-                          ? viewmodel.units!.map((Unit? unit) {
-                              return DropdownMenuItem<Unit>(
-                                value: unit,
-                                child: Text(unit!.name.capitalizeFirst()),
-                              );
-                            }).toList()
-                          : []
-                        ..add(
-                          DropdownMenuItem<Unit>(
-                            value: Unit(
-                                name: "+ Add new unit",
-                                numberOfQuestionsWithDeletion: 0,
-                                questions: {}),
-                            child: const Row(
-                              children: [Icon(Icons.add), Text("Add new unit")],
-                            ),
-                          ),
-                        ),
-                      onChanged: isDayMenuEnabled
-                          ? (Unit? newUnit) {
-                              if (newUnit != null &&
-                                  newUnit.name == "+ Add new unit") {
-                                newUnit = viewmodel.addUnit();
-                              }
-                              setState(() {
-                                selectedUnit = newUnit;
-                              });
-
-                              if (selectedUnit != null &&
-                                  selectedLevel != null &&
-                                  selectedSection != null) {
-                                _updateQuestionTypeState();
-                                setState(() {
-                                  selectedQuestionType = null;
-
-                                  selectedUnit = newUnit;
-                                });
-                              }
-                            }
-                          : null,
-                      decoration: const InputDecoration(
-                        labelText: "Please select a unit",
-                        hintText: "Select a unit",
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Please select a unit';
-                        }
-                        return null;
-                      },
-                      disabledHint: viewmodel.units == null
-                          ? const Text(
-                              "Please fill all fields above to select a unit")
-                          : const Text("Please add the level first"),
-                    ),
-                    SizedBox(height: 16.h),
-                    // don't select question type if admin is uploading a worksheet
-                    DropdownButtonFormField(
-                      value: selectedQuestionType,
-                      isExpanded: true,
-                      items: const [
-                        DropdownMenuItem(
-                          value: QuestionType.multipleChoice,
-                          child: Text("Multiple Choice"),
-                        ),
-                        DropdownMenuItem(
-                          value: QuestionType.dictation,
-                          child: Text("Dictation"),
-                        ),
-                        DropdownMenuItem(
-                          value: QuestionType.passage,
-                          child: Text("Passage"),
-                        ),
-                        DropdownMenuItem(
-                          value: QuestionType.youtubeLesson,
-                          child: Text("Youtube video"),
-                        ),
-                        DropdownMenuItem(
-                          value: QuestionType.vocabulary,
-                          child: Text("Vocabulary"),
-                        ),
-                        DropdownMenuItem(
-                          value: QuestionType.fillTheBlanks,
-                          child: Text("Fill in the blank"),
-                        ),
-                        DropdownMenuItem(
-                          value: QuestionType.worksheet,
-                          child: Text("Worksheet"),
-                        ),
-                        DropdownMenuItem(
-                          value: QuestionType.whiteboard,
-                          child: Text("Whiteboard"),
-                        ),
-                      ],
-                      onChanged: isQuestionTypeEnabled
-                          ? (QuestionType? questionTypeSelection) {
-                              print(
-                                  "Question type selected: ${questionTypeSelection!.toShortString()}");
-                              setState(() {
-                                selectedQuestionType = questionTypeSelection;
-                              });
-                            }
-                          : null,
-                      decoration: const InputDecoration(
-                        labelText: "Question Type",
-                        hintText: "Select question type",
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Please select a question type';
-                        }
-                        return null;
-                      },
-                      disabledHint: const Text(
-                          "Please fill all fields above to select question type"),
-                    ),
-                    SizedBox(height: 16.h),
-                    const Text("Fields marked with * are required"),
-                    SizedBox(height: 16.h),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(Constants.padding12),
-                        child: selectedQuestionType == null
-                            ? const Text("Select question type to start")
-                            : _buildQuestionForm(),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              if (viewmodel.isLoading)
+                Container(
+                  color: Colors.black.withOpacity(0.1),
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+            ],
           ),
         );
       }),

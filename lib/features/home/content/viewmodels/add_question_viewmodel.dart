@@ -49,6 +49,8 @@ class AddQuestionViewModel extends ChangeNotifier {
 
   Future<void> fetchDays(
       {required String level, required String section, d}) async {
+    _isLoading = true;
+    notifyListeners();
     try {
       units = await _firestoreService.getDays(
         level,
@@ -59,6 +61,9 @@ class AddQuestionViewModel extends ChangeNotifier {
     } catch (e) {
       print('Error fetching questions: $e');
       questions = [];
+      notifyListeners();
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }

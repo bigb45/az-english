@@ -61,128 +61,129 @@ class _EditQuestionState extends State<EditQuestion> {
                 ),
               ),
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Row(
+            body: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
                       children: [
-                        Expanded(
-                          child: levelsDropDown(
-                            onChanged: (levelSelection) {
-                              setState(() {
-                                selectedLevel = levelSelection;
-                              });
-                              _updateDayMenuState();
-                              if (selectedLevel != null &&
-                                  selectedSection != null) {
-                                setState(() {
-                                  selectedUnit = null;
-                                  viewmodel.questions.clear();
-                                });
-                                viewmodel.fetchDays(
-                                    level: selectedLevel!,
-                                    section: selectedSection!);
-                              }
-                              if (selectedUnit != null &&
-                                  selectedLevel != null &&
-                                  selectedSection != null) {
-                                viewmodel.fetchQuestions(
-                                  level: selectedLevel!,
-                                  section: selectedSection!,
-                                  day: selectedUnit!.name.split("t")[1],
-                                );
-                              }
-                            },
-                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: levelsDropDown(
+                                onChanged: (levelSelection) {
+                                  setState(() {
+                                    selectedLevel = levelSelection;
+                                  });
+                                  _updateDayMenuState();
+                                  if (selectedLevel != null &&
+                                      selectedSection != null) {
+                                    setState(() {
+                                      selectedUnit = null;
+                                      viewmodel.questions.clear();
+                                    });
+                                    viewmodel.fetchDays(
+                                        level: selectedLevel!,
+                                        section: selectedSection!);
+                                  }
+                                  if (selectedUnit != null &&
+                                      selectedLevel != null &&
+                                      selectedSection != null) {
+                                    viewmodel.fetchQuestions(
+                                      level: selectedLevel!,
+                                      section: selectedSection!,
+                                      day: selectedUnit!.name.split("t")[1],
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                            SizedBox(width: 16.w),
+                            Expanded(
+                              child: sectionDropDown(
+                                onChanged: (sectionSelection) {
+                                  setState(() {
+                                    selectedSection =
+                                        sectionSelection as String?;
+                                  });
+                                  _updateDayMenuState();
+                                  if (selectedLevel != null &&
+                                      selectedSection != null) {
+                                    setState(() {
+                                      selectedUnit = null;
+                                      viewmodel.questions.clear();
+                                    });
+                                    viewmodel.fetchDays(
+                                        level: selectedLevel!,
+                                        section: selectedSection!);
+                                  }
+                                  if (selectedUnit != null &&
+                                      selectedLevel != null &&
+                                      selectedSection != null) {
+                                    viewmodel.fetchQuestions(
+                                      level: selectedLevel!,
+                                      section: selectedSection!,
+                                      day: selectedUnit!.name.split("t")[1],
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 16.w),
-                        Expanded(
-                          child: sectionDropDown(
-                            onChanged: (sectionSelection) {
-                              setState(() {
-                                selectedSection = sectionSelection as String?;
-                              });
-                              _updateDayMenuState();
-                              if (selectedLevel != null &&
-                                  selectedSection != null) {
-                                setState(() {
-                                  selectedUnit = null;
-                                  viewmodel.questions.clear();
-                                });
-                                viewmodel.fetchDays(
-                                    level: selectedLevel!,
-                                    section: selectedSection!);
-                              }
-                              if (selectedUnit != null &&
-                                  selectedLevel != null &&
-                                  selectedSection != null) {
-                                viewmodel.fetchQuestions(
-                                  level: selectedLevel!,
-                                  section: selectedSection!,
-                                  day: selectedUnit!.name.split("t")[1],
-                                );
-                              }
-                            },
+                        const SizedBox(height: 16),
+                        const SizedBox(height: 16),
+                        DropdownButtonFormField<Unit>(
+                          value: selectedUnit,
+                          isExpanded: true,
+                          items: viewmodel.units != null
+                              ? viewmodel.units!.map((Unit? unit) {
+                                  return DropdownMenuItem<Unit>(
+                                    value: unit,
+                                    child: Text(unit!.name.capitalizeFirst()),
+                                  );
+                                }).toList()
+                              : [],
+                          onChanged: isDayMenuEnabled
+                              ? (Unit? newUnit) {
+                                  setState(() {
+                                    selectedUnit = newUnit;
+                                  });
+                                  if (selectedUnit != null &&
+                                      selectedLevel != null &&
+                                      selectedSection != null) {
+                                    viewmodel.fetchQuestions(
+                                      level: selectedLevel!,
+                                      section: selectedSection!,
+                                      day: selectedUnit!.name.split("t")[1],
+                                    );
+                                    setState(() {
+                                      selectedUnit = newUnit;
+                                    });
+                                  }
+                                }
+                              : null,
+                          decoration: const InputDecoration(
+                            labelText: "Please select a unit",
+                            hintText: "Select a unit",
+                            border: OutlineInputBorder(),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<Unit>(
-                      value: selectedUnit,
-                      isExpanded: true,
-                      items: viewmodel.units != null
-                          ? viewmodel.units!.map((Unit? unit) {
-                              return DropdownMenuItem<Unit>(
-                                value: unit,
-                                child: Text(unit!.name.capitalizeFirst()),
-                              );
-                            }).toList()
-                          : [],
-                      onChanged: isDayMenuEnabled
-                          ? (Unit? newUnit) {
-                              setState(() {
-                                selectedUnit = newUnit;
-                              });
-                              if (selectedUnit != null &&
-                                  selectedLevel != null &&
-                                  selectedSection != null) {
-                                viewmodel.fetchQuestions(
-                                  level: selectedLevel!,
-                                  section: selectedSection!,
-                                  day: selectedUnit!.name.split("t")[1],
-                                );
-                                setState(() {
-                                  selectedUnit = newUnit;
-                                });
-                              }
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please select a unit';
                             }
-                          : null,
-                      decoration: const InputDecoration(
-                        labelText: "Please select a unit",
-                        hintText: "Select a unit",
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Please select a unit';
-                        }
-                        return null;
-                      },
-                      disabledHint: viewmodel.units == null
-                          ? const Text(
-                              "Please fill all fields above to select a unit")
-                          : const Text("Please add the level first"),
-                    ),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      child: viewmodel.isLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : viewmodel.questions.isNotEmpty
+                            return null;
+                          },
+                          disabledHint: viewmodel.units == null
+                              ? const Text(
+                                  "Please fill all fields above to select a unit")
+                              : const Text("Please add the level first"),
+                        ),
+                        const SizedBox(height: 16),
+                        Expanded(
+                          child: viewmodel.questions.isNotEmpty
                               ? ListView.builder(
                                   itemCount: viewmodel.questions.length,
                                   itemBuilder: (context, index) {
@@ -220,10 +221,19 @@ class _EditQuestionState extends State<EditQuestion> {
                               : const Text(
                                   "No questions found for the selected day.",
                                 ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                if (viewmodel.isLoading)
+                  Container(
+                    color: Colors.black.withOpacity(0.1),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+              ],
             ),
           );
         },
