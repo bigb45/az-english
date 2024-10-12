@@ -100,7 +100,7 @@ class _WhiteboardFormState extends State<WhiteboardForm> {
         onChanged: _validateForm,
         autovalidateMode: AutovalidateMode.always,
         child: viewmodel.isLoading
-            ? CircularProgressIndicator()
+            ? Center(child: CircularProgressIndicator())
             : Column(
                 children: [
                   TextFormField(
@@ -123,7 +123,7 @@ class _WhiteboardFormState extends State<WhiteboardForm> {
                     children: [
                       if (currentImage != null)
                         Center(child: Image.file(currentImage!))
-                      else if (originalImagePath != null)
+                      else if (newImagePath != null)
                         Center(
                             child: CachedNetworkImage(
                                 progressIndicatorBuilder:
@@ -134,7 +134,7 @@ class _WhiteboardFormState extends State<WhiteboardForm> {
                                     ),
                                   );
                                 },
-                                imageUrl: originalImagePath!))
+                                imageUrl: newImagePath!))
                       else
                         UploadCard(
                             onPressed: () async {
