@@ -91,8 +91,13 @@ class _ExpandableListTileState extends State<ExpandableListTile> {
                   InteractiveViewer(
                     child: CachedNetworkImage(
                       imageUrl: widget.imageUrl,
-                      placeholder: (context, url) =>
-                          const CircularProgressIndicator(),
+                      progressIndicatorBuilder: (context, url, progress) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: progress.progress,
+                          ),
+                        );
+                      },
                     ),
                   ),
               ],

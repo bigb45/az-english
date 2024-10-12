@@ -57,8 +57,13 @@ class _GenericMultipleChoiceQuestionState
             else
               CachedNetworkImage(
                 imageUrl: widget.question.imageUrl!,
-                placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
+                progressIndicatorBuilder: (context, url, progress) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: progress.progress,
+                    ),
+                  );
+                },
               ),
             SizedBox(height: Constants.padding20),
             Text(
