@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/admin/users/users_settings_viewmodel.dart';
+import 'package:ez_english/features/home/admin/worksheets/worksheets_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -97,6 +98,7 @@ class _WorksheetFormState extends State<WorksheetForm> {
                                 });
                               },
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   AutoSizeText(

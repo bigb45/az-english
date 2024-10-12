@@ -1,3 +1,4 @@
+import 'package:ez_english/features/home/whiteboard/whiteboard_model.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/worksheet.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
@@ -77,6 +78,8 @@ abstract class BaseQuestion<T> {
       case QuestionType.worksheet:
         return Worksheet.fromMap(json);
 
+      case QuestionType.whiteboard:
+        return WhiteboardModel.fromMap(json);
       default:
         throw Exception('Unknown question type: $questionType');
     }
@@ -118,6 +121,7 @@ enum QuestionType {
 
   checkbox,
   worksheet,
+  whiteboard,
   //other
   other,
 }

@@ -50,9 +50,7 @@ class _LevelSelectionState extends State<LevelSelection> {
         ),
         body: viewmodel.isLoading
             ? const Center(child: CircularProgressIndicator())
-            : !viewmodel.isSpeakingAssigned &&
-                    (viewmodel.levels.isNotEmpty &&
-                        !viewmodel.levels[0].isAssigned)
+            : !viewmodel.isSpeakingAssigned && viewmodel.levels.isEmpty
                 ? Center(
                     child: Text(
                       'No Assigned Sections yet.',

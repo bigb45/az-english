@@ -58,8 +58,14 @@ class _StudentWorksheetViewState extends State<StudentWorksheetView> {
                                 imageUrl:
                                     viewmodel.uploadedWorksheet?.imagePath ??
                                         '',
-                                placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator()),
+                                progressIndicatorBuilder:
+                                    (context, url, progress) {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: progress.progress,
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ),
@@ -72,8 +78,14 @@ class _StudentWorksheetViewState extends State<StudentWorksheetView> {
                               child: CachedNetworkImage(
                                 imageUrl:
                                     viewmodel.worksheetAnswer?.imageUrl ?? '',
-                                placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator()),
+                                progressIndicatorBuilder:
+                                    (context, url, progress) {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: progress.progress,
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ),

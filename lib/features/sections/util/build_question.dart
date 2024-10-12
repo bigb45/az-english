@@ -1,3 +1,4 @@
+import 'package:ez_english/features/home/whiteboard/whiteboard_model.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/checkbox_question.dart';
@@ -7,6 +8,7 @@ import 'package:ez_english/features/sections/components/fill_the_blanks_question
 import 'package:ez_english/features/sections/components/generic_multiple_choice_question.dart';
 import 'package:ez_english/features/sections/components/sentence_forming_question.dart';
 import 'package:ez_english/features/sections/components/speaking_question.dart';
+import 'package:ez_english/features/sections/components/whiteboard_view.dart';
 import 'package:ez_english/features/sections/components/word_view_question.dart';
 import 'package:ez_english/features/sections/components/youtube_lesson.dart';
 import 'package:ez_english/features/sections/models/checkbox_question_model.dart';
@@ -18,6 +20,7 @@ import 'package:ez_english/features/sections/models/speaking_question_model.dart
 import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
+import 'package:ez_english/widgets/full_screen_card.dart';
 import 'package:flutter/material.dart';
 
 Widget buildQuestion({
@@ -75,9 +78,11 @@ Widget buildQuestion({
               "https://www.youtube.com/watch?v=aDm5WZ3QiIE",
         ),
       );
+
     case QuestionType.vocabularyWithListening:
     case QuestionType.vocabulary:
       return WordViewQuestion(wordData: question as WordDefinition);
+
     case QuestionType.fillTheBlanks:
       return FillTheBlanksQuestion(
         key: ValueKey(question.answer),
@@ -87,8 +92,12 @@ Widget buildQuestion({
         // controller: TextEditingController(),
       );
 
+    case QuestionType.whiteboard:
+      return WhiteboardView(whiteboardModel: question as WhiteboardModel);
+
     default:
-      print("Unsupported Question Type: ${question.questionType}, $question");
+      print(
+          "Unsupported Question Type: ${question.questionType}, ${question.imageUrl}");
       return const Text("Unsupported Question Type");
   }
 }

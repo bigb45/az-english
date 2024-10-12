@@ -3,6 +3,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/dictation_ques
 import 'package:ez_english/features/home/content/data_entry_forms/fill_the_blanks_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/multiple_choice_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
+import 'package:ez_english/features/home/content/data_entry_forms/whiteboard_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
 import 'package:ez_english/features/home/content/edit_question.dart';
 import 'package:ez_english/features/home/content/viewmodels/passage_question_viewmodel.dart';
@@ -258,7 +259,9 @@ class _PassageFormState extends State<PassageForm> {
                           onIconPressed: () {
                             viewmodel.deleteQuestion(question);
                             setState(() {
-                              questions.remove(key);
+                              widget.question!.questions.remove(key);
+                              questions = widget.question!.questions.map(
+                                  (key, value) => MapEntry(key, value?.copy()));
                             });
                           },
                         );
@@ -484,6 +487,10 @@ class _AddEmbeddedQuestionFormState extends State<AddEmbeddedQuestionForm> {
                     value: QuestionType.fillTheBlanks,
                     child: Text("Fill in the blank"),
                   ),
+                  DropdownMenuItem(
+                    value: QuestionType.whiteboard,
+                    child: Text("Whiteboard"),
+                  ),
                 ],
                 onChanged: (QuestionType? questionTypeSelection) {
                   setState(() {
@@ -561,6 +568,14 @@ class _AddEmbeddedQuestionFormState extends State<AddEmbeddedQuestionForm> {
           day: widget.day,
           onSubmit: widget.onAddQuestion,
         );
+      case QuestionType.whiteboard:
+        return WhiteboardForm(
+          level: widget.level,
+          section: widget.section,
+          day: widget.day,
+          onSubmit: widget.onAddQuestion,
+        );
+
       default:
         return const Text("Select question type to start");
     }
