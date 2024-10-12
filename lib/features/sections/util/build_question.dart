@@ -75,9 +75,11 @@ Widget buildQuestion({
               "https://www.youtube.com/watch?v=aDm5WZ3QiIE",
         ),
       );
+
     case QuestionType.vocabularyWithListening:
     case QuestionType.vocabulary:
       return WordViewQuestion(wordData: question as WordDefinition);
+
     case QuestionType.fillTheBlanks:
       return FillTheBlanksQuestion(
         key: ValueKey(question.answer),
@@ -86,6 +88,9 @@ Widget buildQuestion({
         answerState: answerState,
         // controller: TextEditingController(),
       );
+
+    // case QuestionType.whiteboard:
+    //   return FullScreenCard(imageUrl: question.imageUrl)
 
     default:
       print("Unsupported Question Type: ${question.questionType}, $question");
