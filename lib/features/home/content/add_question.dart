@@ -4,6 +4,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/fill_the_blank
 import 'package:ez_english/features/home/content/data_entry_forms/multiple_choice_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/passage_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
+import 'package:ez_english/features/home/content/data_entry_forms/whiteboard_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/worksheet_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
 import 'package:ez_english/features/home/content/viewmodels/add_question_viewmodel.dart';
@@ -297,6 +298,10 @@ class _AddQuestionState extends State<AddQuestion> {
                           value: QuestionType.worksheet,
                           child: Text("Worksheet"),
                         ),
+                        DropdownMenuItem(
+                          value: QuestionType.whiteboard,
+                          child: Text("Whiteboard"),
+                        ),
                       ],
                       onChanged: isQuestionTypeEnabled
                           ? (QuestionType? questionTypeSelection) {
@@ -391,6 +396,12 @@ class _AddQuestionState extends State<AddQuestion> {
           section: selectedSection!,
           day: selectedUnit!.name.split("t")[1],
         );
+
+      case QuestionType.whiteboard:
+        return WhiteboardForm(
+            level: selectedLevel!,
+            section: selectedSection!,
+            day: selectedUnit!.name.split("t")[1]);
       default:
         return const Text("Select question type to start");
     }

@@ -118,6 +118,7 @@ enum QuestionType {
 
   checkbox,
   worksheet,
+  whiteboard,
   //other
   other,
 }

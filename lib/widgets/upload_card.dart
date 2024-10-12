@@ -28,7 +28,7 @@ class UploadCard extends StatelessWidget {
           strokeWidth: 3.w,
           child: Padding(
             padding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 10.h),
-            child: child,
+            child: SizedBox.expand(child: child),
           ),
         ),
       ),

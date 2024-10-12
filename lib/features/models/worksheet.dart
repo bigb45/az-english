@@ -9,7 +9,6 @@ class Worksheet extends BaseQuestion {
   String? description;
   Map<String, WorksheetStudent>? students;
   Timestamp? timestamp;
-// TODO: add description
   Worksheet({
     this.title,
     this.students,
