@@ -13,6 +13,10 @@ class FillTheBlanksViewModel extends ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
   final Uuid uuid = const Uuid();
 
+  bool _isloading = false;
+
+  get isLoading => _isloading;
+
   Future<void> pickImage() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -46,6 +50,8 @@ class FillTheBlanksViewModel extends ChangeNotifier {
     required String day,
     required FillTheBlanksQuestionModel question,
   }) async {
+    _isloading = true;
+    notifyListeners();
     try {
       await _firestoreService.uploadQuestionToFirestore(
           day: day,
@@ -54,6 +60,13 @@ class FillTheBlanksViewModel extends ChangeNotifier {
           questionMap: question.toMap());
     } catch (e) {
       print('Error adding question: $e');
+    } finally {
+      _isloading = false;
+      notifyListeners();
     }
+  }
+
+  void reset() {
+    notifyListeners();
   }
 }

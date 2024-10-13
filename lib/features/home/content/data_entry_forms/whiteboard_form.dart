@@ -258,10 +258,10 @@ class _WhiteboardFormState extends State<WhiteboardForm> {
                                             day: widget.day,
                                             question: updatedQuestion)
                                         .then((_) {
+                                      resetForm();
                                       Utils.showSnackbar(
                                           text:
                                               "Question uploaded successfully");
-                                      resetForm();
                                     });
                                   },
                                   question: updatedQuestion);
