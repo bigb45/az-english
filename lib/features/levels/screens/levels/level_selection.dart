@@ -49,7 +49,8 @@ class _LevelSelectionState extends State<LevelSelection> {
         ),
         body: viewmodel.isLoading
             ? const Center(child: CircularProgressIndicator())
-            : !viewmodel.isSpeakingAssigned && viewmodel.levels.isEmpty
+            : !viewmodel.isSpeakingAssigned &&
+                    !viewmodel.levels.any((level) => level.isAssigned)
                 ? Center(
                     child: Text(
                       'No Assigned Sections yet.',
@@ -104,12 +105,7 @@ class _LevelSelectionState extends State<LevelSelection> {
                                                 .id,
                                           );
                                         })
-                                    : Center(
-                                        child: Text(
-                                          'No Assigned Sections yet.',
-                                          style: TextStyles.bodyLarge,
-                                        ),
-                                      ),
+                                    : const SizedBox(),
                               viewmodel.isSpeakingAssigned
                                   ? _buildCard(
                                       headerText: "Practice",
