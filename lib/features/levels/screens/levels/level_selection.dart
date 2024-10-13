@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
-import 'package:ez_english/features/levels/data/upload_data_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -82,10 +81,17 @@ class _LevelSelectionState extends State<LevelSelection> {
                               //   child: const Text("Add data"),
                               // ),
                               if (viewmodel.levels.isNotEmpty)
-                                viewmodel.levels
-                                        .firstWhere(
-                                            (level) => level.isAssigned == true)
-                                        .isAssigned
+                                viewmodel.levels.firstWhere(
+                                  (level) => level.isAssigned == true,
+                                  orElse: () {
+                                    return Level(
+                                        id: 0,
+                                        isAssigned: false,
+                                        name: '',
+                                        description: "",
+                                        sections: []);
+                                  },
+                                ).isAssigned
                                     ? _buildCard(
                                         headerText: "Speaking",
                                         isAssigned: true,
@@ -98,7 +104,12 @@ class _LevelSelectionState extends State<LevelSelection> {
                                                 .id,
                                           );
                                         })
-                                    : const SizedBox(),
+                                    : Center(
+                                        child: Text(
+                                          'No Assigned Sections yet.',
+                                          style: TextStyles.bodyLarge,
+                                        ),
+                                      ),
                               viewmodel.isSpeakingAssigned
                                   ? _buildCard(
                                       headerText: "Practice",
