@@ -125,7 +125,7 @@ abstract class BaseViewModel extends ChangeNotifier {
     notifyListeners();
     try {
       if (!tempUnit) {
-        await _firestoreService.updateUserProgress("A1", sectionName!);
+        await _firestoreService.updateUserProgress(levelName!, sectionName!);
       }
     } catch (e) {
       // this causes speaking section error
