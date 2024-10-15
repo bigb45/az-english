@@ -7,6 +7,7 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/network/apis_constants.dart';
 import 'package:ez_english/core/network/custom_response.dart';
 import 'package:ez_english/core/network/network_helper.dart';
+import 'package:ez_english/features/models/speech_recognition_result.dart';
 import 'package:ez_english/features/sections/models/speaking_question_model.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -41,6 +42,11 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
   int highlightIndex = 0;
   Timer? _timer;
   List<int> segmentIndices = [];
+  double accuracyScore = 0.0;
+  double fluencyScore = 0.0;
+  double completenessScore = 0.0;
+  double pronScore = 0.0;
+  String displayText = "";
 
   @override
   void initState() {
@@ -159,6 +165,26 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
   }
 
   final String apiKey = dotenv.env['AZURE_API_KEY_1'] ?? '';
+  void updateScores(double accuracy, double fluency, double completeness,
+      double pron, String text) {
+    setState(() {
+      accuracyScore = accuracy;
+      fluencyScore = fluency;
+      completenessScore = completeness;
+      pronScore = pron;
+      displayText = text;
+    });
+  }
+
+  void updateUIWithResponse(SpeechRecognitionResult result) {
+    updateScores(
+        result.nBest.first.accuracyScore,
+        result.nBest.first.fluencyScore,
+        result.nBest.first.completenessScore,
+        result.nBest.first.pronScore,
+        result.displayText);
+  }
+
   Future<void> _sendAudioFile() async {
     if (_audioFilePath != null) {
       List<int> audioBytes = File(_audioFilePath!).readAsBytesSync();
@@ -185,6 +211,9 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
       );
       if (response.statusCode == 200) {
         print("Audio file sent successfully: ${response.data}");
+        SpeechRecognitionResult result =
+            SpeechRecognitionResult.fromJson((response.data));
+        updateUIWithResponse(result);
       } else {
         print(
             'Failed to send audio file: ${response.errorMessage} ${response.statusCode}');
@@ -205,12 +234,11 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
               TextStyles.readingPracticeTextStyle.copyWith(height: 1.5),
         ),
         Constants.gapH18,
-        // CustomTextBox(
-        //   paragraphText: '''More lorem ipsum text here...''',
-        //   maxLineNum: 2,
-        //   secondaryTextStyle:
-        //       TextStyles.readingPracticeTextStyle.copyWith(height: 1.5),
-        // ),
+        Text("Accuracy Score: $accuracyScore%"),
+        Text("Fluency Score: $fluencyScore%"),
+        Text("Completeness Score: $completenessScore%"),
+        Text("Pronunciation Score: $pronScore%"),
+        Constants.gapH8,
         Constants.gapH8,
         AudioControlButton(
           onPressed: () async {
