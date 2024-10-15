@@ -4,38 +4,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextBox extends StatelessWidget {
-  final String paragraphText;
+  final List<TextSpan> textSpans;
   final int maxLineNum;
   final TextStyle? secondaryTextStyle;
 
   const CustomTextBox({
     Key? key,
-    required this.paragraphText,
+    required this.textSpans,
     required this.maxLineNum,
     this.secondaryTextStyle,
   }) : super(key: key);
 
   @override
+  @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      initialValue: paragraphText,
-      readOnly: true, // User cannot edit the text
-      maxLines: maxLineNum,
-      style: secondaryTextStyle ?? TextStyles.readingPracticeTextStyle,
-      decoration: InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16.r),
-          borderSide: BorderSide(
-            color: Palette.secondaryText,
-            width: 2.w,
-          ),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Palette.secondaryText,
+          width: 2.w,
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16.r),
-          borderSide: BorderSide(
-            color: Palette.secondaryVariantStroke,
-            width: 2.w,
-          ),
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+      child: RichText(
+        maxLines: maxLineNum,
+        overflow: TextOverflow.ellipsis,
+        text: TextSpan(
+          children: textSpans,
+          style: secondaryTextStyle ?? TextStyles.readingPracticeTextStyle,
         ),
       ),
     );
