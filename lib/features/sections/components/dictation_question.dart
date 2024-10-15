@@ -1,6 +1,7 @@
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/sections/components/view_model/dictation_question_view.model.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/utils/utils.dart';
 import 'package:ez_english/widgets/audio_control_button.dart';
 import 'package:ez_english/widgets/text_field.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +12,9 @@ import 'package:provider/provider.dart';
 import '../models/dictation_question_model.dart';
 
 class DictationQuestion extends StatefulWidget {
-  final TextEditingController controller = TextEditingController();
   final Function(String) onAnswerChanged;
   final DictationQuestionModel question;
-  DictationQuestion({
+  const DictationQuestion({
     super.key,
     required this.onAnswerChanged,
     required this.question,
@@ -29,6 +29,8 @@ class _DictationQuestionState extends State<DictationQuestion> {
   bool _isLoading = false;
   bool _isPlaying = false;
   bool _isPaused = false;
+  final TextEditingController _controller = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -123,8 +125,11 @@ class _DictationQuestionState extends State<DictationQuestion> {
             ),
             SizedBox(height: Constants.padding20),
             CustomTextField(
-              onChanged: widget.onAnswerChanged,
-              controller: widget.controller,
+              onChanged: (value) {
+                printDebug("Answer changed: $value");
+                widget.onAnswerChanged(value);
+              },
+              controller: _controller,
               maxLines: 10,
               hintText: "Type your answer here",
             ),

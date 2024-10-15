@@ -20,7 +20,6 @@ import 'package:ez_english/features/sections/models/speaking_question_model.dart
 import 'package:ez_english/features/sections/models/string_answer.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
-import 'package:ez_english/widgets/full_screen_card.dart';
 import 'package:flutter/material.dart';
 
 Widget buildQuestion({
@@ -59,7 +58,7 @@ Widget buildQuestion({
 
     case QuestionType.dictation:
       return DictationQuestion(
-        onAnswerChanged: (value) => onChanged(value as StringAnswer),
+        onAnswerChanged: (value) => onChanged(StringAnswer(answer: value)),
         question: question as DictationQuestionModel,
       );
 

@@ -179,68 +179,72 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
       create: (_) => FillTheBlanksViewModel(),
       child: Consumer<FillTheBlanksViewModel>(
         builder: (context, viewmodel, child) {
-          return Form(
-            onChanged: _validateForm,
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Text(
-                      "Select part of the sentence and press the 'insert blank' button to insert a blank.",
-                      style: TextStyles.bodyMedium),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  RichTextfield(
-                    initialAnswer: answer,
-                    isRequired: true,
-                    type: QuestionTextFormFieldType.both,
-                    onChanged: (answer, formattedText) {
-                      this.answer = answer;
-                      formattedTextInEnglish = formattedText;
-                      print("Answer: $answer, formattedText: $formattedText");
-                      _validateForm();
-                    },
-                    controller: incompleteSentenceInEnglishController,
-                  ),
-                  SizedBox(height: 10.h),
-                  RichTextfield(
-                    isRequired: true,
-                    isArabicText: true,
-                    type: QuestionTextFormFieldType.both,
-                    controller: incompleteSentenceInArabicController,
-                    onChanged: (answer, formattedText) {
-                      formattedTextInArabic = formattedText;
-                      print("Answer: $answer, formattedText: $formattedText");
-                      _validateForm();
-                    },
-                  ),
-                  SizedBox(height: 10.h),
-                  TextFormField(
-                    controller: questionEnglishController,
-                    maxLines: 2,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Question in English",
-                      hintText: "Enter the question in English",
+          return viewmodel.isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Form(
+                  onChanged: _validateForm,
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Text(
+                            "Select part of the sentence and press the 'insert blank' button to insert a blank.",
+                            style: TextStyles.bodyMedium),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        RichTextfield(
+                          initialAnswer: answer,
+                          isRequired: true,
+                          type: QuestionTextFormFieldType.both,
+                          onChanged: (answer, formattedText) {
+                            this.answer = answer;
+                            formattedTextInEnglish = formattedText;
+                            print(
+                                "Answer: $answer, formattedText: $formattedText");
+                            _validateForm();
+                          },
+                          controller: incompleteSentenceInEnglishController,
+                        ),
+                        SizedBox(height: 10.h),
+                        RichTextfield(
+                          isRequired: true,
+                          isArabicText: true,
+                          type: QuestionTextFormFieldType.both,
+                          controller: incompleteSentenceInArabicController,
+                          onChanged: (answer, formattedText) {
+                            formattedTextInArabic = formattedText;
+                            print(
+                                "Answer: $answer, formattedText: $formattedText");
+                            _validateForm();
+                          },
+                        ),
+                        SizedBox(height: 10.h),
+                        TextFormField(
+                          controller: questionEnglishController,
+                          maxLines: 2,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Question in English",
+                            hintText: "Enter the question in English",
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        TextFormField(
+                          controller: questionArabicController,
+                          maxLines: 2,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Question in Arabic",
+                            hintText: "Enter the question in Arabic",
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        _updateButton(viewmodel),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 10.h),
-                  TextFormField(
-                    controller: questionArabicController,
-                    maxLines: 2,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Question in Arabic",
-                      hintText: "Enter the question in Arabic",
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  _updateButton(viewmodel),
-                ],
-              ),
-            ),
-          );
+                );
         },
       ),
     );
@@ -290,6 +294,9 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                               showPreviewModalSheet(
                                   context: context,
                                   onSubmit: () {
+                                    _formKey.currentState!.reset();
+                                    resetForm(viewmodel.reset);
+
                                     viewmodel
                                         .uploadQuestion(
                                       level: widget.level,
@@ -298,10 +305,13 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
                                       question: updatedQuestion,
                                     )
                                         .then((_) {
+                                      printDebug(
+                                          "reset form, ${questionArabicController.text}");
                                       Utils.showSnackbar(
                                           text:
                                               "Question uploaded successfully");
                                     });
+
                                     if (widget.onSubmit != null) {
                                       widget.onSubmit!(updatedQuestion);
                                     }
@@ -348,5 +358,23 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
           ),
       ],
     );
+  }
+
+  void resetForm(VoidCallback resetViewmodel) {
+    setState(() {
+      questionEnglishController.clear();
+      questionArabicController.clear();
+      incompleteSentenceInEnglishController.clear();
+      incompleteSentenceInArabicController.clear();
+      updateMessage = null;
+      englishBlankStart = 0;
+      englishBlankEnd = 0;
+      arabicBlankStart = 0;
+      arabicBlankEnd = 0;
+      isFormValid = false;
+      answer = "";
+      _validateForm();
+      resetViewmodel();
+    });
   }
 }
