@@ -3,6 +3,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/dictation_ques
 import 'package:ez_english/features/home/content/data_entry_forms/fill_the_blanks_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/multiple_choice_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/passage_question_form.dart';
+import 'package:ez_english/features/home/content/data_entry_forms/speaking_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/whiteboard_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/worksheet_form.dart';
@@ -300,6 +301,10 @@ class _AddQuestionState extends State<AddQuestion> {
                               child: Text("Fill in the blank"),
                             ),
                             DropdownMenuItem(
+                              value: QuestionType.speaking,
+                              child: Text("Speaking"),
+                            ),
+                            DropdownMenuItem(
                               value: QuestionType.worksheet,
                               child: Text("Worksheet"),
                             ),
@@ -393,6 +398,12 @@ class _AddQuestionState extends State<AddQuestion> {
 
       case QuestionType.passage:
         return PassageForm(
+          level: selectedLevel!,
+          section: selectedSection!,
+          day: selectedUnit!.name.split("t")[1],
+        );
+      case QuestionType.speaking:
+        return SpeakingQuestionForm(
           level: selectedLevel!,
           section: selectedSection!,
           day: selectedUnit!.name.split("t")[1],

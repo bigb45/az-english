@@ -94,6 +94,9 @@ Widget buildQuestion({
     case QuestionType.whiteboard:
       return WhiteboardView(whiteboardModel: question as WhiteboardModel);
 
+    case QuestionType.speaking:
+      return SpeakingQuestion(question: question as SpeakingQuestionModel);
+
     default:
       print(
           "Unsupported Question Type: ${question.questionType}, ${question.imageUrl}");

@@ -4,6 +4,7 @@ import 'package:ez_english/features/models/worksheet.dart';
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
+import 'package:ez_english/features/sections/models/speaking_question_model.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 
@@ -80,6 +81,8 @@ abstract class BaseQuestion<T> {
 
       case QuestionType.whiteboard:
         return WhiteboardModel.fromMap(json);
+      case QuestionType.speaking:
+        return SpeakingQuestionModel.fromMap(json);
       default:
         throw Exception('Unknown question type: $questionType');
     }
