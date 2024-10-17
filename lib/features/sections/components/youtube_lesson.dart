@@ -1,4 +1,6 @@
+import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class YouTubeVideoPlayer extends StatefulWidget {
@@ -12,7 +14,6 @@ class YouTubeVideoPlayer extends StatefulWidget {
 
 class _YouTubeVideoPlayerState extends State<YouTubeVideoPlayer> {
   late YoutubePlayerController _controller;
-  late TextEditingController _seekToController;
   late String videoId;
   bool _isPlayerReady = false;
 
@@ -33,7 +34,6 @@ class _YouTubeVideoPlayerState extends State<YouTubeVideoPlayer> {
         // hideControls: true,
       ),
     )..addListener(listener);
-    _seekToController = TextEditingController();
   }
 
   void listener() {
@@ -45,31 +45,49 @@ class _YouTubeVideoPlayerState extends State<YouTubeVideoPlayer> {
   @override
   void dispose() {
     _controller.dispose();
-    _seekToController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: YoutubePlayerBuilder(
-        player: YoutubePlayer(
-          controller: _controller,
-          showVideoProgressIndicator: true,
-          progressIndicatorColor: Colors.blueAccent,
-          onReady: () {
-            _isPlayerReady = true;
-          },
-          onEnded: (data) {},
-        ),
-        builder: (context, player) => Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              child: player,
+      child: Column(
+        children: [
+          YoutubePlayerBuilder(
+            player: YoutubePlayer(
+              controller: _controller,
+              showVideoProgressIndicator: true,
+              progressIndicatorColor: Colors.blueAccent,
+              onReady: () {
+                _isPlayerReady = true;
+              },
+              onEnded: (data) {},
+              bottomActions: [
+                IconButton(
+                    onPressed: () {
+                      _controller.pause();
+                      context.push('/youtube/${videoId}');
+                    },
+                    icon: const Icon(
+                      Icons.fullscreen,
+                      color: Palette.secondary,
+                    ))
+              ],
             ),
-          ],
-        ),
+            builder: (context, player) => Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: player,
+                ),
+              ],
+            ),
+          ),
+          // Button(
+          //   onPressed: () {},
+          //   text: 'Watch in fullscreen',
+          // ),
+        ],
       ),
     );
   }

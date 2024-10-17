@@ -14,6 +14,7 @@ import 'package:ez_english/features/home/content/add_question.dart';
 import 'package:ez_english/features/home/content/content_screen.dart';
 import 'package:ez_english/features/home/content/edit_question.dart';
 import 'package:ez_english/features/home/test/test_overview.dart';
+import 'package:ez_english/features/levels/screens/full_screen_youtube.dart';
 import 'package:ez_english/features/levels/screens/school/landing_page.dart';
 import 'package:ez_english/features/levels/screens/school/school_practice.dart';
 import 'package:ez_english/features/sections/worksheet/student_worksheet_view.dart';
@@ -72,19 +73,11 @@ final loggedInRouter = GoRouter(
       }),
     ),
     GoRoute(
-      path: '/youtube',
-      builder: (context, state) => Scaffold(
-        body: Column(
-          children: const [
-            Text("widgets"),
-            YouTubeVideoPlayer(
-              videoId: "DoKYYLZVU98",
-            ),
-            Text("other widgets")
-          ],
-        ),
-      ),
-    ),
+        path: '/youtube/:videoId',
+        builder: (context, state) {
+          final videoId = state.pathParameters['videoId'] ?? "";
+          return FullScreenYoutube(videoId: videoId);
+        }),
 
     GoRoute(
       path: '/landing_page/:levelId/:sectionId',
