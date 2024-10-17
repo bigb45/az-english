@@ -7,12 +7,14 @@ class AudioControlButton extends StatefulWidget {
   final AudioControlType type;
   final double? size;
   final bool isLoading; // New parameter for loading state
+  final bool isRecording;
   const AudioControlButton({
     super.key,
     required this.onPressed,
     required this.type,
     this.size,
     this.isLoading = false, // Default value for loading state
+    this.isRecording = false,
   });
 
   @override
@@ -65,7 +67,7 @@ class AudioControlButtonState extends State<AudioControlButton> {
                     color: Palette.secondary,
                   )
                 : Icon(
-                    _getIconData(widget.type),
+                    widget.isRecording ? Icons.stop : _getIconData(widget.type),
                     color: Palette.secondary,
                     size: widget.size == null ? 80.r : widget.size! / 2,
                   ),

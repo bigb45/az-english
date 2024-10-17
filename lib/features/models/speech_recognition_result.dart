@@ -10,12 +10,21 @@ class SpeechRecognitionResult {
   });
 
   factory SpeechRecognitionResult.fromJson(Map<String, dynamic> json) {
-    return SpeechRecognitionResult(
-      recognitionStatus: json['RecognitionStatus'],
-      nBest: List<NBestEntry>.from(
-          json['NBest'].map((x) => NBestEntry.fromJson(x))),
-      displayText: json['DisplayText'],
-    );
+    SpeechRecognitionResult? result;
+    try {
+      result = SpeechRecognitionResult(
+        recognitionStatus: json['RecognitionStatus'],
+        nBest: List<NBestEntry>.from(
+            json['NBest'].map((x) => NBestEntry.fromJson(x))),
+        displayText: json['DisplayText'],
+      );
+    } catch (e) {}
+    return result ??
+        SpeechRecognitionResult(
+          recognitionStatus: "Error",
+          nBest: [],
+          displayText: "",
+        );
   }
 }
 
@@ -46,7 +55,13 @@ class NBestEntry {
       fluencyScore: json['FluencyScore'],
       completenessScore: json['CompletenessScore'],
       pronScore: json['PronScore'],
-      words: List<Word>.from(json['Words'].map((x) => Word.fromJson(x))),
+      words: List<Word>.from(
+        json['Words'].map(
+          (x) => Word.fromJson(
+            x,
+          ),
+        ),
+      ),
     );
   }
 }

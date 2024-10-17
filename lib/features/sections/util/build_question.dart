@@ -30,7 +30,9 @@ Widget buildQuestion({
   switch (question.questionType) {
     case QuestionType.speaking:
       return SpeakingQuestion(
-        question: question as SpeakingQuestionModel,
+        key: ValueKey((question as SpeakingQuestionModel).question),
+        question: question,
+        onAnswerChanged: (value) => onChanged(value),
       );
 
     case QuestionType.sentenceForming:
@@ -94,8 +96,10 @@ Widget buildQuestion({
     case QuestionType.whiteboard:
       return WhiteboardView(whiteboardModel: question as WhiteboardModel);
 
-    case QuestionType.speaking:
-      return SpeakingQuestion(question: question as SpeakingQuestionModel);
+    // case QuestionType.speaking:
+    //   return SpeakingQuestion(
+    //       question: question as SpeakingQuestionModel,
+    //       onAnswerChanged: (value) => onChanged(value));
 
     default:
       print(

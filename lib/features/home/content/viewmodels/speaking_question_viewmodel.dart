@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/sections/models/speaking_answer.dart';
 import 'package:ez_english/features/sections/models/speaking_question_model.dart';
-import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -20,9 +18,10 @@ class SpeakingQuestionViewModel extends ChangeNotifier {
     }
 
     return SpeakingQuestionModel(
-      question: questionParagraph,
-      sectionName: sectionName,
-    );
+        question: questionParagraph,
+        sectionName: sectionName,
+        // add a minimum accuracy score of 60% to consider question as correct
+        answer: SpeakingAnswer(answer: 60));
   }
 
   Future<void> uploadQuestion({

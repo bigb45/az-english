@@ -1,9 +1,10 @@
 import 'package:ez_english/features/models/base_question.dart';
-import 'package:ez_english/features/sections/models/string_answer.dart';
-import 'package:flutter/foundation.dart';
+import 'package:ez_english/features/sections/models/speaking_answer.dart';
+import 'package:ez_english/utils/utils.dart';
 
-class SpeakingQuestionModel extends BaseQuestion<String> {
+class SpeakingQuestionModel extends BaseQuestion<int> {
   String question;
+
   SpeakingQuestionModel({
     required this.question,
     super.titleInEnglish,
@@ -13,6 +14,7 @@ class SpeakingQuestionModel extends BaseQuestion<String> {
     super.imageUrl,
     super.voiceUrl,
     super.sectionName,
+    required super.answer,
   });
 
   @override
@@ -26,10 +28,12 @@ class SpeakingQuestionModel extends BaseQuestion<String> {
       questionType: questionType,
       titleInEnglish: titleInEnglish,
       sectionName: sectionName,
+      answer: answer?.copy(),
     );
   }
 
   factory SpeakingQuestionModel.fromMap(Map<String, dynamic> map) {
+    printDebug('fromMap: $map');
     return SpeakingQuestionModel(
       question: map['question'],
       questionTextInEnglish: map['questionTextInEnglish'],
@@ -38,6 +42,7 @@ class SpeakingQuestionModel extends BaseQuestion<String> {
       imageUrl: map['imageUrl'],
       titleInEnglish: map["titleInEnglish"],
       sectionName: SectionNameExtension.fromString(map['sectionName']),
+      answer: SpeakingAnswer(answer: map['answer']['answer']),
     );
   }
 
@@ -52,7 +57,7 @@ class SpeakingQuestionModel extends BaseQuestion<String> {
 
   @override
   bool evaluateAnswer() {
-    return true;
+    return answer?.validate(userAnswer) ?? false;
   }
 
   @override

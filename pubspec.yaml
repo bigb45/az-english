@@ -51,6 +51,7 @@ dependencies:
   image_picker: ^1.1.2
   uuid: ^4.4.2
   audio_session: ^0.1.21
+  logger: ^2.4.0
 
 
 flutter_native_splash:

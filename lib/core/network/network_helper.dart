@@ -47,6 +47,10 @@ class NetworkHelper {
 
   static NetworkHelper get instance => _instance;
 
+  static NetworkHelper getNewInstance() {
+    return NetworkHelper._privateConstructor();
+  }
+
   void _setJsonHeader() {
     headers.putIfAbsent('Accept', () => 'application/json');
   }
