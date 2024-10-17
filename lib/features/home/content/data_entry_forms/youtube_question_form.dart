@@ -239,5 +239,6 @@ class _YoutubeLessonFormState extends State<YoutubeLessonForm> {
   void resetForm() {
     youtubeUrlController.text = "";
     titleInEnglishController.text = "";
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 }

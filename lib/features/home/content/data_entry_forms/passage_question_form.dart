@@ -428,6 +428,7 @@ class _PassageFormState extends State<PassageForm> {
     setState(() {
       isFormValid = false;
     });
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 }
 

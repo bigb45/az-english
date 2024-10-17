@@ -376,5 +376,6 @@ class _FillTheBlanksFormState extends State<FillTheBlanksForm> {
       _validateForm();
       resetViewmodel();
     });
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 }

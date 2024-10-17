@@ -215,5 +215,6 @@ class _SpeakingQuestionFormState extends State<SpeakingQuestionForm> {
 
   void resetForm() {
     paragraphController.text = "";
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 }

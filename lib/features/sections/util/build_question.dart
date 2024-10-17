@@ -62,6 +62,7 @@ Widget buildQuestion({
       return DictationQuestion(
         onAnswerChanged: (value) => onChanged(StringAnswer(answer: value)),
         question: question as DictationQuestionModel,
+        key: ValueKey(question.speakableText),
       );
 
     case QuestionType.findWordsFromPassage:
@@ -95,11 +96,6 @@ Widget buildQuestion({
 
     case QuestionType.whiteboard:
       return WhiteboardView(whiteboardModel: question as WhiteboardModel);
-
-    // case QuestionType.speaking:
-    //   return SpeakingQuestion(
-    //       question: question as SpeakingQuestionModel,
-    //       onAnswerChanged: (value) => onChanged(value));
 
     default:
       print(

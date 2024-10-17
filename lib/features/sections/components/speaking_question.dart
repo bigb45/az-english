@@ -256,7 +256,7 @@ class _SpeakingQuestionState extends State<SpeakingQuestion> {
     Map<String, dynamic> headers = {
       'Content-Type': 'audio/wav; codecs=audio/pcm; samplerate=16000',
       'Pronunciation-Assessment': pronAssessmentHeader,
-      'Ocp-Apim-Subscription-Key': APIConstants.apiKey,
+      'Ocp-Apim-Subscription-Key': APIConstants.sttApiKey,
       'Accept': 'application/json',
     };
     return headers;

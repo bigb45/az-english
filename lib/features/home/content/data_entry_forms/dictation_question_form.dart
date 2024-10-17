@@ -131,77 +131,79 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
       create: (_) => DictationQuestionViewModel(),
       child: Consumer<DictationQuestionViewModel>(
         builder: (context, viewmodel, child) {
-          return Form(
-            onChanged: _validateForm,
-            autovalidateMode: AutovalidateMode.always,
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: questionEnglishController,
-                  maxLines: 2,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Question text (Egnlish)",
-                    hintText: "Ex: \"Write what you hear\"",
+          return viewmodel.isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Form(
+                  onChanged: _validateForm,
+                  autovalidateMode: AutovalidateMode.always,
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: questionEnglishController,
+                        maxLines: 2,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Question text (Egnlish)",
+                          hintText: "Ex: \"Write what you hear\"",
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+                      TextFormField(
+                        controller: questionArabicController,
+                        maxLines: 2,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Question text (Arabic)",
+                          hintText: "Ex: \"اكتب ما تسمع\"",
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+                      TextFormField(
+                        controller: speakableTextController,
+                        maxLines: 2,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Dictation text",
+                          hintText: "The text to be talked back to the user",
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter some text in English';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 10.h),
+                      TextFormField(
+                        controller: answerTextController,
+                        maxLines: 2,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Answer",
+                          hintText: "The student answer",
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please fill some text in English';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 10.h),
+                      TextFormField(
+                        controller: titleInEnglishController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Question title",
+                          hintText: "Enter the title in English",
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+                      _updateButton(viewmodel),
+                    ],
                   ),
-                ),
-                SizedBox(height: 10.h),
-                TextFormField(
-                  controller: questionArabicController,
-                  maxLines: 2,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Question text (Arabic)",
-                    hintText: "Ex: \"اكتب ما تسمع\"",
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                TextFormField(
-                  controller: speakableTextController,
-                  maxLines: 2,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Dictation text",
-                    hintText: "The text to be talked back to the user",
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text in English';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 10.h),
-                TextFormField(
-                  controller: answerTextController,
-                  maxLines: 2,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Answer",
-                    hintText: "The student answer",
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please fill some text in English';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 10.h),
-                TextFormField(
-                  controller: titleInEnglishController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Question title",
-                    hintText: "Enter the title in English",
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                _updateButton(viewmodel),
-              ],
-            ),
-          );
+                );
         },
       ),
     );
@@ -269,6 +271,8 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
                                           text:
                                               "Question uploaded successfully");
                                       resetForm(viewmodel.reset);
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
                                     });
                                     if (widget.onSubmit != null) {
                                       widget.onSubmit!(updatedQuestion);
@@ -327,6 +331,7 @@ class _DictationQuestionFormState extends State<DictationQuestionForm> {
       isFormValid = false;
       updateMessage = null;
     });
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 }
 

@@ -372,5 +372,6 @@ class _VocabularyFormState extends State<VocabularyForm> {
     currentWordType = null;
     updateMessage = null;
     _validateForm();
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 }
