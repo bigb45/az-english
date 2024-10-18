@@ -77,7 +77,16 @@ class LevelSelectionViewmodel extends ChangeNotifier {
       if (_authProvider.userData == null) return;
       List<String>? assignedLevels = _authProvider.userData!.assignedLevels;
       _error = null;
-      _levels = await firestoreService.fetchLevels(user!);
+      if (_levels == null || _levels.isEmpty) {
+        _levels = _initializeLevels();
+      }
+
+      notifyListeners();
+
+      final fetchedLevels = await firestoreService.fetchLevels(user!);
+      if (fetchedLevels != null) {
+        _levels = _mergeLevelsWithFetchedData(_levels, fetchedLevels);
+      }
       for (var level in _levels) {
         level.isAssigned = assignedLevels!.contains(level.name);
       }
@@ -121,6 +130,15 @@ class LevelSelectionViewmodel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  List<Level> _initializeLevels() {
+    List<Level> tempLevel = [];
+    for (var entry in RouteConstants.levelNameId.entries) {
+      tempLevel.add(Level(
+          name: entry.key, description: '', sections: [], id: entry.value));
+    }
+    return tempLevel;
   }
 
   List<Section> _initializeSections(Level level) {
@@ -183,6 +201,28 @@ class LevelSelectionViewmodel extends ChangeNotifier {
     }
 
     return sectionMap.values.toList();
+  }
+
+  List<Level> _mergeLevelsWithFetchedData(
+      List<Level> initializedLevel, List<Level> fetchedLevels) {
+    if (initializedLevel.length == fetchedLevels.length) {
+      return initializedLevel;
+    }
+    Map<String, Level> levelMap = {
+      for (var level in initializedLevel) level.name: level
+    };
+
+    for (var fetchedLevel in fetchedLevels) {
+      if (levelMap.containsKey(fetchedLevel.name)) {
+        // Override the section if it already exists
+        levelMap[fetchedLevel.name] = fetchedLevel;
+      } else {
+        // Add the section if it doesn't exist
+        levelMap[fetchedLevel.name] = fetchedLevel;
+      }
+    }
+
+    return levelMap.values.toList();
   }
 
   void setSelectedLevel(int level) {
