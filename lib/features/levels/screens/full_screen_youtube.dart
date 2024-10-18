@@ -1,3 +1,4 @@
+import 'package:ez_english/theme/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -12,8 +13,6 @@ class FullScreenYoutube extends StatefulWidget {
 
 class _FullScreenYoutubeState extends State<FullScreenYoutube> {
   late YoutubePlayerController _controller;
-  late TextEditingController _seekToController;
-  late String videoId;
   bool _isPlayerReady = false;
 
   @override
@@ -24,6 +23,7 @@ class _FullScreenYoutubeState extends State<FullScreenYoutube> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+
     _controller = YoutubePlayerController(
       initialVideoId: widget.videoId,
       flags: const YoutubePlayerFlags(
@@ -34,36 +34,57 @@ class _FullScreenYoutubeState extends State<FullScreenYoutube> {
         isLive: false,
         forceHD: false,
         enableCaption: true,
-        // hideControls: true,
       ),
     )..addListener(listener);
-    _seekToController = TextEditingController();
   }
 
   void listener() {
-    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
-      setState(() {});
+    if (mounted && _controller.value.isReady) {
+      setState(() {
+        _isPlayerReady = true; // Set this to true when the player is ready
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return YoutubePlayerBuilder(
-      player: YoutubePlayer(
+    return Scaffold(
+      appBar: _isPlayerReady && !_controller.value.isFullScreen
+          ? AppBar(
+              automaticallyImplyLeading: false,
+              systemOverlayStyle: SystemUiOverlayStyle.dark,
+              backgroundColor: Colors.white,
+              title: const Text('Video Player'),
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Palette.primaryText,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            )
+          : null,
+      body: Center(
+          child: YoutubePlayer(
         controller: _controller,
         showVideoProgressIndicator: true,
         progressIndicatorColor: Colors.blueAccent,
+        onEnded: (data) {},
         onReady: () {
           _isPlayerReady = true;
+          if (_controller.value.isReady) {
+            _controller.toggleFullScreenMode();
+          }
         },
-        onEnded: (data) {},
-      ),
-      builder: (context, player) => Scaffold(
-        body: Container(
-          padding: const EdgeInsets.all(8.0),
-          child: player,
-        ),
-      ),
+      )),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
