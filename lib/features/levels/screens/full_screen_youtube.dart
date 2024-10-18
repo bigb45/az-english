@@ -66,8 +66,7 @@ class _FullScreenYoutubeState extends State<FullScreenYoutube> {
               ),
             )
           : null,
-      body: Center(
-          child: YoutubePlayer(
+      body: YoutubePlayer(
         controller: _controller,
         showVideoProgressIndicator: true,
         progressIndicatorColor: Colors.blueAccent,
@@ -78,7 +77,7 @@ class _FullScreenYoutubeState extends State<FullScreenYoutube> {
             _controller.toggleFullScreenMode();
           }
         },
-      )),
+      ),
     );
   }
 
