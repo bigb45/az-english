@@ -29,11 +29,12 @@ class _DictationQuestionState extends State<DictationQuestion> {
   bool _isLoading = false;
   bool _isPlaying = false;
   bool _isPaused = false;
-  final TextEditingController _controller = TextEditingController();
+  TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    _controller = TextEditingController();
     viewmodel = Provider.of<DictationQuestionViewModel>(context, listen: false);
     player.playerStateStream.listen((playerState) {
       setState(() {

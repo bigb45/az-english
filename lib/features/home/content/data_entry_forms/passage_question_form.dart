@@ -2,6 +2,7 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/dictation_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/fill_the_blanks_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/multiple_choice_form.dart';
+import 'package:ez_english/features/home/content/data_entry_forms/speaking_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/whiteboard_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
@@ -427,6 +428,7 @@ class _PassageFormState extends State<PassageForm> {
     setState(() {
       isFormValid = false;
     });
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 }
 
@@ -490,6 +492,10 @@ class _AddEmbeddedQuestionFormState extends State<AddEmbeddedQuestionForm> {
                   DropdownMenuItem(
                     value: QuestionType.whiteboard,
                     child: Text("Whiteboard"),
+                  ),
+                  DropdownMenuItem(
+                    value: QuestionType.speaking,
+                    child: Text("Speaking"),
                   ),
                 ],
                 onChanged: (QuestionType? questionTypeSelection) {
@@ -570,6 +576,13 @@ class _AddEmbeddedQuestionFormState extends State<AddEmbeddedQuestionForm> {
         );
       case QuestionType.whiteboard:
         return WhiteboardForm(
+          level: widget.level,
+          section: widget.section,
+          day: widget.day,
+          onSubmit: widget.onAddQuestion,
+        );
+      case QuestionType.speaking:
+        return SpeakingQuestionForm(
           level: widget.level,
           section: widget.section,
           day: widget.day,

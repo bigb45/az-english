@@ -561,5 +561,6 @@ class _MultipleChoiceFormState extends State<MultipleChoiceForm> {
       isSubformValid = false;
       updateMessage = null;
     });
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 }

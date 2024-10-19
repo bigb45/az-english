@@ -2,6 +2,7 @@ import 'package:ez_english/features/home/content/data_entry_forms/dictation_ques
 import 'package:ez_english/features/home/content/data_entry_forms/fill_the_blanks_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/multiple_choice_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/passage_question_form.dart';
+import 'package:ez_english/features/home/content/data_entry_forms/speaking_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/vocabulary_question_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/whiteboard_form.dart';
 import 'package:ez_english/features/home/content/data_entry_forms/youtube_question_form.dart';
@@ -13,6 +14,7 @@ import 'package:ez_english/features/sections/models/dictation_question_model.dar
 import 'package:ez_english/features/sections/models/fill_the_blanks_question_model.dart';
 import 'package:ez_english/features/sections/models/multiple_choice_question_model.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
+import 'package:ez_english/features/sections/models/speaking_question_model.dart';
 import 'package:ez_english/features/sections/models/word_definition.dart';
 import 'package:ez_english/features/sections/models/youtube_lesson_model.dart';
 import 'package:ez_english/theme/text_styles.dart';
@@ -375,7 +377,17 @@ Widget buildQuestionForm(BaseQuestion<dynamic> question, String? selectedLevel,
                   },
               question: question as WhiteboardModel,
             );
-
+          case QuestionType.speaking:
+            return SpeakingQuestionForm(
+              level: selectedLevel!,
+              section: selectedSection!,
+              day: dayController!,
+              onSubmit: updateQuestionCallback ??
+                  (updatedQuestion) {
+                    viewModel.updateQuestion(updatedQuestion);
+                  },
+              question: question as SpeakingQuestionModel,
+            );
           default:
             return const Text("Question type not supported.");
         }

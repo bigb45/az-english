@@ -47,12 +47,17 @@ class NetworkHelper {
 
   static NetworkHelper get instance => _instance;
 
+  static NetworkHelper getNewInstance() {
+    return NetworkHelper._privateConstructor();
+  }
+
   void _setJsonHeader() {
     headers.putIfAbsent('Accept', () => 'application/json');
   }
 
   void _setAuthHeader() {
-    headers.putIfAbsent('Ocp-Apim-Subscription-Key', () => APIConstants.apiKey);
+    headers.putIfAbsent(
+        'Ocp-Apim-Subscription-Key', () => APIConstants.ttsApiKey);
   }
 
   Future<CustomResponse> get({

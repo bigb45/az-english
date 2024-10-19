@@ -30,7 +30,9 @@ Widget buildQuestion({
   switch (question.questionType) {
     case QuestionType.speaking:
       return SpeakingQuestion(
-        question: question as SpeakingQuestionModel,
+        key: ValueKey((question as SpeakingQuestionModel).question),
+        question: question,
+        onAnswerChanged: (value) => onChanged(value),
       );
 
     case QuestionType.sentenceForming:
@@ -38,6 +40,7 @@ Widget buildQuestion({
         question: question as SentenceFormingQuestionModel,
         onChanged: (value) => onChanged(value),
         answerState: answerState,
+        key: ValueKey(question),
       );
 
     case QuestionType.multipleChoice:
@@ -46,6 +49,7 @@ Widget buildQuestion({
         onChanged: (value) {
           onChanged(value);
         },
+        key: ValueKey(question),
       );
 
     case QuestionType.checkbox:
@@ -54,12 +58,14 @@ Widget buildQuestion({
         onChanged: (value) {
           onChanged(value);
         },
+        key: ValueKey(question),
       );
 
     case QuestionType.dictation:
       return DictationQuestion(
         onAnswerChanged: (value) => onChanged(StringAnswer(answer: value)),
         question: question as DictationQuestionModel,
+        key: ValueKey(question.speakableText),
       );
 
     case QuestionType.findWordsFromPassage:
@@ -80,7 +86,10 @@ Widget buildQuestion({
 
     case QuestionType.vocabularyWithListening:
     case QuestionType.vocabulary:
-      return WordViewQuestion(wordData: question as WordDefinition);
+      return WordViewQuestion(
+        wordData: question as WordDefinition,
+        key: ValueKey(question),
+      );
 
     case QuestionType.fillTheBlanks:
       return FillTheBlanksQuestion(
@@ -92,7 +101,10 @@ Widget buildQuestion({
       );
 
     case QuestionType.whiteboard:
-      return WhiteboardView(whiteboardModel: question as WhiteboardModel);
+      return WhiteboardView(
+        whiteboardModel: question as WhiteboardModel,
+        key: ValueKey(question),
+      );
 
     default:
       print(

@@ -212,6 +212,7 @@ class _WhiteboardFormState extends State<WhiteboardForm> {
       setState(() {
         isFormValid = false;
       });
+      FocusManager.instance.primaryFocus?.unfocus();
     }
 
     return Column(

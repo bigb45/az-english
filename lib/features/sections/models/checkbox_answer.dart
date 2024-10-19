@@ -7,6 +7,7 @@ class CheckboxAnswer extends BaseAnswer<List<CheckboxData>> {
   CheckboxAnswer({
     required super.answer,
   }) : super(answerType: AnswerType.checkbox);
+
   @override
   Map<String, dynamic> toMap() {
     // TODO: implement toMap

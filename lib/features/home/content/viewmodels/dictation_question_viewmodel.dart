@@ -9,6 +9,9 @@ import 'package:image_picker/image_picker.dart';
 
 class DictationQuestionViewModel extends ChangeNotifier {
   File? image;
+  bool _isLoading = false;
+
+  get isLoading => _isLoading;
   final FirestoreService _firestoreService = FirestoreService();
   Future<void> pickImage() async {
     final pickedFile =
@@ -48,12 +51,15 @@ class DictationQuestionViewModel extends ChangeNotifier {
     required String day,
     required DictationQuestionModel question,
   }) async {
-    print("Uploading question to firestore");
+    _isLoading = true;
+    notifyListeners();
     await _firestoreService.uploadQuestionToFirestore(
         day: day,
         level: level,
         section: section,
         questionMap: question.toMap());
+    _isLoading = false;
+    notifyListeners();
   }
 
   void reset() {

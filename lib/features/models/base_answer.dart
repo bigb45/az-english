@@ -15,4 +15,11 @@ abstract class BaseAnswer<T> {
   BaseAnswer({required this.answerType, this.answer});
 }
 
-enum AnswerType { string, multipleChoice, checkbox, fillTheBlanks, dictation }
+enum AnswerType {
+  string,
+  multipleChoice,
+  checkbox,
+  fillTheBlanks,
+  dictation,
+  speakingScore,
+}

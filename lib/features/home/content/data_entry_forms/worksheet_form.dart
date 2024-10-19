@@ -169,6 +169,7 @@ class _WorksheetFormState extends State<WorksheetForm> {
       setState(() {
         isFormValid = false;
       });
+      FocusManager.instance.primaryFocus?.unfocus();
     }
 
     return Column(
