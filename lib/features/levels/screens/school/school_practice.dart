@@ -147,38 +147,41 @@ class _SchoolPracticeState extends State<SchoolPractice> {
               : SafeArea(
                   child: Column(
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: ProgressBar(value: viewmodel.progress!),
+                      ),
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                if (passageQuestion != null)
-                                  Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 10.0,
-                                      ),
-                                      child: ExpandableTextBox(
-                                          paragraph: passageQuestion!
-                                              .passageInEnglish!,
-                                          paragraphTranslation:
-                                              passageQuestion!.passageInArabic,
-                                          isFocused: false,
-                                          readMoreText: AppStrings
-                                              .mcQuestionReadMoreText)),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  child:
-                                      ProgressBar(value: viewmodel.progress!),
-                                ),
-                                buildQuestion(
-                                  answerState: viewmodel.answerState,
-                                  onChanged: viewmodel.updateAnswer,
-                                  question: currentQuestion!,
-                                )
-                              ],
+                          child: Center(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  if (passageQuestion != null)
+                                    Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 10.0,
+                                        ),
+                                        child: ExpandableTextBox(
+                                            paragraph: passageQuestion!
+                                                .passageInEnglish!,
+                                            paragraphTranslation:
+                                                passageQuestion!
+                                                    .passageInArabic,
+                                            isFocused: false,
+                                            readMoreText: AppStrings
+                                                .mcQuestionReadMoreText)),
+                                  buildQuestion(
+                                    answerState: viewmodel.answerState,
+                                    onChanged: viewmodel.updateAnswer,
+                                    question: currentQuestion!,
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
