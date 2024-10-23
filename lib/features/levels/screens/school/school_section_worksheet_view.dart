@@ -1,11 +1,13 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/features/levels/screens/school/school_section_viewmodel.dart';
 import 'package:ez_english/features/models/worksheet.dart';
-import 'package:ez_english/features/sections/worksheet/student_worksheet_viewmodel.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/upload_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -43,8 +45,7 @@ class _SchoolSectionStudentWorksheetViewState
             child: viewmodel.isLoading
                 ? const CircularProgressIndicator()
                 : !isSubmitted
-                    // TODO: Design
-                    ? ElevatedButton(
+                    ? UploadCard(
                         onPressed: () async {
                           final pickedImage = await ImagePicker().pickImage(
                             source: ImageSource.gallery,
@@ -79,7 +80,33 @@ class _SchoolSectionStudentWorksheetViewState
                             );
                           }
                         },
-                        child: Text("Upload Image"))
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            AutoSizeText(
+                              'Add Submission',
+                              style: TextStyles.cardHeader
+                                  .copyWith(fontSize: 18.sp),
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                            ),
+                            Expanded(
+                              child: viewmodel.isLoading
+                                  ? const Center(
+                                      child: CircularProgressIndicator(
+                                        color: Palette.primaryText,
+                                      ),
+                                    )
+                                  : const FittedBox(
+                                      child: Icon(
+                                        Icons.add_rounded,
+                                        color: Palette.secondaryText,
+                                      ),
+                                    ),
+                            ),
+                          ],
+                        ),
+                      )
                     : SingleChildScrollView(
                         // scrollDirection: Axis.horizontal,
                         child: Column(
