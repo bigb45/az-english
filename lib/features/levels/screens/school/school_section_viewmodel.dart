@@ -217,10 +217,7 @@ class SchoolSectionViewmodel extends BaseViewModel {
       currentIndex = currentIndex + 1;
       progress = _firestoreService.calculateNewProgress(currentIndex);
       if (currentIndex < _questions.length &&
-          (_questions[currentIndex].questionType ==
-                  QuestionType.youtubeLesson ||
-              _questions[currentIndex].questionType ==
-                  QuestionType.vocabularyWithListening)) {
+          shouldSkipValidation(_questions[currentIndex])) {
         answerState = EvaluationState.noState;
       } else {
         answerState = EvaluationState.empty;

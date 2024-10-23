@@ -8,6 +8,7 @@ import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/models/base_viewmodel.dart';
 import 'package:ez_english/features/models/unit.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
+import 'package:ez_english/utils/utils.dart';
 
 class WritingSectionViewmodel extends BaseViewModel {
   String? levelId;
@@ -92,12 +93,7 @@ class WritingSectionViewmodel extends BaseViewModel {
       currentIndex = currentIndex + 1;
       progress = _firestoreService.calculateNewProgress(currentIndex);
       if (currentIndex < _questions.length &&
-          (_questions[currentIndex].questionType ==
-                  QuestionType.youtubeLesson ||
-              _questions[currentIndex].questionType ==
-                  QuestionType.vocabularyWithListening ||
-              _questions[currentIndex].questionType ==
-                  QuestionType.whiteboard)) {
+          shouldSkipValidation(_questions[currentIndex])) {
         answerState = EvaluationState.noState;
       } else {
         answerState = EvaluationState.empty;
