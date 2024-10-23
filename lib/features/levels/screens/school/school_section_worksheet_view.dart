@@ -45,67 +45,77 @@ class _SchoolSectionStudentWorksheetViewState
             child: viewmodel.isLoading
                 ? const CircularProgressIndicator()
                 : !isSubmitted
-                    ? UploadCard(
-                        onPressed: () async {
-                          final pickedImage = await ImagePicker().pickImage(
-                            source: ImageSource.gallery,
-                          );
-                          if (pickedImage != null) {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  content: const Text(
-                                      "Are you sure you want to upload the selected image?"),
-                                  title: const Text('Confirm Upload'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('Cancel'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        Navigator.pop(context);
-                                        await viewmodel.uploadStudentSubmission(
-                                            imagePath: pickedImage.path,
-                                            worksheet: worksheet);
-                                      },
-                                      child: const Text('Upload'),
-                                    ),
-                                  ],
+                    ? Column(
+                        children: [
+                          Text(
+                            "Worksheet Title: ${worksheet.title}",
+                            style: TextStyles.bodyLarge,
+                          ),
+                          Constants.gapH20,
+                          UploadCard(
+                            onPressed: () async {
+                              final pickedImage = await ImagePicker().pickImage(
+                                source: ImageSource.gallery,
+                              );
+                              if (pickedImage != null) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: const Text(
+                                          "Are you sure you want to upload the selected image?"),
+                                      title: const Text('Confirm Upload'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            Navigator.pop(context);
+                                            await viewmodel
+                                                .uploadStudentSubmission(
+                                                    imagePath: pickedImage.path,
+                                                    worksheet: worksheet);
+                                          },
+                                          child: const Text('Upload'),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 );
-                              },
-                            );
-                          }
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            AutoSizeText(
-                              'Add Submission',
-                              style: TextStyles.cardHeader
-                                  .copyWith(fontSize: 18.sp),
-                              textAlign: TextAlign.center,
-                              maxLines: 3,
+                              }
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AutoSizeText(
+                                  'Add Submission',
+                                  style: TextStyles.cardHeader
+                                      .copyWith(fontSize: 18.sp),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 3,
+                                ),
+                                Expanded(
+                                  child: viewmodel.isLoading
+                                      ? const Center(
+                                          child: CircularProgressIndicator(
+                                            color: Palette.primaryText,
+                                          ),
+                                        )
+                                      : const FittedBox(
+                                          child: Icon(
+                                            Icons.add_rounded,
+                                            color: Palette.secondaryText,
+                                          ),
+                                        ),
+                                ),
+                              ],
                             ),
-                            Expanded(
-                              child: viewmodel.isLoading
-                                  ? const Center(
-                                      child: CircularProgressIndicator(
-                                        color: Palette.primaryText,
-                                      ),
-                                    )
-                                  : const FittedBox(
-                                      child: Icon(
-                                        Icons.add_rounded,
-                                        color: Palette.secondaryText,
-                                      ),
-                                    ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       )
                     : SingleChildScrollView(
                         // scrollDirection: Axis.horizontal,
