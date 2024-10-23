@@ -1,6 +1,7 @@
 import 'package:ez_english/core/network/apis_constants.dart';
 import 'package:ez_english/core/network/custom_response.dart';
 import 'package:ez_english/core/network/network_helper.dart';
+import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/theme/text_styles.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -135,4 +136,13 @@ extension StringExtension on String {
     final RegExp arabic = RegExp(r'^[\u0621-\u064A]+');
     return arabic.hasMatch(this) ? true : false;
   }
+}
+
+// add question types accordingly
+bool shouldSkipValidation(BaseQuestion? question) {
+  return (question?.questionType == QuestionType.youtubeLesson ||
+      question?.questionType == QuestionType.vocabularyWithListening ||
+      question?.questionType == QuestionType.whiteboard ||
+      question?.questionType == QuestionType.worksheet ||
+      question?.questionType == QuestionType.whiteboard);
 }

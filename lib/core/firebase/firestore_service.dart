@@ -1044,18 +1044,20 @@ class FirestoreService {
     }
   }
 
-  Future<WorksheetStudent> addStudentSubmission(
-      {required String level,
-      required String section,
-      required String studentImagePath,
-      required String workSheetID}) async {
+  Future<WorksheetStudent> addStudentSubmission({
+    required String level,
+    required String section,
+    required String studentImagePath,
+    required String workSheetID,
+    String? tempUnitNumber,
+  }) async {
     try {
       WorksheetStudent studentSubmission = WorksheetStudent(
         studentName: _userModel!.studentName,
         imagePath: studentImagePath,
         dateSolved: DateTime.now(),
         worksheetId: workSheetID,
-        unitNumber: unitNumber,
+        unitNumber: tempUnitNumber ?? unitNumber,
       );
 
       // Reference to the unit document
@@ -1065,7 +1067,7 @@ class FirestoreService {
           .collection(FirestoreConstants.sectionsCollection)
           .doc(RouteConstants.getSectionIds(section))
           .collection(FirestoreConstants.unitsCollection)
-          .doc(unitNumber);
+          .doc(tempUnitNumber ?? unitNumber);
 
       FieldPath fieldPath = FieldPath([
         FirestoreConstants.questionsField,

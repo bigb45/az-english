@@ -1,6 +1,8 @@
 import 'package:ez_english/features/home/whiteboard/whiteboard_model.dart';
+import 'package:ez_english/features/levels/screens/school/school_section_worksheet_view.dart';
 import 'package:ez_english/features/models/base_answer.dart';
 import 'package:ez_english/features/models/base_question.dart';
+import 'package:ez_english/features/models/worksheet.dart';
 import 'package:ez_english/features/sections/components/checkbox_question.dart';
 import 'package:ez_english/features/sections/components/dictation_question.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
@@ -105,7 +107,11 @@ Widget buildQuestion({
         whiteboardModel: question as WhiteboardModel,
         key: ValueKey(question),
       );
-
+    case QuestionType.worksheet:
+      return SchoolSectionStudentWorksheetView(
+        worksheet: question as Worksheet,
+        key: ValueKey(question),
+      );
     default:
       print(
           "Unsupported Question Type: ${question.questionType}, ${question.imageUrl}");
