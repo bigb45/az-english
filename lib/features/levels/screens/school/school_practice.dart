@@ -68,13 +68,21 @@ class _SchoolPracticeState extends State<SchoolPractice> {
                   setState(() {
                     _isLoading = true;
                   });
-                  await viewmodel.updateUserProgress().then((value) {
+                  if (viewmodel.questions.length != 0) {
+                    await viewmodel.updateUserProgress().then((value) {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                      context.pop();
+                      context.pop();
+                    });
+                  } else {
                     setState(() {
                       _isLoading = false;
                     });
                     context.pop();
                     context.pop();
-                  });
+                  }
                 },
               );
       }
