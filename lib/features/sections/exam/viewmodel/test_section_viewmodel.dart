@@ -38,7 +38,10 @@ class TestSectionViewmodel extends BaseViewModel {
 
   Future<void> myInit() async {
     _isSubmitted = false;
-    _isReadyToSubmit = false;
+    // _isReadyToSubmit = false;
+    // setting this flag to true allows the user to submit the test without answering any questions
+    // this is to handle the case of a test with no answerable questions such as vocab and yt lessons
+    _isReadyToSubmit = true;
     _answers = [];
     currentIndex = 0;
     levelName = RouteConstants.getLevelName(levelId!);

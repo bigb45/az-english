@@ -73,6 +73,8 @@ class _SchoolPracticeState extends State<SchoolPractice> {
                       setState(() {
                         _isLoading = false;
                       });
+                      viewmodel.setSectionCompletedLocally(
+                          RouteConstants.testSectionName);
                       context.pop();
                       context.pop();
                     });

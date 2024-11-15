@@ -174,9 +174,14 @@ class _TestSectionState extends State<TestSection> {
                                 await viewmodel
                                     .updateUserProgress()
                                     .then((value) {
+                                  viewmodel.setSectionCompletedLocally(
+                                      viewmodel.sectionName ?? "");
+                                  Navigator.pop(context);
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                 });
+
+                                // TODO: set the unit completion date to DateTime.now()
                               },
                               text: "finish & return",
                             )

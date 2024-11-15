@@ -35,7 +35,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
   late LevelSelectionViewmodel viewmodel;
   int originalCurrentUnitNumber = 1;
   int tempCurrentUnitNumber = 1;
-
+  late bool isUnitLocked;
   bool _isLoading = true;
   @override
   void initState() {
@@ -54,8 +54,8 @@ class _PracticeSectionsState extends State<PracticeSections> {
       "assets/images/listening_section_card.svg",
       "assets/images/vocabulary_section_card.svg",
       "assets/images/grammar_section_card.svg",
-      null,
-      "assets/images/worksheet.svg"
+      'assets/images/notepad.svg',
+      "assets/images/worksheet.svg",
     ];
     backgroundColors = [
       const Color(0xFFFFA500),
@@ -69,7 +69,6 @@ class _PracticeSectionsState extends State<PracticeSections> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _fetchSections();
     });
-
     super.initState();
   }
 
@@ -80,6 +79,8 @@ class _PracticeSectionsState extends State<PracticeSections> {
     viewmodel.tempUnit = false;
     originalCurrentUnitNumber = viewmodel.userCurrentDay;
     tempCurrentUnitNumber = originalCurrentUnitNumber;
+    isUnitLocked = viewmodel.userCurrentDay == tempCurrentUnitNumber &&
+        viewmodel.checkIsUnitFinishedToday();
     setState(() {
       _isLoading = false;
     });
@@ -119,59 +120,95 @@ class _PracticeSectionsState extends State<PracticeSections> {
         ),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
-            : SizedBox(
-                child: SingleChildScrollView(
-                  child: SizedBox(
-                    child: Padding(
-                      padding: EdgeInsets.all(Constants.padding8),
-                      child: Center(
-                        child: Column(
-                          children: [
-                            Constants.gapH20,
-                            Wrap(
-                              alignment: WrapAlignment.center,
-                              runSpacing: 15.h,
-                              spacing: 10.w,
+            : Stack(
+                children: [
+                  SizedBox(
+                    child: SingleChildScrollView(
+                      child: SizedBox(
+                        child: Padding(
+                          padding: EdgeInsets.all(Constants.padding8),
+                          child: Center(
+                            child: Column(
                               children: [
-                                ...hintTexts.asMap().entries.map((entry) {
-                                  int index = entry.key;
-                                  Section section = viewmodel
-                                      .levels[int.tryParse(widget.levelId)!]
-                                      .sections![index];
-                                  printDebug(
-                                      "${section.name} ${section.isAssigned}, ${section.numberOfQuestions}");
-                                  String hintText = entry.value;
-                                  bool showCardInfo = section.name !=
-                                      RouteConstants.worksheetSectionName;
-                                  return _buildCard(
-                                    headerText: hintText,
-                                    cardText:
-                                        "Learn common everyday expressions and simple phrases",
-                                    onTap: !section.isAssigned
-                                        ? null
-                                        : () {
-                                            navigateToSection(
-                                              sectionId:
-                                                  RouteConstants.getSectionIds(
-                                                      section.name),
-                                            );
-                                            viewmodel.updateSectionStatus(
-                                                section, widget.levelName);
-                                          },
-                                    shouldShowCardInformation: showCardInfo,
-                                    imagePath: imageAssets[index],
-                                    backgroundColor: backgroundColors[index],
-                                    section: section,
-                                  );
-                                }).toList(),
+                                Constants.gapH20,
+                                Wrap(
+                                  alignment: WrapAlignment.center,
+                                  runSpacing: 15.h,
+                                  spacing: 10.w,
+                                  children: [
+                                    ...hintTexts.asMap().entries.map((entry) {
+                                      int index = entry.key;
+                                      Section section = viewmodel
+                                          .levels[int.tryParse(widget.levelId)!]
+                                          .sections![index];
+                                      printDebug(
+                                          "${section.name} ${section.isAssigned}, ${section.numberOfQuestions}");
+                                      String hintText = entry.value;
+                                      bool showCardInfo = section.name !=
+                                          RouteConstants.worksheetSectionName;
+
+                                      return _buildCard(
+                                        headerText: hintText,
+                                        cardText:
+                                            "Learn common everyday expressions and simple phrases",
+                                        onTap: section.isAssigned
+                                            ? () {
+                                                navigateToSection(
+                                                  sectionId: RouteConstants
+                                                      .getSectionIds(
+                                                          section.name),
+                                                );
+                                                viewmodel.updateSectionStatus(
+                                                    section, widget.levelName);
+                                              }
+                                            : null,
+                                        shouldShowCardInformation: showCardInfo,
+                                        imagePath: imageAssets[index],
+                                        backgroundColor:
+                                            backgroundColors[index],
+                                        section: section,
+                                      );
+                                    }).toList(),
+                                  ],
+                                ),
                               ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                  if (isUnitLocked)
+                    Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: Palette.blackColor.withOpacity(0.7),
+                      child: const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.lock_clock_outlined,
+                              color: Colors.white,
+                              size: 200,
+                            ),
+                            Text(
+                              "Unit Locked",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                              ),
+                            ),
+                            Text(
+                              "You can unlock this unit tomorrow",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                ],
               ),
         endDrawer: Drawer(
           child: ListView(
@@ -196,30 +233,46 @@ class _PracticeSectionsState extends State<PracticeSections> {
               ),
               ...List.generate(originalCurrentUnitNumber, (index) {
                 int unitNumber = index + 1;
+                final isDrawerUnitLocked =
+                    viewmodel.userCurrentDay == unitNumber &&
+                        viewmodel.checkIsUnitFinishedToday();
                 return ListTile(
-                  leading: const Icon(Icons.book),
-                  title: Text('Unit $unitNumber'),
+                  leading: isDrawerUnitLocked
+                      ? const Icon(Icons.lock)
+                      : const Icon(Icons.book),
+                  title: Text(
+                    'Unit $unitNumber',
+                    style: TextStyle(
+                        color: isDrawerUnitLocked
+                            ? Palette.secondaryText
+                            : Palette.blackColor),
+                  ),
                   selected: unitNumber == tempCurrentUnitNumber,
-                  onTap: () async {
-                    Navigator.of(context).pop();
-                    setState(() {
-                      _isLoading = true;
-                      tempCurrentUnitNumber = unitNumber;
-                    });
-                    if (unitNumber != originalCurrentUnitNumber) {
-                      viewmodel.tempUnit = true;
-                      await viewmodel.fetchSections(
-                          viewmodel.levels[int.tryParse(widget.levelId)!],
-                          desiredDay: unitNumber);
-                    } else {
-                      await viewmodel.fetchSections(
-                        viewmodel.levels[int.tryParse(widget.levelId)!],
-                      );
-                    }
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  },
+                  onTap: isDrawerUnitLocked
+                      ? null
+                      : () async {
+                          Navigator.of(context).pop();
+                          setState(() {
+                            _isLoading = true;
+                            tempCurrentUnitNumber = unitNumber;
+                            isUnitLocked = viewmodel.userCurrentDay ==
+                                    tempCurrentUnitNumber &&
+                                viewmodel.checkIsUnitFinishedToday();
+                          });
+                          if (unitNumber != originalCurrentUnitNumber) {
+                            viewmodel.tempUnit = true;
+                            await viewmodel.fetchSections(
+                                viewmodel.levels[int.tryParse(widget.levelId)!],
+                                desiredDay: unitNumber);
+                          } else {
+                            await viewmodel.fetchSections(
+                              viewmodel.levels[int.tryParse(widget.levelId)!],
+                            );
+                          }
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        },
                 );
               }),
             ],
@@ -259,6 +312,7 @@ class _PracticeSectionsState extends State<PracticeSections> {
     return ExerciseCard(
       onPressed: onTap != null
           ? () {
+              printDebug("onTap");
               onTap();
             }
           : null,

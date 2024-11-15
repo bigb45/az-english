@@ -4,6 +4,7 @@ import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/firebase_options.dart';
 import 'package:ez_english/router.dart';
 import 'package:ez_english/theme/palette.dart';
+import 'package:ez_english/utils/shared_preferences_util.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +27,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await SharedPreferencesUtil.instance.init();
+
   runApp(
     EasyLocalization(
       supportedLocales: const [

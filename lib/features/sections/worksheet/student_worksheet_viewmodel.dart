@@ -127,8 +127,8 @@ class StudentWorksheetViewModel extends BaseViewModel {
       final userSubmission = workSheet.students?.entries.firstWhere(
           (studentEntry) => studentEntry.key == _currentUserId,
           orElse: () => MapEntry('null', WorksheetStudent()));
-
-      if (userSubmission!.key != "null") {
+      // todo: fix null
+      if (userSubmission != null && userSubmission.key != "null") {
         _uploadedWorksheet = userSubmission.value;
         _worksheetAnswer = workSheet;
         printDebug(

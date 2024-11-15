@@ -52,7 +52,7 @@ dependencies:
   uuid: ^4.4.2
   audio_session: ^0.1.21
   logger: ^2.4.0
-
+  shared_preferences: ^2.3.3
 
 flutter_native_splash:
   color: "#ffffff"

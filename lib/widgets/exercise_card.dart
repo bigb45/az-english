@@ -3,10 +3,12 @@ import 'package:ez_english/core/Constants.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/theme/palette.dart';
 import 'package:ez_english/theme/text_styles.dart';
+import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class ExerciseCard extends StatefulWidget {
   final VoidCallback? onPressed;
@@ -18,17 +20,18 @@ class ExerciseCard extends StatefulWidget {
   final Color? textColor;
   final Section section;
   final bool showCardInfo;
-  const ExerciseCard(
-      {super.key,
-      required this.section,
-      required this.onPressed,
-      required this.text,
-      required this.image,
-      required this.cardBackgroundColor,
-      required this.showCardInfo,
-      this.cardShadowColor,
-      this.textColor,
-      this.description});
+  const ExerciseCard({
+    super.key,
+    required this.section,
+    required this.onPressed,
+    required this.text,
+    required this.image,
+    required this.cardBackgroundColor,
+    required this.showCardInfo,
+    this.cardShadowColor,
+    this.textColor,
+    this.description,
+  });
 
   @override
   State<ExerciseCard> createState() => ExerciseCardState();
@@ -63,9 +66,14 @@ class ExerciseCardState extends State<ExerciseCard> {
         });
       },
       onTap: () {
-        widget.onPressed != null ? widget.onPressed!() : null;
+        if (section.isCompleted) {
+          showCompletionDialog(
+              context, widget.onPressed != null ? widget.onPressed! : () {});
+        } else {
+          widget.onPressed != null ? widget.onPressed!() : null;
+        }
       },
-      child: !section.isAssigned
+      child: !section.isAssigned || section.isCompleted
           ? ColorFiltered(
               colorFilter: ColorFilter.mode(
                   Palette.secondaryStroke.withOpacity(0.5), BlendMode.srcATop),
@@ -167,7 +175,9 @@ class ExerciseCardState extends State<ExerciseCard> {
                           height: 20.h,
                         ),
                       SvgPicture.asset(
-                        widget.image ?? 'assets/images/notepad.svg',
+                        section.isCompleted
+                            ? 'assets/images/timeout.svg'
+                            : widget.image ?? 'assets/images/notepad.svg',
                         height: 80.h,
                         width: 80.w,
                       ),
@@ -326,4 +336,41 @@ Color darkenColor(Color? color, double factor) {
   int blue = (color.blue * (1 - factor)).round();
   // Create and return the new color
   return Color.fromARGB(color.alpha, red, green, blue);
+}
+
+void showCompletionDialog(BuildContext context, Function? onReviewRequested) {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Section Completed"),
+            ],
+          ),
+          content: const Text(
+              "You have already completed this section. Come back tomorrow for more practice!"),
+          actions: [
+            Button(
+              // todo: pass callback to navigate to relevant section
+              onPressed: () {
+                try {
+                  context.pop();
+                  onReviewRequested!();
+                } catch (e) {
+                  print(e);
+                }
+              },
+              text: "review section",
+            ),
+            SizedBox(height: 10.h),
+            Button(
+              onPressed: context.pop,
+              text: "ok",
+              type: ButtonType.secondary,
+            ),
+          ],
+        );
+      });
 }

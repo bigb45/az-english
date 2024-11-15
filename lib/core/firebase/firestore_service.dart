@@ -448,7 +448,9 @@ class FirestoreService {
 
       // Check if all sections except the test are completed
       bool allSectionsCompleted = daySections
-          .where((daySection) => daySection != RouteConstants.testSectionName)
+          .where((daySection) =>
+              daySection != RouteConstants.testSectionName &&
+              daySection != RouteConstants.worksheetSectionName)
           .every((daySection) {
         String sectionId = RouteConstants.getSectionIds(daySection);
         return levelProgress.sectionProgress!.containsKey(sectionId) &&
@@ -456,6 +458,7 @@ class FirestoreService {
       });
 
       if (allSectionsCompleted) {
+        // if (true) {
         String testSectionId =
             RouteConstants.getSectionIds(RouteConstants.testSectionName);
 

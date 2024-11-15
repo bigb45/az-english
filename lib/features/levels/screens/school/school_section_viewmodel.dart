@@ -17,6 +17,7 @@ import 'package:ez_english/features/models/worksheet.dart';
 import 'package:ez_english/features/models/worksheet_student.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
 import 'package:ez_english/features/sections/models/passage_question_model.dart';
+import 'package:ez_english/utils/shared_preferences_util.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -27,7 +28,7 @@ class SchoolSectionViewmodel extends BaseViewModel {
   get questions => _questions;
 
   List<Level> _levels = [];
-  int _userCurrentDay = 0;
+  int _userCurrentDay = 1;
   String? _tempUnitNumber;
   List<Level> get levels => _levels;
   int get userCurrentDay => _userCurrentDay;
@@ -117,10 +118,11 @@ class SchoolSectionViewmodel extends BaseViewModel {
       }
       progress = assignedQuestions.progress;
       int currentDay = assignedQuestions.currentDay;
+      // _userCurrentDay = currentDay;
       List<String> daySections = _firestoreService.getSectionsForDay();
       int tempAllQuestionsLength = 0;
       int tempFilterQuestionsLength = 0;
-
+      String? completedDay = SharedPreferencesUtil.getValue("schoolCurrentDay");
       for (var section in daySections) {
         String tempUnitNumber = "$currentDay";
         _tempUnitNumber = "unit$currentDay";
@@ -362,6 +364,40 @@ class SchoolSectionViewmodel extends BaseViewModel {
       print("Error uploading image: $e");
     } finally {}
     return '';
+  }
+
+  @override
+  void setSectionCompletedLocally(String sectionName) {
+    SharedPreferencesUtil.setValue(
+        "school" + sectionName, DateTime.now().toString());
+    SharedPreferencesUtil.setValue(
+        "schoolCurrentDay", firestoreService.currentDayString);
+  }
+
+  bool _isAfterMidnightOf(DateTime compareTime) {
+    DateTime currentTime = DateTime.now();
+
+    DateTime midnightCompareTime =
+        DateTime(compareTime.year, compareTime.month, compareTime.day)
+            .add(const Duration(days: 1));
+    printDebug(
+        "comparing time: $midnightCompareTime with $currentTime, result: ${currentTime.isAfter(midnightCompareTime)}");
+    return currentTime.isAfter(midnightCompareTime);
+  }
+
+  bool checkIsUnitFinishedToday() {
+    String sectionFinishDate = SharedPreferencesUtil.getValue<String>(
+            "school" + RouteConstants.testSectionName) ??
+        '';
+    printDebug("unit finished on $sectionFinishDate");
+    if (sectionFinishDate.isNotEmpty) {
+      var parsedFinishDate = DateTime.parse(sectionFinishDate);
+      bool isAfterMidnight = _isAfterMidnightOf(parsedFinishDate);
+
+      return !isAfterMidnight;
+    } else {
+      return false;
+    }
   }
 
   void reset() {

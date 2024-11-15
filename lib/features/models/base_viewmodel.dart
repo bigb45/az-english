@@ -4,6 +4,7 @@ import 'package:ez_english/core/constants.dart';
 import 'package:ez_english/core/firebase/exceptions.dart';
 import 'package:ez_english/core/firebase/firestore_service.dart';
 import 'package:ez_english/features/sections/components/evaluation_section.dart';
+import 'package:ez_english/utils/shared_preferences_util.dart';
 import 'package:flutter/material.dart';
 
 abstract class BaseViewModel extends ChangeNotifier {
@@ -160,5 +161,11 @@ abstract class BaseViewModel extends ChangeNotifier {
   set answerState(EvaluationState value) {
     _answerState = value;
     notifyListeners();
+  }
+
+  void setSectionCompletedLocally(String sectionName) {
+    SharedPreferencesUtil.setValue(sectionName, DateTime.now().toString());
+    SharedPreferencesUtil.setValue(
+        "currentDay", firestoreService.currentDayString);
   }
 }

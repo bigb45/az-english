@@ -10,6 +10,7 @@ import 'package:ez_english/features/auth/view_model/auth_view_model.dart';
 import 'package:ez_english/features/models/level.dart';
 import 'package:ez_english/features/models/section.dart';
 import 'package:ez_english/features/models/user.dart';
+import 'package:ez_english/utils/shared_preferences_util.dart';
 import 'package:ez_english/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,6 @@ class LevelSelectionViewmodel extends ChangeNotifier {
   CustomException? _error;
   CustomException? get error => _error;
   bool tempUnit = false;
-
   void update(AuthViewModel authViewModel) async {
     _authProvider = authViewModel;
     if (_authProvider.isSignedIn) {
@@ -111,7 +111,6 @@ class LevelSelectionViewmodel extends ChangeNotifier {
       }
 
       notifyListeners();
-
       final fetchedSections = await firestoreService.fetchSection(level.name,
           desiredDay: desiredDay);
 
@@ -266,5 +265,31 @@ class LevelSelectionViewmodel extends ChangeNotifier {
     Utils.showErrorSnackBar(e);
     // errorOccurred = true;
     // navigatorKey.currentState!.pop();
+  }
+
+  bool _isAfterMidnightOf(DateTime compareTime) {
+    DateTime currentTime = DateTime.now();
+
+    DateTime midnightCompareTime =
+        DateTime(compareTime.year, compareTime.month, compareTime.day)
+            .add(const Duration(days: 1));
+    printDebug(
+        "comparing time: $midnightCompareTime with $currentTime, result: ${currentTime.isAfter(midnightCompareTime)}");
+    return currentTime.isAfter(midnightCompareTime);
+  }
+
+  bool checkIsUnitFinishedToday() {
+    String sectionFinishDate = SharedPreferencesUtil.getValue<String>(
+            RouteConstants.testSectionName) ??
+        '';
+    printDebug("unit finished on $sectionFinishDate");
+    if (sectionFinishDate.isNotEmpty) {
+      var parsedFinishDate = DateTime.parse(sectionFinishDate);
+      bool isAfterMidnight = _isAfterMidnightOf(parsedFinishDate);
+
+      return !isAfterMidnight;
+    } else {
+      return false;
+    }
   }
 }

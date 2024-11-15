@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:ez_english/core/constants.dart';
-import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/levels/screens/school/school_section_viewmodel.dart';
 import 'package:ez_english/resources/app_strings.dart';
 import 'package:ez_english/theme/palette.dart';
@@ -27,6 +26,7 @@ class _SchoolSectionState extends State<SchoolSection> {
   int originalCurrentUnitNumber = 0;
   int tempCurrentUnitNumber = 0;
   bool _isLoading = true;
+  bool isUnitLocked = false;
   @override
   void initState() {
     viewmodel = Provider.of<SchoolSectionViewmodel>(context, listen: false);
@@ -39,16 +39,10 @@ class _SchoolSectionState extends State<SchoolSection> {
       setState(() {
         _isLoading = false;
       });
+      isUnitLocked = originalCurrentUnitNumber == tempCurrentUnitNumber &&
+          viewmodel.checkIsUnitFinishedToday();
     });
-
     super.initState();
-  }
-
-  Future<void> _fetchSections() async {
-    viewmodel = Provider.of<SchoolSectionViewmodel>(context, listen: false);
-    // setState(() {
-    //   _isLoading = false;
-    // });
   }
 
   @override
@@ -79,58 +73,92 @@ class _SchoolSectionState extends State<SchoolSection> {
           ),
         ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: Constants.padding12, vertical: Constants.padding20),
-          child: _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : Column(
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: Constants.padding12,
+                  vertical: Constants.padding20),
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Column(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/speaking_section_onboarding.svg',
+                                width: 200,
+                                colorFilter: ColorFilter.mode(
+                                    Palette.primaryText, BlendMode.srcIn),
+                              ),
+                              Text(
+                                AppStrings.speakingSectionPageTitle,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 32.sp,
+                                  color: Palette.primaryText,
+                                  fontFamily: 'Inter',
+                                  height: 2,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Constants.gapH12,
+                              Text(
+                                AppStrings.speakingSectionOnboardingText,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  height: 2,
+                                  fontSize: 16.sp,
+                                  color: Palette.primaryText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Button(
+                          onPressed: () {
+                            context.push('/school_practice/practice');
+                          },
+                          type: ButtonType.primary,
+                          text: AppStrings.startPracticingButton,
+                        )
+                      ],
+                    ),
+            ),
+          ),
+          if (isUnitLocked)
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Palette.blackColor.withOpacity(0.7),
+              child: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            'assets/images/speaking_section_onboarding.svg',
-                            width: 200,
-                            colorFilter: ColorFilter.mode(
-                                Palette.primaryText, BlendMode.srcIn),
-                          ),
-                          Text(
-                            AppStrings.speakingSectionPageTitle,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 32.sp,
-                              color: Palette.primaryText,
-                              fontFamily: 'Inter',
-                              height: 2,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          Constants.gapH12,
-                          Text(
-                            AppStrings.speakingSectionOnboardingText,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              height: 2,
-                              fontSize: 16.sp,
-                              color: Palette.primaryText,
-                            ),
-                          ),
-                        ],
+                    Icon(
+                      Icons.lock_clock_outlined,
+                      color: Colors.white,
+                      size: 200,
+                    ),
+                    Text(
+                      "Unit Locked",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
                       ),
                     ),
-                    Button(
-                      onPressed: () {
-                        context.push('/school_practice/practice');
-                      },
-                      type: ButtonType.primary,
-                      text: AppStrings.startPracticingButton,
+                    Text(
+                      "You can unlock this unit tomorrow",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                     )
                   ],
                 ),
-        ),
+              ),
+            )
+        ],
       ),
       endDrawer: Drawer(
         child: _isLoading
@@ -157,35 +185,51 @@ class _SchoolSectionState extends State<SchoolSection> {
                   ),
                   ...List.generate(originalCurrentUnitNumber, (index) {
                     int unitNumber = index + 1;
+                    final isDrawerUnitLocked =
+                        originalCurrentUnitNumber == unitNumber &&
+                            viewmodel.checkIsUnitFinishedToday();
                     return ListTile(
-                      leading: const Icon(Icons.book),
-                      title: Text('Unit $unitNumber'),
+                      leading: isDrawerUnitLocked
+                          ? const Icon(Icons.lock)
+                          : const Icon(Icons.book),
+                      title: Text(
+                        'Unit $unitNumber',
+                        style: TextStyle(
+                            color: isDrawerUnitLocked
+                                ? Palette.secondaryText
+                                : Palette.blackColor),
+                      ),
                       selected: unitNumber == tempCurrentUnitNumber,
-                      onTap: () async {
-                        Navigator.of(context).pop();
-                        setState(() {
-                          tempCurrentUnitNumber = unitNumber;
-                        });
-                        if (unitNumber != originalCurrentUnitNumber) {
-                          viewmodel.tempUnit = true;
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          await viewmodel.fetchQuestionsFromLevel(
-                              desiredDay: tempCurrentUnitNumber);
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        } else {
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          await viewmodel.fetchQuestionsFromLevel();
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        }
-                      },
+                      onTap: isDrawerUnitLocked
+                          ? null
+                          : () async {
+                              Navigator.of(context).pop();
+                              setState(() {
+                                tempCurrentUnitNumber = unitNumber;
+                                isUnitLocked = originalCurrentUnitNumber ==
+                                        tempCurrentUnitNumber &&
+                                    viewmodel.checkIsUnitFinishedToday();
+                              });
+                              if (unitNumber != originalCurrentUnitNumber) {
+                                viewmodel.tempUnit = true;
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                await viewmodel.fetchQuestionsFromLevel(
+                                    desiredDay: tempCurrentUnitNumber);
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              } else {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                await viewmodel.fetchQuestionsFromLevel();
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              }
+                            },
                     );
                   }),
                 ],
