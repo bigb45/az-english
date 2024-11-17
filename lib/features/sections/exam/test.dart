@@ -1,4 +1,5 @@
 import 'package:ez_english/core/constants.dart';
+import 'package:ez_english/features/home/home_screen.dart';
 import 'package:ez_english/features/levels/screens/levels/level_selection_viewmodel.dart';
 import 'package:ez_english/features/models/base_question.dart';
 import 'package:ez_english/features/sections/components/leave_alert_dialog.dart';
@@ -11,6 +12,7 @@ import 'package:ez_english/widgets/button.dart';
 import 'package:ez_english/widgets/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class TestSection extends StatefulWidget {
@@ -24,6 +26,7 @@ class TestSection extends StatefulWidget {
 
 class _TestSectionState extends State<TestSection> {
   late TestSectionViewmodel viewmodel;
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -170,18 +173,15 @@ class _TestSectionState extends State<TestSection> {
                       padding: const EdgeInsets.all(8.0),
                       child: viewmodel.isSubmitted
                           ? Button(
-                              onPressed: () async {
-                                await viewmodel
-                                    .updateUserProgress()
-                                    .then((value) {
-                                  viewmodel.setSectionCompletedLocally(
-                                      viewmodel.sectionName ?? "");
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                });
-
-                                // TODO: set the unit completion date to DateTime.now()
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) => const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                                _handleTestCompletion();
                               },
                               text: "finish & return",
                             )
@@ -211,5 +211,29 @@ class _TestSectionState extends State<TestSection> {
               ),
       );
     });
+  }
+
+  Future<void> _handleTestCompletion() async {
+    try {
+      await viewmodel.updateUserProgress();
+      viewmodel.setSectionCompletedLocally(viewmodel.sectionName ?? "");
+
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      if (mounted) {
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+        await Future.delayed(const Duration(milliseconds: 100));
+        if (context.mounted) {
+          context.go("/");
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+      debugPrint('Error during test completion: $e');
+    }
   }
 }
